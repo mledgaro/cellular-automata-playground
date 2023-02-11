@@ -8,17 +8,21 @@
     <title>Cellular Automata</title>
 
     <head>
+
+        <!-- JQuery -->
+        <script src="libs/jquery-3.6.0.min.js"></script>
+
         <!-- Bootstrap 5 -->
-        <link href="bootstrap/bootstrap.css" rel="stylesheet">
-        <script src="bootstrap/bootstrap.bundle.js"></script> 
+        <link href="libs/bootstrap/bootstrap.css" rel="stylesheet">
+        <script src="libs/bootstrap/bootstrap.bundle.js"></script> 
 
         <!-- Font Awesome Icons -->
-        <link href="fontawesome/css/all.css" rel="stylesheet">
+        <link href="libs/fontawesome/css/all.css" rel="stylesheet">
 
+        <!-- Styles -->
         <link href="css/style.css" rel="stylesheet">
 
-        <script src="js/jquery-3.6.0.min.js"></script>
-
+        <!-- Scripts -->
         <script src="js/components/CAPButton.js"></script>
         <script src="js/components/CAPButtonGroupSelector.js"></script>
         <script src="js/components/CAPCanvas.js"></script>
@@ -45,9 +49,9 @@
 
         <script>
             let CONTROLLER;
+            
             $(document).ready(
-                function ()
-                {
+                function () {
                     CONTROLLER = new Controller();
                 }
             );
