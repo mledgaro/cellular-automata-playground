@@ -1,10 +1,7 @@
-class CAPRuleCheck2D extends CAPToggleButton
-{
-
+class CAPRuleCheck2D extends CAPToggleButton {
     #element;
 
-    constructor(label)
-    {
+    constructor(label) {
         super("", ["square-minus", "square", "square-check"], "solid", "xl");
 
         let mcont, cont, btnCont;
@@ -35,9 +32,7 @@ class CAPRuleCheck2D extends CAPToggleButton
         this.#element = mcont;
     }
 
-    get element()
-    {
+    get element() {
         return this.#element;
     }
-
 }

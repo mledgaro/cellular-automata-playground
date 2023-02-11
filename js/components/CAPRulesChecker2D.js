@@ -1,25 +1,21 @@
-class CAPRulesChecker2D
-{
+class CAPRulesChecker2D {
     #CLASS_NAME = "cap-rule-2d";
 
     #container;
     #arr;
 
-    constructor (containerId)
-    {
+    constructor(containerId) {
         this.#container = $("#" + containerId);
 
         this.#arr = [];
     }
 
-    #addRules(num)
-    {
+    #addRules(num) {
         this.#arr = [];
 
         this.#container.empty();
 
-        for (let i = 0, rule; i <= num; i++)
-        {
+        for (let i = 0, rule; i <= num; i++) {
             rule = new CAPRuleCheck2D(i);
 
             this.#arr.push(rule);
@@ -28,10 +24,8 @@ class CAPRulesChecker2D
         }
     }
 
-    loadRules(neighborhoodSize, neighborhoodType)
-    {
-        switch (neighborhoodType)
-        {
+    loadRules(neighborhoodSize, neighborhoodType) {
+        switch (neighborhoodType) {
             case "moore":
                 this.#addRules(Math.pow(neighborhoodSize, 2) - 1);
                 break;
@@ -42,25 +36,20 @@ class CAPRulesChecker2D
         }
     }
 
-    get rules()
-    {
-        return this.#arr.map((e) => e.state == 0 ? null : e.state == 2);
+    get rules() {
+        return this.#arr.map((e) => (e.state == 0 ? null : e.state == 2));
     }
 
-    set rules(rules)
-    {
+    set rules(rules) {
         this.#arr.forEach(
-            (e, i) => e.state = rules[i] == null ? 0 : rules[i] ? 2 : 1);
+            (e, i) => (e.state = rules[i] == null ? 0 : rules[i] ? 2 : 1)
+        );
     }
 
-    set enabled(bool)
-    {
+    set enabled(bool) {
         this.#container.find("button").removeAttr("disabled");
-        if (!bool)
-        {
+        if (!bool) {
             this.#container.find("button").attr("disabled", "true");
         }
     }
-
-    
 }

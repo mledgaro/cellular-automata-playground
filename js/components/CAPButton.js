@@ -1,10 +1,8 @@
-class CAPButton
-{
+class CAPButton {
     #button;
     #icon;
 
-    constructor(buttonId, title, iconId, iconSize)
-    {
+    constructor(buttonId, title, iconId, iconSize) {
         this.#button = $("#" + buttonId);
         this.#button.attr("type", "button");
         this.#button.attr("title", title);
@@ -12,50 +10,41 @@ class CAPButton
         this.#button.attr("data-bs-placement", "bottom");
         this.#button.addClass("btn cap-btn");
 
-        this.#icon = 
-            $(`<i class='fa-${iconId} fa-solid fa-${iconSize}'></i>`);
+        this.#icon = $(`<i class='fa-${iconId} fa-solid fa-${iconSize}'></i>`);
 
         this.#button.append(this.#icon);
     }
 
-    get element()
-    {
+    get element() {
         return this.#button;
     }
 
-    set tooltipLabel(label)
-    {
+    set tooltipLabel(label) {
         this.#button.attr("data-bs-original-title", label);
     }
 
-    set enabled(bool)
-    {
+    set enabled(bool) {
         this.#button.removeAttr("disabled");
-        if (!bool)
-        {
+        if (!bool) {
             this.#button.attr("disabled", "true");
         }
     }
 
-    set visible(bool)
-    {
+    set visible(bool) {
         this.#button.hide();
-        if (bool)
-        {
+        if (bool) {
             this.#button.show();
         }
     }
 
-    set icon(iconId)
-    {
+    set icon(iconId) {
         this.#icon.remove();
         this.#icon = $("<i></i>");
         this.#icon.addClass("fa-" + iconId + " fa-solid fa-lg");
         this.#button.append(this.#icon);
     }
 
-    set onClick(func)
-    {
+    set onClick(func) {
         this.#button.click(func);
     }
 }

@@ -1,14 +1,11 @@
-class CAPCellButton
-{
-
+class CAPCellButton {
     #element;
 
     #checked;
     #highlighted;
     neighborhood;
 
-    constructor(id)
-    {
+    constructor(id) {
         this.#element = $(`\
             <button type='button'\
                     class='cap-cell-btn cap-cell-btn-off'>\
@@ -23,82 +20,66 @@ class CAPCellButton
 
         this.#element.click(() => this.toggle());
 
-        this.#element.mouseover(
-            () => this.neighborhood.forEach((e) => e.highlight()));
+        this.#element.mouseover(() =>
+            this.neighborhood.forEach((e) => e.highlight())
+        );
 
-        this.#element.mouseout(
-            () => this.neighborhood.forEach((e) => e.highlight()));
+        this.#element.mouseout(() =>
+            this.neighborhood.forEach((e) => e.highlight())
+        );
     }
 
-    toggle()
-    {
-        if (this.#highlighted)
-        {
+    toggle() {
+        if (this.#highlighted) {
             this.#element.toggleClass("cap-cell-btn-off-high");
             this.#element.toggleClass("cap-cell-btn-on-high");
-        }
-        else
-        {
+        } else {
             this.#element.toggleClass("cap-cell-btn-off");
             this.#element.toggleClass("cap-cell-btn-on");
         }
         this.#checked = !this.#checked;
     }
 
-    highlight()
-    {
-        if (this.#checked)
-        {
+    highlight() {
+        if (this.#checked) {
             this.#element.toggleClass("cap-cell-btn-on");
-            this.#element.toggleClass("cap-cell-btn-on-high");    
-        }
-        else
-        {
+            this.#element.toggleClass("cap-cell-btn-on-high");
+        } else {
             this.#element.toggleClass("cap-cell-btn-off");
             this.#element.toggleClass("cap-cell-btn-off-high");
         }
         this.#highlighted = !this.#highlighted;
     }
 
-    get element()
-    {
+    get element() {
         return this.#element;
     }
 
-    get checked()
-    {
+    get checked() {
         return this.#checked;
     }
 
-    get id()
-    {
+    get id() {
         return Number(this.#element.text());
     }
 
-    set checked(bool)
-    {
+    set checked(bool) {
         this.#element.removeClass("cap-cell-btn-off");
         this.#element.removeClass("cap-cell-btn-on");
 
-        if (bool)
-        {
+        if (bool) {
             this.#element.addClass("cap-cell-btn-on");
-        }
-        else
-        {
+        } else {
             this.#element.addClass("cap-cell-btn-off");
         }
 
         this.#checked = bool;
     }
 
-    set enabled(bool)
-    {
+    set enabled(bool) {
         this.#element.removeAttr("disabled");
-        if (!bool)
-        {
+        if (!bool) {
             this.#element.attr("disabled", "true");
         }
     }
-
 }

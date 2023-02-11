@@ -1,15 +1,11 @@
-class Controller
-{
-
+class Controller {
     gui;
     #cellularAutomaton;
     #cellularAutomaton2d;
     #intervalId;
     #appState;
 
-
-    constructor()
-    {
+    constructor() {
         this.gui = new GUI();
 
         this.#cellularAutomaton = new CellularAutomaton();
@@ -22,12 +18,9 @@ class Controller
         this.#enableTooltips();
 
         this.#setStopped();
-
-
     }
 
-    #addListeners()
-    {
+    #addListeners() {
         this.gui.controls.flow.next.onClick = () => this.#nextBtnFunc();
         this.gui.controls.flow.run.onClick = () => this.#runBtnFunc();
         this.gui.controls.flow.pause.onClick = () => this.#pauseBtnFunc();
@@ -36,30 +29,27 @@ class Controller
         this.gui.controls.speed.decreaseBtnClick = () => this.#changeSpeed();
         this.gui.controls.speed.increaseBtnClick = () => this.#changeSpeed();
 
-        this.gui.canvas.canvas.click(
-            (evt) =>
-            {
-                if (this.gui.currentDimension == "d2" 
-                    && this.#appState == "stopped") // 2D
-                {
-                    this.gui.canvas.toggleCell(evt.pageX, evt.pageY);
-                }
+        this.gui.canvas.canvas.click((evt) => {
+            if (
+                this.gui.currentDimension == "d2" &&
+                this.#appState == "stopped"
+            ) {
+                // 2D
+                this.gui.canvas.toggleCell(evt.pageX, evt.pageY);
             }
-        );
-    }
-
-    #enableTooltips()
-    {
-        let tooltipTriggerList = [].slice.call(
-            document.querySelectorAll("[data-bs-toggle='tooltip']"));
-        let tooltipList = tooltipTriggerList.map(
-            function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
         });
     }
 
-    #setStopped()
-    {
+    #enableTooltips() {
+        let tooltipTriggerList = [].slice.call(
+            document.querySelectorAll("[data-bs-toggle='tooltip']")
+        );
+        let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    }
+
+    #setStopped() {
         this.gui.dimensionSelectorBtn.enabled = true;
 
         this.gui.controls.flow.next.enabled = true;
@@ -77,8 +67,7 @@ class Controller
         this.#appState = "stopped";
     }
 
-    #setPaused()
-    {
+    #setPaused() {
         this.gui.dimensionSelectorBtn.enabled = false;
 
         this.gui.controls.flow.next.enabled = true;
@@ -96,8 +85,7 @@ class Controller
         this.#appState = "paused";
     }
 
-    #setRunning()
-    {
+    #setRunning() {
         this.gui.dimensionSelectorBtn.enabled = false;
 
         this.gui.controls.flow.next.enabled = false;
@@ -115,29 +103,25 @@ class Controller
         this.#appState = "running";
     }
 
-    #loadConfig()
-    {
-        if (this.gui.currentDimension == "d1") // 1D
-        {
-            this.#cellularAutomaton.neighborhoodSize = 
-            this.gui.neighborhood.getSize("d1");
+    #loadConfig() {
+        if (this.gui.currentDimension == "d1") {
+            // 1D
+            this.#cellularAutomaton.neighborhoodSize =
+                this.gui.neighborhood.getSize("d1");
 
             this.#cellularAutomaton.rules = this.gui.rules.ruleNumber;
 
-            this.#cellularAutomaton.neighborhoods = 
+            this.#cellularAutomaton.neighborhoods =
                 this.gui.initialState.neighborhoods;
 
             this.#cellularAutomaton.state = this.gui.initialState.state;
 
-
-            this.gui.canvas.clearBuffer();   
+            this.gui.canvas.clearBuffer();
             this.gui.canvas.bufferRow(this.#cellularAutomaton.state);
             this.gui.canvas.paintBuffer();
-        }
-        else // 2D
-        {
-            this.#cellularAutomaton2d.config = 
-            {
+        } // 2D
+        else {
+            this.#cellularAutomaton2d.config = {
                 neighborhoodSize: this.gui.neighborhood.getSize("d2"),
                 neighborhoodType: this.gui.neighborhood.getType("d2"),
                 neighborhoodAlignment: this.gui.neighborhood.getAlignment("d2"),
@@ -150,45 +134,39 @@ class Controller
         }
     }
 
-    #nextAutomatonState()
-    {
-        if (this.gui.currentDimension == "d1") // 1D
-        {
-            this.gui.canvas.bufferRow(
-                this.#cellularAutomaton.nextState());
+    #nextAutomatonState() {
+        if (this.gui.currentDimension == "d1") {
+            // 1D
+            this.gui.canvas.bufferRow(this.#cellularAutomaton.nextState());
             this.gui.canvas.paintBuffer();
-        }
-        else // 2D
-        {
+        } // 2D
+        else {
             this.gui.canvas.paintCells(
-                this.#cellularAutomaton2d.nextState(true));
+                this.#cellularAutomaton2d.nextState(true)
+            );
         }
     }
 
-    #runAutomaton() 
-    {
+    #runAutomaton() {
         this.#intervalId = setInterval(
-            () => this.#nextAutomatonState(), this.gui.controls.speed.value);
+            () => this.#nextAutomatonState(),
+            this.gui.controls.speed.value
+        );
     }
 
-    #stopAutomaton()
-    {
+    #stopAutomaton() {
         clearInterval(this.#intervalId);
     }
 
-    #changeSpeed()
-    {
-        if (this.#appState == "running") 
-        {
+    #changeSpeed() {
+        if (this.#appState == "running") {
             this.#stopBtnFunc();
-            this.#runBtnFunc(); 
+            this.#runBtnFunc();
         }
     }
 
-    #nextBtnFunc()
-    {
-        switch (this.#appState)
-        {
+    #nextBtnFunc() {
+        switch (this.#appState) {
             case "stopped":
                 this.#loadConfig();
                 this.#setPaused();
@@ -200,10 +178,8 @@ class Controller
         }
     }
 
-    #runBtnFunc()
-    {
-        switch (this.#appState)
-        {
+    #runBtnFunc() {
+        switch (this.#appState) {
             case "stopped":
                 this.#loadConfig();
                 this.#runAutomaton();
@@ -219,10 +195,8 @@ class Controller
         }
     }
 
-    #pauseBtnFunc()
-    {
-        switch (this.#appState)
-        {
+    #pauseBtnFunc() {
+        switch (this.#appState) {
             case "running":
                 this.#stopAutomaton();
 
@@ -231,10 +205,8 @@ class Controller
         }
     }
 
-    #stopBtnFunc()
-    {
-        switch (this.#appState)
-        {
+    #stopBtnFunc() {
+        switch (this.#appState) {
             case "running":
                 this.#stopAutomaton();
 
@@ -243,10 +215,9 @@ class Controller
 
             case "paused":
                 this.#stopAutomaton();
-                
+
                 this.#setStopped();
                 break;
         }
     }
-
 }

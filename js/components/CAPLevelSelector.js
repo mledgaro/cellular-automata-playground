@@ -1,5 +1,4 @@
-class CAPLevelSelector
-{
+class CAPLevelSelector {
     #levels;
     #currIdx;
 
@@ -8,8 +7,7 @@ class CAPLevelSelector
     #increaseBtn;
     #progressCells;
 
-    constructor(containerId, levels, iconId, tooltipLabel)
-    {
+    constructor(containerId, levels, iconId, tooltipLabel) {
         this.#levels = levels;
 
         this.#element = $(`\
@@ -24,28 +22,33 @@ class CAPLevelSelector
             </div>\
         `);
 
-        this.#decreaseBtn = $("\
+        this.#decreaseBtn = $(
+            "\
             <button type='button' class='btn cap-btn'>\
                 <i class='fa-minus fa-solid fa-lg'></i>\
             </button>\
-        ");
-        this.#decreaseBtn.click(() => this.level = this.#currIdx - 1);
+        "
+        );
+        this.#decreaseBtn.click(() => (this.level = this.#currIdx - 1));
 
-        this.#increaseBtn = $("\
+        this.#increaseBtn = $(
+            "\
             <button type='button' class='btn cap-btn'>\
                 <i class='fa-plus fa-solid fa-lg'></i>\
             </button>\
-        ");
-        this.#increaseBtn.click(() => this.level = this.#currIdx + 1);
-
+        "
+        );
+        this.#increaseBtn.click(() => (this.level = this.#currIdx + 1));
 
         this.#element.append(this.#decreaseBtn);
-        
-        for (let i = 0; i < this.#levels.length; i++)
-        {
+
+        for (let i = 0; i < this.#levels.length; i++) {
             this.#element.append(
-                $("<span class='input-group-text cap-progress-cell'>\
-                    </span>"));
+                $(
+                    "<span class='input-group-text cap-progress-cell'>\
+                    </span>"
+                )
+            );
         }
 
         this.#element.append(this.#increaseBtn);
@@ -57,28 +60,23 @@ class CAPLevelSelector
         $("#" + containerId).append(this.#element);
     }
 
-    get element()
-    {
+    get element() {
         return this.#element;
     }
 
-    get value()
-    {
+    get value() {
         return this.#levels[this.#currIdx];
     }
 
-    set decreaseBtnOnClick(func)
-    {
+    set decreaseBtnOnClick(func) {
         this.#decreaseBtn.click(func);
     }
 
-    set increaseBtnOnClick(func)
-    {
+    set increaseBtnOnClick(func) {
         this.#increaseBtn.click(func);
     }
 
-    set level(idx)
-    {
+    set level(idx) {
         idx = Math.max(0, idx);
         idx = Math.min(idx, this.#levels.length - 1);
 
@@ -97,23 +95,19 @@ class CAPLevelSelector
         this.#decreaseBtn.removeAttr("disabled");
         this.#increaseBtn.removeAttr("disabled");
 
-        if (this.#currIdx <= 0)
-        {
+        if (this.#currIdx <= 0) {
             this.#decreaseBtn.attr("disabled", "true");
         }
 
-        if (this.#currIdx >= this.#levels.length - 1)
-        {
+        if (this.#currIdx >= this.#levels.length - 1) {
             this.#increaseBtn.attr("disabled", "true");
         }
     }
 
-    set enabled(bool)
-    {
+    set enabled(bool) {
         this.#decreaseBtn.removeAttr("disabled");
         this.#increaseBtn.removeAttr("disabled");
-        if (!bool)
-        {
+        if (!bool) {
             this.#decreaseBtn.attr("disabled", "true");
             this.#increaseBtn.attr("disabled", "true");
         }

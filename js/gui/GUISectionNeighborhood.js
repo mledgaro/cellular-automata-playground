@@ -1,17 +1,13 @@
-class GUISectionNeighborhood
-{
-
+class GUISectionNeighborhood {
     static IDS = {
         container: "section-neighborhood-container",
         class: "cap-section-neighborhood",
-        d1:
-        {
+        d1: {
             size: "neighborhood-size-input-1d",
             type: "neighborhood-type-selector-1d",
             alignment: "neighborhood-alignment-selector-1d",
         },
-        d2:
-        {
+        d2: {
             size: "neighborhood-size-input-2d",
             type: "neighborhood-type-selector-2d",
             alignment: "neighborhood-alignment-selector-2d",
@@ -22,24 +18,20 @@ class GUISectionNeighborhood
     d1;
     d2;
 
-    constructor()
-    {
+    constructor() {
         this.container = $("#" + GUISectionNeighborhood.IDS.container);
 
-        this.d1 =
-        {
+        this.d1 = {
             size: $("#" + GUISectionNeighborhood.IDS.d1.size),
             type: $("#" + GUISectionNeighborhood.IDS.d1.type),
             alignment: $("#" + GUISectionNeighborhood.IDS.d1.alignment),
         };
 
-        this.d2 =
-        {
+        this.d2 = {
             size: $("#" + GUISectionNeighborhood.IDS.d2.size),
             type: $("#" + GUISectionNeighborhood.IDS.d2.type),
             alignment: $("#" + GUISectionNeighborhood.IDS.d2.alignment),
         };
-
 
         this.d1.size.val(3);
         this.d1.size.change(() => this.enableAlignment1D());
@@ -51,7 +43,6 @@ class GUISectionNeighborhood
 
         this.enableAlignment1D();
 
-
         this.d2.size.val(3);
         this.d2.size.change(() => this.enableAlignment2D());
 
@@ -62,52 +53,43 @@ class GUISectionNeighborhood
         this.enableAlignment2D();
     }
 
-
-    getSize(dim)
-    {
+    getSize(dim) {
         return Number(this[dim].size.val());
     }
 
-    getType(dim)
-    {
+    getType(dim) {
         return this[dim].type.val();
     }
 
-    getAlignment(dim)
-    {
+    getAlignment(dim) {
         return this[dim].alignment.val();
     }
 
-    setSizeEnabled(dim, bool)
-    {
+    setSizeEnabled(dim, bool) {
         GUI.setEnabled(this[dim].size, bool);
     }
 
-    setTypeEnabled(dim, bool)
-    {
+    setTypeEnabled(dim, bool) {
         GUI.setEnabled(this[dim].type, bool);
     }
 
-    setAlignmentEnabled(dim, bool)
-    {
+    setAlignmentEnabled(dim, bool) {
         GUI.setEnabled(this[dim].alignment, bool);
     }
 
-    enableAlignment1D()
-    {
-        this.setAlignmentEnabled("d1", 
-            this.getSize("d1") % 2 == 0 && this.getType("d1") == "insitu");
+    enableAlignment1D() {
+        this.setAlignmentEnabled(
+            "d1",
+            this.getSize("d1") % 2 == 0 && this.getType("d1") == "insitu"
+        );
     }
 
-    enableAlignment2D()
-    {
+    enableAlignment2D() {
         this.setAlignmentEnabled("d2", this.getSize("d2") % 2 == 0);
     }
 
-    enableAlignment(dim)
-    {
-        switch (dim)
-        {
+    enableAlignment(dim) {
+        switch (dim) {
             case "d1":
                 this.enableAlignment1D();
                 break;
@@ -118,14 +100,11 @@ class GUISectionNeighborhood
         }
     }
 
-    get maxRuleNumber()
-    {
+    get maxRuleNumber() {
         return Math.pow(2, Math.pow(2, this.getSize("d1"))) - 1;
     }
 
-
-    set enabled(bool)
-    {
+    set enabled(bool) {
         GUI.setEnabled($("." + GUISectionNeighborhood.IDS.class), bool);
     }
 }

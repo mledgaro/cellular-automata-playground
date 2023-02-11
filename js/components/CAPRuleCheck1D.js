@@ -1,13 +1,12 @@
-class CAPRuleCheck1D extends CAPCheck
-{
+class CAPRuleCheck1D extends CAPCheck {
     #element;
 
-    constructor(id, binarySize) 
-    {
+    constructor(id, binarySize) {
         super();
 
-        let binLabel = 
-            ("0".repeat(binarySize) + id.toString(2)).slice(-binarySize);
+        let binLabel = ("0".repeat(binarySize) + id.toString(2)).slice(
+            -binarySize
+        );
 
         this.#element = $(`\
             <div class='col-3 my-1'>\
@@ -27,10 +26,7 @@ class CAPRuleCheck1D extends CAPCheck
         this.#element.find("span:first").after(super.element);
     }
 
-    get element() 
-    {
+    get element() {
         return this.#element;
     }
-
-    
 }
