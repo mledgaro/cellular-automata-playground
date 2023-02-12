@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 
-<html  lang="es">
+<html lang="en">
 
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#000000" />
+    <meta name="description"
+        content="Web site created using create-react-app" />
 
     <title>Cellular Automata</title>
 
     <head>
+
+        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
         <!-- JQuery -->
         <script src="libs/jquery-3.6.0.min.js"></script>
@@ -20,32 +27,32 @@
         <link href="libs/fontawesome/css/all.css" rel="stylesheet">
 
         <!-- Styles -->
-        <link href="css/style.css" rel="stylesheet">
+        <link href="../src/css/style.css" rel="stylesheet">
 
         <!-- Scripts -->
-        <script src="js/components/CAPButton.js"></script>
-        <script src="js/components/CAPButtonGroupSelector.js"></script>
-        <script src="js/components/CAPCanvas.js"></script>
-        <script src="js/components/CAPCellsState.js"></script>
-        <script src="js/components/CAPLevelSelector.js"></script>
-        <script src="js/components/CAPCellButton.js"></script>
-        <script src="js/components/CAPToggleButton.js"></script>
-        <script src="js/components/CAPCheck.js"></script>
-        <script src="js/components/CAPRuleCheck1D.js"></script>
-        <script src="js/components/CAPRulesChecker1D.js"></script>
-        <script src="js/components/CAPRuleCheck2D.js"></script>
-        <script src="js/components/CAPRulesChecker2D.js"></script>
+        <script src="../src/js/components/CAPButton.js"></script>
+        <script src="../src/js/components/CAPButtonGroupSelector.js"></script>
+        <script src="../src/js/components/CAPCanvas.js"></script>
+        <script src="../src/js/components/CAPCellsState.js"></script>
+        <script src="../src/js/components/CAPLevelSelector.js"></script>
+        <script src="../src/js/components/CAPCellButton.js"></script>
+        <script src="../src/js/components/CAPToggleButton.js"></script>
+        <script src="../src/js/components/CAPCheck.js"></script>
+        <script src="../src/js/components/CAPRuleCheck1D.js"></script>
+        <script src="../src/js/components/CAPRulesChecker1D.js"></script>
+        <script src="../src/js/components/CAPRuleCheck2D.js"></script>
+        <script src="../src/js/components/CAPRulesChecker2D.js"></script>
 
-        <script src="js/gui/GUIControls.js"></script>
-        <script src="js/gui/GUISectionNeighborhood.js"></script>
-        <script src="js/gui/GUISectionRules.js"></script>
-        <script src="js/gui/GUISectionInitialState.js"></script>
-        <script src="js/gui/GUI.js"></script>
+        <script src="../src/js/gui/GUIControls.js"></script>
+        <script src="../src/js/gui/GUISectionNeighborhood.js"></script>
+        <script src="../src/js/gui/GUISectionRules.js"></script>
+        <script src="../src/js/gui/GUISectionInitialState.js"></script>
+        <script src="../src/js/gui/GUI.js"></script>
 
-        <script src="js/models/CellularAutomaton.js"></script>
-        <script src="js/models/CellularAutomaton2D.js"></script>
+        <script src="../src/js/models/CellularAutomaton.js"></script>
+        <script src="../src/js/models/CellularAutomaton2D.js"></script>
 
-        <script src="js/Controller.js"></script>
+        <script src="../src/js/Controller.js"></script>
 
         <script>
             let CONTROLLER;
@@ -59,6 +66,9 @@
     </head>
 
     <body class="bg-secondary text-white">
+
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+
     <div class="container-fluid">
 
         <!-- Title -->
@@ -80,12 +90,10 @@
             </div>
         </div>
 
-
         <!-- Cells canvas -->
         <div class="row mt-4 mb-0" id="canvas-container-1d" style="margin:auto;">
             <!-- <canvas class="p-0" id="cells-canvas"></canvas> -->
         </div>
-
 
         <!-- Controls -->
         <div class="row mt-0">
@@ -136,10 +144,8 @@
 
         </div>
 
-
         <!-- Section selector -->
         <div class="mt-5 mb-3" id="section-selector-container"></div>
-
 
         <!-- Neighborhood -->
         <div class="row cap-section" id="section-neighborhood-container">
@@ -240,7 +246,6 @@
 
         </div>
 
-
         <!-- Rules -->
         <div class="cap-section" id="section-rules-container">
 
@@ -300,7 +305,6 @@
 
         </div>
 
-
         <!-- Initial state -->
         <div class="cap-section" id="section-initial-state">
 
@@ -344,7 +348,6 @@
 
         </div>
 
-
         <!-- Footer -->
         <div id="footer" class="mt-5 mb-3">
             Universidad Nacional Autónoma de México - Facultad de Ciencias
@@ -355,7 +358,6 @@
             <br>
             mledgaro@ciencias.unam.mx
         </div>
-
 
     </div>
     </body>
