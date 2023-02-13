@@ -1,9 +1,12 @@
 //
 
-import "./css/style.css"
+import "./css/style.css";
 
 import ComponentsEG from "./ComponentsEG";
-
+import Title from "./sections/Title";
+import Controls from "./sections/Controls";
+import Settings from "./sections/Settings";
+import Footer from "./sections/Footer";
 
 function App() {
     return (
@@ -23,8 +26,12 @@ function App() {
                 </a>
             </header> */}
 
-            <ComponentsEG />
+            {/* <ComponentsEG /> */}
 
+            <Title />
+            <Controls />
+            <Settings />
+            <Footer />
         </div>
     );
 }
