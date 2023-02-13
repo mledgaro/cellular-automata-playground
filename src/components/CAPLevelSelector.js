@@ -1,0 +1,67 @@
+//
+
+import { useState } from "react";
+import FAIcon from "./FAIcon";
+
+function CAPLevelSelector(props) {
+    const [level, setLevel] = useState(0);
+
+    const levelDown = () => setLevel(level == 0 ? 0 : level - 1);
+    const levelUp = () =>
+        setLevel(level == props.numLevels ? props.numLevels : level + 1);
+
+    let highLevels = [];
+    let lowLevels = [];
+
+    for (let i = 0; i < level; i++) {
+        highLevels.push(
+            <span className="input-group-text cap-progress-cell cap-cell-on"></span>
+        );
+    }
+
+    for (let i = 0; i < props.numLevels - level; i++) {
+        lowLevels.push(
+            <span className="input-group-text cap-progress-cell"></span>
+        );
+    }
+
+    return (
+        <div
+            className="input-group
+                        d-flex justify-content-center"
+        >
+            <span
+                className="input-group-text cap-text-label"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                title={props.tooltipLabel}
+            >
+                <FAIcon iconId={props.iconId} iconStyle="solid" iconSize="lg" />
+            </span>
+
+            <button
+                type="button"
+                className="btn cap-btn"
+                onClick={levelDown}
+                disabled={level == 0}
+            >
+                <FAIcon iconId="minus" iconStyle="solid" iconSize="lg" />
+            </button>
+
+            {highLevels}
+
+            {lowLevels}
+
+            <button
+                type="button"
+                className="btn cap-btn"
+                onClick={levelUp}
+                disabled={level == props.numLevels}
+            >
+                <FAIcon iconId="plus" iconStyle="solid" iconSize="lg" />
+            </button>
+        </div>
+    );
+}
+
+export default CAPLevelSelector;

@@ -1,0 +1,2140 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        <meta
+            name="description"
+            content="Web site created using create-react-app"
+        />
+
+        <title>Cellular Automata</title>
+
+        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+        <!-- JQuery -->
+        <script src="libs/jquery-3.6.0.min.js"></script>
+
+        <!-- Bootstrap 5 -->
+        <link href="libs/bootstrap/bootstrap.css" rel="stylesheet" />
+        <script src="libs/bootstrap/bootstrap.bundle.js"></script>
+
+        <!-- Font Awesome Icons -->
+        <link href="libs/fontawesome/css/all.css" rel="stylesheet" />
+
+        <!-- Styles -->
+        <link href="../src/css/style.css" rel="stylesheet" />
+
+        <!-- Scripts -->
+        <script src="../src/js/components/CAPButton.js"></script>
+        <script src="../src/js/components/CAPButtonGroupSelector.js"></script>
+        <script src="../src/js/components/CAPCanvas.js"></script>
+        <script src="../src/js/components/CAPCellsState.js"></script>
+        <script src="../src/js/components/CAPLevelSelector.js"></script>
+        <script src="../src/js/components/CAPCellButton.js"></script>
+        <script src="../src/js/components/CAPToggleButton.js"></script>
+        <script src="../src/js/components/CAPCheck.js"></script>
+        <script src="../src/js/components/CAPRuleCheck1D.js"></script>
+        <script src="../src/js/components/CAPRulesChecker1D.js"></script>
+        <script src="../src/js/components/CAPRuleCheck2D.js"></script>
+        <script src="../src/js/components/CAPRulesChecker2D.js"></script>
+
+        <script src="../src/js/gui/GUIControls.js"></script>
+        <script src="../src/js/gui/GUISectionNeighborhood.js"></script>
+        <script src="../src/js/gui/GUISectionRules.js"></script>
+        <script src="../src/js/gui/GUISectionInitialState.js"></script>
+        <script src="../src/js/gui/GUI.js"></script>
+
+        <script src="../src/js/models/CellularAutomaton.js"></script>
+        <script src="../src/js/models/CellularAutomaton2D.js"></script>
+
+        <script src="../src/js/Controller.js"></script>
+
+        <script>
+            let CONTROLLER;
+
+            $(document).ready(function () {
+                CONTROLLER = new Controller();
+            });
+        </script>
+    </head>
+
+    <body class="bg-secondary text-white">
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+
+        <div class="container-fluid">
+            <!-- Title -->
+            <div class="row mt-3">
+                <div
+                    class="input-group input-group-lg d-flex justify-content-center"
+                >
+                    <button
+                        id="dimension-selector-btn"
+                        class="pe-0 btn cap-btn"
+                        type="button"
+                    >
+                        <i class="fa-1 fa-solid fa-2xl" style=""></i
+                        ><i
+                            class="fa-2 fa-solid fa-2xl"
+                            style="display: none"
+                        ></i>
+                    </button>
+
+                    <span
+                        class="input-group-text ps-0 bg-warning border border-warning"
+                    >
+                        <i class="fa-d fa-solid fa-2xl"></i>
+                    </span>
+
+                    <span
+                        class="input-group-text cap-text-label"
+                        id="title-page"
+                    >
+                        Cellular Automata
+                    </span>
+                </div>
+            </div>
+
+            <!-- Cells canvas -->
+            <div
+                class="row mt-4 mb-0"
+                id="canvas-container-1d"
+                style="margin: auto; width: 95vw; height: 70vh"
+            >
+                <!-- <canvas class="p-0" id="cells-canvas"></canvas> -->
+                <canvas class="p-0" width="1297" height="444"></canvas>
+            </div>
+
+            <!-- Controls -->
+            <div class="row mt-0">
+
+                <!-- Flow -->
+                <div class="col-lg my-2">
+                    <div
+                        class="input-group d-flex justify-content-center"
+                        id="controls-flow-container"
+                    >
+                        <!-- Next -->
+                        <button
+                            id="next-control-btn"
+                            type="button"
+                            title=""
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            class="btn cap-btn"
+                            data-bs-original-title="Next"
+                            aria-label="Next"
+                        >
+                            <i class="fa-forward-step fa-solid fa-lg"></i>
+                        </button>
+
+                        <!-- Run -->
+                        <button
+                            id="run-control-btn"
+                            type="button"
+                            title=""
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            class="btn cap-btn"
+                            data-bs-original-title="Run"
+                            aria-label="Run"
+                        >
+                            <i class="fa-play fa-solid fa-lg"></i>
+                        </button>
+
+                        <!-- Pause -->
+                        <button
+                            id="pause-control-btn"
+                            type="button"
+                            title=""
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            class="btn cap-btn"
+                            data-bs-original-title="Pause"
+                            aria-label="Pause"
+                            disabled="disabled"
+                        >
+                            <i class="fa-pause fa-solid fa-lg"></i>
+                        </button>
+
+                        <!-- Stop -->
+                        <button
+                            id="stop-control-btn"
+                            type="button"
+                            title=""
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            class="btn cap-btn"
+                            data-bs-original-title="Stop"
+                            aria-label="Stop"
+                            disabled="disabled"
+                        >
+                            <i class="fa-stop fa-solid fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Canvas -->
+                <div class="col-lg my-2">
+                    <div
+                        class="input-group d-flex justify-content-center"
+                        id="controls-canvas-container"
+                    >
+                        <!-- Clear -->
+                        <button
+                            id="clear-controls-canvas-btn"
+                            type="button"
+                            title=""
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            class="btn cap-btn"
+                            data-bs-original-title="Clear"
+                            aria-label="Clear"
+                        >
+                            <i class="fa-broom fa-solid fa-lg"></i>
+                        </button>
+
+                        <!-- Screenshot -->
+                        <button
+                            id="screenshot-controls-canvas-btn"
+                            type="button"
+                            title=""
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            class="btn cap-btn"
+                            data-bs-original-title="Screenshot"
+                            aria-label="Screenshot"
+                        >
+                            <i class="fa-camera-retro fa-solid fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Speed -->
+                <div class="col-lg my-2" id="speed-level-container">
+                    <!-- JS LOAD -->
+                    <div class="input-group d-flex justify-content-center">
+                        <span
+                            class="input-group-text cap-text-label"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title=""
+                            data-bs-original-title="Speed"
+                        >
+                            <i class="fa-gauge-high fa-solid fa-lg"></i>
+                        </span>
+                        <button type="button" class="btn cap-btn">
+                            <i class="fa-minus fa-solid fa-lg"></i></button
+                        ><span
+                            class="input-group-text cap-progress-cell cap-cell-on"
+                        >
+                        </span
+                        ><span
+                            class="input-group-text cap-progress-cell cap-cell-on"
+                        >
+                        </span
+                        ><span
+                            class="input-group-text cap-progress-cell cap-cell-on"
+                        >
+                        </span
+                        ><span class="input-group-text cap-progress-cell">
+                        </span
+                        ><span class="input-group-text cap-progress-cell">
+                        </span
+                        ><button type="button" class="btn cap-btn">
+                            <i class="fa-plus fa-solid fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Zoom -->
+                <div class="col-lg my-2" id="zoom-level-container">
+                    <!-- JS Load -->
+                    <div class="input-group d-flex justify-content-center">
+                        <span
+                            class="input-group-text cap-text-label"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title=""
+                            data-bs-original-title="Zoom"
+                        >
+                            <i class="fa-magnifying-glass fa-solid fa-lg"></i>
+                        </span>
+                        <button type="button" class="btn cap-btn">
+                            <i class="fa-minus fa-solid fa-lg"></i></button
+                        ><span
+                            class="input-group-text cap-progress-cell cap-cell-on"
+                        >
+                        </span
+                        ><span
+                            class="input-group-text cap-progress-cell cap-cell-on"
+                        >
+                        </span
+                        ><span
+                            class="input-group-text cap-progress-cell cap-cell-on"
+                        >
+                        </span
+                        ><span class="input-group-text cap-progress-cell">
+                        </span
+                        ><span class="input-group-text cap-progress-cell">
+                        </span
+                        ><button type="button" class="btn cap-btn">
+                            <i class="fa-plus fa-solid fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Section selector -->
+            <div class="mt-5 mb-3" id="section-selector-container">
+                <div
+                    class="input-group input-group-lg d-flex justify-content-center"
+                >
+                    <button
+                        type="button"
+                        class="btn cap-btn-group-select cap-btn-group-select-active"
+                    >
+                        Neighborhood</button
+                    ><button type="button" class="btn cap-btn-group-select">
+                        Rules</button
+                    ><button type="button" class="btn cap-btn-group-select">
+                        Initial state
+                    </button>
+                </div>
+            </div>
+
+            <!-- Neighborhood -->
+            <div
+                class="row cap-section"
+                id="section-neighborhood-container"
+                style=""
+            >
+                <!-- Size -->
+                <div class="col-lg">
+                    <div
+                        class="input-group input-group-lg d-flex justify-content-center"
+                    >
+                        <span class="input-group-text cap-text-label">
+                            Size
+                        </span>
+
+                        <!-- 1D -->
+                        <input
+                            type="number"
+                            class="form-control rounded-end cap-input cap-1d-component cap-section-neighborhood"
+                            id="neighborhood-size-input-1d"
+                            value="3"
+                            min="1"
+                            max="8"
+                            step="1"
+                            style="max-width: 5rem"
+                        />
+
+                        <!-- 2D -->
+                        <input
+                            type="number"
+                            class="form-control rounded-end cap-input cap-2d-component cap-section-neighborhood"
+                            id="neighborhood-size-input-2d"
+                            value="3"
+                            min="1"
+                            max="8"
+                            step="1"
+                            style="max-width: 5rem; display: none"
+                        />
+                    </div>
+                </div>
+
+                <!-- Type -->
+                <div class="col-lg">
+                    <div
+                        class="input-group input-group-lg d-flex justify-content-center"
+                    >
+                        <span class="input-group-text cap-text-label">
+                            Type
+                        </span>
+
+                        <!-- 1D -->
+                        <select
+                            class="cap-1d-component rounded-end cap-input form-select cap-section-neighborhood"
+                            style="max-width: 10rem"
+                            id="neighborhood-type-selector-1d"
+                        >
+                            <option value="insitu" selected="">In situ</option>
+                            <option value="scattered">Scattered</option>
+                            <option value="grouped">Grouped</option>
+                        </select>
+
+                        <!-- 2D -->
+                        <select
+                            class="cap-2d-component rounded-end cap-input form-select cap-section-neighborhood"
+                            style="max-width: 12rem; display: none"
+                            id="neighborhood-type-selector-2d"
+                        >
+                            <option value="moore" selected="">Moore</option>
+                            <option value="vonneumann">Von Neumann</option>
+                            <option value="diagonal">Diagonal</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Alignment -->
+                <div class="col-lg">
+                    <div
+                        class="input-group input-group-lg d-flex justify-content-center"
+                    >
+                        <span class="input-group-text cap-text-label">
+                            Alignment
+                        </span>
+
+                        <!-- 1D -->
+                        <select
+                            class="cap-input rounded-end cap-1d-component form-select cap-section-neighborhood"
+                            style="max-width: 8rem"
+                            id="neighborhood-alignment-selector-1d"
+                        >
+                            <option value="left" selected="">Left</option>
+                            <option value="right">Right</option>
+                        </select>
+
+                        <!-- 2D -->
+                        <select
+                            class="cap-input rounded-end cap-2d-component form-select cap-section-neighborhood"
+                            style="max-width: 12rem; display: none"
+                            id="neighborhood-alignment-selector-2d"
+                        >
+                            <option value="topleft" selected="">
+                                Top Left
+                            </option>
+                            <option value="topright">Top Right</option>
+                            <option value="bottomleft">Bottom Left</option>
+                            <option value="bottomright">Bottom Right</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rules -->
+            <div
+                class="cap-section"
+                id="section-rules-container"
+                style="display: none"
+            >
+                <!-- 1D -->
+                <div class="cap-1d-component">
+                    <div class="row">
+                        <!-- Rule number -->
+                        <div class="col-lg">
+                            <div
+                                class="input-group input-group-lg d-flex justify-content-center"
+                            >
+                                <span class="input-group-text cap-text-label">
+                                    Rule number
+                                </span>
+
+                                <input
+                                    type="number"
+                                    class="form-control cap-input cap-section-rules"
+                                    value="90"
+                                    min="0"
+                                    step="1"
+                                    style="max-width: 10rem"
+                                    id="rules-rule-number"
+                                    max="255"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="col-lg">
+                            <div
+                                class="input-group input-group-lg d-flex justify-content-center"
+                            >
+                                <!-- Random -->
+                                <button
+                                    class="cap-section-rules btn cap-btn"
+                                    id="rules-random-rule-btn"
+                                    type="button"
+                                    title=""
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom"
+                                    data-bs-original-title="Random"
+                                    aria-label="Random"
+                                >
+                                    <i class="fa-shuffle fa-solid fa-lg"></i>
+                                </button>
+
+                                <!-- Uncheck all -->
+                                <button
+                                    class="cap-section-rules btn cap-btn"
+                                    id="rules-uncheck-all-rules-btn"
+                                    type="button"
+                                    title=""
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom"
+                                    data-bs-original-title="Uncheck all"
+                                    aria-label="Uncheck all"
+                                >
+                                    <i class="fa-square fa-solid fa-lg"></i>
+                                </button>
+
+                                <!-- Check all -->
+                                <button
+                                    class="cap-section-rules btn cap-btn"
+                                    id="rules-check-all-rules-btn"
+                                    type="button"
+                                    title=""
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom"
+                                    data-bs-original-title="Check all"
+                                    aria-label="Check all"
+                                >
+                                    <i
+                                        class="fa-square-check fa-solid fa-lg"
+                                    ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3" id="rules-atomic-rules-cont">
+                        <div class="col-3 my-1">
+                            <div
+                                class="input-group d-flex justify-content-center"
+                            >
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 2rem"
+                                >
+                                    0 </span
+                                ><button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 3rem"
+                                >
+                                    000
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-3 my-1">
+                            <div
+                                class="input-group d-flex justify-content-center"
+                            >
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 2rem"
+                                >
+                                    1 </span
+                                ><button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style=""
+                                    ></i>
+                                </button>
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 3rem"
+                                >
+                                    001
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-3 my-1">
+                            <div
+                                class="input-group d-flex justify-content-center"
+                            >
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 2rem"
+                                >
+                                    2 </span
+                                ><button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 3rem"
+                                >
+                                    010
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-3 my-1">
+                            <div
+                                class="input-group d-flex justify-content-center"
+                            >
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 2rem"
+                                >
+                                    3 </span
+                                ><button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style=""
+                                    ></i>
+                                </button>
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 3rem"
+                                >
+                                    011
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-3 my-1">
+                            <div
+                                class="input-group d-flex justify-content-center"
+                            >
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 2rem"
+                                >
+                                    4 </span
+                                ><button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style=""
+                                    ></i>
+                                </button>
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 3rem"
+                                >
+                                    100
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-3 my-1">
+                            <div
+                                class="input-group d-flex justify-content-center"
+                            >
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 2rem"
+                                >
+                                    5 </span
+                                ><button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 3rem"
+                                >
+                                    101
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-3 my-1">
+                            <div
+                                class="input-group d-flex justify-content-center"
+                            >
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 2rem"
+                                >
+                                    6 </span
+                                ><button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style=""
+                                    ></i>
+                                </button>
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 3rem"
+                                >
+                                    110
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-3 my-1">
+                            <div
+                                class="input-group d-flex justify-content-center"
+                            >
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 2rem"
+                                >
+                                    7 </span
+                                ><button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                                <span
+                                    class="input-group-text cap-text-label"
+                                    style="min-width: 3rem"
+                                >
+                                    111
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2D -->
+                <div
+                    class="row cap-2d-component"
+                    id="rules-2d-cont"
+                    style="display: none"
+                >
+                    <div class="col d-flex justify-content-center m-1">
+                        <div
+                            class="card bg-warning border-0"
+                            style="width: 3.5em"
+                        >
+                            <div class="card-header bg-dark cap-text-label p-1">
+                                0
+                            </div>
+                            <div class="card-body p-0 mx-auto text-dark">
+                                <button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square-minus fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col d-flex justify-content-center m-1">
+                        <div
+                            class="card bg-warning border-0"
+                            style="width: 3.5em"
+                        >
+                            <div class="card-header bg-dark cap-text-label p-1">
+                                1
+                            </div>
+                            <div class="card-body p-0 mx-auto text-dark">
+                                <button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square-minus fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col d-flex justify-content-center m-1">
+                        <div
+                            class="card bg-warning border-0"
+                            style="width: 3.5em"
+                        >
+                            <div class="card-header bg-dark cap-text-label p-1">
+                                2
+                            </div>
+                            <div class="card-body p-0 mx-auto text-dark">
+                                <button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square-minus fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col d-flex justify-content-center m-1">
+                        <div
+                            class="card bg-warning border-0"
+                            style="width: 3.5em"
+                        >
+                            <div class="card-header bg-dark cap-text-label p-1">
+                                3
+                            </div>
+                            <div class="card-body p-0 mx-auto text-dark">
+                                <button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square-minus fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style=""
+                                    ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col d-flex justify-content-center m-1">
+                        <div
+                            class="card bg-warning border-0"
+                            style="width: 3.5em"
+                        >
+                            <div class="card-header bg-dark cap-text-label p-1">
+                                4
+                            </div>
+                            <div class="card-body p-0 mx-auto text-dark">
+                                <button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square-minus fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col d-flex justify-content-center m-1">
+                        <div
+                            class="card bg-warning border-0"
+                            style="width: 3.5em"
+                        >
+                            <div class="card-header bg-dark cap-text-label p-1">
+                                5
+                            </div>
+                            <div class="card-body p-0 mx-auto text-dark">
+                                <button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square-minus fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col d-flex justify-content-center m-1">
+                        <div
+                            class="card bg-warning border-0"
+                            style="width: 3.5em"
+                        >
+                            <div class="card-header bg-dark cap-text-label p-1">
+                                6
+                            </div>
+                            <div class="card-body p-0 mx-auto text-dark">
+                                <button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square-minus fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col d-flex justify-content-center m-1">
+                        <div
+                            class="card bg-warning border-0"
+                            style="width: 3.5em"
+                        >
+                            <div class="card-header bg-dark cap-text-label p-1">
+                                7
+                            </div>
+                            <div class="card-body p-0 mx-auto text-dark">
+                                <button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square-minus fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col d-flex justify-content-center m-1">
+                        <div
+                            class="card bg-warning border-0"
+                            style="width: 3.5em"
+                        >
+                            <div class="card-header bg-dark cap-text-label p-1">
+                                8
+                            </div>
+                            <div class="card-body p-0 mx-auto text-dark">
+                                <button type="button" class="btn cap-btn">
+                                    <i
+                                        class="fa-square-minus fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i
+                                    ><i
+                                        class="fa-square fa-solid fa-xl"
+                                        style=""
+                                    ></i
+                                    ><i
+                                        class="fa-square-check fa-solid fa-xl"
+                                        style="display: none"
+                                    ></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Initial state -->
+            <div
+                class="cap-section"
+                id="section-initial-state"
+                style="display: none"
+            >
+                <!-- Buttons -->
+                <div class="row mb-2">
+                    <div class="col-lg">
+                        <div
+                            class="input-group input-group-lg d-flex justify-content-center"
+                        >
+                            <!-- Clear -->
+                            <button
+                                class="cap-section-initial-state btn cap-btn"
+                                id="initial-state-clear-btn"
+                                type="button"
+                                title=""
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-original-title="Clear"
+                                aria-label="Clear"
+                            >
+                                <i class="fa-broom fa-solid fa-lg"></i>
+                            </button>
+
+                            <!-- Random density -->
+                            <input
+                                type="number"
+                                class="form-control cap-section-initial-state"
+                                value="0,3"
+                                min="0,1"
+                                max="1"
+                                step="0.1"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                title=""
+                                style="max-width: 6rem"
+                                id="initial-state-random-density"
+                                data-bs-original-title="Density"
+                                aria-label="Density"
+                            />
+
+                            <!-- Random -->
+                            <button
+                                class="cap-section-initial-state btn cap-btn"
+                                id="initial-state-random-btn"
+                                type="button"
+                                title=""
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-original-title="Random"
+                                aria-label="Random"
+                            >
+                                <i class="fa-shuffle fa-solid fa-lg"></i>
+                            </button>
+
+                            <!-- Neighborhoods -->
+                            <button
+                                class="cap-section-initial-state btn cap-btn"
+                                id="initial-state-neighborhoods-btn"
+                                type="button"
+                                title=""
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-original-title="Neighborhoods"
+                                aria-label="Neighborhoods"
+                            >
+                                <i class="fa-circle-nodes fa-solid fa-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Initial state cells -->
+                <div
+                    class="row px-5"
+                    style="text-align: center"
+                    id="initial-state-cells"
+                >
+                    <button type="button" class="cap-cell-btn cap-cell-btn-off">
+                        0</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        1</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        2</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        3</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        4</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        5</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        6</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        7</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        8</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        9</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        10</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        11</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        12</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        13</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        14</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        15</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        16</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        17</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        18</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        19</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        20</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        21</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        22</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        23</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        24</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        25</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        26</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        27</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        28</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        29</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        30</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        31</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        32</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        33</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        34</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        35</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        36</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        37</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        38</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        39</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        40</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        41</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        42</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        43</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        44</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        45</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        46</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        47</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        48</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        49</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        50</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        51</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        52</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        53</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        54</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        55</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        56</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        57</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        58</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        59</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        60</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        61</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        62</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        63</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        64</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        65</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        66</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        67</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        68</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        69</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        70</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        71</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        72</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        73</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        74</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        75</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        76</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        77</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        78</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        79</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        80</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        81</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        82</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        83</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        84</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        85</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        86</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        87</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        88</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        89</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        90</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        91</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        92</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        93</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        94</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        95</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        96</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        97</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        98</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        99</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        100</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        101</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        102</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        103</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        104</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        105</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        106</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        107</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        108</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        109</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        110</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        111</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        112</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        113</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        114</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        115</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        116</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        117</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        118</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        119</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        120</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        121</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        122</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        123</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        124</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        125</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        126</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        127</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        128</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        129</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        130</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        131</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        132</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        133</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        134</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        135</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        136</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        137</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        138</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        139</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        140</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        141</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        142</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        143</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        144</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        145</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        146</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        147</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        148</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        149</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        150</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        151</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        152</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        153</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        154</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        155</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        156</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        157</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        158</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        159</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        160</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        161</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        162</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        163</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        164</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        165</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        166</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        167</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        168</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        169</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        170</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        171</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        172</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        173</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        174</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        175</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        176</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        177</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        178</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        179</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        180</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        181</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        182</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        183</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        184</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        185</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        186</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        187</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        188</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        189</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        190</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        191</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        192</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        193</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        194</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        195</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        196</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        197</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        198</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        199</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        200</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        201</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        202</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        203</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        204</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        205</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        206</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        207</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        208</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        209</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        210</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        211</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        212</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        213</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        214</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        215</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        216</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        217</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        218</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        219</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        220</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        221</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        222</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        223</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        224</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        225</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        226</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        227</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        228</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        229</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        230</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        231</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        232</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        233</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        234</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        235</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        236</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        237</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        238</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        239</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        240</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        241</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        242</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        243</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        244</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        245</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        246</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        247</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        248</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        249</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        250</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        251</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        252</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        253</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        254</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        255</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        256</button
+                    ><button type="button" class="cap-cell-btn cap-cell-btn-on">
+                        257</button
+                    ><button
+                        type="button"
+                        class="cap-cell-btn cap-cell-btn-off"
+                    >
+                        258
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div id="footer" class="mt-5 mb-3">
+                Universidad Nacional Autónoma de México - Facultad de Ciencias
+                <br />
+                Ciencias de la Computación - Vida Artificial 2022-2
+                <br />
+                Edgar Mendoza
+                <br />
+                mledgaro@ciencias.unam.mx
+            </div>
+        </div>
+    </body>
+</html>
