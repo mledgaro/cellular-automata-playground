@@ -6,7 +6,11 @@ import ComponentsEG from "./ComponentsEG";
 import Title from "./sections/Title";
 import Controls from "./sections/Controls";
 import Settings from "./sections/Settings";
+import Neighborhood from "./sections/Neighborhood";
 import Footer from "./sections/Footer";
+import Rules from "./sections/Rules";
+import InitialState from "./sections/InitialState";
+
 
 function App() {
     return (
@@ -31,6 +35,9 @@ function App() {
             <Title />
             <Controls />
             <Settings />
+            <Neighborhood />
+            <Rules />
+            <InitialState />
             <Footer />
         </div>
     );

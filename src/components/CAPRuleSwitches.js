@@ -10,35 +10,33 @@ export function CAPRuleSwitch1D(props) {
     ).slice(-props.labelWidth);
 
     return (
-        <div class="col-3 my-1">
-            <div class="input-group d-flex justify-content-center">
-                <span
-                    class="input-group-text cap-text-label"
-                    style={{ minWidth: "2rem" }}
-                >
-                    {props.index}
-                </span>
+        <div class="input-group d-flex justify-content-center">
+            <span
+                class="input-group-text cap-text-label"
+                style={{ minWidth: "2rem" }}
+            >
+                {props.index}
+            </span>
 
-                <CAPStateButton
-                    icons={["square", "square-check"]}
-                    iconStyle="solid"
-                    iconSize="xl"
-                />
+            <CAPStateButton
+                icons={["square", "square-check"]}
+                iconStyle="solid"
+                iconSize="xl"
+            />
 
-                <span
-                    class="input-group-text cap-text-label"
-                    style={{ minWidth: "3rem" }}
-                >
-                    {binLabel}
-                </span>
-            </div>
+            <span
+                class="input-group-text cap-text-label"
+                style={{ minWidth: "3rem" }}
+            >
+                {binLabel}
+            </span>
         </div>
     );
 }
 
 export function CAPRuleSwitch2D(props) {
     return (
-        <div class="col d-flex justify-content-center m-1">
+        <div class="d-flex justify-content-center">
             <div class="card bg-warning border-0" style={{ width: "3.5rem" }}>
                 <div class="card-header bg-dark cap-text-label p-1">
                     {props.index}

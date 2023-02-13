@@ -6,11 +6,13 @@ import CAPStateButton from "./components/CAPStateButton";
 import CAPCellButton from "./components/CAPCellButton";
 import CAPLevelSelector from "./components/CAPLevelSelector";
 import { CAPRuleSwitch1D, CAPRuleSwitch2D } from "./components/CAPRuleSwitches";
+import CAPNumberInput from "./components/CAPNumberInput";
+import CAPSelector from "./components/CAPSelector";
+
 
 function ComponentsEG() {
     return (
         <div>
-
             <h3>CAPButton</h3>
 
             <CAPButton
@@ -53,6 +55,18 @@ function ComponentsEG() {
             <h3>CAPRuleSwitch2D</h3>
 
             <CAPRuleSwitch2D index={0} />
+
+            <h3>CAPNumberInput</h3>
+
+            <CAPNumberInput label="Size" value={3} min={1} max={8} />
+
+            <h3>CAPSelector</h3>
+
+            <CAPSelector
+                label="Options"
+                maxWidth={10}
+                options={["Option A", "Option B", "Option C"]}
+            />
         </div>
     );
 }
