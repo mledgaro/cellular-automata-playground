@@ -6,20 +6,20 @@ import {
     CAPRuleSwitch2D,
 } from "../components/CAPRuleSwitches";
 
-function Rules(props) {
+export function Rules1D() {
     //
 
-    let d1Rules = [];
+    let rules = [];
 
     for (let i = 0; i < 8; i++) {
-        d1Rules.push(
+        rules.push(
             <div class="col-3 my-1">
                 <CAPRuleSwitch1D index={i} labelWidth={3} />
             </div>
         );
     }
 
-    const d1 = (
+    return (
         <div>
             <div className="row">
                 {/* <!-- Rule number --> */}
@@ -59,28 +59,23 @@ function Rules(props) {
                 </div>
             </div>
 
-            <div className="row mt-3">{d1Rules}</div>
+            <div className="row mt-3">{rules}</div>
         </div>
     );
+}
 
-    let d2Rules = [];
+export function Rules2D() {
+    //
+
+    let rules = [];
 
     for (let i = 0; i <= 8; i++) {
-        d1Rules.push(
+        rules.push(
             <div class="col m-1">
                 <CAPRuleSwitch2D index={i} />
             </div>
         );
     }
 
-    const d2 = <div className="row">{d2Rules}</div>;
-
-    return (
-        <div>
-            {d1}
-            {d2}
-        </div>
-    );
+    return <div className="row">{rules}</div>;
 }
-
-export default Rules;

@@ -1,17 +1,9 @@
 //
 
-import { useState } from "react";
-
 import FAIcon from "../components/FAIcon";
 
-function Title() {
+function Title(props) {
     //
-
-    const [icon, setIcon] = useState("1");
-
-    const changeIcon = () => {
-        setIcon(icon === "1" ? "2" : "1");
-    };
 
     return (
         <div class="row mt-3">
@@ -19,9 +11,9 @@ function Title() {
                 <button
                     type="button"
                     className="btn cap-btn"
-                    onClick={changeIcon}
+                    onClick={props.onClick}
                 >
-                    <FAIcon iconId={icon} iconStyle="solid" iconSize="2xl" />
+                    <FAIcon iconId={props.dimension} iconStyle="solid" iconSize="2xl" />
                     <FAIcon iconId="d" iconStyle="solid" iconSize="2xl" />
                 </button>
 

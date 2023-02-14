@@ -3,10 +3,8 @@
 import CAPNumberInput from "../components/CAPNumberInput";
 import CAPSelector from "../components/CAPSelector";
 
-function Neighborhood() {
-    //
-
-    const d1 = (
+export function Neighborhood1D() {
+    return (
         <div className="row">
             <div class="col-lg">
                 <CAPNumberInput label="Size" value={3} min={1} max={8} />
@@ -29,8 +27,10 @@ function Neighborhood() {
             </div>
         </div>
     );
+}
 
-    const d2 = (
+export function Neighborhood2D() {
+    return (
         <div className="row">
             <div class="col-lg">
                 <CAPNumberInput label="Size" value={3} min={1} max={8} />
@@ -58,13 +58,4 @@ function Neighborhood() {
             </div>
         </div>
     );
-
-    return (
-        <div>
-            {d1}
-            {d2}
-        </div>
-    );
 }
-
-export default Neighborhood;

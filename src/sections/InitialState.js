@@ -3,10 +3,12 @@
 import CAPButton from "../components/CAPButton";
 import CAPCellButton from "../components/CAPCellButton";
 
-function InitialState() {
+function InitialState(props) {
+    //
+
     let cells = [];
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < props.cellsNumber; i++) {
         cells.push(<CAPCellButton index={i} />);
     }
 
