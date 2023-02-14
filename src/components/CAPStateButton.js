@@ -7,21 +7,18 @@ function CAPStateButton(props) {
     //
     let lastState = props.icons.length - 1;
 
-    const [iconIdx, setIconIdx] = useState(0);
+    const [index, setIndex] = useState(0);
 
     const nextIndex = () => {
-        setIconIdx(iconIdx === lastState ? 0 : iconIdx + 1);
+        setIndex(index === lastState ? 0 : index + 1);
     };
 
-    let icon = props.icons[iconIdx];
+    let icon = props.icons[index];
+    let style = props.styles[index];
 
     return (
         <button type="button" className="btn cap-btn" onClick={nextIndex}>
-            <FAIcon
-                iconId={icon}
-                iconStyle={props.iconStyle}
-                iconSize={props.iconSize}
-            />
+            <FAIcon iconId={icon} iconStyle={style} iconSize={props.iconSize} />
         </button>
     );
 }

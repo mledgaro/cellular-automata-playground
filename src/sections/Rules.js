@@ -13,7 +13,7 @@ export function Rules1D() {
 
     for (let i = 0; i < 8; i++) {
         rules.push(
-            <div class="col-3 my-1">
+            <div className="col-3 my-1">
                 <CAPRuleSwitch1D index={i} labelWidth={3} />
             </div>
         );
@@ -34,27 +34,12 @@ export function Rules1D() {
 
                 {/* <!-- Buttons --> */}
                 <div className="col-lg">
-                    <div class="input-group input-group-lg d-flex justify-content-center">
-                        <CAPButton
-                            title="Random"
-                            label="Random"
-                            iconId="shuffle"
-                            iconSize="lg"
-                        />
+                    <div className="input-group input-group-lg d-flex justify-content-center">
+                        <CAPButton label="Random" iconId="shuffle" />
 
-                        <CAPButton
-                            title="Uncheck all"
-                            label="Uncheck all"
-                            iconId="square"
-                            iconSize="lg"
-                        />
+                        <CAPButton label="Uncheck all" iconId="square" />
 
-                        <CAPButton
-                            title="Check all"
-                            label="Check all"
-                            iconId="square-check"
-                            iconSize="lg"
-                        />
+                        <CAPButton label="Check all" iconId="square-check" />
                     </div>
                 </div>
             </div>
@@ -71,7 +56,7 @@ export function Rules2D() {
 
     for (let i = 0; i <= 8; i++) {
         rules.push(
-            <div class="col m-1">
+            <div className="col m-1">
                 <CAPRuleSwitch2D index={i} />
             </div>
         );

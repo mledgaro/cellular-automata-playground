@@ -5,67 +5,36 @@ import CAPLevelSelector from "../components/CAPLevelSelector";
 
 function Controls() {
     return (
-        <div class="row mt-0">
+        <div className="row mt-0">
             {/* <!-- Flow --> */}
-            <div class="col-lg my-2">
+            <div className="col-lg my-2">
                 <div
-                    class="input-group d-flex justify-content-center"
-                    id="controls-flow-container"
+                    className="input-group d-flex justify-content-center"
                 >
-                    <CAPButton
-                        title="Next"
-                        label="Next"
-                        iconId="forward-step"
-                        iconSize="lg"
-                    />
+                    <CAPButton label="Next" iconId="forward-step" />
 
-                    <CAPButton
-                        title="Run"
-                        label="Run"
-                        iconId="play"
-                        iconSize="lg"
-                    />
+                    <CAPButton label="Run" iconId="play" />
 
-                    <CAPButton
-                        title="Pause"
-                        label="Pause"
-                        iconId="pause"
-                        iconSize="lg"
-                    />
+                    <CAPButton label="Pause" iconId="pause" />
 
-                    <CAPButton
-                        title="Stop"
-                        label="Stop"
-                        iconId="stop"
-                        iconSize="lg"
-                    />
+                    <CAPButton label="Stop" iconId="stop" />
                 </div>
             </div>
 
             {/* <!-- Canvas --> */}
-            <div class="col-lg my-2">
+            <div className="col-lg my-2">
                 <div
-                    class="input-group d-flex justify-content-center"
+                    className="input-group d-flex justify-content-center"
                     id="controls-canvas-container"
                 >
-                    <CAPButton
-                        title="Clear"
-                        label="Clear"
-                        iconId="broom"
-                        iconSize="lg"
-                    />
+                    <CAPButton label="Clear" iconId="broom" />
 
-                    <CAPButton
-                        title="Screenshot"
-                        label="Screenshot"
-                        iconId="camera-retro"
-                        iconSize="lg"
-                    />
+                    <CAPButton label="Screenshot" iconId="camera-retro" />
                 </div>
             </div>
 
             {/* <!-- Speed --> */}
-            <div class="col-lg my-2" id="speed-level-container">
+            <div className="col-lg my-2" id="speed-level-container">
                 <CAPLevelSelector
                     numLevels={5}
                     tooltipLabels="Speed"
@@ -74,7 +43,7 @@ function Controls() {
             </div>
 
             {/* <!-- Zoom --> */}
-            <div class="col-lg my-2" id="zoom-level-container">
+            <div className="col-lg my-2" id="zoom-level-container">
                 <CAPLevelSelector
                     numLevels={5}
                     tooltipLabels="Zoom"

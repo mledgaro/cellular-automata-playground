@@ -1,7 +1,11 @@
 //
 
 function FAIcon(props) {
-    return <i className={`fa-${props.iconId} fa-${props.iconStyle} fa-${props.iconSize}`}></i>
+
+    let style = props.iconStyle == null ? "solid" : props.iconStyle;
+    let size = props.iconSize == null ? "lg" : props.iconSize;
+
+    return <i className={`fa-${props.iconId} fa-${style} fa-${size}`}></i>
 }
 
 export default FAIcon;

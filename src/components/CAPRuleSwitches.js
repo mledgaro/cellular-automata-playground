@@ -10,9 +10,9 @@ export function CAPRuleSwitch1D(props) {
     ).slice(-props.labelWidth);
 
     return (
-        <div class="input-group d-flex justify-content-center">
+        <div className="input-group d-flex justify-content-center">
             <span
-                class="input-group-text cap-text-label"
+                className="input-group-text cap-text-label"
                 style={{ minWidth: "2rem" }}
             >
                 {props.index}
@@ -20,12 +20,12 @@ export function CAPRuleSwitch1D(props) {
 
             <CAPStateButton
                 icons={["square", "square-check"]}
-                iconStyle="solid"
+                styles={["solid", "solid"]}
                 iconSize="xl"
             />
 
             <span
-                class="input-group-text cap-text-label"
+                className="input-group-text cap-text-label"
                 style={{ minWidth: "3rem" }}
             >
                 {binLabel}
@@ -36,16 +36,19 @@ export function CAPRuleSwitch1D(props) {
 
 export function CAPRuleSwitch2D(props) {
     return (
-        <div class="d-flex justify-content-center">
-            <div class="card bg-warning border-0" style={{ width: "3.5rem" }}>
-                <div class="card-header bg-dark cap-text-label p-1">
+        <div className="d-flex justify-content-center">
+            <div
+                className="card bg-warning border-0"
+                style={{ width: "3.5rem" }}
+            >
+                <div className="card-header bg-dark cap-text-label p-1">
                     {props.index}
                 </div>
 
-                <div class="card-body p-0 mx-auto text-dark">
+                <div className="card-body p-0 mx-auto text-dark">
                     <CAPStateButton
                         icons={["square-minus", "square", "square-check"]}
-                        iconStyle="solid"
+                        styles={["solid", "solid", "solid"]}
                         iconSize="xl"
                     />
                 </div>

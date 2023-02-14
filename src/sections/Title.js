@@ -6,18 +6,21 @@ function Title(props) {
     //
 
     return (
-        <div class="row mt-3">
-            <div class="input-group input-group-lg d-flex justify-content-center">
+        <div className="row mt-3">
+            <div className="input-group input-group-lg d-flex justify-content-center">
                 <button
                     type="button"
                     className="btn cap-btn"
                     onClick={props.onClick}
                 >
-                    <FAIcon iconId={props.dimension} iconStyle="solid" iconSize="2xl" />
-                    <FAIcon iconId="d" iconStyle="solid" iconSize="2xl" />
+                    <FAIcon iconId={props.dimension} iconSize="2xl" />
+                    <FAIcon iconId="d" iconSize="2xl" />
                 </button>
 
-                <span class="input-group-text cap-text-label" id="title-page">
+                <span
+                    className="input-group-text cap-text-label"
+                    id="title-page"
+                >
                     Cellular Automata
                 </span>
             </div>

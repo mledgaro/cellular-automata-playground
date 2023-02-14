@@ -36,7 +36,7 @@ function CAPLevelSelector(props) {
                 data-bs-placement="bottom"
                 title={props.tooltipLabel}
             >
-                <FAIcon iconId={props.iconId} iconStyle="solid" iconSize="lg" />
+                <FAIcon iconId={props.iconId} />
             </span>
 
             <button
@@ -45,7 +45,7 @@ function CAPLevelSelector(props) {
                 onClick={levelDown}
                 disabled={level == 0}
             >
-                <FAIcon iconId="minus" iconStyle="solid" iconSize="lg" />
+                <FAIcon iconId="minus" />
             </button>
 
             {highLevels}
@@ -58,7 +58,7 @@ function CAPLevelSelector(props) {
                 onClick={levelUp}
                 disabled={level == props.numLevels}
             >
-                <FAIcon iconId="plus" iconStyle="solid" iconSize="lg" />
+                <FAIcon iconId="plus" />
             </button>
         </div>
     );
