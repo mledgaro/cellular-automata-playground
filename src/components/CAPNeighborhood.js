@@ -1,6 +1,6 @@
 //
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import {
     CAPCellGroupInSitu,
@@ -8,36 +8,36 @@ import {
     CAPCellGroupScattered,
 } from "./CAPCellGroup";
 import CAPNumberInput from "./CAPNumberInput";
+import { NbhdContext } from "../sections/Neighborhood";
 
 export function CAPNeighborhood1D(props) {
     //
 
-    let [numCells, setNumCells] = useState(3);
-    let [mainCell, setMainCell] = useState(1);
+    const nbhdContext = useContext(NbhdContext);
 
     let cellGroup, updateNumCells;
 
     updateNumCells = (val) => {
-        setNumCells(val);
-        setMainCell(0);
+        nbhdContext.nbhdWidth.set(val);
+        nbhdContext.mainCell.set(0);
     };
 
     switch (props.type) {
         case "grouped":
             cellGroup = (
                 <CAPCellGroupGrouped
-                    numCells={numCells}
-                    selected={mainCell}
-                    setSelected={setMainCell}
+                    numCells={nbhdContext.nbhdWidth.get}
+                    selected={nbhdContext.mainCell.get}
+                    setSelected={nbhdContext.mainCell.set}
                 />
             );
             break;
         case "scattered":
             cellGroup = (
                 <CAPCellGroupScattered
-                    numCells={numCells}
-                    selected={mainCell}
-                    setSelected={setMainCell}
+                    numCells={nbhdContext.nbhdWidth.get}
+                    selected={nbhdContext.mainCell.get}
+                    setSelected={nbhdContext.mainCell.set}
                 />
             );
 
@@ -45,14 +45,14 @@ export function CAPNeighborhood1D(props) {
         default: /*"insitu"*/
             cellGroup = (
                 <CAPCellGroupInSitu
-                    numCells={numCells}
-                    selected={mainCell}
-                    setSelected={setMainCell}
+                    numCells={nbhdContext.nbhdWidth.get}
+                    selected={nbhdContext.mainCell.get}
+                    setSelected={nbhdContext.mainCell.set}
                 />
             );
             updateNumCells = (val) => {
-                setNumCells(val);
-                setMainCell(Math.ceil(val / 2) - 1);
+                nbhdContext.nbhdWidth.set(val);
+                nbhdContext.mainCell.set(Math.ceil(val / 2) - 1);
             };
             break;
     }
@@ -62,7 +62,7 @@ export function CAPNeighborhood1D(props) {
             <div className="col">
                 <CAPNumberInput
                     label="Cells"
-                    value={numCells}
+                    value={nbhdContext.nbhdWidth.get}
                     setValue={updateNumCells}
                     min={2}
                     max={16}

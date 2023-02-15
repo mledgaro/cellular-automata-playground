@@ -5,18 +5,27 @@ import CAPNumberInput from "../components/CAPNumberInput";
 import CAPSelector from "../components/CAPSelector";
 import CAPSectionSelector from "../components/CAPSectionSelector";
 
-export function Neighborhood1D() {
+import { createContext } from "react";
+
+
+export const NbhdContext = createContext();
+
+export function Neighborhood1D(props) {
     //
 
     return (
-        <CAPSectionSelector
-            labels={["In situ", "Grouped", "Scattered"]}
-            sections={[
-                <CAPNeighborhood1D type="insitu" />,
-                <CAPNeighborhood1D type="grouped" />,
-                <CAPNeighborhood1D type="scattered" />,
-            ]}
-        />
+        <NbhdContext.Provider
+            value={{ nbhdWidth: props.nbhdWidth, mainCell: props.mainCell }}
+        >
+            <CAPSectionSelector
+                labels={["In situ", "Grouped", "Scattered"]}
+                sections={[
+                    <CAPNeighborhood1D type="insitu" />,
+                    <CAPNeighborhood1D type="grouped" />,
+                    <CAPNeighborhood1D type="scattered" />,
+                ]}
+            />
+        </NbhdContext.Provider>
     );
 }
 
