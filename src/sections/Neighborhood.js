@@ -10,11 +10,11 @@ export function Neighborhood1D() {
 
     return (
         <CAPSectionSelector
-            labels={["In situ", "Scattered", "Grouped"]}
+            labels={["In situ", "Grouped", "Scattered"]}
             sections={[
-                <CAPNeighborhood1D />,
-                <div>Scattered</div>,
-                <div>Grouped</div>,
+                <CAPNeighborhood1D type="insitu" />,
+                <CAPNeighborhood1D type="grouped" />,
+                <CAPNeighborhood1D type="scattered" />,
             ]}
         />
     );
@@ -47,11 +47,7 @@ export function Neighborhood2D() {
     return (
         <CAPSectionSelector
             labels={["Moore", "Von Neumann", "Diagonal"]}
-            sections={[
-                component,
-                <div>Von Neumann</div>,
-                <div>Diagonal</div>,
-            ]}
+            sections={[component, <div>Von Neumann</div>, <div>Diagonal</div>]}
         />
     );
 }
