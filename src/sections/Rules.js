@@ -14,7 +14,7 @@ export function Rules1D() {
     for (let i = 0; i < 8; i++) {
         rules.push(
             <div className="col-3 my-1">
-                <CAPRuleSwitch1D index={i} labelWidth={3} />
+                <CAPRuleSwitch1D index={i} numCells={3} mainCell={1} />
             </div>
         );
     }
@@ -22,24 +22,44 @@ export function Rules1D() {
     return (
         <div>
             <div className="row">
-                {/* <!-- Rule number --> */}
                 <div className="col-lg">
-                    <CAPNumberInput
-                        label="Rule number"
-                        value={90}
-                        min={0}
-                        max={255}
-                    />
+                    <div className="input-group d-flex justify-content-center">
+                        <span
+                            className="input-group-text cap-text-label"
+                            style={{ minWidth: "2rem" }}
+                        >
+                            Rule number
+                        </span>
+                        <span
+                            className="input-group-text cap-text-label"
+                            style={{ minWidth: "2rem" }}
+                        >
+                            90
+                        </span>
+                    </div>
                 </div>
 
                 {/* <!-- Buttons --> */}
                 <div className="col-lg">
                     <div className="input-group input-group-lg d-flex justify-content-center">
+                        <CAPButton
+                            label="Uncheck all"
+                            iconId="square"
+                            iconStyle="regular"
+                        />
+
+                        <CAPButton
+                            label="Check all"
+                            iconId="square"
+                            iconStyle="solid"
+                        />
+
                         <CAPButton label="Random" iconId="shuffle" />
 
-                        <CAPButton label="Uncheck all" iconId="square" />
-
-                        <CAPButton label="Check all" iconId="square-check" />
+                        <CAPButton
+                            label="Invert selection"
+                            iconId="right-left"
+                        />
                     </div>
                 </div>
             </div>

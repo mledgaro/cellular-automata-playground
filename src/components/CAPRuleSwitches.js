@@ -1,34 +1,60 @@
 //
 
+import { useState } from "react";
 import CAPStateButton from "./CAPStateButton";
+import FAIcon from "./FAIcon";
 
 export function CAPRuleSwitch1D(props) {
     //
 
-    let binLabel = (
-        "0".repeat(props.labelWidth) + props.index.toString(2)
-    ).slice(-props.labelWidth);
+    let cellsState = ("0".repeat(props.numCells) + props.index.toString(2))
+        .slice(-props.numCells)
+        .split("")
+        .map((e) => e === "1");
+
+    let [alive, setAlive] = useState(false);
+
+    let cells = [];
+
+    cellsState.forEach((e, i) => {
+        cells.push(
+            <span className="input-group-text cap-text-label px-1">
+                &nbsp;
+                <FAIcon
+                    iconId="square"
+                    iconStyle={e ? "solid" : "regular"}
+                    iconSize={i === props.mainCell ? "xl" : ""}
+                />
+            </span>
+        );
+    });
 
     return (
-        <div className="input-group d-flex justify-content-center">
+        <div
+            className="input-group d-flex justify-content-center"
+            onClick={() => setAlive(!alive)}
+        >
             <span
                 className="input-group-text cap-text-label"
                 style={{ minWidth: "2rem" }}
             >
-                {props.index}
+                {`(${props.index})`}
             </span>
 
-            <CAPStateButton
-                icons={["square", "square-check"]}
-                styles={["solid", "solid"]}
-                iconSize="xl"
-            />
+            {cells}
 
-            <span
-                className="input-group-text cap-text-label"
-                style={{ minWidth: "3rem" }}
-            >
-                {binLabel}
+            <span className="input-group-text cap-text-label px-1">
+                &nbsp;
+                <FAIcon iconId="arrow-right" iconStyle="solid" iconSize=""/>
+            </span>
+
+            <span className="input-group-text cap-text-label px-1">
+                &nbsp;
+                <FAIcon
+                    iconId="square"
+                    iconStyle={alive ? "solid" : "regular"}
+                    iconSize="xl"
+                />
             </span>
         </div>
     );
