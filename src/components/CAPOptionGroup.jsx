@@ -1,5 +1,7 @@
 //
 
+import { inputGroupClasses } from "../js/Utils";
+
 function CAPOptionGroup(props) {
     //
 
@@ -18,7 +20,12 @@ function CAPOptionGroup(props) {
     });
 
     return (
-        <div className="input-group input-group-lg d-flex justify-content-center mb-3">
+        <div className={inputGroupClasses(props.size, props.alignment, "mb-3")}>
+            {props.label != null && (
+                <span className="input-group-text cap-text-label">
+                    {props.label}
+                </span>
+            )}
             {options}
         </div>
     );

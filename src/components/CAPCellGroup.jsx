@@ -1,5 +1,6 @@
 //
 
+import { inputGroupClasses } from "../js/Utils";
 import FAIcon from "./FAIcon";
 
 export function CAPCellGroupInSitu(props) {
@@ -20,9 +21,9 @@ export function CAPCellGroupInSitu(props) {
             </span>
         );
     }
-
+    
     return (
-        <div className="input-group d-flex justify-content-start">{cells}</div>
+        <div className={inputGroupClasses(props.size, props.alignment, "")}>{cells}</div>
     );
 }
 export function CAPCellGroupGrouped(props) {
@@ -63,7 +64,7 @@ export function CAPCellGroupGrouped(props) {
 
     return (
         <div
-            className="input-group d-flex justify-content-start"
+            className={inputGroupClasses(props.size, props.alignment, "")}
             onClick={() => props.setSelected(props.selected === 0 ? -1 : 0)}
         >
             {cells}
@@ -111,7 +112,7 @@ export function CAPCellGroupScattered(props) {
 
     return (
         <div
-            className="input-group d-flex justify-content-start"
+            className={inputGroupClasses(props.size, props.alignment, "")}
             onClick={() => props.setSelected(props.selected === 0 ? -1 : 0)}
         >
             {cells}

@@ -5,6 +5,7 @@ import {
     CAPRuleSwitch1D,
     CAPRuleSwitch2D,
 } from "../components/CAPRuleSwitches";
+import { inputGroupClasses } from "../js/Utils";
 
 export function Rules1D(props) {
     //
@@ -28,7 +29,7 @@ export function Rules1D(props) {
         <div>
             <div className="row">
                 <div className="col-lg">
-                    <div className="input-group d-flex justify-content-center">
+                    <div className={inputGroupClasses(props.size, props.alignment, "")}>
                         <span
                             className="input-group-text cap-text-label"
                             style={{ minWidth: "2rem" }}
@@ -46,7 +47,7 @@ export function Rules1D(props) {
 
                 {/* <!-- Buttons --> */}
                 <div className="col-lg">
-                    <div className="input-group input-group-lg d-flex justify-content-center">
+                    <div className={inputGroupClasses(props.size, props.alignment, "")}>
                         <CAPButton
                             label="Uncheck all"
                             iconId="square"

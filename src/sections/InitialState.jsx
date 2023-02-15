@@ -2,6 +2,7 @@
 
 import CAPButton from "../components/CAPButton";
 import CAPCellButton from "../components/CAPCellButton";
+import { inputGroupClasses } from "../js/Utils";
 
 function InitialState(props) {
     //
@@ -16,7 +17,7 @@ function InitialState(props) {
         <div>
             <div className="row mb-2">
                 <div className="col-lg">
-                    <div className="input-group input-group-lg d-flex justify-content-center">
+                    <div className={inputGroupClasses(props.size, props.alignment, "")}>
                         <CAPButton label="Clear" iconId="broom" />
 
                         {/* <!-- Random density --> */}

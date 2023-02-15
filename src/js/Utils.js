@@ -39,3 +39,32 @@ export function boolArrayToInt(arr, reverse) {
 
     return int;
 }
+
+/**
+ * Builds a string with the corresponding BS5 input group classes.
+ * @param {String} size size ('sm', 'lg', '')
+ * @param {String} alignment alignment ('start', 'center', 'end', '')
+ * @param {String} classes other classes
+ * @returns {String} classes
+ */
+export function inputGroupClasses(size, alignment, classes) {
+    //
+
+    if (size === "sm" || size === "lg") {
+        size = `input-group-${size}`;
+    } else {
+        size = "";
+    }
+
+    if (
+        alignment === "start" ||
+        alignment === "center" ||
+        alignment === "end"
+    ) {
+        alignment = `d-flex justify-content-${alignment}`;
+    } else {
+        alignment = "";
+    }
+    
+    return `input-group ${size} ${alignment} ${classes}`;
+}

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import CAPStateButton from "./CAPStateButton";
 import FAIcon from "./FAIcon";
-import { intToBoolArray } from "../js/Utils";
+import { inputGroupClasses, intToBoolArray } from "../js/Utils";
 
 export function CAPRuleSwitch1D(props) {
     //
@@ -51,7 +51,7 @@ export function CAPRuleSwitch1D(props) {
 
     return (
         <div
-            className="input-group d-flex justify-content-center"
+            className={inputGroupClasses(props.size, props.alignment, "")}
             onClick={() => setAlive(!alive)}
         >
             <span

@@ -1,5 +1,6 @@
 //
 
+import { inputGroupClasses } from "../js/Utils";
 import CAPButton from "./CAPButton";
 
 function CAPNumberInput(props) {
@@ -18,7 +19,7 @@ function CAPNumberInput(props) {
     };
 
     return (
-        <div className="input-group d-flex justify-content-end">
+        <div className={inputGroupClasses(props.size, props.alignment, "")}>
             {props.label != null && (
                 <span className="input-group-text cap-text-label">
                     {props.label}

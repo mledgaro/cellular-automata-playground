@@ -1,6 +1,7 @@
 //
 
 import { useState } from "react";
+import { inputGroupClasses } from "../js/Utils";
 import FAIcon from "./FAIcon";
 
 function CAPLevelSelector(props) {
@@ -27,8 +28,7 @@ function CAPLevelSelector(props) {
 
     return (
         <div
-            className="input-group
-                        d-flex justify-content-center"
+            className={inputGroupClasses(props.size, props.alignment, "")}
         >
             <span
                 className="input-group-text cap-text-label"
