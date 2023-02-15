@@ -3,7 +3,7 @@
 import { useState } from "react";
 import CAPStateButton from "./CAPStateButton";
 import FAIcon from "./FAIcon";
-import { intToBoolArray } from "../Utils";
+import { intToBoolArray } from "../js/Utils";
 
 export function CAPRuleSwitch1D(props) {
     //

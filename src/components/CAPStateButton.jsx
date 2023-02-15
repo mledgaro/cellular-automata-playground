@@ -1,7 +1,7 @@
 //
 
 import { useState } from "react";
-import FAIcon from "./FAIcon.js";
+import FAIcon from "./FAIcon";
 
 function CAPStateButton(props) {
     //
