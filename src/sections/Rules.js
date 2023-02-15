@@ -6,7 +6,7 @@ import {
     CAPRuleSwitch2D,
 } from "../components/CAPRuleSwitches";
 
-export function Rules1D() {
+export function Rules1D(props) {
     //
 
     let rules = [];
@@ -16,9 +16,9 @@ export function Rules1D() {
             <div className="col-3 my-1">
                 <CAPRuleSwitch1D
                     index={i}
-                    numCells={3}
-                    mainCell={0}
-                    type="scattered"
+                    nbhdWidth={props.nbhdWidth}
+                    mainCell={props.mainCell}
+                    type={props.nbhdType}
                 />
             </div>
         );

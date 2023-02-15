@@ -5,12 +5,12 @@ function CAPOptionGroup(props) {
 
     let options = props.labels.map((label, i) => {
         let selected =
-            (i === props.selected) ? "cap-btn-group-select-active" : "";
+            (i === props.selected.get) ? "cap-btn-group-select-active" : "";
         return (
             <button
                 type="button"
                 className={`btn cap-btn-group-select ${selected}`}
-                onClick={() => props.setSelected(i)}
+                onClick={() => props.selected.set(i)}
             >
                 {label}
             </button>

@@ -8,13 +8,13 @@ import { intToBoolArray } from "../Utils";
 export function CAPRuleSwitch1D(props) {
     //
 
-    let cellsState = intToBoolArray(props.index, props.numCells);
+    let cellsState = intToBoolArray(props.index, props.nbhdWidth);
 
     let [alive, setAlive] = useState(false);
 
     let cells = [];
 
-    let mainCell = props.mainCell === -1 ? props.numCells - 1 : props.mainCell;
+    let mainCell = props.mainCell === -1 ? props.nbhdWidth - 1 : props.mainCell;
 
     cellsState.forEach((e, i) => {
         cells.push(

@@ -5,8 +5,7 @@ import CAPNumberInput from "../components/CAPNumberInput";
 import CAPSelector from "../components/CAPSelector";
 import CAPSectionSelector from "../components/CAPSectionSelector";
 
-import { createContext } from "react";
-
+import { createContext, useState } from "react";
 
 export const NbhdContext = createContext();
 
@@ -15,15 +14,27 @@ export function Neighborhood1D(props) {
 
     return (
         <NbhdContext.Provider
-            value={{ nbhdWidth: props.nbhdWidth, mainCell: props.mainCell }}
+            value={{
+                nbhdWidth: props.nbhdWidth,
+                mainCell: props.mainCell,
+            }}
         >
             <CAPSectionSelector
-                labels={["In situ", "Grouped", "Scattered"]}
                 sections={[
-                    <CAPNeighborhood1D type="insitu" />,
-                    <CAPNeighborhood1D type="grouped" />,
-                    <CAPNeighborhood1D type="scattered" />,
+                    {
+                        label: "In situ",
+                        component: <CAPNeighborhood1D type="insitu" />,
+                    },
+                    {
+                        label: "Grouped",
+                        component: <CAPNeighborhood1D type="grouped" />,
+                    },
+                    {
+                        label: "Scattered",
+                        component: <CAPNeighborhood1D type="scattered" />,
+                    },
                 ]}
+                selected={props.nbhdIndex}
             />
         </NbhdContext.Provider>
     );
@@ -31,6 +42,8 @@ export function Neighborhood1D(props) {
 
 export function Neighborhood2D() {
     //
+
+    const [selected, setSelected] = useState(0);
 
     let component = (
         <div className="row">
@@ -55,8 +68,21 @@ export function Neighborhood2D() {
 
     return (
         <CAPSectionSelector
-            labels={["Moore", "Von Neumann", "Diagonal"]}
-            sections={[component, <div>Von Neumann</div>, <div>Diagonal</div>]}
-        />
+                sections={[
+                    {
+                        label: "Moore",
+                        component: component,
+                    },
+                    {
+                        label: "Von Neumann",
+                        component: <div>Von Neumann</div>,
+                    },
+                    {
+                        label: "Diagonal",
+                        component: <div>Diagonal</div>,
+                    },
+                ]}
+                selected={{get: selected, set: setSelected}}
+            />
     );
 }
