@@ -1,5 +1,5 @@
 //
-import CAPNumberInput from "../components/CAPNumberInput";
+
 import CAPButton from "../components/CAPButton";
 import {
     CAPRuleSwitch1D,
@@ -14,7 +14,12 @@ export function Rules1D() {
     for (let i = 0; i < 8; i++) {
         rules.push(
             <div className="col-3 my-1">
-                <CAPRuleSwitch1D index={i} numCells={3} mainCell={1} />
+                <CAPRuleSwitch1D
+                    index={i}
+                    numCells={3}
+                    mainCell={0}
+                    type="scattered"
+                />
             </div>
         );
     }

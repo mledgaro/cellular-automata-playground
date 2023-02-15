@@ -3,18 +3,18 @@
 import { useState } from "react";
 import CAPStateButton from "./CAPStateButton";
 import FAIcon from "./FAIcon";
+import { intToBoolArray } from "../Utils";
 
 export function CAPRuleSwitch1D(props) {
     //
 
-    let cellsState = ("0".repeat(props.numCells) + props.index.toString(2))
-        .slice(-props.numCells)
-        .split("")
-        .map((e) => e === "1");
+    let cellsState = intToBoolArray(props.index, props.numCells);
 
     let [alive, setAlive] = useState(false);
 
     let cells = [];
+
+    let mainCell = props.mainCell === -1 ? props.numCells - 1 : props.mainCell;
 
     cellsState.forEach((e, i) => {
         cells.push(
@@ -23,11 +23,31 @@ export function CAPRuleSwitch1D(props) {
                 <FAIcon
                     iconId="square"
                     iconStyle={e ? "solid" : "regular"}
-                    iconSize={i === props.mainCell ? "xl" : ""}
+                    iconSize={i === mainCell ? "xl" : ""}
                 />
             </span>
         );
     });
+
+    if (props.type !== "insitu") {
+        //
+
+        let ellipsis = (
+            <span className="input-group-text cap-text-label px-1">
+                &nbsp;
+                <FAIcon iconId="ellipsis" iconSize="2xs" />
+            </span>
+        );
+
+        if (props.type === "grouped") {
+            cells.splice(mainCell, 0, ellipsis);
+        } else if (props.type === "scattered") {
+            let len = cells.length - 1;
+            for (let i = 0; i < len; i++) {
+                cells.splice(i * 2 + 1, 0, ellipsis);
+            }
+        }
+    }
 
     return (
         <div
@@ -45,7 +65,7 @@ export function CAPRuleSwitch1D(props) {
 
             <span className="input-group-text cap-text-label px-1">
                 &nbsp;
-                <FAIcon iconId="arrow-right" iconStyle="solid" iconSize=""/>
+                <FAIcon iconId="arrow-right" iconStyle="solid" iconSize="" />
             </span>
 
             <span className="input-group-text cap-text-label px-1">
