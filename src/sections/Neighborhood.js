@@ -1,50 +1,35 @@
 //
 
+import { CAPNeighborhood1D } from "../components/CAPNeighborhood";
 import CAPNumberInput from "../components/CAPNumberInput";
 import CAPSelector from "../components/CAPSelector";
+import CAPSectionSelector from "../components/CAPSectionSelector";
 
 export function Neighborhood1D() {
+    //
+
     return (
-        <div className="row">
-            <div className="col-lg">
-                <CAPNumberInput label="Size" value={3} min={1} max={8} />
-            </div>
-
-            <div className="col-lg">
-                <CAPSelector
-                    label="Type"
-                    maxWidth={10}
-                    options={["In situ", "Scattered", "Grouped"]}
-                />
-            </div>
-
-            <div className="col-lg">
-                <CAPSelector
-                    label="Alignment"
-                    maxWidth={8}
-                    options={["Left", "Right"]}
-                />
-            </div>
-        </div>
+        <CAPSectionSelector
+            labels={["In situ", "Scattered", "Grouped"]}
+            sections={[
+                <CAPNeighborhood1D />,
+                <div>Scattered</div>,
+                <div>Grouped</div>,
+            ]}
+        />
     );
 }
 
 export function Neighborhood2D() {
-    return (
+    //
+
+    let component = (
         <div className="row">
-            <div className="col-lg">
+            <div className="col">
                 <CAPNumberInput label="Size" value={3} min={1} max={8} />
             </div>
 
-            <div className="col-lg">
-                <CAPSelector
-                    label="Type"
-                    maxWidth={12}
-                    options={["Moore", "Von Neumann", "Diagonal"]}
-                />
-            </div>
-
-            <div className="col-lg">
+            <div className="col">
                 <CAPSelector
                     label="Alignment"
                     maxWidth={12}
@@ -57,5 +42,16 @@ export function Neighborhood2D() {
                 />
             </div>
         </div>
+    );
+
+    return (
+        <CAPSectionSelector
+            labels={["Moore", "Von Neumann", "Diagonal"]}
+            sections={[
+                component,
+                <div>Von Neumann</div>,
+                <div>Diagonal</div>,
+            ]}
+        />
     );
 }
