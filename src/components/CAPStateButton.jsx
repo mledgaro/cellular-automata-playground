@@ -3,9 +3,11 @@
 import { useState } from "react";
 import FAIcon from "./FAIcon";
 
-function CAPStateButton(props) {
+export default function CAPStateButton({ icons }) {
     //
-    let lastState = props.icons.length - 1;
+    // TODO - Receive state as parameter. Receive an array of icon objects instead of separated array of properties.
+
+    let lastState = icons.length - 1;
 
     const [index, setIndex] = useState(0);
 
@@ -13,14 +15,9 @@ function CAPStateButton(props) {
         setIndex(index === lastState ? 0 : index + 1);
     };
 
-    let icon = props.icons[index];
-    let style = props.styles[index];
-
     return (
         <button type="button" className="btn cap-btn" onClick={nextIndex}>
-            <FAIcon iconId={icon} iconStyle={style} iconSize={props.iconSize} />
+            <FAIcon icon={icons[index]} />
         </button>
     );
 }
-
-export default CAPStateButton;

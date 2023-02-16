@@ -9,14 +9,14 @@ import { createContext, useState } from "react";
 
 export const NbhdContext = createContext();
 
-export function Neighborhood1D(props) {
+export function Neighborhood1D({ nbhdWidth, mainCell, selected }) {
     //
 
     return (
         <NbhdContext.Provider
             value={{
-                nbhdWidth: props.nbhdWidth,
-                mainCell: props.mainCell,
+                nbhdWidth: nbhdWidth,
+                mainCell: mainCell,
             }}
         >
             <CAPSectionSelector
@@ -34,7 +34,7 @@ export function Neighborhood1D(props) {
                         component: <CAPNbhdInput1D type="scattered" />,
                     },
                 ]}
-                selected={props.nbhdIndex}
+                selected={selected}
                 size="sm"
                 alignment="center"
                 bs5Class="w-75 mx-auto"
@@ -47,11 +47,17 @@ export function Neighborhood2D() {
     //
 
     const [selected, setSelected] = useState(0);
+    const [size, setSize] = useState(3);
 
-    let component = (
+    let mooreSection = (
         <div className="row">
             <div className="col">
-                <CAPNumberInput label="Size" value={3} min={1} max={8} />
+                <CAPNumberInput
+                    label="Size"
+                    value={{ get: size, set: setSize }}
+                    min={1}
+                    max={8}
+                />
             </div>
 
             <div className="col">
@@ -71,23 +77,23 @@ export function Neighborhood2D() {
 
     return (
         <CAPSectionSelector
-                sections={[
-                    {
-                        label: "Moore",
-                        component: component,
-                    },
-                    {
-                        label: "Von Neumann",
-                        component: <div>Von Neumann</div>,
-                    },
-                    {
-                        label: "Diagonal",
-                        component: <div>Diagonal</div>,
-                    },
-                ]}
-                selected={{get: selected, set: setSelected}}
-                size="sm"
-                alignment="center"
-            />
+            sections={[
+                {
+                    label: "Moore",
+                    component: mooreSection,
+                },
+                {
+                    label: "Von Neumann",
+                    component: <div>Von Neumann</div>,
+                },
+                {
+                    label: "Diagonal",
+                    component: <div>Diagonal</div>,
+                },
+            ]}
+            selected={{ get: selected, set: setSelected }}
+            size="sm"
+            alignment="center"
+        />
     );
 }

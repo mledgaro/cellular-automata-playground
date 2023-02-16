@@ -2,17 +2,26 @@
 
 import { inputGroupClasses } from "../js/Utils";
 
-function CAPOptionGroup(props) {
+export default function CAPOptionGroup({
+    labels,
+    selected,
+    size,
+    alignment,
+    bs5Class,
+}) {
     //
 
-    let options = props.labels.map((label, i) => {
-        let selected =
-            (i === props.selected.get) ? "cap-btn-group-select-active" : "";
+    let options = labels.map((label, i) => {
+        //
+
+        let selectedClass =
+            i === selected.get ? "cap-btn-group-select-active" : "";
+
         return (
             <button
                 type="button"
-                className={`btn cap-btn-group-select ${selected}`}
-                onClick={() => props.selected.set(i)}
+                className={`btn cap-btn-group-select ${selectedClass}`}
+                onClick={() => selected.set(i)}
             >
                 {label}
             </button>
@@ -20,15 +29,8 @@ function CAPOptionGroup(props) {
     });
 
     return (
-        <div className={inputGroupClasses(props.size, props.alignment, `my-3 ${props.bs5Class}`)}>
-            {props.label != null && (
-                <span className="input-group-text cap-text-label">
-                    {props.label}
-                </span>
-            )}
+        <div className={inputGroupClasses(size, alignment, `my-3 ${bs5Class}`)}>
             {options}
         </div>
     );
 }
-
-export default CAPOptionGroup;

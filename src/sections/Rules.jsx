@@ -2,12 +2,12 @@
 
 import CAPButton from "../components/CAPButton";
 import {
-    CAPRuleSwitch1D,
-    CAPRuleSwitch2D,
-} from "../components/CAPRuleSwitches";
+    CAPRule1D,
+    CAPRule2D,
+} from "../components/CAPRule";
 import { inputGroupClasses } from "../js/Utils";
 
-export function Rules1D(props) {
+export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
     //
 
     let rules = [];
@@ -15,11 +15,11 @@ export function Rules1D(props) {
     for (let i = 0; i < 8; i++) {
         rules.push(
             <div className="col-3 my-1">
-                <CAPRuleSwitch1D
+                <CAPRule1D
+                    type={nbhdType}
                     index={i}
-                    nbhdWidth={props.nbhdWidth}
-                    mainCell={props.mainCell}
-                    type={props.nbhdType}
+                    nbhdWidth={nbhdWidth}
+                    mainCell={mainCell}
                 />
             </div>
         );
@@ -49,22 +49,23 @@ export function Rules1D(props) {
                 <div className="col-lg">
                     <div className={inputGroupClasses("", "center", "")}>
                         <CAPButton
-                            label="Uncheck all"
-                            iconId="square"
-                            iconStyle="regular"
+                            tooltipLabel="Uncheck all"
+                            icon={{ id: "square", style: "regular" }}
                         />
 
                         <CAPButton
-                            label="Check all"
-                            iconId="square"
-                            iconStyle="solid"
+                            tooltipLabel="Check all"
+                            icon={{ id: "square" }}
                         />
 
-                        <CAPButton label="Random" iconId="shuffle" />
+                        <CAPButton
+                            tooltipLabel="Random"
+                            icon={{ id: "shuffle" }}
+                        />
 
                         <CAPButton
-                            label="Invert selection"
-                            iconId="right-left"
+                            tooltipLabel="Invert selection"
+                            icon={{ id: "right-left" }}
                         />
                     </div>
                 </div>
@@ -83,7 +84,7 @@ export function Rules2D() {
     for (let i = 0; i <= 8; i++) {
         rules.push(
             <div className="col m-1">
-                <CAPRuleSwitch2D index={i} />
+                <CAPRule2D index={i} />
             </div>
         );
     }

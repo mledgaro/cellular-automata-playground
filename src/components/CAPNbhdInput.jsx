@@ -5,14 +5,14 @@ import CAPCellGroup from "./CAPCellGroup";
 import CAPNumberInput from "./CAPNumberInput";
 import { NbhdContext } from "../sections/Neighborhood";
 
-export function CAPNbhdInput1D(props) {
+export function CAPNbhdInput1D({ type }) {
     //
 
     const nbhdContext = useContext(NbhdContext);
 
     let updateNumCells;
 
-    if (props.type === "insitu") {
+    if (type === "insitu") {
         updateNumCells = (val) => {
             nbhdContext.nbhdWidth.set(val);
             nbhdContext.mainCell.set(Math.ceil(val / 2) - 1);
@@ -29,8 +29,7 @@ export function CAPNbhdInput1D(props) {
             <div className="col">
                 <CAPNumberInput
                     label="Cells"
-                    value={nbhdContext.nbhdWidth.get}
-                    setValue={updateNumCells}
+                    value={{get: nbhdContext.nbhdWidth.get, set: updateNumCells}}
                     min={2}
                     max={16}
                     alignment="end"
@@ -39,7 +38,7 @@ export function CAPNbhdInput1D(props) {
 
             <div className="col">
                 <CAPCellGroup
-                    type={props.type}
+                    type={type}
                     numCells={nbhdContext.nbhdWidth.get}
                     selected={nbhdContext.mainCell}
                     alignment="start"

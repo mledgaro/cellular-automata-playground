@@ -4,21 +4,24 @@ import CAPButton from "../components/CAPButton";
 import CAPLevelSelector from "../components/CAPLevelSelector";
 import { inputGroupClasses } from "../js/Utils";
 
-function Controls() {
+export default function Controls() {
+    //
+
     return (
         <div className="row mt-0">
             {/* <!-- Flow --> */}
             <div className="col-lg my-2">
-                <div
-                    className={inputGroupClasses("", "center", "")}
-                >
-                    <CAPButton label="Next" iconId="forward-step" />
+                <div className={inputGroupClasses("", "center", "")}>
+                    <CAPButton
+                        tooltipLabel="Next"
+                        icon={{ id: "forward-step" }}
+                    />
 
-                    <CAPButton label="Run" iconId="play" />
+                    <CAPButton tooltipLabel="Run" icon={{ id: "play" }} />
 
-                    <CAPButton label="Pause" iconId="pause" />
+                    <CAPButton tooltipLabel="Pause" icon={{ id: "pause" }} />
 
-                    <CAPButton label="Stop" iconId="stop" />
+                    <CAPButton tooltipLabel="Stop" icon={{ id: "stop" }} />
                 </div>
             </div>
 
@@ -28,9 +31,12 @@ function Controls() {
                     className={inputGroupClasses("", "center", "")}
                     id="controls-canvas-container"
                 >
-                    <CAPButton label="Clear" iconId="broom" />
+                    <CAPButton tooltipLabel="Clear" icon={{ id: "broom" }} />
 
-                    <CAPButton label="Screenshot" iconId="camera-retro" />
+                    <CAPButton
+                        tooltipLabel="Screenshot"
+                        icon={{ id: "camera-retro" }}
+                    />
                 </div>
             </div>
 
@@ -38,7 +44,7 @@ function Controls() {
             <div className="col-lg my-2" id="speed-level-container">
                 <CAPLevelSelector
                     numLevels={5}
-                    tooltipLabels="Speed"
+                    tooltipLabel="Speed"
                     iconId="gauge-high"
                     alignment="center"
                 />
@@ -48,7 +54,7 @@ function Controls() {
             <div className="col-lg my-2" id="zoom-level-container">
                 <CAPLevelSelector
                     numLevels={5}
-                    tooltipLabels="Zoom"
+                    tooltipLabel="Zoom"
                     iconId="magnifying-glass"
                     alignment="center"
                 />
@@ -56,5 +62,3 @@ function Controls() {
         </div>
     );
 }
-
-export default Controls;

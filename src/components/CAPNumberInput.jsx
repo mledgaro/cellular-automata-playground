@@ -3,38 +3,39 @@
 import { inputGroupClasses } from "../js/Utils";
 import CAPButton from "./CAPButton";
 
-function CAPNumberInput(props) {
+export default function CAPNumberInput({
+    value,
+    min,
+    max,
+    label,
+    size,
+    alignment,
+}) {
     //
 
     let decreaseValue = () => {
-        if (props.value > props.min) {
-            props.setValue(props.value - 1);
+        if (value.get > min) {
+            value.set(value.get - 1);
         }
     };
 
     let increaseValue = () => {
-        if (props.value < props.max) {
-            props.setValue(props.value + 1);
+        if (value.get < max) {
+            value.set(value.get + 1);
         }
     };
 
     return (
-        <div className={inputGroupClasses(props.size, props.alignment, "")}>
-            {props.label != null && (
-                <span className="input-group-text cap-text-label">
-                    {props.label}
-                </span>
+        <div className={inputGroupClasses(size, alignment, "")}>
+            {label != null && (
+                <span className="input-group-text cap-text-label">{label}</span>
             )}
 
-            <CAPButton iconId="minus" onClick={decreaseValue} />
+            <CAPButton icon={{ id: "minus" }} onClick={decreaseValue} />
 
-            <span className="input-group-text cap-text-label">
-                {props.value}
-            </span>
+            <span className="input-group-text cap-text-label">{value.get}</span>
 
-            <CAPButton iconId="plus" onClick={increaseValue} />
+            <CAPButton icon={{ id: "plus" }} onClick={increaseValue} />
         </div>
     );
 }
-
-export default CAPNumberInput;

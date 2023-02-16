@@ -4,12 +4,19 @@ import { useState } from "react";
 import { inputGroupClasses } from "../js/Utils";
 import FAIcon from "./FAIcon";
 
-function CAPLevelSelector(props) {
+export default function CAPLevelSelector({
+    iconId,
+    numLevels,
+    tooltipLabel,
+    size,
+    alignment,
+}) {
+    //
+
     const [level, setLevel] = useState(0);
 
-    const levelDown = () => setLevel(level == 0 ? 0 : level - 1);
-    const levelUp = () =>
-        setLevel(level == props.numLevels ? props.numLevels : level + 1);
+    const levelDown = () => setLevel(level === 0 ? 0 : level - 1);
+    const levelUp = () => setLevel(level === numLevels ? numLevels : level + 1);
 
     let highLevels = [];
     let lowLevels = [];
@@ -20,32 +27,30 @@ function CAPLevelSelector(props) {
         );
     }
 
-    for (let i = 0; i < props.numLevels - level; i++) {
+    for (let i = 0; i < numLevels - level; i++) {
         lowLevels.push(
             <span className="input-group-text cap-progress-cell"></span>
         );
     }
 
     return (
-        <div
-            className={inputGroupClasses(props.size, props.alignment, "")}
-        >
+        <div className={inputGroupClasses(size, alignment, "")}>
             <span
                 className="input-group-text cap-text-label"
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
-                title={props.tooltipLabel}
+                title={tooltipLabel}
             >
-                <FAIcon iconId={props.iconId} />
+                <FAIcon icon={{ id: iconId }} />
             </span>
 
             <button
                 type="button"
                 className="btn cap-btn"
                 onClick={levelDown}
-                disabled={level == 0}
+                disabled={level === 0}
             >
-                <FAIcon iconId="minus" />
+                <FAIcon icon={{ id: "minus" }} />
             </button>
 
             {highLevels}
@@ -56,12 +61,10 @@ function CAPLevelSelector(props) {
                 type="button"
                 className="btn cap-btn"
                 onClick={levelUp}
-                disabled={level == props.numLevels}
+                disabled={level === numLevels}
             >
-                <FAIcon iconId="plus" />
+                <FAIcon icon={{ id: "plus" }} />
             </button>
         </div>
     );
 }
-
-export default CAPLevelSelector;

@@ -2,21 +2,26 @@
 
 import FAIcon from "./FAIcon";
 
-function CAPButton(props) {
+export default function CAPButton({
+    icon,
+    tooltipLabel,
+    onClick,
+}) {
+    //
 
-    let label = props.label == null ? "" : props.label;
-    
+    tooltipLabel = tooltipLabel == null ? "" : tooltipLabel;
+
     return (
-        <button type="button"
-            title={label}
+        <button
+            type="button"
+            title={tooltipLabel}
             data-bs-toggle="tooltip"
             data-bs-placement="bottom"
-            data-bs-original-title={label}
+            data-bs-original-title={tooltipLabel}
             className="btn cap-btn"
-            onClick={props.onClick}>
-                <FAIcon iconId={props.iconId} iconStyle={props.iconStyle} iconSize={props.iconSize} />
+            onClick={onClick}
+        >
+            <FAIcon icon={icon} />
         </button>
     );
 }
-
-export default CAPButton;

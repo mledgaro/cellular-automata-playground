@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 
-function CAPCellButton(props) {
+export default function CAPCellButton({ index }) {
+    //
+
     let [alive, setAlive] = useState(false);
     let [highlighted, setHighlighted] = useState(false);
 
@@ -17,9 +19,7 @@ function CAPCellButton(props) {
             onMouseOver={() => setHighlighted(true)}
             onMouseOut={() => setHighlighted(false)}
         >
-            {props.index}
+            {index}
         </button>
     );
 }
-
-export default CAPCellButton;

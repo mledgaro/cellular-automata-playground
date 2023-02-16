@@ -1,6 +1,6 @@
 //
 
-function Footer() {
+export default function Footer() {
     return (
         <div id="footer" className="mt-5 mb-3">
             Universidad Nacional Autónoma de México - Facultad de Ciencias
@@ -13,5 +13,3 @@ function Footer() {
         </div>
     );
 }
-
-export default Footer;

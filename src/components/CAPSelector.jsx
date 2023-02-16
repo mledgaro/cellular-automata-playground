@@ -1,22 +1,21 @@
 //
 
-function CAPSelector(props) {
+export default function CAPSelector({ label, options, maxWidth }) {
+    //
+    // deprecate
+
     return (
         <div className="input-group input-group-lg d-flex justify-content-center">
-            <span className="input-group-text cap-text-label">
-                {props.label}
-            </span>
+            <span className="input-group-text cap-text-label">{label}</span>
 
             <select
                 className="rounded-end cap-input form-select cap-section-neighborhood"
-                style={{ maxWidth: `${props.maxWidth}rem` }}
+                style={{ maxWidth: `${maxWidth}rem` }}
             >
-                {props.options.map((opt) => (
+                {options.map((opt) => (
                     <option value={opt.toLowerCase()}>{opt}</option>
                 ))}
             </select>
         </div>
     );
 }
-
-export default CAPSelector;

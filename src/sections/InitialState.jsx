@@ -4,12 +4,12 @@ import CAPButton from "../components/CAPButton";
 import CAPCellButton from "../components/CAPCellButton";
 import { inputGroupClasses } from "../js/Utils";
 
-function InitialState(props) {
+export default function InitialState({ cellsNumber, size, alignment }) {
     //
 
     let cells = [];
 
-    for (let i = 0; i < props.cellsNumber; i++) {
+    for (let i = 0; i < cellsNumber; i++) {
         cells.push(<CAPCellButton index={i} />);
     }
 
@@ -17,8 +17,11 @@ function InitialState(props) {
         <div>
             <div className="row mb-2">
                 <div className="col-lg">
-                    <div className={inputGroupClasses(props.size, props.alignment, "")}>
-                        <CAPButton label="Clear" iconId="broom" />
+                    <div className={inputGroupClasses(size, alignment, "")}>
+                        <CAPButton
+                            tootltipLabel="Clear"
+                            icon={{ id: "broom" }}
+                        />
 
                         {/* <!-- Random density --> */}
                         <input
@@ -36,11 +39,14 @@ function InitialState(props) {
                             aria-label="Density"
                         />
 
-                        <CAPButton label="Random" iconId="shuffle" />
+                        <CAPButton
+                            tootltipLabel="Random"
+                            icon={{ id: "shuffle" }}
+                        />
 
                         <CAPButton
-                            label="Neighborhoods"
-                            iconId="circle-nodes"
+                            tootltipLabel="Neighborhoods"
+                            icon={{ id: "circle-nodes" }}
                         />
                     </div>
                 </div>
@@ -53,5 +59,3 @@ function InitialState(props) {
         </div>
     );
 }
-
-export default InitialState;

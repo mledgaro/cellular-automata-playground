@@ -3,21 +3,22 @@
 import { inputGroupClasses } from "../js/Utils";
 import FAIcon from "./FAIcon";
 
-function Cell(props) {
+function Cell({ selected, onClick }) {
     //
 
-    let icon, size;
-
-    icon = props.selected ? "square-check" : "square";
-    size = props.selected ? "2xl" : "lg";
+    let icon = {
+        id: selected ? "square-check" : "square",
+        style: "regular",
+        size: selected ? "2xl" : "lg",
+    };
 
     return (
         <span
             className="input-group-text cap-text-label px-1"
-            onClick={props.onClick}
+            onClick={onClick}
         >
             &nbsp;
-            <FAIcon iconId={icon} iconStyle="regular" iconSize={size} />
+            <FAIcon icon={icon} />
         </span>
     );
 }
@@ -28,58 +29,61 @@ function Ellipsis() {
     return (
         <span className="input-group-text cap-text-label px-1">
             &nbsp;
-            <FAIcon iconId="ellipsis" iconSize="xs" />
+            <FAIcon icon={{ id: "ellipsis", size: "xs" }} />
         </span>
     );
 }
 
-function Container(props) {
+function Container({ content, size, alignment, onClick }) {
     return (
         <div
-            className={inputGroupClasses(props.size, props.alignment, "")}
-            // onClick={() => props.setSelected(props.selected === 0 ? -1 : 0)}
-            onClick={props.onClick}
+            className={inputGroupClasses(size, alignment, "")}
+            // onClick={() => setSelected(selected === 0 ? -1 : 0)}
+            onClick={onClick}
         >
-            {props.content}
+            {content}
         </div>
     );
 }
 
-export default function CAPCellGroup(props) {
+export default function CAPCellGroup({
+    type,
+    numCells,
+    selected,
+    size,
+    alignment,
+}) {
     //
 
     let cells = [];
     let onClickCell = (i) => {};
     let onClickCont = () => {};
-    let lastIdx = props.numCells - 1;
+    let lastIdx = numCells - 1;
 
-    props.selected.set(
-        props.selected.get === -1 ? lastIdx : props.selected.get
-    );
+    selected.set(selected.get === -1 ? lastIdx : selected.get);
 
-    if (props.type === "insitu") {
-        onClickCell = (i) => props.selected.set(i);
+    if (type === "insitu") {
+        onClickCell = (i) => selected.set(i);
     } else {
-        onClickCont = () =>
-            props.selected.set(props.selected.get === 0 ? lastIdx : 0);
+        onClickCont = () => selected.set(selected.get === 0 ? lastIdx : 0);
     }
 
-    for (let i = 0; i < props.numCells; i++) {
+    for (let i = 0; i < numCells; i++) {
         cells.push(
             <Cell
-                selected={props.selected.get === i}
+                selected={selected.get === i}
                 onClick={() => onClickCell(i)}
             />
         );
     }
 
-    if (props.type === "grouped") {
-        if (props.selected.get === 0) {
+    if (type === "grouped") {
+        if (selected.get === 0) {
             cells.splice(1, 0, <Ellipsis />);
         } else {
             cells.splice(lastIdx, 0, <Ellipsis />);
         }
-    } else if (props.type === "scattered") {
+    } else if (type === "scattered") {
         for (let i = 0; i < lastIdx; i++) {
             cells.splice(i * 2 + 1, 0, <Ellipsis />);
         }
@@ -88,8 +92,8 @@ export default function CAPCellGroup(props) {
     return (
         <Container
             content={cells}
-            size={props.size}
-            alignment={props.alignment}
+            size={size}
+            alignment={alignment}
             onClick={onClickCont}
         />
     );
