@@ -5,7 +5,6 @@ import FAIcon from "./FAIcon";
 
 export default function CAPStateButton({ icons }) {
     //
-    // TODO - Receive state as parameter. Receive an array of icon objects instead of separated array of properties.
 
     let lastState = icons.length - 1;
 

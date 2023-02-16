@@ -18,6 +18,7 @@ export function Settings1D({ nbhdWidth, mainCell }) {
 
     return (
         <CAPSectionSelector
+            title="Settings"
             sections={[
                 {
                     label: "Neighborhood",
@@ -58,6 +59,7 @@ export function Settings2D() {
 
     return (
         <CAPSectionSelector
+            title="Settings"
             sections={[
                 { label: "Neighborhood", component: <Neighborhood2D /> },
                 { label: "Rules", component: <Rules2D /> },

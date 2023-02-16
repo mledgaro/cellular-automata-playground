@@ -2,14 +2,7 @@
 
 import { inputGroupClasses } from "../js/Utils";
 
-
-function CAPOptionGroup({
-    labels,
-    selected,
-    size,
-    alignment,
-    bs5Class,
-}) {
+function CAPOptionGroup({ labels, selected, title, size, alignment, bs5Class }) {
     //
 
     let options = labels.map((label, i) => {
@@ -29,13 +22,28 @@ function CAPOptionGroup({
         );
     });
 
+    let titleSize =
+        size === "sm" ? "small" : size === "lg" ? "large" : "medium";
+
     return (
-        <div className={inputGroupClasses(size, alignment, `my-3 ${bs5Class}`)}>
-            {options}
+        <div className={`my-2 ${bs5Class}`}>
+            {title != null && (
+                <div
+                    className="cap-section-selector-title mx-auto mb-1"
+                    style={{ fontSize: titleSize }}
+                >
+                    {title}
+                </div>
+            )}
+
+            <div className={inputGroupClasses(size, alignment, "")}>
+                {options}
+            </div>
         </div>
     );
 }
 export default function CAPSectionSelector({
+    title,
     sections,
     selected,
     size,
@@ -49,6 +57,7 @@ export default function CAPSectionSelector({
     return (
         <div className="">
             <CAPOptionGroup
+                title={title}
                 labels={labels}
                 selected={selected}
                 size={size}

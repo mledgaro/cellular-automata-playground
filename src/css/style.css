@@ -150,6 +150,14 @@
     border-right-width: 0.4vmin;
 }
 
+.cap-section-selector-title {
+    font-weight: 700;
+    text-align: center;
+    background-color: var(--cellOff);
+    color: var(--cellOn);
+    width: 50%;
+    border-radius: 3px;
+}
 
 #title-page
 {

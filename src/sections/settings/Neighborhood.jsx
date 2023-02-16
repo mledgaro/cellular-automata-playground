@@ -94,6 +94,7 @@ export function Neighborhood2D() {
             selected={{ get: selected, set: setSelected }}
             size="sm"
             alignment="center"
+            bs5Class="w-75 mx-auto"
         />
     );
 }
