@@ -1,9 +1,9 @@
 //
 
-import { CAPNbhdInput1D } from "../components/CAPNbhdInput";
-import CAPNumberInput from "../components/CAPNumberInput";
-import CAPSelector from "../components/CAPSelector";
-import CAPSectionSelector from "../components/CAPSectionSelector";
+import { CAPNbhdInput1D } from "../../components/CAPNbhdInput";
+import CAPNumberInput from "../../components/CAPNumberInput";
+import CAPSelector from "../../components/CAPSelector";
+import CAPSectionSelector from "../../components/CAPSectionSelector";
 
 import { createContext, useState } from "react";
 

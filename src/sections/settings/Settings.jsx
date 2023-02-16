@@ -1,6 +1,6 @@
 //
 
-import CAPSectionSelector from "../components/CAPSectionSelector";
+import CAPSectionSelector from "../../components/CAPSectionSelector";
 import { Neighborhood1D, Neighborhood2D } from "./Neighborhood";
 import { Rules1D, Rules2D } from "./Rules";
 import InitialState from "./InitialState";

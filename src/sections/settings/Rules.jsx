@@ -1,11 +1,8 @@
 //
 
-import CAPButton from "../components/CAPButton";
-import {
-    CAPRule1D,
-    CAPRule2D,
-} from "../components/CAPRule";
-import { inputGroupClasses } from "../js/Utils";
+import CAPButton from "../../components/CAPButton";
+import { CAPRule1D, CAPRule2D } from "../../components/CAPRule";
+import { inputGroupClasses } from "../../js/Utils";
 
 export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
     //

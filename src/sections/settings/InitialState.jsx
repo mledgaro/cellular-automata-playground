@@ -1,8 +1,8 @@
 //
 
-import CAPButton from "../components/CAPButton";
-import CAPCellButton from "../components/CAPCellButton";
-import { inputGroupClasses } from "../js/Utils";
+import CAPButton from "../../components/CAPButton";
+import CAPCellButton from "../../components/CAPCellButton";
+import { inputGroupClasses } from "../../js/Utils";
 
 export default function InitialState({ cellsNumber, size, alignment }) {
     //

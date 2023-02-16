@@ -4,11 +4,9 @@ import "./css/style.css";
 
 import { createContext, useState } from "react";
 
-import ComponentsEG from "./ComponentsEG";
-
 import Title from "./sections/Title";
 import Controls from "./sections/Controls";
-import { Settings1D, Settings2D } from "./sections/Settings";
+import { Settings1D, Settings2D } from "./sections/settings/Settings";
 import Footer from "./sections/Footer";
 
 function App() {
@@ -40,8 +38,6 @@ function App() {
     return (
         // <AppContext value={{ numCells: numCells, mainCell: mainCell }}>
         <div className="App">
-            {/* <ComponentsEG /> */}
-
             <Title dimension={dimension} onClick={changeDimension} />
             <Controls />
 
