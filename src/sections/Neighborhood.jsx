@@ -1,6 +1,6 @@
 //
 
-import { CAPNeighborhood1D } from "../components/CAPNeighborhood";
+import { CAPNbhdInput1D } from "../components/CAPNbhdInput";
 import CAPNumberInput from "../components/CAPNumberInput";
 import CAPSelector from "../components/CAPSelector";
 import CAPSectionSelector from "../components/CAPSectionSelector";
@@ -23,18 +23,20 @@ export function Neighborhood1D(props) {
                 sections={[
                     {
                         label: "In situ",
-                        component: <CAPNeighborhood1D type="insitu" />,
+                        component: <CAPNbhdInput1D type="insitu" />,
                     },
                     {
                         label: "Grouped",
-                        component: <CAPNeighborhood1D type="grouped" />,
+                        component: <CAPNbhdInput1D type="grouped" />,
                     },
                     {
                         label: "Scattered",
-                        component: <CAPNeighborhood1D type="scattered" />,
+                        component: <CAPNbhdInput1D type="scattered" />,
                     },
                 ]}
                 selected={props.nbhdIndex}
+                size="sm"
+                alignment="center"
             />
         </NbhdContext.Provider>
     );
@@ -83,6 +85,8 @@ export function Neighborhood2D() {
                     },
                 ]}
                 selected={{get: selected, set: setSelected}}
+                size="sm"
+                alignment="center"
             />
     );
 }

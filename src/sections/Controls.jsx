@@ -2,6 +2,7 @@
 
 import CAPButton from "../components/CAPButton";
 import CAPLevelSelector from "../components/CAPLevelSelector";
+import { inputGroupClasses } from "../js/Utils";
 
 function Controls() {
     return (
@@ -9,7 +10,7 @@ function Controls() {
             {/* <!-- Flow --> */}
             <div className="col-lg my-2">
                 <div
-                    className="input-group d-flex justify-content-center"
+                    className={inputGroupClasses("", "center", "")}
                 >
                     <CAPButton label="Next" iconId="forward-step" />
 
@@ -24,7 +25,7 @@ function Controls() {
             {/* <!-- Canvas --> */}
             <div className="col-lg my-2">
                 <div
-                    className="input-group d-flex justify-content-center"
+                    className={inputGroupClasses("", "center", "")}
                     id="controls-canvas-container"
                 >
                     <CAPButton label="Clear" iconId="broom" />
@@ -39,6 +40,7 @@ function Controls() {
                     numLevels={5}
                     tooltipLabels="Speed"
                     iconId="gauge-high"
+                    alignment="center"
                 />
             </div>
 
@@ -48,6 +50,7 @@ function Controls() {
                     numLevels={5}
                     tooltipLabels="Zoom"
                     iconId="magnifying-glass"
+                    alignment="center"
                 />
             </div>
         </div>

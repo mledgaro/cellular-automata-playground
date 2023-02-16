@@ -13,6 +13,8 @@ function CAPSectionSelector(props) {
             <CAPOptionGroup
                 labels={labels}
                 selected={props.selected}
+                size={props.size}
+                alignment={props.alignment}
             />
             {props.sections[props.selected.get].component}
         </div>

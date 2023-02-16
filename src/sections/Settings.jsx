@@ -45,6 +45,8 @@ export function Settings1D(props) {
                 },
             ]}
             selected={{ get: selected, set: setSelected }}
+            size="lg"
+            alignment="center"
         />
     );
 }
@@ -61,6 +63,8 @@ export function Settings2D() {
                 { label: "Rules", component: <Rules2D /> },
             ]}
             selected={{ get: selected, set: setSelected }}
+            size="lg"
+            alignment="center"
         />
     );
 }

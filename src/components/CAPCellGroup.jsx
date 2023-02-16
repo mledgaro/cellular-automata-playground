@@ -3,119 +3,94 @@
 import { inputGroupClasses } from "../js/Utils";
 import FAIcon from "./FAIcon";
 
-export function CAPCellGroupInSitu(props) {
+function Cell(props) {
+    //
+
+    let icon, size;
+
+    icon = props.selected ? "square-check" : "square";
+    size = props.selected ? "2xl" : "lg";
+
+    return (
+        <span
+            className="input-group-text cap-text-label px-1"
+            onClick={props.onClick}
+        >
+            &nbsp;
+            <FAIcon iconId={icon} iconStyle="regular" iconSize={size} />
+        </span>
+    );
+}
+
+function Ellipsis() {
+    //
+
+    return (
+        <span className="input-group-text cap-text-label px-1">
+            &nbsp;
+            <FAIcon iconId="ellipsis" iconSize="xs" />
+        </span>
+    );
+}
+
+function Container(props) {
+    return (
+        <div
+            className={inputGroupClasses(props.size, props.alignment, "")}
+            // onClick={() => props.setSelected(props.selected === 0 ? -1 : 0)}
+            onClick={props.onClick}
+        >
+            {props.content}
+        </div>
+    );
+}
+
+export default function CAPCellGroup(props) {
     //
 
     let cells = [];
+    let onClickCell = (i) => {};
+    let onClickCont = () => {};
+    let lastIdx = props.numCells - 1;
 
-    for (let i = 0, icon, size; i < props.numCells; i++) {
-        icon = props.selected === i ? "square-check" : "square";
-        size = props.selected === i ? "2xl" : "lg";
+    props.selected.set(
+        props.selected.get === -1 ? lastIdx : props.selected.get
+    );
+
+    if (props.type === "insitu") {
+        onClickCell = (i) => props.selected.set(i);
+    } else {
+        onClickCont = () =>
+            props.selected.set(props.selected.get === 0 ? lastIdx : 0);
+    }
+
+    for (let i = 0; i < props.numCells; i++) {
         cells.push(
-            <span
-                className="input-group-text cap-text-label px-1"
-                onClick={() => props.setSelected(i)}
-            >
-                &nbsp;
-                <FAIcon iconId={icon} iconStyle="regular" iconSize={size} />
-            </span>
+            <Cell
+                selected={props.selected.get === i}
+                onClick={() => onClickCell(i)}
+            />
         );
     }
-    
-    return (
-        <div className={inputGroupClasses(props.size, props.alignment, "")}>{cells}</div>
-    );
-}
-export function CAPCellGroupGrouped(props) {
-    //
 
-    let cells = [];
-
-    let selectedCell = (
-        <span className="input-group-text cap-text-label px-1">
-            &nbsp;
-            <FAIcon iconId="square-check" iconStyle="regular" iconSize="2xl" />
-        </span>
-    );
-
-    let cell = (
-        <span className="input-group-text cap-text-label px-1">
-            &nbsp;
-            <FAIcon iconId="square" iconStyle="regular" />
-        </span>
-    );
-
-    let ellipsis = (
-        <span className="input-group-text cap-text-label px-1">
-            &nbsp;
-            <FAIcon iconId="ellipsis" iconSize="sm" />
-        </span>
-    );
-
-    for (let i = 1; i < props.numCells; i++) {
-        cells.push(cell);
-    }
-
-    if (props.selected === 0) {
-        cells.unshift(selectedCell, ellipsis);
-    } else {
-        cells.push(ellipsis, selectedCell);
+    if (props.type === "grouped") {
+        if (props.selected.get === 0) {
+            cells.splice(1, 0, <Ellipsis />);
+        } else {
+            cells.splice(lastIdx, 0, <Ellipsis />);
+        }
+    } else if (props.type === "scattered") {
+        for (let i = 0; i < lastIdx; i++) {
+            cells.splice(i * 2 + 1, 0, <Ellipsis />);
+        }
     }
 
     return (
-        <div
-            className={inputGroupClasses(props.size, props.alignment, "")}
-            onClick={() => props.setSelected(props.selected === 0 ? -1 : 0)}
-        >
-            {cells}
-        </div>
-    );
-}
-export function CAPCellGroupScattered(props) {
-    //
-
-    let cells = [];
-    let selectedCell, cell, ellipsis;
-
-    selectedCell = (
-        <span className="input-group-text cap-text-label px-1">
-            &nbsp;
-            <FAIcon iconId="square-check" iconStyle="regular" iconSize="2xl" />
-        </span>
-    );
-
-    cell = (
-        <span className="input-group-text cap-text-label px-1">
-            &nbsp;
-            <FAIcon iconId="square" iconStyle="regular" />
-        </span>
-    );
-
-    ellipsis = (
-        <span className="input-group-text cap-text-label px-1">
-            &nbsp;
-            <FAIcon iconId="ellipsis" iconSize="sm" />
-        </span>
-    );
-
-    for (let i = 1; i < props.numCells; i++) {
-        cells.push(cell);
-        cells.push(ellipsis);
-    }
-
-    if (props.selected === 0) {
-        cells.unshift(selectedCell, ellipsis);
-        cells.pop();
-    } else {
-        cells.push(selectedCell);
-    }
-
-    return (
-        <div
-            className={inputGroupClasses(props.size, props.alignment, "")}
-            onClick={() => props.setSelected(props.selected === 0 ? -1 : 0)}
-        >
-            {cells}
-        </div>
+        <Container
+            content={cells}
+            size={props.size}
+            alignment={props.alignment}
+            onClick={onClickCont}
+        />
     );
 }
