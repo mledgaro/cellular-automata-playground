@@ -20,7 +20,7 @@ function CAPOptionGroup(props) {
     });
 
     return (
-        <div className={inputGroupClasses(props.size, props.alignment, "mb-3")}>
+        <div className={inputGroupClasses(props.size, props.alignment, `my-3 ${props.bs5Class}`)}>
             {props.label != null && (
                 <span className="input-group-text cap-text-label">
                     {props.label}

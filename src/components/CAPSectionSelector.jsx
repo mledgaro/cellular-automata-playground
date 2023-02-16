@@ -15,6 +15,7 @@ function CAPSectionSelector(props) {
                 selected={props.selected}
                 size={props.size}
                 alignment={props.alignment}
+                bs5Class={props.bs5Class}
             />
             {props.sections[props.selected.get].component}
         </div>
