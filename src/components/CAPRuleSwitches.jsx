@@ -23,7 +23,7 @@ export function CAPRuleSwitch1D(props) {
                 <FAIcon
                     iconId="square"
                     iconStyle={e ? "solid" : "regular"}
-                    iconSize={i === mainCell ? "xl" : ""}
+                    iconSize={i === mainCell ? "lg" : "xs"}
                 />
             </span>
         );
@@ -51,7 +51,7 @@ export function CAPRuleSwitch1D(props) {
 
     return (
         <div
-            className={inputGroupClasses(props.size, props.alignment, "")}
+            className={inputGroupClasses("sm", "center", "")}
             onClick={() => setAlive(!alive)}
         >
             <span
@@ -65,7 +65,7 @@ export function CAPRuleSwitch1D(props) {
 
             <span className="input-group-text cap-text-label px-1">
                 &nbsp;
-                <FAIcon iconId="arrow-right" iconStyle="solid" iconSize="" />
+                <FAIcon iconId="arrow-right" iconStyle="solid" iconSize="sm" />
             </span>
 
             <span className="input-group-text cap-text-label px-1">
@@ -73,7 +73,7 @@ export function CAPRuleSwitch1D(props) {
                 <FAIcon
                     iconId="square"
                     iconStyle={alive ? "solid" : "regular"}
-                    iconSize="xl"
+                    iconSize="lg"
                 />
             </span>
         </div>

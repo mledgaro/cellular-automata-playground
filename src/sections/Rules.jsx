@@ -29,7 +29,7 @@ export function Rules1D(props) {
         <div>
             <div className="row">
                 <div className="col-lg">
-                    <div className={inputGroupClasses(props.size, props.alignment, "")}>
+                    <div className={inputGroupClasses("", "center", "")}>
                         <span
                             className="input-group-text cap-text-label"
                             style={{ minWidth: "2rem" }}
@@ -47,7 +47,7 @@ export function Rules1D(props) {
 
                 {/* <!-- Buttons --> */}
                 <div className="col-lg">
-                    <div className={inputGroupClasses(props.size, props.alignment, "")}>
+                    <div className={inputGroupClasses("", "center", "")}>
                         <CAPButton
                             label="Uncheck all"
                             iconId="square"

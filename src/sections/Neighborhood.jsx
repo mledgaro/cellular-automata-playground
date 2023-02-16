@@ -37,6 +37,7 @@ export function Neighborhood1D(props) {
                 selected={props.nbhdIndex}
                 size="sm"
                 alignment="center"
+                bs5Class="w-75 mx-auto"
             />
         </NbhdContext.Provider>
     );
