@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import CAPButton from "../../components/CAPButton";
-import CAPCellButton from "../../components/CAPCellButton";
+import CAPCellSet from "../../components/CAPCellsState";
 import CAPNumberInput from "../../components/CAPNumberInput";
 import CAPSectionSelector from "../../components/CAPSectionSelector";
 import { inputGroupClasses } from "../../js/Utils";
 
-export default function InitialState({ cellsNumber, size, alignment }) {
+export default function InitialState({ cellsNumber }) {
     //
 
     let [liveCellsType, setLiveCellsType] = useState(0);
@@ -18,6 +18,8 @@ export default function InitialState({ cellsNumber, size, alignment }) {
     let [groupSize, setGroupSize] = useState(0);
     let [groupMinSize, setGroupMinSize] = useState(0);
     let [groupMaxSize, setGroupMaxSize] = useState(0);
+
+    let [cellsState, setCellsState] = useState(Array(cellsNumber).fill(false));
 
     let liveCellsSelector = (
         <CAPSectionSelector
@@ -122,12 +124,7 @@ export default function InitialState({ cellsNumber, size, alignment }) {
         />
     );
 
-    let cells = [];
-
-    for (let i = 0; i < cellsNumber; i++) {
-        cells.push(<CAPCellButton index={i} />);
-    }
-
+    
     return (
         <div>
             <div className="row mb-2">
@@ -150,9 +147,7 @@ export default function InitialState({ cellsNumber, size, alignment }) {
                 </div>
             </div>
 
-            <div className="row px-5" style={{ textAlign: "center" }}>
-                {cells}
-            </div>
+            <CAPCellSet cellsState={cellsState} />
         </div>
     );
 }

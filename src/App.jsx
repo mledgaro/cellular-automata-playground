@@ -1,6 +1,6 @@
 //
 
-import "./css/style.css";
+import "./css/App.css";
 
 import { createContext, useState } from "react";
 

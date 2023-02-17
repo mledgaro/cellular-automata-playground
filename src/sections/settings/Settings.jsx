@@ -42,7 +42,7 @@ export function Settings1D({ nbhdWidth, mainCell }) {
                 },
                 {
                     label: "Initial state",
-                    component: <InitialState cellsNumber={100} />,
+                    component: <InitialState cellsNumber={256} />,
                 },
             ]}
             selected={{ get: selected, set: setSelected }}
