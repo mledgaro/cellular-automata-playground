@@ -10,6 +10,7 @@ export default function CAPNumberInput({
     label,
     size,
     alignment,
+    extraClasses
 }) {
     //
 
@@ -26,7 +27,7 @@ export default function CAPNumberInput({
     };
 
     return (
-        <div className={inputGroupClasses(size, alignment, "")}>
+        <div className={inputGroupClasses(size, alignment, ` ${extraClasses}`)}>
             {label != null && (
                 <span className="input-group-text cap-text-label">{label}</span>
             )}
