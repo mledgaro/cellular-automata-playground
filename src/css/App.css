@@ -5,6 +5,11 @@
     --highlight: #f8f9fa;
 }
 
+.cap-bg-color-cell-off {
+    background-color: var(--cellOff);
+}
+
+
 .cap-text-label {
     font-size: large;
     font-weight: 500;
@@ -63,6 +68,17 @@
     border: "none";
     width: "2.5rem";
     height: "2.5rem";
+}
+
+.cap-cell-group {
+    background-color: var(--cellOff);
+    text-align: center;
+    border-radius: 3px;
+}
+
+.cap-icon-cell {
+    color: var(--cellOn);
+    padding: 2px;
 }
 
 .cap-cell {

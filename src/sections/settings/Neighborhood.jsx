@@ -1,6 +1,6 @@
 //
 
-import { CAPNbhdInput1D } from "../../components/CAPNbhdInput";
+import { CAPNbhdInput1D, NbhdInput2D } from "../../components/CAPNbhdInput";
 import CAPNumberInput from "../../components/CAPNumberInput";
 import CAPSelector from "../../components/CAPSelector";
 import CAPSectionSelector from "../../components/CAPSectionSelector";
@@ -47,40 +47,13 @@ export function Neighborhood2D() {
     //
 
     const [selected, setSelected] = useState(0);
-    const [size, setSize] = useState(3);
-
-    let mooreSection = (
-        <div className="row">
-            <div className="col">
-                <CAPNumberInput
-                    label="Size"
-                    value={{ get: size, set: setSize }}
-                    min={1}
-                    max={8}
-                />
-            </div>
-
-            <div className="col">
-                <CAPSelector
-                    label="Alignment"
-                    maxWidth={12}
-                    options={[
-                        "Top Left",
-                        "Top Right",
-                        "Bottom Left",
-                        "Bottom Right",
-                    ]}
-                />
-            </div>
-        </div>
-    );
 
     return (
         <CAPSectionSelector
             sections={[
                 {
                     label: "Moore",
-                    component: mooreSection,
+                    component: <NbhdInput2D />,
                 },
                 {
                     label: "Von Neumann",
