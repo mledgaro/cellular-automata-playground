@@ -3,7 +3,7 @@
 import { createContext, useState } from "react";
 
 import CAPSectionSelector from "../../components/CAPSectionSelector";
-import { NbhdInput1D, NbhdInput2D } from "../../components/CAPNbhdInput";
+import { NbhdInput1D, NbhdInput2D } from "../../components/NbhdInput";
 
 export const NbhdContext = createContext();
 
@@ -51,15 +51,15 @@ export function Neighborhood2D() {
             sections={[
                 {
                     label: "Moore",
-                    component: <NbhdInput2D />,
+                    component: <NbhdInput2D type="moore" />,
                 },
                 {
                     label: "Von Neumann",
-                    component: <div>Von Neumann</div>,
+                    component: <NbhdInput2D type="vonneumann" />,
                 },
                 {
                     label: "Diagonal",
-                    component: <div>Diagonal</div>,
+                    component: <NbhdInput2D type="diagonal" />,
                 },
             ]}
             selected={{ get: selected, set: setSelected }}

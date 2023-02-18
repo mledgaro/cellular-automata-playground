@@ -7,14 +7,28 @@ import CAPNumberInput from "./CAPNumberInput";
 
 import { NbhdContext } from "../sections/settings/Neighborhood";
 
-function Cell({ selected, onClick }) {
+function Cell({ active, selected, onClick }) {
     //
 
-    let icon = {
-        id: selected ? "square-check" : "square",
-        style: "regular",
-        size: selected ? "2xl" : "lg",
-    };
+    let icon;
+
+    if (active == null) {
+        active = true;
+    }
+
+    if (active) {
+        icon = {
+            id: selected ? "square-check" : "square",
+            style: "regular",
+            size: selected ? "2xl" : "lg",
+        };
+    } else {
+        icon = {
+            id: "square-xmark",
+            style: "solid",
+            size: "sm",
+        };
+    }
 
     return (
         <span className="cap-icon-cell" onClick={onClick}>
@@ -83,6 +97,22 @@ function CellGroup1D({ type, numCells, selected, size, alignment }) {
 function CellGroup2D({ type, width, height, selected, extraClasses }) {
     //
 
+
+    let isActive;
+
+    switch (type) {
+        case "vonneumann":
+            isActive = (r, c) => selected.get.r === r || selected.get.c === c;
+            break;
+
+        case "diagonal":
+            isActive = (r, c) => Math.abs(selected.get.r - r) === Math.abs(selected.get.c - c);
+            break;
+
+        default:
+            isActive = (r, c) => true;
+    }
+
     let cells = [];
 
     for (let r = 0, row, sel; r < height; r++) {
@@ -91,10 +121,13 @@ function CellGroup2D({ type, width, height, selected, extraClasses }) {
             sel = r === selected.get.r && c === selected.get.c;
             row.push(
                 <td style={{ padding: "5px" }}>
+
                     <Cell
+                        active={isActive(r, c)}
                         selected={sel}
                         onClick={() => selected.set({ r: r, c: c })}
-                    />
+                        />
+                    
                 </td>
             );
         }
