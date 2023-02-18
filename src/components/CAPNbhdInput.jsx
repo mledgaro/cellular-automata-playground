@@ -1,10 +1,11 @@
 //
 
 import { useContext, useState } from "react";
-import CAPNumberInput from "./CAPNumberInput";
-import { NbhdContext } from "../sections/settings/Neighborhood";
-import { inputGroupClasses } from "../js/Utils";
+
 import FAIcon from "./FAIcon";
+import CAPNumberInput from "./CAPNumberInput";
+
+import { NbhdContext } from "../sections/settings/Neighborhood";
 
 function Cell({ selected, onClick }) {
     //
@@ -16,11 +17,7 @@ function Cell({ selected, onClick }) {
     };
 
     return (
-        <span
-            className="input-group-text cap-text-label px-1"
-            onClick={onClick}
-        >
-            &nbsp;
+        <span className="cap-icon-cell" onClick={onClick}>
             <FAIcon icon={icon} />
         </span>
     );
@@ -30,26 +27,13 @@ function Ellipsis() {
     //
 
     return (
-        <span className="input-group-text cap-text-label px-1">
-            &nbsp;
-            <FAIcon icon={{ id: "ellipsis", size: "xs" }} />
+        <span className="cap-icon-cell">
+            <FAIcon icon={{ id: "ellipsis", size: "2xs" }} />
         </span>
     );
 }
 
-function Container({ content, size, alignment, onClick }) {
-    return (
-        <div
-            className={inputGroupClasses(size, alignment, "")}
-            // onClick={() => setSelected(selected === 0 ? -1 : 0)}
-            onClick={onClick}
-        >
-            {content}
-        </div>
-    );
-}
-
-function CAPCellGroup({ type, numCells, selected, size, alignment }) {
+function CellGroup1D({ type, numCells, selected, size, alignment }) {
     //
 
     let cells = [];
@@ -87,16 +71,40 @@ function CAPCellGroup({ type, numCells, selected, size, alignment }) {
     }
 
     return (
-        <Container
-            content={cells}
-            size={size}
-            alignment={alignment}
+        <div
+            className="cap-cell-group mx-auto"
+            style={{ padding: "8px", width: "fit-content" }}
             onClick={onClickCont}
-        />
+        >
+            {cells}
+        </div>
     );
 }
+function CellGroup2D({ type, width, height, selected, extraClasses }) {
+    //
 
-export function CAPNbhdInput1D({ type }) {
+    let cells = [];
+
+    for (let r = 0, row, sel; r < height; r++) {
+        row = [];
+        for (let c = 0; c < width; c++) {
+            sel = r === selected.get.r && c === selected.get.c;
+            row.push(
+                <td style={{ padding: "5px" }}>
+                    <Cell
+                        selected={sel}
+                        onClick={() => selected.set({ r: r, c: c })}
+                    />
+                </td>
+            );
+        }
+        cells.push(<tr>{row}</tr>);
+    }
+
+    return <table className={`cap-cell-group ${extraClasses}`}>{cells}</table>;
+}
+
+export function NbhdInput1D({ type }) {
     //
 
     const nbhdContext = useContext(NbhdContext);
@@ -118,71 +126,33 @@ export function CAPNbhdInput1D({ type }) {
     }
 
     return (
-        <div className="row">
+        <div className="row w-50 mx-auto">
             <div className="col">
                 <CAPNumberInput
-                    label="Cells"
+                    label="Width"
                     value={{
                         get: nbhdContext.nbhdWidth.get,
                         set: updateNumCells,
                     }}
                     min={2}
-                    max={16}
-                    alignment="end"
+                    max={12}
+                    alignment="center"
                 />
             </div>
 
             <div className="col">
-                <CAPCellGroup
+                <CellGroup1D
                     type={type}
                     numCells={nbhdContext.nbhdWidth.get}
                     selected={nbhdContext.mainCell}
-                    alignment="start"
+                    alignment="center"
                 />
             </div>
         </div>
     );
 }
-function Cell2({ selected, onClick }) {
-    //
 
-    let icon = {
-        id: selected ? "square-check" : "square",
-        style: "regular",
-        size: selected ? "2xl" : "lg",
-    };
-
-    return (
-        <span className="cap-icon-cell" onClick={onClick}>
-            <FAIcon icon={icon} />
-        </span>
-    );
-}
-function CellGroup2D({ type, width, height, selected, extraClasses }) {
-    //
-
-    let cells = [];
-
-    for (let r = 0, row, sel; r < height; r++) {
-        row = [];
-        for (let c = 0; c < width; c++) {
-            sel = r === selected.get.r && c === selected.get.c;
-            row.push(
-                <td style={{ padding: "5px" }}>
-                    <Cell2
-                        selected={sel}
-                        onClick={() => selected.set({ r: r, c: c })}
-                    />
-                </td>
-            );
-        }
-        cells.push(<tr>{row}</tr>);
-    }
-
-    return <table className={`cap-cell-group ${extraClasses}`}>{cells}</table>;
-}
-
-export function NbhdInput2D() {
+export function NbhdInput2D({ type }) {
     //
 
     let [selected, setSelected] = useState({ r: 1, c: 1 });
@@ -203,7 +173,7 @@ export function NbhdInput2D() {
                     alignment="center"
                     extraClasses="mb-2"
                 />
-                
+
                 <CAPNumberInput
                     label="Height"
                     value={{
@@ -218,6 +188,7 @@ export function NbhdInput2D() {
 
             <div className="col">
                 <CellGroup2D
+                    type={type}
                     width={width}
                     height={height}
                     selected={{ get: selected, set: setSelected }}

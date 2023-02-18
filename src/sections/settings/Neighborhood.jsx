@@ -1,11 +1,9 @@
 //
 
-import { CAPNbhdInput1D, NbhdInput2D } from "../../components/CAPNbhdInput";
-import CAPNumberInput from "../../components/CAPNumberInput";
-import CAPSelector from "../../components/CAPSelector";
-import CAPSectionSelector from "../../components/CAPSectionSelector";
-
 import { createContext, useState } from "react";
+
+import CAPSectionSelector from "../../components/CAPSectionSelector";
+import { NbhdInput1D, NbhdInput2D } from "../../components/CAPNbhdInput";
 
 export const NbhdContext = createContext();
 
@@ -23,15 +21,15 @@ export function Neighborhood1D({ nbhdWidth, mainCell, selected }) {
                 sections={[
                     {
                         label: "In situ",
-                        component: <CAPNbhdInput1D type="insitu" />,
+                        component: <NbhdInput1D type="insitu" />,
                     },
                     {
                         label: "Grouped",
-                        component: <CAPNbhdInput1D type="grouped" />,
+                        component: <NbhdInput1D type="grouped" />,
                     },
                     {
                         label: "Scattered",
-                        component: <CAPNbhdInput1D type="scattered" />,
+                        component: <NbhdInput1D type="scattered" />,
                     },
                 ]}
                 selected={selected}
