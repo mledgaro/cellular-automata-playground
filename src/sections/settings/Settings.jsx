@@ -37,8 +37,8 @@ function Settings1D() {
                     label: "Rules",
                     component: (
                         <Rules1D
-                            nbhdWidth={nbhdWidth.get}
-                            mainCell={mainCell.get}
+                            nbhdWidth={nbhdWidth}
+                            mainCell={mainCell}
                             nbhdType={nbhdKeys1D[nbhdIndex]}
                         />
                     ),

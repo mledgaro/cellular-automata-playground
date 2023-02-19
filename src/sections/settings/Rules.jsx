@@ -1,18 +1,19 @@
 //
 
 import CAPButton from "../../components/CAPButton";
-import { CAPRule1D, CAPRule2D, Rule2D } from "../../components/CAPRule";
+import { Rule1D, Rule2D } from "../../components/CAPRule";
 import { diagonalNeighbors, inputGroupClasses } from "../../js/Utils";
 
 export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
     //
 
     let rules = [];
+    const ruleNumber = 90;
 
     for (let i = 0; i < 8; i++) {
         rules.push(
-            <div className="col-3 my-1">
-                <CAPRule1D
+            <div className="col-lg-3 my-1">
+                <Rule1D
                     type={nbhdType}
                     index={i}
                     nbhdWidth={nbhdWidth}
@@ -23,26 +24,16 @@ export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
     }
 
     return (
-        <div>
-            <div className="row">
+        <div className="mt-3">
+            <div className="row mx-auto" style={{width: "60%"}}>
+                {/* Rule number */}
                 <div className="col-lg">
-                    <div className={inputGroupClasses("", "center", "")}>
-                        <span
-                            className="input-group-text cap-container-dark-1"
-                            style={{ minWidth: "2rem" }}
-                        >
-                            Rule number
-                        </span>
-                        <span
-                            className="input-group-text cap-container-dark-1"
-                            style={{ minWidth: "2rem" }}
-                        >
-                            90
-                        </span>
+                    <div className="cap-container-dark-1 px-3 py-1 mx-auto" style={{width: "fit-content"}}>
+                        Rule number {ruleNumber}
                     </div>
                 </div>
 
-                {/* <!-- Buttons --> */}
+                {/* Controls */}
                 <div className="col-lg">
                     <div className={inputGroupClasses("", "center", "")}>
                         <CAPButton
@@ -68,7 +59,7 @@ export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
                 </div>
             </div>
 
-            <div className="row mt-3">{rules}</div>
+            <div className="row mt-3 w-75 mx-auto">{rules}</div>
         </div>
     );
 }

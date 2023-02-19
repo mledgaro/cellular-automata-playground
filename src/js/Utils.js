@@ -15,8 +15,8 @@ export function intToBoolArray(int, size) {
     arr = "0".repeat(size) + int.toString(2);
     arr = arr.slice(-size);
     arr = arr.split("");
-    arr = arr.map((e) => e == "1");
-    arr = arr.reverse();
+    arr = arr.map((e) => e === "1");
+    // arr = arr.reverse();
 
     return arr;
 }
