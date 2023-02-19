@@ -1,10 +1,11 @@
 //
 
+import { useState } from "react";
+
 import CAPSectionSelector from "../../components/CAPSectionSelector";
 import { Neighborhood1D, Neighborhood2D } from "./Neighborhood";
 import { Rules1D, Rules2D } from "./Rules";
 import InitialState from "./InitialState";
-import { useState } from "react";
 
 const nbhdKeys1D = ["insitu", "grouped", "scattered"];
 const nbhdKeys2D = ["moore", "vonneumann", "diagonal"];

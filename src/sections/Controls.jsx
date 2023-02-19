@@ -2,15 +2,16 @@
 
 import CAPButton from "../components/CAPButton";
 import CAPLevelSelector from "../components/CAPLevelSelector";
+
 import { inputGroupClasses } from "../js/Utils";
 
 export default function Controls() {
     //
 
     return (
-        <div className="row mt-0">
+        <div className="row my-3">
             {/* <!-- Flow --> */}
-            <div className="col-lg my-2">
+            <div className="col-lg">
                 <div className={inputGroupClasses("", "center", "")}>
                     <CAPButton
                         tooltipLabel="Next"
@@ -26,11 +27,8 @@ export default function Controls() {
             </div>
 
             {/* <!-- Canvas --> */}
-            <div className="col-lg my-2">
-                <div
-                    className={inputGroupClasses("", "center", "")}
-                    id="controls-canvas-container"
-                >
+            <div className="col-lg">
+                <div className={inputGroupClasses("", "center", "")}>
                     <CAPButton tooltipLabel="Clear" icon={{ id: "broom" }} />
 
                     <CAPButton
@@ -41,7 +39,7 @@ export default function Controls() {
             </div>
 
             {/* <!-- Speed --> */}
-            <div className="col-lg my-2" id="speed-level-container">
+            <div className="col-lg">
                 <CAPLevelSelector
                     numLevels={5}
                     tooltipLabel="Speed"
@@ -51,7 +49,7 @@ export default function Controls() {
             </div>
 
             {/* <!-- Zoom --> */}
-            <div className="col-lg my-2" id="zoom-level-container">
+            <div className="col-lg">
                 <CAPLevelSelector
                     numLevels={5}
                     tooltipLabel="Zoom"
