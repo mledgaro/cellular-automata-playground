@@ -1,8 +1,8 @@
 //
 
 import CAPButton from "../../components/CAPButton";
-import { CAPRule1D, CAPRule2D } from "../../components/CAPRule";
-import { inputGroupClasses } from "../../js/Utils";
+import { CAPRule1D, CAPRule2D, Rule2D } from "../../components/CAPRule";
+import { diagonalNeighbors, inputGroupClasses } from "../../js/Utils";
 
 export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
     //
@@ -73,18 +73,46 @@ export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
     );
 }
 
-export function Rules2D() {
+export function Rules2D({ nbhdType, nbhdWidth, nbhdHeight, mainCell }) {
     //
+
+    let numRules;
+
+    if (nbhdType === "vonneumann") {
+        numRules = nbhdWidth + nbhdHeight - 2;
+    } else if (nbhdType === "diagonal") {
+        numRules = diagonalNeighbors(
+            nbhdWidth,
+            nbhdHeight,
+            mainCell.r,
+            mainCell.c
+        );
+    } else {
+        // moore
+        numRules = nbhdWidth * nbhdHeight - 1;
+    }
 
     let rules = [];
 
-    for (let i = 0; i <= 8; i++) {
+    let headers = [];
+
+    headers.push(<td className="cap-icon-cell" >Neighbors</td>);
+    rules.push(<td className="cap-icon-cell">State</td>);
+
+    for (let i = 0; i <= numRules; i++) {
+        headers.push(<td className="cap-icon-cell">{i}</td>);
+
         rules.push(
-            <div className="col m-1">
-                <CAPRule2D index={i} />
-            </div>
+            <td>
+                <Rule2D />
+            </td>
         );
     }
 
-    return <div className="row">{rules}</div>;
+    return (
+        <table className="cap-cell-group w-75 mx-auto">
+            <tr>{headers}</tr>
+            <tr>{rules}</tr>
+        </table>
+    );
 }

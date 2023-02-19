@@ -1,11 +1,11 @@
 //
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 import FAIcon from "./FAIcon";
 import CAPNumberInput from "./CAPNumberInput";
 
-import { NbhdContext } from "../sections/settings/Neighborhood";
+import { NbhdContext1D, NbhdContext2D } from "../sections/settings/Neighborhood";
 
 function Cell({ active, selected, onClick }) {
     //
@@ -31,7 +31,11 @@ function Cell({ active, selected, onClick }) {
     }
 
     return (
-        <span className="cap-icon-cell" onClick={onClick}>
+        <span
+            className="cap-icon-cell"
+            onClick={onClick}
+            style={{ color: !active ? "#6c757d" : "" }}
+        >
             <FAIcon icon={icon} />
         </span>
     );
@@ -140,7 +144,7 @@ function CellGroup2D({ type, width, height, selected, extraClasses }) {
 export function NbhdInput1D({ type }) {
     //
 
-    const nbhdContext = useContext(NbhdContext);
+    const nbhdContext = useContext(NbhdContext1D);
 
     let updateNumCells;
 
@@ -188,19 +192,14 @@ export function NbhdInput1D({ type }) {
 export function NbhdInput2D({ type }) {
     //
 
-    let [selected, setSelected] = useState({ r: 1, c: 1 });
-    let [width, setWidth] = useState(3);
-    let [height, setHeight] = useState(3);
+    const nbhdContext = useContext(NbhdContext2D);
 
     return (
         <div className="row mt-2 mx-auto" style={{ width: "50%" }}>
             <div className="col">
                 <CAPNumberInput
                     label="Width"
-                    value={{
-                        get: width,
-                        set: setWidth,
-                    }}
+                    value={nbhdContext.nbhdWidth}
                     min={2}
                     max={8}
                     alignment="center"
@@ -209,10 +208,7 @@ export function NbhdInput2D({ type }) {
 
                 <CAPNumberInput
                     label="Height"
-                    value={{
-                        get: height,
-                        set: setHeight,
-                    }}
+                    value={nbhdContext.nbhdHeight}
                     min={2}
                     max={8}
                     alignment="center"
@@ -222,9 +218,9 @@ export function NbhdInput2D({ type }) {
             <div className="col">
                 <CellGroup2D
                     type={type}
-                    width={width}
-                    height={height}
-                    selected={{ get: selected, set: setSelected }}
+                    width={nbhdContext.nbhdWidth.get}
+                    height={nbhdContext.nbhdHeight.get}
+                    selected={nbhdContext.mainCell}
                     extraClasses="mx-auto"
                 />
             </div>

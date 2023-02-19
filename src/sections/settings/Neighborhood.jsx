@@ -5,13 +5,14 @@ import { createContext, useState } from "react";
 import CAPSectionSelector from "../../components/CAPSectionSelector";
 import { NbhdInput1D, NbhdInput2D } from "../../components/NbhdInput";
 
-export const NbhdContext = createContext();
+export const NbhdContext1D = createContext();
+export const NbhdContext2D = createContext();
 
 export function Neighborhood1D({ nbhdWidth, mainCell, selected }) {
     //
 
     return (
-        <NbhdContext.Provider
+        <NbhdContext1D.Provider
             value={{
                 nbhdWidth: nbhdWidth,
                 mainCell: mainCell,
@@ -37,35 +38,41 @@ export function Neighborhood1D({ nbhdWidth, mainCell, selected }) {
                 alignment="center"
                 bs5Class="w-75 mx-auto"
             />
-        </NbhdContext.Provider>
+        </NbhdContext1D.Provider>
     );
 }
 
-export function Neighborhood2D() {
+export function Neighborhood2D({ nbhdType, nbhdWidth, nbhdHeight, mainCell }) {
     //
 
-    const [selected, setSelected] = useState(0);
-
     return (
-        <CAPSectionSelector
-            sections={[
-                {
-                    label: "Moore",
-                    component: <NbhdInput2D type="moore" />,
-                },
-                {
-                    label: "Von Neumann",
-                    component: <NbhdInput2D type="vonneumann" />,
-                },
-                {
-                    label: "Diagonal",
-                    component: <NbhdInput2D type="diagonal" />,
-                },
-            ]}
-            selected={{ get: selected, set: setSelected }}
-            size="sm"
-            alignment="center"
-            bs5Class="w-75 mx-auto"
-        />
+        <NbhdContext2D.Provider
+            value={{
+                nbhdWidth: nbhdWidth,
+                nbhdHeight: nbhdHeight,
+                mainCell: mainCell,
+            }}
+        >
+            <CAPSectionSelector
+                sections={[
+                    {
+                        label: "Moore",
+                        component: <NbhdInput2D type="moore" />,
+                    },
+                    {
+                        label: "Von Neumann",
+                        component: <NbhdInput2D type="vonneumann" />,
+                    },
+                    {
+                        label: "Diagonal",
+                        component: <NbhdInput2D type="diagonal" />,
+                    },
+                ]}
+                selected={nbhdType}
+                size="sm"
+                alignment="center"
+                bs5Class="w-75 mx-auto"
+            />
+        </NbhdContext2D.Provider>
     );
 }

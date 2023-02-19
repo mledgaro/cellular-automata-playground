@@ -65,6 +65,44 @@ export function inputGroupClasses(size, alignment, classes) {
     } else {
         alignment = "";
     }
-    
+
     return `input-group ${size} ${alignment} ${classes}`;
+}
+
+/**
+ * Returns the number of elements in the diagonal given of an entry in a matrix.
+ * @param {Int} width 
+ * @param {Int} height 
+ * @param {Int} row 
+ * @param {Int} col 
+ * @returns number of elements in the diagonal
+ */
+export function diagonalSize(width, height, row, col) {
+    //
+
+    let d = col - row;
+
+    if (0 > d) {
+        return Math.min(width, height) - Math.abs(d);
+    } else if (d > Math.abs(width - height)) {
+        return Math.max(width, height) - Math.abs(d);
+    } else {
+        // 0 <= d <= Math.abs(width - height)
+        return Math.min(width, height);
+    }
+}
+
+/**
+ * Returns the number of neighbors in the diagonals given of an entry in a matrix.
+ * @param {Int} width 
+ * @param {Int} height 
+ * @param {Int} row 
+ * @param {Int} col 
+ * @returns number of elements in the diagonal
+ */
+export function diagonalNeighbors(width, height, row, col) {
+    return (
+        diagonalSize(width, height, row, col) +
+        diagonalSize(width, height, row, width - col) - 1
+    );
 }

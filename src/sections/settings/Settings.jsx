@@ -6,15 +6,17 @@ import { Rules1D, Rules2D } from "./Rules";
 import InitialState from "./InitialState";
 import { useState } from "react";
 
-const nbhdKeys = ["insitu", "grouped", "scattered"];
+const nbhdKeys1D = ["insitu", "grouped", "scattered"];
+const nbhdKeys2D = ["moore", "vonneumann", "diagonal"];
 
-export function Settings1D({ nbhdWidth, mainCell }) {
+function Settings1D() {
     //
 
-    const [nbhdIndex, setNbhdIndex] = useState(0);
-    const [selected, setSelected] = useState(0);
+    const [section, setSection] = useState(0);
 
-    let nbhdType = nbhdKeys[nbhdIndex];
+    const [nbhdIndex, setNbhdIndex] = useState(0);
+    const [nbhdWidth, setNbhdWidth] = useState(3);
+    const [mainCell, setMainCell] = useState(1);
 
     return (
         <CAPSectionSelector
@@ -24,8 +26,8 @@ export function Settings1D({ nbhdWidth, mainCell }) {
                     label: "Neighborhood",
                     component: (
                         <Neighborhood1D
-                            nbhdWidth={nbhdWidth}
-                            mainCell={mainCell}
+                            nbhdWidth={{ get: nbhdWidth, set: setNbhdWidth }}
+                            mainCell={{ get: mainCell, set: setMainCell }}
                             selected={{ get: nbhdIndex, set: setNbhdIndex }}
                         />
                     ),
@@ -36,7 +38,7 @@ export function Settings1D({ nbhdWidth, mainCell }) {
                         <Rules1D
                             nbhdWidth={nbhdWidth.get}
                             mainCell={mainCell.get}
-                            nbhdType={nbhdType}
+                            nbhdType={nbhdKeys1D[nbhdIndex]}
                         />
                     ),
                 },
@@ -45,28 +47,62 @@ export function Settings1D({ nbhdWidth, mainCell }) {
                     component: <InitialState cellsNumber={256} />,
                 },
             ]}
-            selected={{ get: selected, set: setSelected }}
+            selected={{ get: section, set: setSection }}
             size="lg"
             alignment="center"
         />
     );
 }
 
-export function Settings2D() {
+function Settings2D() {
     //
 
-    const [selected, setSelected] = useState(0);
+    const [section, setSection] = useState(0);
+
+    const [nbhdIndex, setNbhdIndex] = useState(0);
+    const [nbhdWidth, setNbhdWidth] = useState(3);
+    const [nbhdHeight, setNbhdHeight] = useState(3);
+    const [mainCell, setMainCell] = useState({ r: 1, c: 1 });
 
     return (
         <CAPSectionSelector
             title="Settings"
             sections={[
-                { label: "Neighborhood", component: <Neighborhood2D /> },
-                { label: "Rules", component: <Rules2D /> },
+                {
+                    label: "Neighborhood",
+                    component: (
+                        <Neighborhood2D
+                            nbhdType={{ get: nbhdIndex, set: setNbhdIndex }}
+                            nbhdWidth={{ get: nbhdWidth, set: setNbhdWidth }}
+                            nbhdHeight={{ get: nbhdHeight, set: setNbhdHeight }}
+                            mainCell={{ get: mainCell, set: setMainCell }}
+                        />
+                    ),
+                },
+                {
+                    label: "Rules",
+                    component: (
+                        <Rules2D
+                            nbhdType={nbhdKeys2D[nbhdIndex]}
+                            nbhdWidth={nbhdWidth}
+                            nbhdHeight={nbhdHeight}
+                            mainCell={mainCell}
+                        />
+                    ),
+                },
             ]}
-            selected={{ get: selected, set: setSelected }}
+            selected={{ get: section, set: setSection }}
             size="lg"
             alignment="center"
         />
     );
+}
+
+export default function Settings({ dimension }) {
+    if (dimension === 1) {
+        return <Settings1D />;
+    } else {
+        // dimension === 2
+        return <Settings2D />;
+    }
 }

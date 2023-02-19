@@ -86,27 +86,16 @@ export function CAPRule1D({ type, index, nbhdWidth, mainCell }) {
     );
 }
 
-export function CAPRule2D({ index }) {
-    return (
-        <div className="d-flex justify-content-center">
-            <div
-                className="card bg-warning border-0"
-                style={{ width: "3.5rem" }}
-            >
-                <div className="card-header bg-dark cap-text-label p-1">
-                    {index}
-                </div>
+export function Rule2D() {
+    //
 
-                <div className="card-body p-0 mx-auto text-dark">
-                    <CAPStateButton
-                        icons={[
-                            { id: "square-minus", size: "xl" },
-                            { id: "square", size: "xl" },
-                            { id: "square-check", size: "xl" },
-                        ]}
-                    />
-                </div>
-            </div>
-        </div>
+    return (
+        <CAPStateButton
+            icons={[
+                { id: "square-minus", style: "regular", size: "xl" },
+                { id: "square", style: "regular", size: "xl" },
+                { id: "square", style: "solid", size: "xl" },
+            ]}
+        />
     );
 }
