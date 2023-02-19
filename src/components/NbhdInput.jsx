@@ -178,7 +178,7 @@ export function NbhdInput1D({ type }) {
                         set: updateNumCells,
                     }}
                     min={2}
-                    max={12}
+                    max={8}
                     alignment="center"
                 />
             </div>

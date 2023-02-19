@@ -1,6 +1,6 @@
 //
 
-import { createContext, useState } from "react";
+import { createContext } from "react";
 
 import CAPSectionSelector from "../../components/CAPSectionSelector";
 import { NbhdInput1D, NbhdInput2D } from "../../components/NbhdInput";
@@ -10,6 +10,16 @@ export const NbhdContext2D = createContext();
 
 export function Neighborhood1D({ nbhdWidth, mainCell, selected }) {
     //
+
+    const changeSection = (idx) => { 
+        if (idx === 0) {
+            mainCell.set(Math.floor(nbhdWidth.get / 2));
+        } else {
+            mainCell.set(0);
+        }
+        selected.set(idx);
+    };
+    
 
     return (
         <NbhdContext1D.Provider
@@ -33,7 +43,7 @@ export function Neighborhood1D({ nbhdWidth, mainCell, selected }) {
                         component: <NbhdInput1D type="scattered" />,
                     },
                 ]}
-                selected={selected}
+                selected={{get: selected.get, set: changeSection}}
                 size="sm"
                 alignment="center"
                 bs5Class="w-75 mx-auto"

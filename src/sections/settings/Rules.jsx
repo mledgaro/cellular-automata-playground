@@ -10,7 +10,9 @@ export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
     let rules = [];
     const ruleNumber = 90;
 
-    for (let i = 0; i < 8; i++) {
+    let numRules = Math.pow(2, nbhdWidth);
+
+    for (let i = 0; i < numRules; i++) {
         rules.push(
             <div className="col-lg-3 my-1">
                 <Rule1D

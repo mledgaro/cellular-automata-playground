@@ -56,7 +56,7 @@ export function Rule1D({ type, index, nbhdWidth, mainCell }) {
         //
 
         if (type === "grouped") {
-            cells.splice(mainCell, 0, <Ellipsis />);
+            cells.splice(mainCell === 0 ? 1 : mainCell, 0, <Ellipsis />);
         } else if (type === "scattered") {
             let len = cells.length - 1;
             for (let i = 0; i < len; i++) {
