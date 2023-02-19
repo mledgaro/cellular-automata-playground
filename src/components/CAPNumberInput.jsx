@@ -14,18 +14,6 @@ export default function CAPNumberInput({
 }) {
     //
 
-    let decreaseValue = () => {
-        if (value.get > min) {
-            value.set(value.get - 1);
-        }
-    };
-
-    let increaseValue = () => {
-        if (value.get < max) {
-            value.set(value.get + 1);
-        }
-    };
-
     return (
         <div className={inputGroupClasses(size, alignment, ` ${extraClasses}`)}>
             {label != null && (
@@ -34,13 +22,21 @@ export default function CAPNumberInput({
                 </span>
             )}
 
-            <CAPButton icon={{ id: "minus" }} onClick={decreaseValue} />
+            <CAPButton
+                icon={{ id: "minus" }}
+                enabled={value.get > min}
+                onClick={() => value.set(value.get - 1)}
+            />
 
             <span className="input-group-text cap-container-dark-1">
                 {value.get}
             </span>
 
-            <CAPButton icon={{ id: "plus" }} onClick={increaseValue} />
+            <CAPButton
+                icon={{ id: "plus" }}
+                enabled={value.get < max}
+                onClick={() => value.set(value.get + 1)}
+            />
         </div>
     );
 }

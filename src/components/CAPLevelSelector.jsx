@@ -16,9 +16,6 @@ export default function CAPLevelSelector({
 
     const [level, setLevel] = useState(0);
 
-    const levelDown = () => setLevel(level === 0 ? 0 : level - 1);
-    const levelUp = () => setLevel(level === numLevels ? numLevels : level + 1);
-
     let highLevels = [];
     let lowLevels = [];
 
@@ -48,7 +45,7 @@ export default function CAPLevelSelector({
             <CAPButton
                 icon={{ id: "minus" }}
                 enabled={level > 0}
-                onClick={levelDown}
+                onClick={() => setLevel(level - 1)}
             />
 
             {highLevels}
@@ -58,7 +55,7 @@ export default function CAPLevelSelector({
             <CAPButton
                 icon={{ id: "plus" }}
                 enabled={level < numLevels}
-                onClick={levelUp}
+                onClick={() => setLevel(level + 1)}
             />
         </div>
     );
