@@ -84,7 +84,7 @@ export default function InitialState({ cellsNumber }) {
                 {
                     label: "Random",
                     component: (
-                        <div className="row">
+                        <div className="row mx-auto" style={{width: "80%"}}>
                             <div className="col">
                                 <CAPNumberInput
                                     label="Min"
@@ -127,7 +127,7 @@ export default function InitialState({ cellsNumber }) {
     
     return (
         <div>
-            <div className="row mb-2">
+            <div className="row mb-2 w-75 mx-auto">
                 <div className="col">{liveCellsSelector}</div>
 
                 <div className="col">
