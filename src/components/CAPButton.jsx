@@ -2,14 +2,12 @@
 
 import FAIcon from "./FAIcon";
 
-export default function CAPButton({
-    icon,
-    tooltipLabel,
-    onClick,
-}) {
+export default function CAPButton({ icon, tooltipLabel, enabled, onClick }) {
     //
 
     tooltipLabel = tooltipLabel == null ? "" : tooltipLabel;
+
+    enabled = enabled == null ? true : enabled;
 
     return (
         <button
@@ -18,8 +16,9 @@ export default function CAPButton({
             data-bs-toggle="tooltip"
             data-bs-placement="bottom"
             data-bs-original-title={tooltipLabel}
-            className="btn cap-btn"
+            className="btn cap-container-clear-1"
             onClick={onClick}
+            disabled={!enabled}
         >
             <FAIcon icon={icon} />
         </button>

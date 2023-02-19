@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { inputGroupClasses } from "../js/Utils";
+import CAPButton from "./CAPButton";
 import FAIcon from "./FAIcon";
 
 export default function CAPLevelSelector({
@@ -36,7 +37,7 @@ export default function CAPLevelSelector({
     return (
         <div className={inputGroupClasses(size, alignment, "")}>
             <span
-                className="input-group-text cap-text-label"
+                className="input-group-text cap-container-dark-1"
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
                 title={tooltipLabel}
@@ -44,27 +45,21 @@ export default function CAPLevelSelector({
                 <FAIcon icon={{ id: iconId }} />
             </span>
 
-            <button
-                type="button"
-                className="btn cap-btn"
+            <CAPButton
+                icon={{ id: "minus" }}
+                enabled={level > 0}
                 onClick={levelDown}
-                disabled={level === 0}
-            >
-                <FAIcon icon={{ id: "minus" }} />
-            </button>
+            />
 
             {highLevels}
 
             {lowLevels}
 
-            <button
-                type="button"
-                className="btn cap-btn"
+            <CAPButton
+                icon={{ id: "plus" }}
+                enabled={level < numLevels}
                 onClick={levelUp}
-                disabled={level === numLevels}
-            >
-                <FAIcon icon={{ id: "plus" }} />
-            </button>
+            />
         </div>
     );
 }
