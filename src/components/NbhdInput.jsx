@@ -90,7 +90,7 @@ function CellGroup1D({ type, numCells, selected, size, alignment }) {
 
     return (
         <div
-            className="cap-cell-group mx-auto"
+            className="cap-container-dark-1 mx-auto"
             style={{ padding: "8px", width: "fit-content" }}
             onClick={onClickCont}
         >
@@ -138,7 +138,13 @@ function CellGroup2D({ type, width, height, selected, extraClasses }) {
         cells.push(<tr>{row}</tr>);
     }
 
-    return <table className={`cap-cell-group ${extraClasses}`}>{cells}</table>;
+    return (
+        <table
+            className={`cap-container-dark-1 ${extraClasses}`}
+        >
+            {cells}
+        </table>
+    );
 }
 
 export function NbhdInput1D({ type }) {

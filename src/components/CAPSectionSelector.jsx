@@ -29,7 +29,7 @@ function CAPOptionGroup({ labels, selected, title, size, alignment, bs5Class }) 
         <div className={`my-2 ${bs5Class}`}>
             {title != null && (
                 <div
-                    className="cap-section-selector-title mx-auto mb-1"
+                    className="cap-section-selector-title cap-container-dark-1 mx-auto mb-1"
                     style={{ fontSize: titleSize }}
                 >
                     {title}

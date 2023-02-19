@@ -28,13 +28,13 @@ export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
                 <div className="col-lg">
                     <div className={inputGroupClasses("", "center", "")}>
                         <span
-                            className="input-group-text cap-text-label"
+                            className="input-group-text cap-container-dark-1"
                             style={{ minWidth: "2rem" }}
                         >
                             Rule number
                         </span>
                         <span
-                            className="input-group-text cap-text-label"
+                            className="input-group-text cap-container-dark-1"
                             style={{ minWidth: "2rem" }}
                         >
                             90
@@ -96,7 +96,7 @@ export function Rules2D({ nbhdType, nbhdWidth, nbhdHeight, mainCell }) {
 
     let headers = [];
 
-    headers.push(<td className="cap-icon-cell" >Neighbors</td>);
+    headers.push(<td className="cap-icon-cell">Neighbors</td>);
     rules.push(<td className="cap-icon-cell">State</td>);
 
     for (let i = 0; i <= numRules; i++) {
@@ -110,7 +110,7 @@ export function Rules2D({ nbhdType, nbhdWidth, nbhdHeight, mainCell }) {
     }
 
     return (
-        <table className="cap-cell-group w-75 mx-auto">
+        <table className="cap-container-dark-1 w-75 mx-auto">
             <tr>{headers}</tr>
             <tr>{rules}</tr>
         </table>

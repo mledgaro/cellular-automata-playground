@@ -10,7 +10,7 @@ export default function CAPNumberInput({
     label,
     size,
     alignment,
-    extraClasses
+    extraClasses,
 }) {
     //
 
@@ -29,12 +29,16 @@ export default function CAPNumberInput({
     return (
         <div className={inputGroupClasses(size, alignment, ` ${extraClasses}`)}>
             {label != null && (
-                <span className="input-group-text cap-text-label">{label}</span>
+                <span className="input-group-text cap-container-dark-1">
+                    {label}
+                </span>
             )}
 
             <CAPButton icon={{ id: "minus" }} onClick={decreaseValue} />
 
-            <span className="input-group-text cap-text-label">{value.get}</span>
+            <span className="input-group-text cap-container-dark-1">
+                {value.get}
+            </span>
 
             <CAPButton icon={{ id: "plus" }} onClick={increaseValue} />
         </div>

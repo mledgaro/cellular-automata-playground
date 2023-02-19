@@ -15,7 +15,11 @@ export default function CAPStateButton({ icons }) {
     };
 
     return (
-        <button type="button" className="btn cap-btn" onClick={nextIndex}>
+        <button
+            type="button"
+            className="btn cap-container-clear-1"
+            onClick={nextIndex}
+        >
             <FAIcon icon={icons[index]} />
         </button>
     );

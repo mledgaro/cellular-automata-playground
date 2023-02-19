@@ -18,7 +18,7 @@ export function CAPRule1D({ type, index, nbhdWidth, mainCell }) {
 
     cellsState.forEach((e, i) => {
         cells.push(
-            <span className="input-group-text cap-text-label px-1">
+            <span className="input-group-text cap-container-dark-1 px-1">
                 &nbsp;
                 <FAIcon
                     icon={{
@@ -35,7 +35,7 @@ export function CAPRule1D({ type, index, nbhdWidth, mainCell }) {
         //
 
         let ellipsis = (
-            <span className="input-group-text cap-text-label px-1">
+            <span className="input-group-text cap-container-dark-1 px-1">
                 &nbsp;
                 <FAIcon icon={{ id: "ellipsis", size: "2xs" }} />
             </span>
@@ -57,7 +57,7 @@ export function CAPRule1D({ type, index, nbhdWidth, mainCell }) {
             onClick={() => setAlive(!alive)}
         >
             <span
-                className="input-group-text cap-text-label"
+                className="input-group-text cap-container-dark-1"
                 style={{ minWidth: "2rem" }}
             >
                 {`(${index})`}
@@ -65,14 +65,14 @@ export function CAPRule1D({ type, index, nbhdWidth, mainCell }) {
 
             {cells}
 
-            <span className="input-group-text cap-text-label px-1">
+            <span className="input-group-text cap-container-dark-1 px-1">
                 &nbsp;
                 <FAIcon
                     icon={{ id: "arrow-right", style: "solid", size: "sm" }}
                 />
             </span>
 
-            <span className="input-group-text cap-text-label px-1">
+            <span className="input-group-text cap-container-dark-1 px-1">
                 &nbsp;
                 <FAIcon
                     icon={{

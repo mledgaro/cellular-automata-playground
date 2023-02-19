@@ -6,7 +6,9 @@ export default function CAPSelector({ label, options, maxWidth }) {
 
     return (
         <div className="input-group input-group-lg d-flex justify-content-center">
-            <span className="input-group-text cap-text-label">{label}</span>
+            <span className="input-group-text cap-container-dark-1">
+                {label}
+            </span>
 
             <select
                 className="rounded-end cap-input form-select cap-section-neighborhood"
