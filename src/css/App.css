@@ -5,6 +5,7 @@
     --clear2: #f8f9fa;
 }
 
+
 .cap-container-clear-1 {
     background-color: var(--clear1);
     color: var(--dark1)
@@ -30,8 +31,6 @@
 
 
 
-
-
 .cap-btn-group-select {
     background-color: var(--dark1);
     color: var(--clear1);
@@ -48,10 +47,6 @@
     color: var(--dark1);
     font-weight: 600;
 }
-
-
-
-
 
 
 
@@ -91,29 +86,27 @@
 
 
 
-
-
-.cap-progress-cell {
+.cap-level {
+    width: 3vmin;
     padding: 0;
-    border: 0;
-    width: 2vmin;
+    border-width: 0px 1px 0px 1px;
+    border-color: var(--dark2);
+}
+
+.cap-level:nth-of-type(2) {
+    border-left-width: 2px;
+}
+
+.cap-level:nth-last-of-type(1) {
+    border-right-width: 2px;
+}
+
+.cap-level-off {
     background-color: var(--dark1);
 }
 
-.cap-progress-cell.cap-cell-on {
+.cap-level-on {
     background-color: var(--clear1);
-}
-
-.cap-progress-cell:nth-of-type(2) {
-    border-style: solid;
-    border-color: var(--dark1);
-    border-left-width: 0.4vmin;
-}
-
-.cap-progress-cell:nth-last-of-type(1) {
-    border-style: solid;
-    border-color: var(--dark1);
-    border-right-width: 0.4vmin;
 }
 
 
@@ -121,6 +114,8 @@
     font-weight: 700;
     width: 50%;
 }
+
+
 
 #app-title {
     font-size: 3em;
@@ -135,7 +130,6 @@
     /* overflow-x: scroll; */
     /* overflow-y: scroll; */
 }
-
 
 #footer {
     font-size: small;

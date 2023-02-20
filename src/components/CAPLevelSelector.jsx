@@ -21,13 +21,13 @@ export default function CAPLevelSelector({
 
     for (let i = 0; i < level; i++) {
         highLevels.push(
-            <span className="input-group-text cap-progress-cell cap-cell-on"></span>
+            <span className="input-group-text cap-level cap-level-on"></span>
         );
     }
 
     for (let i = 0; i < numLevels - level; i++) {
         lowLevels.push(
-            <span className="input-group-text cap-progress-cell"></span>
+            <span className="input-group-text cap-level cap-level-off"></span>
         );
     }
 
