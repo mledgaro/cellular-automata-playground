@@ -36,45 +36,46 @@ function Arrow() {
     );
 }
 
-export function Rule1D({ type, index, nbhdWidth, mainCell }) {
+function Rule1DPrefix({ type, index, nbhdWidth, mainCell }) {
     //
 
-    let cellsState = intToBoolArray(index, nbhdWidth);
+    let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
+        <Cell state={e} main={i === mainCell} />
+    ));
 
-    let [alive, setAlive] = useState(false);
-
-    let cells = [];
-
-    mainCell = mainCell === -1 ? nbhdWidth - 1 : mainCell;
-
-    cellsState.forEach((e, i) => {
-        cells.push(<Cell state={e} main={i === mainCell} />);
-    });
-
-    if (type !== "insitu") {
-        //
-
-        if (type === "grouped") {
-            cells.splice(mainCell === 0 ? 1 : mainCell, 0, <Ellipsis />);
-        } else if (type === "scattered") {
-            let len = cells.length - 1;
-            for (let i = 0; i < len; i++) {
-                cells.splice(i * 2 + 1, 0, <Ellipsis />);
-            }
+    if (type === "grouped") {
+        cells.splice(mainCell === 0 ? 1 : mainCell, 0, <Ellipsis />);
+    } else if (type === "scattered") {
+        let len = cells.length - 1;
+        for (let i = 0; i < len; i++) {
+            cells.splice(i * 2 + 1, 0, <Ellipsis />);
         }
     }
+
+    cells.push(<Arrow />);
+
+    return <span>{cells}</span>;
+}
+
+export function Rule1D({ type, index, nbhdWidth, mainCell, state }) {
+    //
+
+    mainCell = mainCell === -1 ? nbhdWidth - 1 : mainCell;
 
     return (
         <div
             className="cap-container-dark-1 px-2 py-1 mx-auto"
             style={{ width: "fit-content" }}
-            onClick={() => setAlive(!alive)}
+            onClick={state.change}
         >
-            {cells}
+            <Rule1DPrefix
+                type={type}
+                index={index}
+                nbhdWidth={nbhdWidth}
+                mainCell={mainCell}
+            />
 
-            <Arrow />
-
-            <Cell state={alive} main={true} />
+            <Cell state={state.get} main={true} />
         </div>
     );
 }

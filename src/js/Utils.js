@@ -32,7 +32,8 @@ export function intToBoolArray(int, size) {
 export function boolArrayToInt(arr, reverse) {
     let int;
 
-    int = reverse ? arr.reverse() : arr;
+    int = [...arr]
+    int = reverse ? int.reverse() : int;
     int = int.map((e) => (e ? "1" : "0"));
     int = int.join("");
     int = parseInt(int, 2);
@@ -105,4 +106,23 @@ export function diagonalNeighbors(width, height, row, col) {
         diagonalSize(width, height, row, col) +
         diagonalSize(width, height, row, width - col) - 1
     );
+}
+
+
+export function randomBoolArray(size) {
+    let boolArr = [];
+
+    for (let i = 0; i < size; i++) {
+        boolArr.push(Math.random() <= 0.5);
+    }
+
+    return boolArr;
+}
+
+export function boolArray(size, bool) {
+    return Array(size).fill(bool);
+}
+
+export function boolArrayNot(boolArr) {
+    return boolArr.map(e => !e);
 }
