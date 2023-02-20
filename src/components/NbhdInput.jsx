@@ -3,9 +3,12 @@
 import { useContext } from "react";
 
 import FAIcon from "./FAIcon";
-import CAPNumberInput from "./CAPNumberInput";
+import NumberInput from "./NumberInput";
 
-import { NbhdContext1D, NbhdContext2D } from "../sections/settings/Neighborhood";
+import {
+    NbhdContext1D,
+    NbhdContext2D,
+} from "../sections/settings/Neighborhood";
 
 function Cell({ active, selected, onClick }) {
     //
@@ -101,7 +104,6 @@ function CellGroup1D({ type, numCells, selected, size, alignment }) {
 function CellGroup2D({ type, width, height, selected, extraClasses }) {
     //
 
-
     let isActive;
 
     switch (type) {
@@ -110,7 +112,8 @@ function CellGroup2D({ type, width, height, selected, extraClasses }) {
             break;
 
         case "diagonal":
-            isActive = (r, c) => Math.abs(selected.get.r - r) === Math.abs(selected.get.c - c);
+            isActive = (r, c) =>
+                Math.abs(selected.get.r - r) === Math.abs(selected.get.c - c);
             break;
 
         default:
@@ -125,13 +128,11 @@ function CellGroup2D({ type, width, height, selected, extraClasses }) {
             sel = r === selected.get.r && c === selected.get.c;
             row.push(
                 <td style={{ padding: "5px" }}>
-
                     <Cell
                         active={isActive(r, c)}
                         selected={sel}
                         onClick={() => selected.set({ r: r, c: c })}
-                        />
-                    
+                    />
                 </td>
             );
         }
@@ -139,9 +140,7 @@ function CellGroup2D({ type, width, height, selected, extraClasses }) {
     }
 
     return (
-        <table
-            className={`cap-container-dark-1 ${extraClasses}`}
-        >
+        <table className={`cap-container-dark-1 ${extraClasses}`}>
             {cells}
         </table>
     );
@@ -171,7 +170,7 @@ export function NbhdInput1D({ type }) {
     return (
         <div className="row w-50 mx-auto">
             <div className="col">
-                <CAPNumberInput
+                <NumberInput
                     label="Width"
                     value={{
                         get: nbhdContext.nbhdWidth.get,
@@ -203,7 +202,7 @@ export function NbhdInput2D({ type }) {
     return (
         <div className="row mt-2 mx-auto" style={{ width: "50%" }}>
             <div className="col">
-                <CAPNumberInput
+                <NumberInput
                     label="Width"
                     value={nbhdContext.nbhdWidth}
                     min={2}
@@ -212,7 +211,7 @@ export function NbhdInput2D({ type }) {
                     extraClasses="mb-2"
                 />
 
-                <CAPNumberInput
+                <NumberInput
                     label="Height"
                     value={nbhdContext.nbhdHeight}
                     min={2}

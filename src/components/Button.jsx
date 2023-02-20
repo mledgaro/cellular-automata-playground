@@ -2,7 +2,7 @@
 
 import FAIcon from "./FAIcon";
 
-export default function CAPButton({ icon, tooltipLabel, enabled, onClick }) {
+export default function Button({ icon, tooltipLabel, enabled, onClick }) {
     //
 
     tooltipLabel = tooltipLabel == null ? "" : tooltipLabel;

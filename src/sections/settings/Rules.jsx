@@ -1,7 +1,7 @@
 //
 
-import CAPButton from "../../components/CAPButton";
-import { Rule1D, Rule2D } from "../../components/CAPRule";
+import Button from "../../components/Button";
+import { Rule1D, Rule2D } from "../../components/Rule";
 import { diagonalNeighbors, inputGroupClasses } from "../../js/Utils";
 
 export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
@@ -27,10 +27,13 @@ export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
 
     return (
         <div className="mt-3">
-            <div className="row mx-auto" style={{width: "60%"}}>
+            <div className="row mx-auto" style={{ width: "60%" }}>
                 {/* Rule number */}
                 <div className="col-lg">
-                    <div className="cap-container-dark-1 px-3 py-1 mx-auto" style={{width: "fit-content"}}>
+                    <div
+                        className="cap-container-dark-1 px-3 py-1 mx-auto"
+                        style={{ width: "fit-content" }}
+                    >
                         Rule number {ruleNumber}
                     </div>
                 </div>
@@ -38,22 +41,22 @@ export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
                 {/* Controls */}
                 <div className="col-lg">
                     <div className={inputGroupClasses("", "center", "")}>
-                        <CAPButton
+                        <Button
                             tooltipLabel="Uncheck all"
                             icon={{ id: "square", style: "regular" }}
                         />
 
-                        <CAPButton
+                        <Button
                             tooltipLabel="Check all"
                             icon={{ id: "square" }}
                         />
 
-                        <CAPButton
+                        <Button
                             tooltipLabel="Random"
                             icon={{ id: "shuffle" }}
                         />
 
-                        <CAPButton
+                        <Button
                             tooltipLabel="Invert selection"
                             icon={{ id: "right-left" }}
                         />

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { inputGroupClasses } from "../js/Utils";
-import CAPButton from "./CAPButton";
+import Button from "./Button";
 import FAIcon from "./FAIcon";
 
-export default function CAPLevelSelector({
+export default function LevelSelector({
     iconId,
     numLevels,
     tooltipLabel,
@@ -42,7 +42,7 @@ export default function CAPLevelSelector({
                 <FAIcon icon={{ id: iconId }} />
             </span>
 
-            <CAPButton
+            <Button
                 icon={{ id: "minus" }}
                 enabled={level > 0}
                 onClick={() => setLevel(level - 1)}
@@ -52,7 +52,7 @@ export default function CAPLevelSelector({
 
             {lowLevels}
 
-            <CAPButton
+            <Button
                 icon={{ id: "plus" }}
                 enabled={level < numLevels}
                 onClick={() => setLevel(level + 1)}

@@ -1,7 +1,7 @@
 //
 
-import CAPButton from "../components/CAPButton";
-import CAPLevelSelector from "../components/CAPLevelSelector";
+import Button from "../components/Button";
+import LevelSelector from "../components/LevelSelector";
 
 import { inputGroupClasses } from "../js/Utils";
 
@@ -13,25 +13,25 @@ export default function Controls() {
             {/* <!-- Flow --> */}
             <div className="col-lg">
                 <div className={inputGroupClasses("", "center", "")}>
-                    <CAPButton
+                    <Button
                         tooltipLabel="Next"
                         icon={{ id: "forward-step" }}
                     />
 
-                    <CAPButton tooltipLabel="Run" icon={{ id: "play" }} />
+                    <Button tooltipLabel="Run" icon={{ id: "play" }} />
 
-                    <CAPButton tooltipLabel="Pause" icon={{ id: "pause" }} />
+                    <Button tooltipLabel="Pause" icon={{ id: "pause" }} />
 
-                    <CAPButton tooltipLabel="Stop" icon={{ id: "stop" }} />
+                    <Button tooltipLabel="Stop" icon={{ id: "stop" }} />
                 </div>
             </div>
 
             {/* <!-- Canvas --> */}
             <div className="col-lg">
                 <div className={inputGroupClasses("", "center", "")}>
-                    <CAPButton tooltipLabel="Clear" icon={{ id: "broom" }} />
+                    <Button tooltipLabel="Clear" icon={{ id: "broom" }} />
 
-                    <CAPButton
+                    <Button
                         tooltipLabel="Screenshot"
                         icon={{ id: "camera-retro" }}
                     />
@@ -40,7 +40,7 @@ export default function Controls() {
 
             {/* <!-- Speed --> */}
             <div className="col-lg">
-                <CAPLevelSelector
+                <LevelSelector
                     numLevels={5}
                     tooltipLabel="Speed"
                     iconId="gauge-high"
@@ -50,7 +50,7 @@ export default function Controls() {
 
             {/* <!-- Zoom --> */}
             <div className="col-lg">
-                <CAPLevelSelector
+                <LevelSelector
                     numLevels={5}
                     tooltipLabel="Zoom"
                     iconId="magnifying-glass"

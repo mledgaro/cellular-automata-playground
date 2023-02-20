@@ -1,10 +1,10 @@
 //
 
 import { useState } from "react";
-import CAPButton from "../../components/CAPButton";
-import CAPCellSet from "../../components/CAPCellsState";
-import CAPNumberInput from "../../components/CAPNumberInput";
-import CAPSectionSelector from "../../components/CAPSectionSelector";
+import Button from "../../components/Button";
+import CellSet from "../../components/CellsState";
+import NumberInput from "../../components/NumberInput";
+import SectionSelector from "../../components/SectionSelector";
 import { inputGroupClasses } from "../../js/Utils";
 
 export default function InitialState({ cellsNumber }) {
@@ -22,13 +22,13 @@ export default function InitialState({ cellsNumber }) {
     let [cellsState, setCellsState] = useState(Array(cellsNumber).fill(false));
 
     let liveCellsSelector = (
-        <CAPSectionSelector
+        <SectionSelector
             title="Live cells"
             sections={[
                 {
                     label: "Number",
                     component: (
-                        <CAPNumberInput
+                        <NumberInput
                             value={{
                                 get: liveCells,
                                 set: setLiveCells,
@@ -43,7 +43,7 @@ export default function InitialState({ cellsNumber }) {
                 {
                     label: "Percentage",
                     component: (
-                        <CAPNumberInput
+                        <NumberInput
                             value={{
                                 get: liveCells,
                                 set: setLiveCells,
@@ -63,13 +63,13 @@ export default function InitialState({ cellsNumber }) {
     );
 
     let groupSizeSelector = (
-        <CAPSectionSelector
+        <SectionSelector
             title="Group size"
             sections={[
                 {
                     label: "Fixed",
                     component: (
-                        <CAPNumberInput
+                        <NumberInput
                             value={{
                                 get: groupSize,
                                 set: setGroupSize,
@@ -84,9 +84,9 @@ export default function InitialState({ cellsNumber }) {
                 {
                     label: "Random",
                     component: (
-                        <div className="row mx-auto" style={{width: "80%"}}>
+                        <div className="row mx-auto" style={{ width: "80%" }}>
                             <div className="col">
-                                <CAPNumberInput
+                                <NumberInput
                                     label="Min"
                                     value={{
                                         get: groupMinSize,
@@ -99,7 +99,7 @@ export default function InitialState({ cellsNumber }) {
                                 />
                             </div>
                             <div className="col">
-                                <CAPNumberInput
+                                <NumberInput
                                     label="Max"
                                     value={{
                                         get: groupMaxSize,
@@ -124,14 +124,13 @@ export default function InitialState({ cellsNumber }) {
         />
     );
 
-    
     return (
         <div>
             <div className="row mb-2 w-75 mx-auto">
                 <div className="col">{liveCellsSelector}</div>
 
                 <div className="col">
-                    <CAPSectionSelector
+                    <SectionSelector
                         title="Distribution"
                         sections={[
                             { label: "Random", component: <div /> },
@@ -147,7 +146,7 @@ export default function InitialState({ cellsNumber }) {
                 </div>
             </div>
 
-            <CAPCellSet cellsState={cellsState} />
+            <CellSet cellsState={cellsState} />
         </div>
     );
 }

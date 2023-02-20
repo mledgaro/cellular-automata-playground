@@ -2,7 +2,7 @@
 
 import { createContext } from "react";
 
-import CAPSectionSelector from "../../components/CAPSectionSelector";
+import SectionSelector from "../../components/SectionSelector";
 import { NbhdInput1D, NbhdInput2D } from "../../components/NbhdInput";
 
 export const NbhdContext1D = createContext();
@@ -11,7 +11,7 @@ export const NbhdContext2D = createContext();
 export function Neighborhood1D({ nbhdWidth, mainCell, selected }) {
     //
 
-    const changeSection = (idx) => { 
+    const changeSection = (idx) => {
         if (idx === 0) {
             mainCell.set(Math.floor(nbhdWidth.get / 2));
         } else {
@@ -19,7 +19,6 @@ export function Neighborhood1D({ nbhdWidth, mainCell, selected }) {
         }
         selected.set(idx);
     };
-    
 
     return (
         <NbhdContext1D.Provider
@@ -28,7 +27,7 @@ export function Neighborhood1D({ nbhdWidth, mainCell, selected }) {
                 mainCell: mainCell,
             }}
         >
-            <CAPSectionSelector
+            <SectionSelector
                 sections={[
                     {
                         label: "In situ",
@@ -43,7 +42,7 @@ export function Neighborhood1D({ nbhdWidth, mainCell, selected }) {
                         component: <NbhdInput1D type="scattered" />,
                     },
                 ]}
-                selected={{get: selected.get, set: changeSection}}
+                selected={{ get: selected.get, set: changeSection }}
                 size="sm"
                 alignment="center"
                 bs5Class="w-75 mx-auto"
@@ -63,7 +62,7 @@ export function Neighborhood2D({ nbhdType, nbhdWidth, nbhdHeight, mainCell }) {
                 mainCell: mainCell,
             }}
         >
-            <CAPSectionSelector
+            <SectionSelector
                 sections={[
                     {
                         label: "Moore",

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import CAPSectionSelector from "../../components/CAPSectionSelector";
+import SectionSelector from "../../components/SectionSelector";
 import { Neighborhood1D, Neighborhood2D } from "./Neighborhood";
 import { Rules1D, Rules2D } from "./Rules";
 import InitialState from "./InitialState";
@@ -20,7 +20,7 @@ function Settings1D() {
     const [mainCell, setMainCell] = useState(1);
 
     return (
-        <CAPSectionSelector
+        <SectionSelector
             title="Settings"
             sections={[
                 {
@@ -66,7 +66,7 @@ function Settings2D() {
     const [mainCell, setMainCell] = useState({ r: 1, c: 1 });
 
     return (
-        <CAPSectionSelector
+        <SectionSelector
             title="Settings"
             sections={[
                 {

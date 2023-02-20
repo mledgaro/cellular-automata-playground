@@ -1,9 +1,9 @@
 //
 
 import { inputGroupClasses } from "../js/Utils";
-import CAPButton from "./CAPButton";
+import Button from "./Button";
 
-export default function CAPNumberInput({
+export default function NumberInput({
     value,
     min,
     max,
@@ -22,7 +22,7 @@ export default function CAPNumberInput({
                 </span>
             )}
 
-            <CAPButton
+            <Button
                 icon={{ id: "minus" }}
                 enabled={value.get > min}
                 onClick={() => value.set(value.get - 1)}
@@ -32,7 +32,7 @@ export default function CAPNumberInput({
                 {value.get}
             </span>
 
-            <CAPButton
+            <Button
                 icon={{ id: "plus" }}
                 enabled={value.get < max}
                 onClick={() => value.set(value.get + 1)}

@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 
-
-function CAPCell({ id, on, high }) {
+function Cell({ id, on, high }) {
     //
 
     let [on_, setOn] = useState(on);
@@ -21,20 +20,17 @@ function CAPCell({ id, on, high }) {
     );
 }
 
-export default function CAPCellSet({ cellsState }) {
+export default function CellSet({ cellsState }) {
     //
 
     let cells = [];
 
     cellsState.forEach((e, i) => {
-        cells.push(<CAPCell id={i} on={e} high={false} />);
+        cells.push(<Cell id={i} on={e} high={false} />);
     });
 
     return (
-        <div
-            className="row mx-auto ps-2"
-            style={{ width: "90%"}}
-        >
+        <div className="row mx-auto ps-2" style={{ width: "90%" }}>
             {cells}
         </div>
     );

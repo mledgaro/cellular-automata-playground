@@ -2,7 +2,7 @@
 
 import { inputGroupClasses } from "../js/Utils";
 
-function CAPOptionGroup({ labels, selected, title, size, alignment, bs5Class }) {
+function OptionGroup({ labels, selected, title, size, alignment, bs5Class }) {
     //
 
     let options = labels.map((label, i) => {
@@ -42,7 +42,7 @@ function CAPOptionGroup({ labels, selected, title, size, alignment, bs5Class }) 
         </div>
     );
 }
-export default function CAPSectionSelector({
+export default function SectionSelector({
     title,
     sections,
     selected,
@@ -56,7 +56,7 @@ export default function CAPSectionSelector({
 
     return (
         <div className="">
-            <CAPOptionGroup
+            <OptionGroup
                 title={title}
                 labels={labels}
                 selected={selected}
