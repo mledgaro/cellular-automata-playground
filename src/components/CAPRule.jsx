@@ -3,7 +3,6 @@
 import { useState } from "react";
 
 import FAIcon from "./FAIcon";
-import CAPStateButton from "./CAPStateButton";
 
 import { intToBoolArray } from "../js/Utils";
 
@@ -83,13 +82,26 @@ export function Rule1D({ type, index, nbhdWidth, mainCell }) {
 export function Rule2D() {
     //
 
+    const [state, setState] = useState(0);
+    let icon;
+
+    switch (state) {
+        case 1:
+            icon = { id: "square", style: "regular", size: "xl" };
+            break;
+        case 2:
+            icon = { id: "square", style: "solid", size: "xl" };
+            break;
+        default:
+            icon = { id: "square-minus", style: "regular", size: "xl" };
+    }
+
     return (
-        <CAPStateButton
-            icons={[
-                { id: "square-minus", style: "regular", size: "xl" },
-                { id: "square", style: "regular", size: "xl" },
-                { id: "square", style: "solid", size: "xl" },
-            ]}
-        />
+        <span
+            className=""
+            onClick={() => setState(state === 2 ? 0 : state + 1)}
+        >
+            <FAIcon icon={icon} />
+        </span>
     );
 }
