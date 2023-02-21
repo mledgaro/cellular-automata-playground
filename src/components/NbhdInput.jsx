@@ -73,6 +73,7 @@ function CellGroup1D({ type, numCells, selected, size, alignment }) {
     for (let i = 0; i < numCells; i++) {
         cells.push(
             <Cell
+                key={i}
                 selected={selected.get === i}
                 onClick={() => onClickCell(i)}
             />

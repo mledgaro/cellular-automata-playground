@@ -40,7 +40,7 @@ function Rule1DPrefix({ type, index, nbhdWidth, mainCell }) {
     //
 
     let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
-        <Cell state={e} main={i === mainCell} />
+        <Cell key={i} state={e} main={i === mainCell} />
     ));
 
     if (type === "grouped") {

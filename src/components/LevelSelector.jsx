@@ -19,15 +19,23 @@ export default function LevelSelector({
     let highLevels = [];
     let lowLevels = [];
 
-    for (let i = 0; i < level; i++) {
+    let i;
+
+    for (i = 0; i < level; i++) {
         highLevels.push(
-            <span className="input-group-text cap-level cap-level-on"></span>
+            <span
+                key={i}
+                className="input-group-text cap-level cap-level-on"
+            ></span>
         );
     }
 
-    for (let i = 0; i < numLevels - level; i++) {
+    for (; i < numLevels; i++) {
         lowLevels.push(
-            <span className="input-group-text cap-level cap-level-off"></span>
+            <span
+                key={i}
+                className="input-group-text cap-level cap-level-off"
+            ></span>
         );
     }
 

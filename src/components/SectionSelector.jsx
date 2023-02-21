@@ -13,6 +13,7 @@ function OptionGroup({ labels, selected, title, size, alignment, bs5Class }) {
 
         return (
             <button
+                key={i}
                 type="button"
                 className={`btn cap-btn-group-select ${selectedClass}`}
                 onClick={() => selected.set(i)}
