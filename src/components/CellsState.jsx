@@ -1,32 +1,38 @@
 //
 
-import { useState } from "react";
-
-function Cell({ id, on, high }) {
+function Cell({ on, high }) {
     //
 
-    let [on_, setOn] = useState(on);
-    // let [on, setOn] = useState(false);
-
-    let stateTags = on_ ? "on" : "off";
+    let stateTags = on.get ? "on" : "off";
     stateTags += high ? "-high" : "";
 
     return (
         <span
-            id={`cell-${id}`}
             className={`cap-cell cap-cell-${stateTags}`}
-            onClick={() => setOn(!on_)}
+            onClick={on.change}
         ></span>
     );
 }
 
-export default function CellSet({ cellsState }) {
+export default function CellsSet({ cellsState }) {
     //
 
     let cells = [];
 
-    cellsState.forEach((e, i) => {
-        cells.push(<Cell id={i} on={e} high={false} />);
+    cellsState.get.forEach((e, i) => {
+        cells.push(
+            <Cell
+                key={i}
+                on={{
+                    get: e,
+                    change: () =>
+                        cellsState.set(
+                            cellsState.get.map((e, j) => (j === i ? !e : e))
+                        ),
+                }}
+                high={false}
+            />
+        );
     });
 
     return (

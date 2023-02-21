@@ -45,7 +45,7 @@ function Settings1D() {
                 },
                 {
                     label: "Initial state",
-                    component: <InitialState cellsNumber={256} />,
+                    component: <InitialState numCells={256} />,
                 },
             ]}
             selected={{ get: section, set: setSection }}

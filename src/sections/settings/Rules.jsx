@@ -7,10 +7,10 @@ import {
     diagonalNeighbors,
     inputGroupClasses,
     boolArray,
-    randomBoolArray,
     boolArrayNot,
     boolArrayToInt,
     intToBoolArray,
+    randBoolArrPercent,
 } from "../../js/Utils";
 
 function RuleNumber({ value }) {
@@ -38,7 +38,9 @@ function Controls({ rulesState }) {
                     tooltipLabel="Random"
                     icon={{ id: "shuffle" }}
                     onClick={() =>
-                        rulesState.set(randomBoolArray(rulesState.get.length))
+                        rulesState.set(
+                            randBoolArrPercent(rulesState.get.length, 50)
+                        )
                     }
                 />
 
