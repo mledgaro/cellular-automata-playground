@@ -49,6 +49,14 @@
 }
 
 
+.cap-input-text:focus {
+    background-color: var(--clear1);
+    color: var(--dark1);
+    outline: none;
+    border-style: solid;
+    border-width: 3px 4px 3px 4px;
+    border-color: var(--clear2);
+}
 
 .cap-icon-cell {
     padding: 2px;
