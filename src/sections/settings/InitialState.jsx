@@ -161,7 +161,7 @@ export default function InitialState({ numCells }) {
 
     return (
         <div>
-            <div className="row mb-2 w-75 mx-auto">
+            <div className="row mb-2 mx-auto" style={{width: "80%"}}>
                 <div className="col-5">
                     <LiveCellsSelector
                         selected={{ get: liveCellsType, set: setLiveCellsType }}

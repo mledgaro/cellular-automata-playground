@@ -131,10 +131,12 @@
     width: fit-content;
 }
 
-#cells-canvas-container {
+#canvas-container {
     margin: auto;
-    width: 95vw;
-    height: 70vh;
+    width: fit-content;
+    /* height: fit-content; */
+    margin-top: 3vh;
+    margin-bottom: 1vh;
     /* overflow-x: scroll; */
     /* overflow-y: scroll; */
 }
