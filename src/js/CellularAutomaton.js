@@ -1,4 +1,8 @@
+//
+
 class CellularAutomaton {
+    //
+
     #neighborhoodSize;
     #ruleNum;
 
@@ -15,6 +19,8 @@ class CellularAutomaton {
     // private
 
     #cellNextState(index) {
+        //
+
         let nstate;
 
         nstate = this.neighborhoods[index];
