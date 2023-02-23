@@ -7,17 +7,16 @@ import { Neighborhood1D, Neighborhood2D } from "./Neighborhood";
 import { Rules1D, Rules2D } from "./Rules";
 import InitialState from "./InitialState";
 
-const nbhdKeys1D = ["insitu", "grouped", "scattered"];
-const nbhdKeys2D = ["moore", "vonneumann", "diagonal"];
 
 function Settings1D() {
     //
 
-    const [section, setSection] = useState(0);
+    const [getSection, setSection] = useState("nbhd");
 
-    const [nbhdIndex, setNbhdIndex] = useState(0);
-    const [nbhdWidth, setNbhdWidth] = useState(3);
-    const [mainCell, setMainCell] = useState(1);
+    const [getNbhdWidth, setNbhdWidth] = useState(3);
+    const [getMainCell, setMainCell] = useState(1);
+    const [getIncludeMainCell, setIncludeMainCell] = useState("cellin");
+    const [getNbhdType, setNbhdType] = useState("contiguos");
 
     return (
         <SectionSelector
@@ -25,30 +24,37 @@ function Settings1D() {
             sections={[
                 {
                     label: "Neighborhood",
+                    value: "nbhd",
                     component: (
                         <Neighborhood1D
-                            nbhdWidth={{ get: nbhdWidth, set: setNbhdWidth }}
-                            mainCell={{ get: mainCell, set: setMainCell }}
-                            selected={{ get: nbhdIndex, set: setNbhdIndex }}
+                            nbhdWidth={{ get: getNbhdWidth, set: setNbhdWidth }}
+                            includeMainCell={{
+                                get: getIncludeMainCell,
+                                set: setIncludeMainCell,
+                            }}
+                            mainCell={{ get: getMainCell, set: setMainCell }}
+                            type={{ get: getNbhdType, set: setNbhdType }}
                         />
                     ),
                 },
                 {
                     label: "Rules",
+                    value: "rules",
                     component: (
                         <Rules1D
-                            nbhdWidth={nbhdWidth}
-                            mainCell={mainCell}
-                            nbhdType={nbhdKeys1D[nbhdIndex]}
+                            nbhdWidth={getNbhdWidth}
+                            mainCell={getMainCell}
+                            nbhdType={getNbhdType}
                         />
                     ),
                 },
                 {
                     label: "Initial state",
+                    value: "initstate",
                     component: <InitialState numCells={256} />,
                 },
             ]}
-            selected={{ get: section, set: setSection }}
+            selected={{ get: getSection, set: setSection }}
             size="lg"
             alignment="center"
         />
@@ -58,12 +64,12 @@ function Settings1D() {
 function Settings2D() {
     //
 
-    const [section, setSection] = useState(0);
+    const [getSection, setSection] = useState("nbhd");
 
-    const [nbhdIndex, setNbhdIndex] = useState(0);
-    const [nbhdWidth, setNbhdWidth] = useState(3);
-    const [nbhdHeight, setNbhdHeight] = useState(3);
-    const [mainCell, setMainCell] = useState({ r: 1, c: 1 });
+    const [getNbhdType, setNbhdType] = useState("moore");
+    const [getNbhdWidth, setNbhdWidth] = useState(3);
+    const [getNbhdHeight, setNbhdHeight] = useState(3);
+    const [getMainCell, setMainCell] = useState({ r: 1, c: 1 });
 
     return (
         <SectionSelector
@@ -71,28 +77,33 @@ function Settings2D() {
             sections={[
                 {
                     label: "Neighborhood",
+                    value: "nbhd",
                     component: (
                         <Neighborhood2D
-                            nbhdType={{ get: nbhdIndex, set: setNbhdIndex }}
-                            nbhdWidth={{ get: nbhdWidth, set: setNbhdWidth }}
-                            nbhdHeight={{ get: nbhdHeight, set: setNbhdHeight }}
-                            mainCell={{ get: mainCell, set: setMainCell }}
+                            nbhdType={{ get: getNbhdType, set: setNbhdType }}
+                            nbhdWidth={{ get: getNbhdWidth, set: setNbhdWidth }}
+                            nbhdHeight={{
+                                get: getNbhdHeight,
+                                set: setNbhdHeight,
+                            }}
+                            mainCell={{ get: getMainCell, set: setMainCell }}
                         />
                     ),
                 },
                 {
                     label: "Rules",
+                    value: "rules",
                     component: (
                         <Rules2D
-                            nbhdType={nbhdKeys2D[nbhdIndex]}
-                            nbhdWidth={nbhdWidth}
-                            nbhdHeight={nbhdHeight}
-                            mainCell={mainCell}
+                            nbhdType={getNbhdType}
+                            nbhdWidth={getNbhdWidth}
+                            nbhdHeight={getNbhdHeight}
+                            mainCell={getMainCell}
                         />
                     ),
                 },
             ]}
-            selected={{ get: section, set: setSection }}
+            selected={{ get: getSection, set: setSection }}
             size="lg"
             alignment="center"
         />

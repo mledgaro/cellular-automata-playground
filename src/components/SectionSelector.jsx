@@ -2,23 +2,23 @@
 
 import { inputGroupClasses } from "../js/Utils";
 
-function OptionGroup({ labels, selected, title, size, alignment, bs5Class }) {
+function OptionGroup({ title, options, selected, size, alignment, bs5Class }) {
     //
 
-    let options = labels.map((label, i) => {
+    let options_ = options.map((opt, i) => {
         //
 
         let selectedClass =
-            i === selected.get ? "cap-btn-group-select-active" : "";
+            opt.value === selected.get ? "cap-btn-group-select-active" : "";
 
         return (
             <button
                 key={i}
                 type="button"
                 className={`btn cap-btn-group-select ${selectedClass}`}
-                onClick={() => selected.set(i)}
+                onClick={() => selected.set(opt.value)}
             >
-                {label}
+                {opt.label}
             </button>
         );
     });
@@ -38,7 +38,7 @@ function OptionGroup({ labels, selected, title, size, alignment, bs5Class }) {
             )}
 
             <div className={inputGroupClasses(size, alignment, "")}>
-                {options}
+                {options_}
             </div>
         </div>
     );
@@ -53,19 +53,30 @@ export default function SectionSelector({
 }) {
     //
 
-    const labels = sections.map((e) => e.label);
+    const options = sections.map((e) => {
+        return { label: e.label, value: e.value };
+    });
+
+    let visibleSection = sections[0].component;
+
+    for (let i = 0; i < sections.length; i++) {
+        if (sections[i].value === selected.get) {
+            visibleSection = sections[i].component;
+            break;
+        }
+    }
 
     return (
         <div className="">
             <OptionGroup
                 title={title}
-                labels={labels}
+                options={options}
                 selected={selected}
                 size={size}
                 alignment={alignment}
                 bs5Class={bs5Class}
             />
-            {sections[selected.get].component}
+            {visibleSection}
         </div>
     );
 }

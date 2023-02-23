@@ -1,6 +1,6 @@
 //
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 import FAIcon from "./FAIcon";
 import NumberInput from "./NumberInput";
@@ -15,9 +15,7 @@ function Cell({ active, selected, onClick }) {
 
     let icon;
 
-    if (active == null) {
-        active = true;
-    }
+    active = active == null ? true : active;
 
     if (active) {
         icon = {
@@ -54,37 +52,37 @@ function Ellipsis() {
     );
 }
 
-function CellGroup1D({ type, numCells, selected, size, alignment }) {
+export function CellGroup1D({ type, numCells, selected, allowSelection}) {
     //
 
     let cells = [];
-    let onClickCell = (i) => {};
-    let onClickCont = () => {};
     let lastIdx = numCells - 1;
 
-    selected.set(selected.get === -1 ? lastIdx : selected.get);
-
-    if (type === "insitu") {
-        onClickCell = (i) => selected.set(i);
+    let select;
+    if (allowSelection) {
+        select = (i) => selected.set(i);
     } else {
-        onClickCont = () => selected.set(selected.get === 0 ? lastIdx : 0);
+        select = (i) => {};
     }
 
     for (let i = 0; i < numCells; i++) {
         cells.push(
             <Cell
                 key={i}
-                selected={selected.get === i}
-                onClick={() => onClickCell(i)}
+                selected={allowSelection && selected.get === i}
+                onClick={() => select(i)}
             />
         );
     }
 
-    if (type === "grouped") {
+    if (allowSelection && type === "grouped") {
         if (selected.get === 0) {
             cells.splice(1, 0, <Ellipsis />);
-        } else {
+        } else if (selected.get === lastIdx) {
             cells.splice(lastIdx, 0, <Ellipsis />);
+        } else {
+            cells.splice(selected.get + 1, 0, <Ellipsis />);
+            cells.splice(selected.get, 0, <Ellipsis />);
         }
     } else if (type === "scattered") {
         for (let i = 0; i < lastIdx; i++) {
@@ -96,7 +94,6 @@ function CellGroup1D({ type, numCells, selected, size, alignment }) {
         <div
             className="cap-container-dark-1 mx-auto"
             style={{ padding: "8px", width: "fit-content" }}
-            onClick={onClickCont}
         >
             {cells}
         </div>
@@ -147,53 +144,6 @@ function CellGroup2D({ type, width, height, selected, extraClasses }) {
     );
 }
 
-export function NbhdInput1D({ type }) {
-    //
-
-    const nbhdContext = useContext(NbhdContext1D);
-
-    let updateNumCells;
-
-    if (type === "insitu") {
-        nbhdContext.mainCell.set(Math.ceil(nbhdContext.nbhdWidth.get / 2) - 1);
-        updateNumCells = (val) => {
-            nbhdContext.nbhdWidth.set(val);
-            nbhdContext.mainCell.set(Math.ceil(val / 2) - 1);
-        };
-    } else {
-        nbhdContext.mainCell.set(0);
-        updateNumCells = (val) => {
-            nbhdContext.nbhdWidth.set(val);
-            nbhdContext.mainCell.set(0);
-        };
-    }
-
-    return (
-        <div className="row w-50 mx-auto">
-            <div className="col">
-                <NumberInput
-                    label="Width"
-                    value={{
-                        get: nbhdContext.nbhdWidth.get,
-                        set: updateNumCells,
-                    }}
-                    min={2}
-                    max={8}
-                    alignment="center"
-                />
-            </div>
-
-            <div className="col">
-                <CellGroup1D
-                    type={type}
-                    numCells={nbhdContext.nbhdWidth.get}
-                    selected={nbhdContext.mainCell}
-                    alignment="center"
-                />
-            </div>
-        </div>
-    );
-}
 
 export function NbhdInput2D({ type }) {
     //

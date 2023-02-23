@@ -34,12 +34,14 @@ function LiveCellsSelector({ selected, value, numCells }) {
             sections={[
                 {
                     label: "Number",
+                    value: "num",
                     component: (
                         <ISNumberInput value={value} min={0} max={numCells} />
                     ),
                 },
                 {
                     label: "Percentage",
+                    value: "perc",
                     component: (
                         <ISNumberInput value={value} min={0} max={100} />
                     ),
@@ -71,12 +73,14 @@ function GroupSizeSelector({
             sections={[
                 {
                     label: "Fixed",
+                    value: "fixed",
                     component: (
                         <ISNumberInput value={groupSize} min={1} max={256} />
                     ),
                 },
                 {
                     label: "Random",
+                    value: "rand",
                     component: (
                         <div className="row mx-auto" style={{ width: "80%" }}>
                             <div className="col">
@@ -120,9 +124,10 @@ function DistributionSelector({
         <SectionSelector
             title="Distribution"
             sections={[
-                { label: "Random", component: <div /> },
+                { label: "Random", value: "rand" },
                 {
                     label: "Even",
+                    value: "even",
                     component: (
                         <GroupSizeSelector
                             groupSize={groupSize}
@@ -146,9 +151,9 @@ function DistributionSelector({
 export default function InitialState({ numCells }) {
     //
 
-    let [liveCellsType, setLiveCellsType] = useState(0);
-    let [distribution, setDistribution] = useState(0);
-    let [groupSizeType, setGroupSizeType] = useState(0);
+    let [liveCellsType, setLiveCellsType] = useState("num");
+    let [distribution, setDistribution] = useState("rand");
+    let [groupSizeType, setGroupSizeType] = useState("fixed");
 
     let [liveCells, setLiveCells] = useState(0);
     let [groupSize, setGroupSize] = useState(0);
