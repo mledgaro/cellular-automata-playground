@@ -1,13 +1,15 @@
 //
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import SectionSelector from "../../components/SectionSelector";
 import { Neighborhood1D, Neighborhood2D } from "./Neighborhood";
 import { Rules1D, Rules2D } from "./Rules";
 import InitialState from "./InitialState";
 import useStateObj from "../../components/useStateObj";
+import { intToBoolArray, randBoolArrPercent } from "../../js/Utils";
 
+const numCells = 256;
 
 function Settings1D() {
     //
@@ -15,10 +17,20 @@ function Settings1D() {
     const section = useStateObj("nbhd");
 
     const nbhdWidth = useStateObj(3);
-    const mainCell = useStateObj(3);
+    const mainCell = useStateObj(1);
 
     const includeMainCell = useStateObj("cellin");
     const nbhdType = useStateObj("contiguos");
+
+    const rulesState = useStateObj(
+        intToBoolArray(90, Math.pow(2, nbhdWidth.get))
+    );
+
+    const initState = useStateObj(randBoolArrPercent(numCells, 10));
+
+    useEffect(() => {
+        rulesState.set(randBoolArrPercent(Math.pow(2, nbhdWidth.get), 50));
+    }, [nbhdWidth.get]);
 
     return (
         <SectionSelector
@@ -42,15 +54,25 @@ function Settings1D() {
                     component: (
                         <Rules1D
                             nbhdWidth={nbhdWidth.get}
-                            mainCell={mainCell.get}
+                            mainCell={
+                                includeMainCell.get === "cellout"
+                                    ? -1
+                                    : mainCell.get
+                            }
                             nbhdType={nbhdType.get}
+                            rulesState={rulesState}
                         />
                     ),
                 },
                 {
                     label: "Initial state",
                     value: "initstate",
-                    component: <InitialState numCells={256} />,
+                    component: (
+                        <InitialState
+                            numCells={numCells}
+                            cellsState={initState}
+                        />
+                    ),
                 },
             ]}
             selected={section}

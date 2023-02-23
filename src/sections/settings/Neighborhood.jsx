@@ -6,7 +6,7 @@ import SectionSelector from "../../components/SectionSelector";
 import {
     CellGroup1D,
     NbhdInput2D,
-} from "../../components/NbhdInput";
+} from "../../components/CellGroup";
 import NumberInput from "../../components/NumberInput";
 
 export const NbhdContext1D = createContext();
@@ -65,7 +65,7 @@ export function Neighborhood1D({ nbhdWidth, includeMainCell, mainCell, type }) {
     //
 
     return (
-        <div className="row mx-auto" style={{width: "80%"}}>
+        <div className="row mx-auto" style={{ width: "80%" }}>
             <div className="col-3 d-flex align-items-center">
                 <NumberInput
                     label="Width"
@@ -83,9 +83,10 @@ export function Neighborhood1D({ nbhdWidth, includeMainCell, mainCell, type }) {
             <div className="col-4 d-flex align-items-center">
                 <CellGroup1D
                     type={type.get}
-                    numCells={nbhdWidth.get}
-                    selected={mainCell}
+                    nbhdWidth={nbhdWidth.get}
+                    selection={mainCell}
                     allowSelection={includeMainCell.get === "cellin"}
+                    lg={true}
                 />
             </div>
         </div>

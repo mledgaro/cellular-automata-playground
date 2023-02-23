@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Button from "../../components/Button";
-import { Rule1D, Rule2D } from "../../components/Rule";
+import { CellGroup1D } from "../../components/CellGroup";
+import FAIcon from "../../components/FAIcon";
+import useStateObj from "../../components/useStateObj";
 import {
     diagonalNeighbors,
     inputGroupClasses,
@@ -70,22 +72,6 @@ function Controls({ rulesState }) {
     );
 }
 
-function ColRule1D({ type, index, nbhdWidth, mainCell, state }) {
-    //
-
-    return (
-        <div className="col-lg-3 my-1">
-            <Rule1D
-                type={type}
-                index={index}
-                nbhdWidth={nbhdWidth}
-                mainCell={mainCell}
-                state={state}
-            />
-        </div>
-    );
-}
-
 function RulesSet1D({ nbhdType, nbhdWidth, mainCell, states }) {
     //
 
@@ -93,53 +79,84 @@ function RulesSet1D({ nbhdType, nbhdWidth, mainCell, states }) {
         <div className="row mt-3 w-75 mx-auto">
             {states.get.map((e, i) => {
                 return (
-                    <ColRule1D
-                        key={i}
-                        type={nbhdType}
-                        index={i}
-                        nbhdWidth={nbhdWidth}
-                        mainCell={mainCell}
-                        state={{get: e, change: () => states.set(states.get.map((e, j) => j === i ? !e : e))}}
-                    />
+                    <div className="col-3 my-1">
+                        <CellGroup1D
+                            key={i}
+                            type={nbhdType}
+                            index={i}
+                            nbhdWidth={nbhdWidth}
+                            selection={{
+                                get: e,
+                                change: () =>
+                                    states.set(
+                                        states.get.map((e, j) =>
+                                            j === i ? !e : e
+                                        )
+                                    ),
+                            }}
+                            mainCell={mainCell}
+                            rule={true}
+                        />
+                    </div>
                 );
             })}
         </div>
     );
 }
 
-export function Rules1D({ nbhdType, nbhdWidth, mainCell }) {
+export function Rules1D({ nbhdType, nbhdWidth, mainCell, rulesState }) {
     //
 
-    let numRules = Math.pow(2, nbhdWidth);
-
-    const [rulesState, setRulesState] = useState(intToBoolArray(90, numRules));
-
-    const [ruleNumber, setRuleNumber] = useState(boolArrayToInt(rulesState));
+    const ruleNumber = useStateObj(boolArrayToInt(rulesState.get));
 
     useEffect(() => {
-        setRuleNumber(boolArrayToInt(rulesState, true));
-    }, [rulesState]);
+        ruleNumber.set(boolArrayToInt(rulesState.get, true));
+    }, [rulesState.get]);
 
     return (
         <div className="mt-3">
             <div className="row mx-auto" style={{ width: "60%" }}>
-                <RuleNumber value={ruleNumber} />
+                <RuleNumber value={ruleNumber.get} />
 
-                <Controls
-                    rulesState={{ get: rulesState, set: setRulesState }}
-                />
+                <Controls rulesState={rulesState} />
             </div>
 
             <RulesSet1D
                 nbhdType={nbhdType}
                 nbhdWidth={nbhdWidth}
                 mainCell={mainCell}
-                states={{ get: rulesState, set: setRulesState }}
+                states={rulesState}
             />
         </div>
     );
 }
 
+function Rule2D() {
+    //
+
+    const [state, setState] = useState(0);
+    let icon;
+
+    switch (state) {
+        case 1:
+            icon = { id: "square", style: "regular", size: "xl" };
+            break;
+        case 2:
+            icon = { id: "square", style: "solid", size: "xl" };
+            break;
+        default:
+            icon = { id: "square-minus", style: "regular", size: "xl" };
+    }
+
+    return (
+        <span
+            className=""
+            onClick={() => setState(state === 2 ? 0 : state + 1)}
+        >
+            <FAIcon icon={icon} />
+        </span>
+    );
+}
 export function Rules2D({ nbhdType, nbhdWidth, nbhdHeight, mainCell }) {
     //
 
