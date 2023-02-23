@@ -6,17 +6,19 @@ import SectionSelector from "../../components/SectionSelector";
 import { Neighborhood1D, Neighborhood2D } from "./Neighborhood";
 import { Rules1D, Rules2D } from "./Rules";
 import InitialState from "./InitialState";
+import useStateObj from "../../components/useStateObj";
 
 
 function Settings1D() {
     //
 
-    const [getSection, setSection] = useState("nbhd");
+    const section = useStateObj("nbhd");
 
-    const [getNbhdWidth, setNbhdWidth] = useState(3);
-    const [getMainCell, setMainCell] = useState(1);
-    const [getIncludeMainCell, setIncludeMainCell] = useState("cellin");
-    const [getNbhdType, setNbhdType] = useState("contiguos");
+    const nbhdWidth = useStateObj(3);
+    const mainCell = useStateObj(3);
+
+    const includeMainCell = useStateObj("cellin");
+    const nbhdType = useStateObj("contiguos");
 
     return (
         <SectionSelector
@@ -27,13 +29,10 @@ function Settings1D() {
                     value: "nbhd",
                     component: (
                         <Neighborhood1D
-                            nbhdWidth={{ get: getNbhdWidth, set: setNbhdWidth }}
-                            includeMainCell={{
-                                get: getIncludeMainCell,
-                                set: setIncludeMainCell,
-                            }}
-                            mainCell={{ get: getMainCell, set: setMainCell }}
-                            type={{ get: getNbhdType, set: setNbhdType }}
+                            nbhdWidth={nbhdWidth}
+                            includeMainCell={includeMainCell}
+                            mainCell={mainCell}
+                            type={nbhdType}
                         />
                     ),
                 },
@@ -42,9 +41,9 @@ function Settings1D() {
                     value: "rules",
                     component: (
                         <Rules1D
-                            nbhdWidth={getNbhdWidth}
-                            mainCell={getMainCell}
-                            nbhdType={getNbhdType}
+                            nbhdWidth={nbhdWidth.get}
+                            mainCell={mainCell.get}
+                            nbhdType={nbhdType.get}
                         />
                     ),
                 },
@@ -54,7 +53,7 @@ function Settings1D() {
                     component: <InitialState numCells={256} />,
                 },
             ]}
-            selected={{ get: getSection, set: setSection }}
+            selected={section}
             size="lg"
             alignment="center"
         />
