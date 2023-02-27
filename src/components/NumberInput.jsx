@@ -1,8 +1,59 @@
 //
 
-import { useState } from "react";
+import { useCallback } from "react";
 import { inputGroupClasses } from "../js/Utils";
 import Button from "./Button";
+import useStateObj from "./useStateObj";
+
+function Label({ text }) {
+    return (
+        <span className="input-group-text cap-container-dark-1">{text}</span>
+    );
+}
+
+function DecreaseButton({ value, tmp, min }) {
+    //
+
+    return (
+        <Button
+            icon={{ id: "minus" }}
+            enabled={value.get > min}
+            onClick={() => {
+                value.set(value.get - 1);
+            }}
+        />
+    );
+}
+
+function IncreaseButton({ value, tmp, max }) {
+    //
+
+    return (
+        <Button
+            icon={{ id: "plus" }}
+            enabled={value.get < max}
+            onClick={() => {
+                value.set(value.get + 1);
+            }}
+        />
+    );
+}
+
+function InputNum({ value }) {
+    //
+
+    return (
+        <input
+            type="text"
+            className=" cap-container-dark-1 cap-input-text"
+            value={value.get}
+            onChange={(e) => value.set(e.target.value)}
+            // onFocus={(e) => {}}
+            // onBlur={(e) => {}}
+            size={1}
+        />
+    );
+}
 
 export default function NumberInput({
     value,
@@ -15,52 +66,25 @@ export default function NumberInput({
 }) {
     //
 
-    let [tmp, setTmp] = useState(value.get);
+    const changeValue = useCallback((val) => { 
+        value.set(
+            !isNaN(val) ? Math.max(min, Math.min(Number(val), max)) : min
+        );
+    }, [value, min, max]);
+
+    const val = { get: value.get, set: changeValue };
+
+    const contClasses = inputGroupClasses(size, alignment, ` ${extraClasses}`);
 
     return (
-        <div className={inputGroupClasses(size, alignment, ` ${extraClasses}`)}>
-            {label != null && (
-                <span className="input-group-text cap-container-dark-1">
-                    {label}
-                </span>
-            )}
+        <div className={contClasses}>
+            {label != null && <Label text={label} />}
 
-            <Button
-                icon={{ id: "minus" }}
-                enabled={value.get > min}
-                onClick={() => {
-                    value.set(value.get - 1);
-                    setTmp(tmp - 1);
-                }}
-            />
+            <DecreaseButton value={value} min={min} />
 
-            <input
-                type="text"
-                className=" cap-container-dark-1 cap-input-text"
-                value={tmp}
-                onChange={(e) => setTmp(e.target.value)}
-                onBlur={(e) => {
-                    if (!isNaN(tmp)) {
-                        let val = Number(tmp);
-                        val = val < min ? min : val > max ? max : val;
-                        setTmp(val);
-                        value.set(val);
-                    } else {
-                        setTmp(min);
-                        value.set(min);
-                    }
-                }}
-                size={1}
-            />
+            <InputNum value={val} min={min} max={max} />
 
-            <Button
-                icon={{ id: "plus" }}
-                enabled={value.get < max}
-                onClick={() => {
-                    value.set(value.get + 1);
-                    setTmp(tmp + 1);
-                }}
-            />
+            <IncreaseButton value={value} max={max} />
         </div>
     );
 }
