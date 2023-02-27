@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Button from "../../components/Button";
-import { CellGroup1D } from "../../components/CellGroup";
+import { Rule } from "../../components/CellGroup";
 import FAIcon from "../../components/FAIcon";
 import useStateObj from "../../components/useStateObj";
 import {
@@ -11,8 +11,7 @@ import {
     boolArray,
     boolArrayNot,
     boolArrayToInt,
-    intToBoolArray,
-    randBoolArrPercent,
+    randomBoolArray,
 } from "../../js/Utils";
 
 function RuleNumber({ value }) {
@@ -40,9 +39,7 @@ function Controls({ rulesState }) {
                     tooltipLabel="Random"
                     icon={{ id: "shuffle" }}
                     onClick={() =>
-                        rulesState.set(
-                            randBoolArrPercent(rulesState.get.length, 50)
-                        )
+                        rulesState.set(randomBoolArray(rulesState.get.length))
                     }
                 />
 
@@ -80,11 +77,12 @@ function RulesSet1D({ nbhdType, nbhdWidth, mainCell, states }) {
             {states.get.map((e, i) => {
                 return (
                     <div className="col-3 my-1">
-                        <CellGroup1D
+                        <Rule
                             key={i}
                             type={nbhdType}
                             index={i}
                             nbhdWidth={nbhdWidth}
+                            mainCell={mainCell}
                             selection={{
                                 get: e,
                                 change: () =>
@@ -94,8 +92,6 @@ function RulesSet1D({ nbhdType, nbhdWidth, mainCell, states }) {
                                         )
                                     ),
                             }}
-                            mainCell={mainCell}
-                            rule={true}
                         />
                     </div>
                 );

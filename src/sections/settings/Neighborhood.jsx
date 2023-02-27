@@ -4,7 +4,7 @@ import { createContext, useEffect, useState } from "react";
 
 import SectionSelector from "../../components/SectionSelector";
 import {
-    CellGroup1D,
+    NbhdInput,
     NbhdInput2D,
 } from "../../components/CellGroup";
 import NumberInput from "../../components/NumberInput";
@@ -64,6 +64,8 @@ function NbhdType({ includeMainCell, type }) {
 export function Neighborhood1D({ nbhdWidth, includeMainCell, mainCell, type }) {
     //
 
+    useEffect(() => { mainCell.set(Math.min(mainCell.get, nbhdWidth.get - 1)); }, [mainCell, nbhdWidth.get]);
+
     return (
         <div className="row mx-auto" style={{ width: "80%" }}>
             <div className="col-3 d-flex align-items-center">
@@ -81,12 +83,12 @@ export function Neighborhood1D({ nbhdWidth, includeMainCell, mainCell, type }) {
             </div>
 
             <div className="col-4 d-flex align-items-center">
-                <CellGroup1D
+                <NbhdInput
                     type={type.get}
                     nbhdWidth={nbhdWidth.get}
-                    selection={mainCell}
-                    allowSelection={includeMainCell.get === "cellin"}
-                    lg={true}
+                    selection={
+                        includeMainCell.get === "cellin" ? mainCell : null
+                    }
                 />
             </div>
         </div>

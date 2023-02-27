@@ -31,24 +31,37 @@ function DeactivatedCell({ onClick }) {
     );
 }
 
-export function Cell({ selected, alive, main, lg, onClick }) {
+function SelectedCell({ onClick }) {
     //
-
-    let icon;
-
-    selected = selected == null ? false : selected;
-    alive = alive == null ? false : alive;
-    main = main == null ? true : main;
-
-    icon = {
-        id: selected ? "square-check" : "square",
-        style: alive ? "solid" : "regular",
-        size: selected ? "2xl" : main || lg ? "lg" : "xs",
-    };
 
     return (
         <span className="cap-icon-cell" onClick={onClick}>
-            <FAIcon icon={icon} />
+            <FAIcon
+                icon={{
+                    id: "square-check",
+                    style: "regular",
+                    size: "2xl",
+                }}
+            />
+        </span>
+    );
+}
+
+function Cell({ alive, main, onClick }) {
+    //
+
+    alive = alive == null ? false : alive;
+    main = main == null ? true : main;
+
+    return (
+        <span className="cap-icon-cell" onClick={onClick}>
+            <FAIcon
+                icon={{
+                    id: "square",
+                    style: alive ? "solid" : "regular",
+                    size: main ? "lg" : "xs",
+                }}
+            />
         </span>
     );
 }
@@ -71,79 +84,93 @@ function Arrow() {
     );
 }
 
-export function CellGroup1D({
-    type,
-    index,
-    nbhdWidth,
-    selection,
-    mainCell,
-    allowSelection,
-    rule,
-}) {
+function addEllipses(cells, type, mainCell) {
     //
 
-    let cells;
-    let select;
+    if (type === "grouped") {
 
-    if (allowSelection) {
-        select = (i) => selection.set(i);
-    } else {
-        select = (i) => {};
-    }
-
-    let selectRule;
-    if (rule) {
-        selectRule = selection.change;
-    } else {
-        selectRule = () => {};
-    }
-
-    index = index == null ? 0 : index;
-
-    cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
-        <Cell
-            key={i}
-            selected={allowSelection && selection.get === i}
-            alive={e}
-            main={i === mainCell}
-            onClick={() => select(i)}
-            lg={!rule}
-        />
-    ));
-
-    if (type === "grouped" && allowSelection) {
-        if (selection.get === 0) {
+        if (mainCell === 0) {
             cells.splice(1, 0, <Ellipsis />);
-        } else if (selection.get === cells.length - 1) {
+        } else if (mainCell === cells.length - 1) {
             cells.splice(cells.length - 1, 0, <Ellipsis />);
-        } else {
-            cells.splice(selection.get + 1, 0, <Ellipsis />);
-            cells.splice(selection.get, 0, <Ellipsis />);
+        } else if (mainCell > 0) {
+            cells.splice(mainCell + 1, 0, <Ellipsis />);
+            cells.splice(mainCell, 0, <Ellipsis />);
         }
+
+        return cells;
     } else if (type === "scattered") {
         let len = cells.length - 1;
         for (let i = len; i > 0; i--) {
             cells.splice(i, 0, <Ellipsis />);
         }
+        return cells;
     }
 
-    let ruleComp;
-    if (rule) {
-        ruleComp = <span><Arrow /> <Cell alive={selection.get} /></span>;
-    }
-    else {
-        ruleComp = <span />;
+    return cells;
+}
+
+export function NbhdInput({ type, nbhdWidth, selection }) {
+    //
+
+    let cells = [];
+
+    if (selection != null) {
+        //
+
+        let i = 0;
+
+        for (let k = i; i < selection.get; k++, i++) {
+            cells.push(<Cell onClick={() => selection.set(k)} />);
+        }
+
+        cells.push(<SelectedCell />);
+        i++;
+
+        for (let k = i; i < nbhdWidth; k++, i++) {
+            cells.push(<Cell onClick={() => selection.set(k)} />);
+        }
+
+        cells = addEllipses(cells, type, selection.get);
+    } else {
+        //
+
+        for (let i = 0; i < nbhdWidth; i++) {
+            cells.push(<Cell />);
+        }
+
+        cells = addEllipses(cells, type, -1);
     }
 
     return (
         <div
             className="cap-container-dark-1 mx-auto"
             style={{ padding: "8px", width: "max-content" }}
-            onClick={selectRule}
         >
             {cells}
+        </div>
+    );
+}
 
-            {ruleComp}
+export function Rule({ type, index, nbhdWidth, mainCell, selection }) {
+    //
+
+    let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
+        <Cell key={i} alive={e} main={i === mainCell} />
+    ));
+
+    cells = addEllipses(cells, type, mainCell);
+
+    cells.push(<Arrow />);
+    cells.push(<Cell alive={selection.get} />);
+
+    return (
+        <div
+            className="cap-container-dark-1 mx-auto"
+            style={{ padding: "8px", width: "max-content" }}
+            onClick={selection.change}
+        >
+            {cells}
         </div>
     );
 }
@@ -175,16 +202,13 @@ function CellGroup2D({ type, width, height, selected, extraClasses }) {
             sel = r === selected.get.r && c === selected.get.c;
             row.push(
                 <td style={{ padding: "5px" }}>
-                    
-                    {isActive(r, c) &&
+                    {isActive(r, c) && (
                         <Cell
                             selected={sel}
                             onClick={() => selected.set({ r: r, c: c })}
                         />
-                    }
-                    { !isActive(r, c) &&
-                        <DeactivatedCell />
-                    }
+                    )}
+                    {!isActive(r, c) && <DeactivatedCell />}
                 </td>
             );
         }
