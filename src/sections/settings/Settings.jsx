@@ -6,7 +6,7 @@ import SectionSelector from "../../components/SectionSelector";
 import { Neighborhood1D, Neighborhood2D } from "./Neighborhood";
 import { Rules1D, Rules2D } from "./Rules";
 import InitialState from "./InitialState";
-import useStateObj from "../../components/useStateObj";
+import { useStateObj } from "../../components/CustomHooks";
 import { buildState, intToBoolArray, randomBoolArray } from "../../js/Utils";
 
 const numCells = 256;

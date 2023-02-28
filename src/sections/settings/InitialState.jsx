@@ -5,7 +5,7 @@ import Button from "../../components/Button";
 import CellsSet from "../../components/CellsState";
 import NumberInput from "../../components/NumberInput";
 import SectionSelector from "../../components/SectionSelector";
-import useStateObj from "../../components/useStateObj";
+import { useStateObj } from "../../components/CustomHooks";
 import { buildState, randBoolArrPercent } from "../../js/Utils";
 
 function ISNumberInput({ title, value, min, max }) {

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import { Rule } from "../../components/CellGroup";
 import FAIcon from "../../components/FAIcon";
-import useStateObj from "../../components/useStateObj";
+import { useStateObj } from "../../components/CustomHooks";
 import {
     diagonalNeighbors,
     inputGroupClasses,

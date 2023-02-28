@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { inputGroupClasses } from "../js/Utils";
 import Button from "./Button";
-import useStateObj from "./useStateObj";
+import { useStateObj } from "./CustomHooks";
 
 function Label({ text }) {
     return (
@@ -66,11 +66,14 @@ export default function NumberInput({
 }) {
     //
 
-    const changeValue = useCallback((val) => { 
-        value.set(
-            !isNaN(val) ? Math.max(min, Math.min(Number(val), max)) : min
-        );
-    }, [value, min, max]);
+    const changeValue = useCallback(
+        (val) => {
+            value.set(
+                !isNaN(val) ? Math.max(min, Math.min(Number(val), max)) : min
+            );
+        },
+        [value, min, max]
+    );
 
     const val = { get: value.get, set: changeValue };
 
