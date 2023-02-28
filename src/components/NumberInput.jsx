@@ -1,9 +1,7 @@
 //
 
-import { useCallback } from "react";
 import { inputGroupClasses } from "../js/Utils";
 import Button from "./Button";
-import { useStateObj } from "./CustomHooks";
 
 function Label({ text }) {
     return (
@@ -11,30 +9,26 @@ function Label({ text }) {
     );
 }
 
-function DecreaseButton({ value, tmp, min }) {
+function DecreaseButton({ value, min }) {
     //
 
     return (
         <Button
             icon={{ id: "minus" }}
             enabled={value.get > min}
-            onClick={() => {
-                value.set(value.get - 1);
-            }}
+            onClick={value.prev}
         />
     );
 }
 
-function IncreaseButton({ value, tmp, max }) {
+function IncreaseButton({ value, max }) {
     //
 
     return (
         <Button
             icon={{ id: "plus" }}
             enabled={value.get < max}
-            onClick={() => {
-                value.set(value.get + 1);
-            }}
+            onClick={value.next}
         />
     );
 }
@@ -66,17 +60,6 @@ export default function NumberInput({
 }) {
     //
 
-    const changeValue = useCallback(
-        (val) => {
-            value.set(
-                !isNaN(val) ? Math.max(min, Math.min(Number(val), max)) : min
-            );
-        },
-        [value, min, max]
-    );
-
-    const val = { get: value.get, set: changeValue };
-
     const contClasses = inputGroupClasses(size, alignment, ` ${extraClasses}`);
 
     return (
@@ -85,7 +68,7 @@ export default function NumberInput({
 
             <DecreaseButton value={value} min={min} />
 
-            <InputNum value={val} min={min} max={max} />
+            <InputNum value={value} />
 
             <IncreaseButton value={value} max={max} />
         </div>

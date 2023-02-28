@@ -1,12 +1,12 @@
 //
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Button from "../../components/Button";
 import CellsSet from "../../components/CellsState";
 import NumberInput from "../../components/NumberInput";
 import SectionSelector from "../../components/SectionSelector";
-import { useStateObj } from "../../components/CustomHooks";
-import { buildState, randBoolArrPercent } from "../../js/Utils";
+import { useRangeReducer, useStateObj } from "../../components/CustomHooks";
+import { buildState } from "../../js/Utils";
 
 function ISNumberInput({ title, value, min, max }) {
     //
@@ -144,9 +144,14 @@ export default function InitialState({ numCells, cellsState }) {
     let liveCellsType = useStateObj("num");
     let distributionType = useStateObj("rand");
 
-    let liveCells = useStateObj(1);
-    let groupMinSize = useStateObj(1);
-    let groupMaxSize = useStateObj(1);
+    let liveCells = useRangeReducer(1, numCells, 1, false);
+    const groupMinSize = useRangeReducer(1, numCells, 1, false);
+    const groupMaxSize = useRangeReducer(
+        groupMinSize.get,
+        numCells,
+        groupMinSize.get,
+        false
+    );
 
     return (
         <div>

@@ -6,7 +6,7 @@ import SectionSelector from "../../components/SectionSelector";
 import { Neighborhood1D, Neighborhood2D } from "./Neighborhood";
 import { Rules1D, Rules2D } from "./Rules";
 import InitialState from "./InitialState";
-import { useStateObj } from "../../components/CustomHooks";
+import { useRangeReducer, useStateObj } from "../../components/CustomHooks";
 import { buildState, intToBoolArray, randomBoolArray } from "../../js/Utils";
 
 const numCells = 256;
@@ -16,9 +16,11 @@ function Settings1D() {
 
     const section = useStateObj("nbhd");
 
-    const nbhdWidth = useStateObj(3);
+    // const nbhdWidth = useStateObj(3);
+    const nbhdWidth = useRangeReducer(2, 8, 3, false);
     const mainCell = useStateObj(1);
 
+    // const includeMainCell = useEnumReducer(["cellin", "cellout"], 0);
     const includeMainCell = useStateObj("cellin");
     const nbhdType = useStateObj("contiguos");
 

@@ -1,9 +1,8 @@
 //
 
-import { useState } from "react";
 import { inputGroupClasses } from "../js/Utils";
 import Button from "./Button";
-import { useStateObj } from "./CustomHooks";
+import { useRangeReducer } from "./CustomHooks";
 import FAIcon from "./FAIcon";
 
 function Level({ on }) {
@@ -39,7 +38,7 @@ export default function LevelSelector({
 }) {
     //
 
-    const level = useStateObj(0);
+    const level = useRangeReducer(0, numLevels, 0, false);
 
     return (
         <div className={inputGroupClasses(size, alignment, "")}>
@@ -55,7 +54,7 @@ export default function LevelSelector({
             <Button
                 icon={{ id: "minus" }}
                 enabled={level.get > 0}
-                onClick={() => level.set(level.get - 1)}
+                onClick={level.prev}
             />
 
             <Levels current={level.get} total={numLevels} />
@@ -63,7 +62,7 @@ export default function LevelSelector({
             <Button
                 icon={{ id: "plus" }}
                 enabled={level.get < numLevels}
-                onClick={() => level.set(level.get + 1)}
+                onClick={level.next}
             />
         </div>
     );

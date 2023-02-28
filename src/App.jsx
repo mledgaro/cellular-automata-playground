@@ -2,29 +2,27 @@
 
 import "./css/App.css";
 
-import { useRef, useState } from "react";
-
 import Title from "./sections/Title";
 import Canvas from "./sections/Canvas";
 import Controls from "./sections/Controls";
 import Settings from "./sections/settings/Settings";
 import Footer from "./sections/Footer";
-import CanvasCntrl from "./js/CanvasCntrl";
+import { useRangeReducer } from "./components/CustomHooks";
 
 export default function App() {
     //
 
-    let [dimension, setDimension] = useState(1);
+    let dimension = useRangeReducer(1, 2, 1, true);
 
     return (
         <div className="App">
-            <Title dimension={{ get: dimension, set: setDimension }} />
+            <Title dimension={dimension} />
 
             <Canvas />
 
             <Controls />
 
-            <Settings dimension={dimension} />
+            <Settings dimension={dimension.get} />
 
             <Footer />
         </div>
