@@ -3,7 +3,32 @@
 import { useState } from "react";
 import { inputGroupClasses } from "../js/Utils";
 import Button from "./Button";
+import { useStateObj } from "./CustomHooks";
 import FAIcon from "./FAIcon";
+
+function Level({ on }) {
+    //
+
+    return (
+        <span
+            className={`input-group-text cap-level cap-level-${
+                on ? "on" : "off"
+            }`}
+        ></span>
+    );
+}
+
+function Levels({ current, total }) {
+    //
+
+    let arr = [];
+
+    for (let i = 0; i < total; i++) {
+        arr.push(<Level key={i} on={i <= current} />);
+    }
+
+    return <span>{arr}</span>;
+}
 
 export default function LevelSelector({
     iconId,
@@ -14,30 +39,7 @@ export default function LevelSelector({
 }) {
     //
 
-    const [level, setLevel] = useState(0);
-
-    let highLevels = [];
-    let lowLevels = [];
-
-    let i;
-
-    for (i = 0; i < level; i++) {
-        highLevels.push(
-            <span
-                key={i}
-                className="input-group-text cap-level cap-level-on"
-            ></span>
-        );
-    }
-
-    for (; i < numLevels; i++) {
-        lowLevels.push(
-            <span
-                key={i}
-                className="input-group-text cap-level cap-level-off"
-            ></span>
-        );
-    }
+    const level = useStateObj(0);
 
     return (
         <div className={inputGroupClasses(size, alignment, "")}>
@@ -52,18 +54,16 @@ export default function LevelSelector({
 
             <Button
                 icon={{ id: "minus" }}
-                enabled={level > 0}
-                onClick={() => setLevel(level - 1)}
+                enabled={level.get > 0}
+                onClick={() => level.set(level.get - 1)}
             />
 
-            {highLevels}
-
-            {lowLevels}
+            <Levels current={level.get} total={numLevels} />
 
             <Button
                 icon={{ id: "plus" }}
-                enabled={level < numLevels}
-                onClick={() => setLevel(level + 1)}
+                enabled={level.get < numLevels}
+                onClick={() => level.set(level.get + 1)}
             />
         </div>
     );
