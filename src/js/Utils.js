@@ -109,17 +109,17 @@ export function diagonalNeighbors(width, height, row, col) {
     );
 }
 
-// export function randomBoolArray(size) {
-//     //
+export function randomBoolArray(size) {
+    //
 
-//     let boolArr = [];
+    let boolArr = [];
 
-//     for (let i = 0; i < size; i++) {
-//         boolArr.push(Math.random() <= 0.5);
-//     }
+    for (let i = 0; i < size; i++) {
+        boolArr.push(Math.random() <= 0.5);
+    }
 
-//     return boolArr;
-// }
+    return boolArr;
+}
 
 export function boolArray(length, bool) {
     return Array(length).fill(bool);
@@ -129,163 +129,131 @@ export function boolArrayNot(boolArr) {
     return boolArr.map((e) => !e);
 }
 
-export function randBoolArr(length, numTrue) {
+/**
+ * Returns an array of integers between 'minVal' and 'maxVal' whose sum equals totalSum.
+ * @param {Int} minVal min value
+ * @param {Int} maxVal max value
+ * @param {Int} totalSum total sum
+ */
+function variableDist(minVal, maxVal, totalSum) {
     //
 
-    let boolArr = boolArray(length, false);
-
-    for (let i = 0, r; i < numTrue; i++) {
-        r = Math.round(Math.random() * length);
-        boolArr[r] = true;
-    }
-
-    return boolArr;
-}
-
-export function randBoolArrEvenDist(length, numTrue, groupSize) {
-    //
-
-    let boolArr = [];
-
-    let numGroups = Math.round(numTrue / groupSize);
-    let padding = Math.round((length - numTrue) / (numGroups + 1));
-
-    for (let i = 0; i <= numGroups; i++) {
-        boolArr = boolArr.concat(boolArray(padding, false));
-        boolArr = boolArr.concat(boolArray(groupSize, true));
-    }
-
-    return boolArr.slice(0, length);
-}
-
-export function randBoolArrRandDist(
-    length,
-    numTrue,
-    groupMinSize,
-    groupMaxSize
-) {
-    //
-
-    let boolArr = [];
-    let groups = [];
-
-    let groupSizeDif = Math.abs(groupMaxSize - groupMinSize);
-
+    let arr = [];
+    let diff = Math.abs(maxVal - minVal);
     let sum = 0;
-    let groupSize = 0;
+    let num;
 
-    while (sum < numTrue) {
-        groupSize = groupMinSize + Math.round(Math.random() * groupSizeDif);
-        groups.push(groupSize);
-        sum += groupSize;
+    while (sum < totalSum) {
+        num = minVal + Math.round(Math.random() * diff);
+        arr.push(num);
+        sum += num;
     }
 
-    let padding = Math.round((length - numTrue) / (groups.length + 1));
+    arr[arr.length - 1] -= sum - totalSum;
 
-    groups.forEach((e) => {
-        boolArr = boolArr.concat(boolArray(padding, false));
-        boolArr = boolArr.concat(boolArray(e, true));
-    });
+    return arr;
+}
 
-    while (boolArr.length < length) {
-        boolArr = boolArr.concat(boolArray(padding, false));
-        boolArr = boolArr.concat(boolArray(groupMaxSize, true));
+/**
+ * Returns an array of n = 'nums' random integers whose sum equals 'totalSum'.
+ * @param {Int} nums number of integers
+ * @param {Int} totalSum total sum
+ */
+function randomDist(nums, totalSum) {
+    //
+
+    let arr = [];
+    let sum = 0;
+
+    for (let i = 0, n; i < nums; i++) {
+        n = Math.round(Math.random() * totalSum);
+        arr.push(n);
+        sum += n;
     }
 
-    return boolArr.slice(0, length);
+    let trim = Math.round((sum - totalSum) / nums);
+
+    for (let i = 0, diff, trimAc = 0; i < nums; i++) {
+        diff = arr[i] - (trim + trimAc);
+        if (diff > 0) {
+            arr[i] = diff;
+            trimAc = 0;
+        } else {
+            arr[i] = 1;
+            trimAc = Math.abs(diff + 1);
+        }
+    }
+
+    return arr;
 }
 
-export function randBoolArrPercent(length, percentTrue) {
+function normalizeBoolArr(arr, size, fill) {
+    let diff = size - arr.length;
+    if (diff <= 0) {
+        return arr.slice(0, size);
+    } else {
+        return arr.concat(boolArray(diff, fill));
+    }
+}
+
+/**
+ * Interlaced bool strings
+ * @param {*} falseArr each element determines the size of false bool string
+ * @param {*} trueArr each element determines the size of true bool string
+ * @param {*} length length of the resulting array
+ */
+function interlacedBoolArrays(falseArr, trueArr, length) {
     //
 
-    return randBoolArr(length, Math.round((percentTrue / 100) * length));
+    let arr = [];
+
+    for (let i = 0; i < trueArr.length; i++) {
+        arr = arr.concat(
+            boolArray(falseArr[i], false).concat(boolArray(trueArr[i], true))
+        );
+    }
+
+    return normalizeBoolArr(arr, length, false);
 }
 
-export function ranBoolArrEvenDistPercent(length, percentTrue, groupSize) {
-    //
-
-    return randBoolArrEvenDist(
-        length,
-        Math.round((percentTrue / 100) * length),
-        groupSize
-    );
-}
-
-export function randBoolArrRandDistPercent(
-    length,
-    percentTrue,
-    groupMinSize,
-    groupMaxSize
-) {
-    //
-
-    return randBoolArrRandDist(
-        length,
-        Math.round((percentTrue / 100) * length),
-        groupMinSize,
-        groupMaxSize
-    );
-}
-
-export function initState(
+export function buildState(
     liveCellsType,
-    distribution,
-    groupSizeType,
+    distributionType,
     numCells,
     liveCells,
-    groupSize,
     groupMinSize,
     groupMaxSize
 ) {
-    if (liveCellsType === 0) {
-        // number
-        if (distribution === 0) {
-            // random
-            console.log("number - random");
-            return randBoolArr(numCells, liveCells);
-        } else {
-            // even
-            if (groupSizeType === 0) {
-                // fixed
-                console.log("number - even - fixed");
-                return randBoolArrEvenDist(numCells, liveCells, groupSize);
-            } else {
-                // random
-                console.log("number - even - random");
-                return randBoolArrRandDist(
-                    numCells,
-                    liveCells,
-                    groupMinSize,
-                    groupMaxSize
-                );
-            }
-        }
+    //
+
+    if (liveCellsType === "perc") {
+        liveCells = Math.max(1, Math.min(liveCells, 100));
+        liveCells = Math.round((liveCells / 100) * numCells);
     } else {
-        // percentage
-        if (distribution === 0) {
-            // random
-            console.log("percentage - random");
-            return randBoolArrPercent(numCells, liveCells);
-        } else {
-            // even
-            if (groupSizeType === 0) {
-                // fixed
-                console.log("percentage - even - fixed");
-                return ranBoolArrEvenDistPercent(
-                    numCells,
-                    liveCells,
-                    groupSize
-                );
-            } else {
-                // random
-                console.log("percentage - even - random");
-                return randBoolArrRandDistPercent(
-                    numCells,
-                    liveCells,
-                    groupMinSize,
-                    groupMaxSize
-                );
-            }
-        }
+        // liveCellsType === "num"
+        liveCells = Math.max(1, Math.min(liveCells, numCells));
     }
+
+    let groupSizeDiff = Math.abs(groupMaxSize - groupMinSize);
+    let deadCells = numCells - liveCells;
+
+    let trueArr, falseArr;
+
+    if (groupSizeDiff > 0) {
+        trueArr = variableDist(groupMinSize, groupMaxSize, liveCells);
+    } else {
+        trueArr = Array(Math.round(liveCells / groupMinSize)).fill(
+            groupMinSize
+        );
+    }
+
+    if (distributionType === "rand") {
+        falseArr = randomDist(trueArr.length + 1, deadCells);
+    } else {
+        falseArr = Array(trueArr.length + 1).fill(
+            Math.round(deadCells / (trueArr.length + 1))
+        );
+    }
+
+    return interlacedBoolArrays(falseArr, trueArr, numCells);
 }

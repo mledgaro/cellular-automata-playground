@@ -5,10 +5,8 @@ import Button from "../../components/Button";
 import CellsSet from "../../components/CellsState";
 import NumberInput from "../../components/NumberInput";
 import SectionSelector from "../../components/SectionSelector";
-import {
-    initState,
-    randBoolArrPercent,
-} from "../../js/Utils";
+import useStateObj from "../../components/useStateObj";
+import { buildState, randBoolArrPercent } from "../../js/Utils";
 
 function ISNumberInput({ title, value, min, max }) {
     //
@@ -25,99 +23,76 @@ function ISNumberInput({ title, value, min, max }) {
     );
 }
 
-function LiveCellsSelector({ selected, value, numCells }) {
+function LiveCellsSelector({ selection, value, max }) {
     //
 
     return (
-        <SectionSelector
-            title="Live cells"
-            sections={[
-                {
-                    label: "Number",
-                    value: "num",
-                    component: (
-                        <ISNumberInput value={value} min={0} max={numCells} />
-                    ),
-                },
-                {
-                    label: "Percentage",
-                    value: "perc",
-                    component: (
-                        <ISNumberInput value={value} min={0} max={100} />
-                    ),
-                },
-            ]}
-            selected={selected}
-            size="sm"
-            alignment="center"
-        />
+        <div>
+            <SectionSelector
+                title="Live cells"
+                sections={[
+                    {
+                        label: "Number",
+                        value: "num",
+                    },
+                    {
+                        label: "Percentage",
+                        value: "perc",
+                    },
+                ]}
+                selected={selection}
+                size="sm"
+                alignment="center"
+            />
+            <ISNumberInput
+                value={value}
+                min={1}
+                max={selection.get === "num" ? max : 100}
+            />
+        </div>
     );
 }
 
-function GroupSizeSelector({
-    selected,
-    groupSize,
-    groupMinSize,
-    groupMaxSize,
-    numCells,
-}) {
+function GroupSize({ minSizeVal, maxSizeVal, max }) {
+    //
+
     useEffect(() => {
-        if (groupMaxSize.get <= groupMinSize.get) {
-            groupMaxSize.set(groupMinSize.get + 1);
+        if (maxSizeVal.get < minSizeVal.get) {
+            maxSizeVal.set(minSizeVal.get);
         }
-    }, [groupMinSize.get]);
+    }, [minSizeVal.get]);
 
     return (
-        <SectionSelector
-            title="Group size"
-            sections={[
-                {
-                    label: "Fixed",
-                    value: "fixed",
-                    component: (
-                        <ISNumberInput value={groupSize} min={1} max={256} />
-                    ),
-                },
-                {
-                    label: "Random",
-                    value: "rand",
-                    component: (
-                        <div className="row mx-auto" style={{ width: "80%" }}>
-                            <div className="col">
-                                <ISNumberInput
-                                    title={"Min"}
-                                    value={groupMinSize}
-                                    min={1}
-                                    max={numCells}
-                                />
-                            </div>
-                            <div className="col">
-                                <ISNumberInput
-                                    title={"Max"}
-                                    value={groupMaxSize}
-                                    min={groupMinSize.get + 1}
-                                    max={numCells}
-                                />
-                            </div>
-                        </div>
-                    ),
-                },
-            ]}
-            selected={selected}
-            size="sm"
-            alignment="center"
-        />
+        <div>
+            <div
+                className="cap-container-dark-1 cap-section-selector-title mx-auto mb-1"
+                style={{ fontSize: "small" }}
+            >
+                Group size
+            </div>
+            <div className="mx-auto" style={{ width: "80%" }}>
+                <div className="my-2">
+                    <ISNumberInput
+                        title={"Min"}
+                        value={minSizeVal}
+                        min={1}
+                        max={max}
+                    />
+                </div>
+                <div className="my-2">
+                    <ISNumberInput
+                        title={"Max"}
+                        value={maxSizeVal}
+                        min={minSizeVal.get}
+                        max={max}
+                    />
+                </div>
+            </div>
+        </div>
     );
 }
 
-function DistributionSelector({
-    selected,
-    groupSizeType,
-    groupSize,
-    groupMinSize,
-    groupMaxSize,
-    numCells,
-}) {
+function DistributionSelector({ selection }) {
     //
 
     return (
@@ -125,102 +100,91 @@ function DistributionSelector({
             title="Distribution"
             sections={[
                 { label: "Random", value: "rand" },
-                {
-                    label: "Even",
-                    value: "even",
-                    component: (
-                        <GroupSizeSelector
-                            groupSize={groupSize}
-                            groupMinSize={groupMinSize}
-                            groupMaxSize={groupMaxSize}
-                            selected={groupSizeType}
-                            numCells={numCells}
-                        />
-                    ),
-                },
+                { label: "Even", value: "even" },
             ]}
-            selected={selected}
+            selected={selection}
             size="sm"
             alignment="center"
         />
     );
 }
 
+function BuildStateButton({
+    cellsState,
+    liveCellsType,
+    distributionType,
+    numCells,
+    liveCells,
+    groupMinSize,
+    groupMaxSize,
+}) {
+    return (
+        <Button
+            icon={{ id: "arrow-turn-down", size: "2xl" }}
+            tooltipLabel="Set state"
+            onClick={() => {
+                cellsState.set(
+                    buildState(
+                        liveCellsType,
+                        distributionType,
+                        numCells,
+                        liveCells,
+                        groupMinSize,
+                        groupMaxSize
+                    )
+                );
+            }}
+        />
+    );
+}
 
-
-export default function InitialState({ numCells }) {
+export default function InitialState({ numCells, cellsState }) {
     //
 
-    let [liveCellsType, setLiveCellsType] = useState("num");
-    let [distribution, setDistribution] = useState("rand");
-    let [groupSizeType, setGroupSizeType] = useState("fixed");
+    let liveCellsType = useStateObj("num");
+    let distributionType = useStateObj("rand");
 
-    let [liveCells, setLiveCells] = useState(0);
-    let [groupSize, setGroupSize] = useState(0);
-    let [groupMinSize, setGroupMinSize] = useState(0);
-    let [groupMaxSize, setGroupMaxSize] = useState(0);
-
-    let [cellsState, setCellsState] = useState(
-        randBoolArrPercent(numCells, 10)
-    );
+    let liveCells = useStateObj(1);
+    let groupMinSize = useStateObj(1);
+    let groupMaxSize = useStateObj(1);
 
     return (
         <div>
-            <div className="row mb-2 mx-auto" style={{width: "80%"}}>
-                <div className="col-5">
+            <div className="row mb-2 mx-auto" style={{ width: "80%" }}>
+                <div className="col-4">
                     <LiveCellsSelector
-                        selected={{ get: liveCellsType, set: setLiveCellsType }}
-                        value={{ get: liveCells, set: setLiveCells }}
-                        numCells={numCells}
+                        selection={liveCellsType}
+                        value={liveCells}
+                        max={numCells}
                     />
                 </div>
 
-                <div className="col-6">
-                    <DistributionSelector
-                        groupSize={{
-                            get: groupSize,
-                            set: setGroupSize,
-                        }}
-                        groupMinSize={{
-                            get: groupMinSize,
-                            set: setGroupMinSize,
-                        }}
-                        groupMaxSize={{
-                            get: groupMaxSize,
-                            set: setGroupMaxSize,
-                        }}
-                        groupSizeType={{
-                            get: groupSizeType,
-                            set: setGroupSizeType,
-                        }}
-                        selected={{ get: distribution, set: setDistribution }}
-                        numCells={numCells}
+                <div className="col-3">
+                    <GroupSize
+                        minSizeVal={groupMinSize}
+                        maxSizeVal={groupMaxSize}
+                        max={numCells}
                     />
+                </div>
+
+                <div className="col-4">
+                    <DistributionSelector selection={distributionType} />
                 </div>
 
                 <div className="col-1 d-flex align-items-center">
-                    <Button
-                        icon={{ id: "arrow-turn-down", size: "2xl" }}
-                        tooltipLabel="Set state"
-                        onClick={() => {
-                            setCellsState(
-                                initState(
-                                    liveCellsType,
-                                    distribution,
-                                    groupSizeType,
-                                    numCells,
-                                    liveCells,
-                                    groupSize,
-                                    groupMinSize,
-                                    groupMaxSize
-                                )
-                            );
-                        }}
+                    <BuildStateButton
+                        cellsState={cellsState}
+                        liveCellsType={liveCellsType.get}
+                        distributionType={distributionType.get}
+                        numCells={numCells}
+                        liveCells={liveCells.get}
+                        groupMinSize={groupMinSize.get}
+                        groupMaxSize={groupMaxSize.get}
                     />
                 </div>
             </div>
 
-            <CellsSet cellsState={{ get: cellsState, set: setCellsState }} />
+            <CellsSet cellsState={cellsState} />
         </div>
     );
 }

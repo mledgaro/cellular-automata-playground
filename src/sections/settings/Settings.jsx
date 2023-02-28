@@ -7,7 +7,7 @@ import { Neighborhood1D, Neighborhood2D } from "./Neighborhood";
 import { Rules1D, Rules2D } from "./Rules";
 import InitialState from "./InitialState";
 import useStateObj from "../../components/useStateObj";
-import { intToBoolArray, randBoolArrPercent } from "../../js/Utils";
+import { buildState, intToBoolArray, randomBoolArray } from "../../js/Utils";
 
 const numCells = 256;
 
@@ -26,10 +26,12 @@ function Settings1D() {
         intToBoolArray(90, Math.pow(2, nbhdWidth.get))
     );
 
-    const initState = useStateObj(randBoolArrPercent(numCells, 10));
+    const initState = useStateObj(
+        buildState("perc", "rand", numCells, 10, 1, 1)
+    );
 
     useEffect(() => {
-        rulesState.set(randBoolArrPercent(Math.pow(2, nbhdWidth.get), 50));
+        rulesState.set(randomBoolArray(Math.pow(2, nbhdWidth.get)));
     }, [nbhdWidth.get]);
 
     return (
