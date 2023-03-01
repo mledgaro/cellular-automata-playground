@@ -13,20 +13,8 @@ function Level({ on }) {
             className={`input-group-text cap-level cap-level-${
                 on ? "on" : "off"
             }`}
-        ></span>
+        />
     );
-}
-
-function Levels({ current, total }) {
-    //
-
-    let arr = [];
-
-    for (let i = 0; i < total; i++) {
-        arr.push(<Level key={i} on={i <= current} />);
-    }
-
-    return <span>{arr}</span>;
 }
 
 export default function LevelSelector({
@@ -39,6 +27,12 @@ export default function LevelSelector({
     //
 
     const level = useRangeReducer(0, numLevels, 0, false);
+
+    let levels = [];
+
+    for (let i = 0; i < numLevels; i++) {
+        levels.push(<Level key={i} on={i < level.get} />);
+    }
 
     return (
         <div className={inputGroupClasses(size, alignment, "")}>
@@ -57,7 +51,7 @@ export default function LevelSelector({
                 onClick={level.prev}
             />
 
-            <Levels current={level.get} total={numLevels} />
+            {levels}
 
             <Button
                 icon={{ id: "plus" }}
