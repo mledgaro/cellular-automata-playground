@@ -6,31 +6,21 @@ import SectionSelector from "../../components/SectionSelector";
 import { Neighborhood1D, Neighborhood2D } from "./Neighborhood";
 import { Rules1D, Rules2D } from "./Rules";
 import InitialState from "./InitialState";
-import { useRangeReducer, useStateObj } from "../../components/CustomHooks";
-import { buildState, intToBoolArray, randomBoolArray } from "../../js/Utils";
+import { randomBoolArray } from "../../js/Utils";
+import { useStateObj } from "../../components/CustomHooks";
 
-const numCells = 256;
-
-function Settings1D() {
+export function Settings1D({
+    numCells,
+    nbhdWidth,
+    mainCell,
+    includeMainCell,
+    nbhdType,
+    rulesState,
+    initState,
+}) {
     //
 
     const section = useStateObj("nbhd");
-
-    // const nbhdWidth = useStateObj(3);
-    const nbhdWidth = useRangeReducer(2, 8, 3, false);
-    const mainCell = useStateObj(1);
-
-    // const includeMainCell = useEnumReducer(["cellin", "cellout"], 0);
-    const includeMainCell = useStateObj("cellin");
-    const nbhdType = useStateObj("contiguos");
-
-    const rulesState = useStateObj(
-        intToBoolArray(90, Math.pow(2, nbhdWidth.get))
-    );
-
-    const initState = useStateObj(
-        buildState("perc", "rand", numCells, 10, 1, 1)
-    );
 
     useEffect(() => {
         rulesState.set(randomBoolArray(Math.pow(2, nbhdWidth.get)));
@@ -86,7 +76,7 @@ function Settings1D() {
     );
 }
 
-function Settings2D() {
+export function Settings2D() {
     //
 
     const [getSection, setSection] = useState("nbhd");
@@ -133,13 +123,4 @@ function Settings2D() {
             alignment="center"
         />
     );
-}
-
-export default function Settings({ dimension }) {
-    if (dimension === 1) {
-        return <Settings1D />;
-    } else {
-        // dimension === 2
-        return <Settings2D />;
-    }
 }
