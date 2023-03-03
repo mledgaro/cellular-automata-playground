@@ -92,6 +92,10 @@
     border-color: var(--dark2);
 }
 
+.cap-cell-high {
+    background-color: var(--clear2);
+    border-color: var(--clear2);
+}
 
 
 .cap-level {

@@ -1,97 +1,179 @@
 //
 
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext } from "react";
 
 import SectionSelector from "../../components/SectionSelector";
-import {
-    NbhdInput,
-    NbhdInput2D,
-} from "../../components/CellGroup";
+import { NbhdInput, NbhdInput2D } from "../../components/CellGroup";
 import NumberInput from "../../components/NumberInput";
+import { useBoolArrState } from "../../components/CustomHooks";
 
-export const NbhdContext1D = createContext();
+const WidthCtx = createContext();
+const TypeCtx = createContext();
+const MainCellCtx = createContext();
+const CellsNbhdsCtx = createContext();
+const APICtx = createContext();
+
 export const NbhdContext2D = createContext();
 
-function NbhdType({ includeMainCell, type }) {
+function Width() {
     //
 
-    if (includeMainCell.get === "cellout" && type.get === "contiguos") {
-        type.set("grouped");
-    }
+    const width = useContext(WidthCtx);
+    const api = useContext(APICtx);
+
+    return (
+        <NumberInput
+            label="Width"
+            value={{
+                get: width,
+                prev: api.width.prev,
+                next: api.width.next,
+                set: api.width.set,
+            }}
+            min={2}
+            max={8}
+            alignment="center"
+        />
+    );
+}
+
+function Type() {
+    //
+
+    const type = useContext(TypeCtx);
+    const api = useContext(APICtx);
 
     return (
         <SectionSelector
+            title="Type"
             sections={[
-                {
-                    label: "Main cell in",
-                    value: "cellin",
-                    component: (
-                        <SectionSelector
-                            sections={[
-                                { label: "Contiguos", value: "contiguos" },
-                                { label: "Grouped", value: "grouped" },
-                                { label: "Scattered", value: "scattered" },
-                            ]}
-                            selected={type}
-                            size="sm"
-                            alignment="center"
-                        />
-                    ),
-                },
-                {
-                    label: "Main cell out",
-                    value: "cellout",
-                    component: (
-                        <SectionSelector
-                            sections={[
-                                { label: "Grouped", value: "grouped" },
-                                { label: "Scattered", value: "scattered" },
-                            ]}
-                            selected={type}
-                            size="sm"
-                            alignment="center"
-                        />
-                    ),
-                },
+                { label: "Adjacent", value: "adjacent" },
+                { label: "Grouped", value: "grouped" },
+                { label: "Scattered", value: "scattered" },
             ]}
-            selected={includeMainCell}
+            selected={{ get: type, set: api.type.set }}
             size="sm"
             alignment="center"
         />
     );
 }
 
-export function Neighborhood1D({ nbhdWidth, includeMainCell, mainCell, type }) {
+function MainCell() {
     //
 
-    useEffect(() => { mainCell.set(Math.min(mainCell.get, nbhdWidth.get - 1)); }, [mainCell, nbhdWidth.get]);
+    const width = useContext(WidthCtx);
+    const type = useContext(TypeCtx);
+    const mainCell = useContext(MainCellCtx);
+    const api = useContext(APICtx);
 
     return (
-        <div className="row mx-auto" style={{ width: "80%" }}>
-            <div className="col-3 d-flex align-items-center">
-                <NumberInput
-                    label="Width"
-                    value={nbhdWidth}
-                    min={2}
-                    max={8}
-                    alignment="center"
-                />
-            </div>
+        <NbhdInput
+            type={type}
+            nbhdWidth={width}
+            selection={{ get: mainCell, set: api.mainCell.set }}
+        />
+    );
+}
 
-            <div className="col-5">
-                <NbhdType includeMainCell={includeMainCell} type={type} />
-            </div>
+function Cell({ index, highlightedCells }) {
+    //
 
-            <div className="col-4 d-flex align-items-center">
-                <NbhdInput
-                    type={type.get}
-                    nbhdWidth={nbhdWidth.get}
-                    selection={
-                        includeMainCell.get === "cellin" ? mainCell : null
-                    }
+    const cellsNbhds = useContext(CellsNbhdsCtx);
+
+    const highlight = () => {
+        cellsNbhds[index].forEach((e) => highlightedCells.toggle(e));
+    };
+
+    const classes = `cap-cell cap-cell-off ${
+        highlightedCells.get[index] ? "cap-cell-high" : ""
+    }`;
+
+    return (
+        <span
+            className={classes}
+            onMouseOver={highlight}
+            onMouseOut={highlight}
+            // onClick={() => highlightedCells.toggle(index)}
+        />
+    );
+}
+
+function NbhdsMap() {
+    //
+
+const cellsNbhds = useContext(CellsNbhdsCtx);
+    const highlightedCells = useBoolArrState(cellsNbhds.length);
+
+    // console.log(highlightedCells.get);
+
+    return (
+        <div className="row mx-auto ps-2 mt-2" style={{ width: "90%" }}>
+            {highlightedCells.get.map((e, i) => (
+                <Cell
+                    key={i}
+                    index={i}
+                    highlightedCells={highlightedCells}
                 />
-            </div>
+            ))}
         </div>
+    );
+}
+
+function Content() {
+    //
+
+    return (
+        <div>
+            <div className="row mx-auto" style={{ width: "80%" }}>
+                {/* */}
+
+                <div className="col d-flex align-items-center">
+                    <Width />
+                </div>
+
+                <div className="col">
+                    <Type />
+                </div>
+
+                <div className="col d-flex align-items-center">
+                    <MainCell />
+                </div>
+            </div>
+
+            <NbhdsMap />
+        </div>
+    );
+}
+
+export function Neighborhood1D({ width, type, mainCell, cellsNbhds }) {
+    //
+
+    const api = {
+        width: {
+            next: width.next,
+            prev: width.prev,
+            set: width.set,
+        },
+        type: { set: type.set },
+        mainCell: { set: mainCell.set },
+        cellsNbhds: {
+            set: cellsNbhds.set,
+            setAt: cellsNbhds.setAt,
+        },
+    };
+
+    return (
+        <WidthCtx.Provider value={width.get}>
+            <TypeCtx.Provider value={type.get}>
+                <MainCellCtx.Provider value={mainCell.get}>
+                    <CellsNbhdsCtx.Provider value={cellsNbhds.get}>
+                        <APICtx.Provider value={api}>
+                            <Content />
+                        </APICtx.Provider>
+                    </CellsNbhdsCtx.Provider>
+                </MainCellCtx.Provider>
+            </TypeCtx.Provider>
+        </WidthCtx.Provider>
     );
 }
 

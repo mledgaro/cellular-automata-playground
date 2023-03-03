@@ -1,14 +1,11 @@
 //
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 import FAIcon from "./FAIcon";
 import NumberInput from "./NumberInput";
 
-import {
-    NbhdContext1D,
-    NbhdContext2D,
-} from "../sections/settings/Neighborhood";
+import { NbhdContext2D } from "../sections/settings/Neighborhood";
 import { intToBoolArray } from "../js/Utils";
 
 function DeactivatedCell({ onClick }) {
@@ -88,7 +85,6 @@ function addEllipses(cells, type, mainCell) {
     //
 
     if (type === "grouped") {
-
         if (mainCell === 0) {
             cells.splice(1, 0, <Ellipsis />);
         } else if (mainCell === cells.length - 1) {
@@ -115,32 +111,19 @@ export function NbhdInput({ type, nbhdWidth, selection }) {
 
     let cells = [];
 
-    if (selection != null) {
-        //
-
-        let i = 0;
-
-        for (let k = i; i < selection.get; k++, i++) {
-            cells.push(<Cell onClick={() => selection.set(k)} />);
-        }
-
-        cells.push(<SelectedCell />);
-        i++;
-
-        for (let k = i; i < nbhdWidth; k++, i++) {
-            cells.push(<Cell onClick={() => selection.set(k)} />);
-        }
-
-        cells = addEllipses(cells, type, selection.get);
-    } else {
-        //
-
-        for (let i = 0; i < nbhdWidth; i++) {
-            cells.push(<Cell />);
-        }
-
-        cells = addEllipses(cells, type, -1);
+    for (let i = 0; i < nbhdWidth; i++) {
+        cells.push(<Cell onClick={() => selection.set(i)} />);
     }
+
+    if (selection.get !== -1) {
+        cells.splice(
+            selection.get,
+            1,
+            <SelectedCell onClick={() => selection.set(-1)} />
+        );
+    }
+
+    cells = addEllipses(cells, type, selection.get);
 
     return (
         <div

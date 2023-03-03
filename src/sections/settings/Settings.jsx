@@ -12,10 +12,10 @@ import { useStateObj } from "../../components/CustomHooks";
 export function Settings1D({
     numCells,
     nbhdWidth,
-    mainCell,
-    includeMainCell,
     nbhdType,
-    rulesState,
+    mainCell,
+    cellsNbhds,
+    rules,
     initState,
 }) {
     //
@@ -23,7 +23,7 @@ export function Settings1D({
     const section = useStateObj("nbhd");
 
     useEffect(() => {
-        rulesState.set(randomBoolArray(Math.pow(2, nbhdWidth.get)));
+        rules.set(randomBoolArray(Math.pow(2, nbhdWidth.get)));
     }, [nbhdWidth.get]);
 
     return (
@@ -35,10 +35,10 @@ export function Settings1D({
                     value: "nbhd",
                     component: (
                         <Neighborhood1D
-                            nbhdWidth={nbhdWidth}
-                            includeMainCell={includeMainCell}
-                            mainCell={mainCell}
+                            width={nbhdWidth}
                             type={nbhdType}
+                            mainCell={mainCell}
+                            cellsNbhds={cellsNbhds}
                         />
                     ),
                 },
@@ -48,13 +48,9 @@ export function Settings1D({
                     component: (
                         <Rules1D
                             nbhdWidth={nbhdWidth.get}
-                            mainCell={
-                                includeMainCell.get === "cellout"
-                                    ? -1
-                                    : mainCell.get
-                            }
                             nbhdType={nbhdType.get}
-                            rulesState={rulesState}
+                            mainCell={mainCell.get}
+                            rulesState={rules}
                         />
                     ),
                 },

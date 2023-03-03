@@ -2,14 +2,21 @@
 
 import "./css/App.css";
 
-import { useRangeReducer, useStateObj } from "./components/CustomHooks";
-import { buildState, intToBoolArray } from "./js/Utils";
+import {
+    useArrayState,
+    useBoolArrState,
+    useBoolState,
+    useRangeReducer,
+    useStateObj,
+} from "./components/CustomHooks";
+import { intToBoolArray } from "./js/Utils";
 
 import Title from "./sections/Title";
 import Canvas from "./sections/Canvas";
 import Controls from "./sections/Controls";
 import { Settings1D, Settings2D } from "./sections/settings/Settings";
 import Footer from "./sections/Footer";
+import CellularAutomaton from "./js/CellularAutomaton";
 
 const numCells = 256;
 
@@ -19,18 +26,20 @@ export default function App() {
     const dimension = useRangeReducer(1, 2, 1, true);
 
     const nbhdWidth = useRangeReducer(2, 8, 3, false);
+    const nbhdType = useStateObj("adjacent");
     const mainCell = useStateObj(1);
-
-    const includeMainCell = useStateObj("cellin");
-    const nbhdType = useStateObj("contiguos");
-
-    const rulesState = useStateObj(
-        intToBoolArray(90, Math.pow(2, nbhdWidth.get))
+    const cellsNbhds = useArrayState(
+        CellularAutomaton.cellsNbhds(
+            nbhdType.get,
+            numCells,
+            nbhdWidth.get,
+            mainCell.get
+        )
     );
 
-    const initState = useStateObj(
-        buildState("perc", "rand", numCells, 10, 1, 1)
-    );
+    const rules = useStateObj(intToBoolArray(90, Math.pow(2, nbhdWidth.get)));
+
+    const initState = useBoolArrState(numCells);
 
     let settings;
 
@@ -39,10 +48,10 @@ export default function App() {
             <Settings1D
                 numCells={numCells}
                 nbhdWidth={nbhdWidth}
-                mainCell={mainCell}
-                includeMainCell={includeMainCell}
                 nbhdType={nbhdType}
-                rulesState={rulesState}
+                mainCell={mainCell}
+                cellsNbhds={cellsNbhds}
+                rules={rules}
                 initState={initState}
             />
         );
