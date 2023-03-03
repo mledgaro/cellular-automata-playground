@@ -2,9 +2,17 @@
 
 import { useEffect } from "react";
 import Button from "../../components/Button";
-import { Rule } from "../../components/CellGroup";
+import { Cell, Ellipses } from "../../components/Cells";
 import { useStateObj } from "../../components/CustomHooks";
-import { boolArray, boolArrayNot, boolArrayToInt, inputGroupClasses, randomBoolArray } from "../../js/Utils";
+import FAIcon from "../../components/FAIcon";
+import {
+    boolArray,
+    boolArrayNot,
+    boolArrayToInt,
+    inputGroupClasses,
+    intToBoolArray,
+    randomBoolArray,
+} from "../../js/Utils";
 
 function RuleNumber({ value }) {
     //
@@ -57,6 +65,32 @@ function Controls({ rulesState }) {
                     }
                 />
             </div>
+        </div>
+    );
+}
+
+function Rule({ type, index, nbhdWidth, mainCell, selection }) {
+    //
+
+    let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
+        <Cell key={i} alive={e} lg={i === mainCell} />
+    ));
+
+    return (
+        <div
+            className="cap-container-dark-1 mx-auto"
+            style={{ padding: "8px", width: "max-content" }}
+            onClick={selection.change}
+        >
+            <Ellipses cells={cells} mainCell={mainCell} style={type} />
+
+            <span className="cap-icon-cell">
+                <FAIcon
+                    icon={{ id: "arrow-right", style: "solid", size: "sm" }}
+                />
+            </span>
+
+            <Cell alive={selection.get} />
         </div>
     );
 }

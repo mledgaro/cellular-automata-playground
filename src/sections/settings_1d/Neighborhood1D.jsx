@@ -3,9 +3,9 @@
 import { createContext, useContext } from "react";
 
 import SectionSelector from "../../components/SectionSelector";
-import { NbhdInput } from "../../components/CellGroup";
 import NumberInput from "../../components/NumberInput";
 import { useBoolArrState } from "../../components/CustomHooks";
+import { Cell, SelectedCell, Ellipses } from "../../components/Cells";
 
 const WidthCtx = createContext();
 const TypeCtx = createContext();
@@ -45,9 +45,9 @@ function Type() {
         <SectionSelector
             title="Type"
             sections={[
-                { label: "Adjacent", value: "adjacent" },
-                { label: "Grouped", value: "grouped" },
-                { label: "Scattered", value: "scattered" },
+                { label: "Adjacent", value: "none" },
+                { label: "Grouped", value: "main-cell" },
+                { label: "Scattered", value: "all" },
             ]}
             selected={{ get: type, set: api.type.set }}
             size="sm"
@@ -56,7 +56,7 @@ function Type() {
     );
 }
 
-function MainCell() {
+function MainCellSelector() {
     //
 
     const width = useContext(WidthCtx);
@@ -64,16 +64,31 @@ function MainCell() {
     const mainCell = useContext(MainCellCtx);
     const api = useContext(APICtx);
 
+    let cells = [];
+
+    for (let i = 0; i < width; i++) {
+        cells.push(<Cell onClick={() => api.mainCell.set(i)} />);
+    }
+
+    if (mainCell !== -1) {
+        cells.splice(
+            mainCell,
+            1,
+            <SelectedCell onClick={() => api.mainCell.set(-1)} />
+        );
+    }
+
     return (
-        <NbhdInput
-            type={type}
-            nbhdWidth={width}
-            selection={{ get: mainCell, set: api.mainCell.set }}
-        />
+        <div
+            className="cap-container-dark-1 mx-auto"
+            style={{ padding: "8px", width: "max-content" }}
+        >
+            <Ellipses cells={cells} mainCell={mainCell} style={type} />
+        </div>
     );
 }
 
-function Cell({ index, highlightedCells }) {
+function HighlightCell({ index, highlightedCells }) {
     //
 
     const cellsNbhds = useContext(CellsNbhdsCtx);
@@ -99,7 +114,7 @@ function Cell({ index, highlightedCells }) {
 function NbhdsMap() {
     //
 
-const cellsNbhds = useContext(CellsNbhdsCtx);
+    const cellsNbhds = useContext(CellsNbhdsCtx);
     const highlightedCells = useBoolArrState(cellsNbhds.length);
 
     // console.log(highlightedCells.get);
@@ -107,7 +122,7 @@ const cellsNbhds = useContext(CellsNbhdsCtx);
     return (
         <div className="row mx-auto ps-2 mt-2" style={{ width: "90%" }}>
             {highlightedCells.get.map((e, i) => (
-                <Cell
+                <HighlightCell
                     key={i}
                     index={i}
                     highlightedCells={highlightedCells}
@@ -134,7 +149,7 @@ function Content() {
                 </div>
 
                 <div className="col d-flex align-items-center">
-                    <MainCell />
+                    <MainCellSelector />
                 </div>
             </div>
 

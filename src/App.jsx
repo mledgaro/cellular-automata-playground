@@ -27,7 +27,7 @@ export default function App() {
     const dimension = useRangeReducer(1, 2, 1, true);
 
     const nbhdWidth = useRangeReducer(2, 8, 3, false);
-    const nbhdType = useStateObj("adjacent");
+    const nbhdType = useStateObj("none");
     const mainCell = useStateObj(1);
     const cellsNbhds = useArrayState(
         CellularAutomaton.cellsNbhds(
