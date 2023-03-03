@@ -94,7 +94,9 @@ function HighlightCell({ index, highlightedCells }) {
     const cellsNbhds = useContext(CellsNbhdsCtx);
 
     const highlight = () => {
-        cellsNbhds[index].forEach((e) => highlightedCells.toggle(e));
+        let nArr = Array(cellsNbhds.length).fill(false);
+        cellsNbhds[index].forEach((e) => nArr[e] = true);
+        highlightedCells.set(nArr);
     };
 
     const classes = `cap-cell cap-cell-off ${
@@ -106,7 +108,6 @@ function HighlightCell({ index, highlightedCells }) {
             className={classes}
             onMouseOver={highlight}
             onMouseOut={highlight}
-            // onClick={() => highlightedCells.toggle(index)}
         />
     );
 }
