@@ -1,6 +1,8 @@
 //
 
-import FAIcon from "./FAIcon";
+import { faSquareCheck, faSquare as faSquareRegular } from "@fortawesome/free-regular-svg-icons";
+import { faEllipsis, faSquare as faSquareSolid, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function DeactivatedCell({ onClick }) {
     //
@@ -11,13 +13,7 @@ export function DeactivatedCell({ onClick }) {
             onClick={onClick}
             style={{ color: "#6c757d" }}
         >
-            <FAIcon
-                icon={{
-                    id: "square-xmark",
-                    style: "solid",
-                    size: "sm",
-                }}
-            />
+            <FontAwesomeIcon icon={faSquareXmark} size="sm" />
         </span>
     );
 }
@@ -27,13 +23,8 @@ export function SelectedCell({ onClick }) {
 
     return (
         <span className="cap-icon-cell" onClick={onClick}>
-            <FAIcon
-                icon={{
-                    id: "square-check",
-                    style: "regular",
-                    size: "2xl",
-                }}
-            />
+            
+            <FontAwesomeIcon icon={faSquareCheck} size="2xl" />
         </span>
     );
 }
@@ -46,12 +37,9 @@ export function Cell({ alive, lg, onClick }) {
 
     return (
         <span className="cap-icon-cell" onClick={onClick}>
-            <FAIcon
-                icon={{
-                    id: "square",
-                    style: alive ? "solid" : "regular",
-                    size: lg ? "lg" : "xs",
-                }}
+            <FontAwesomeIcon
+                icon={alive ? faSquareSolid : faSquareRegular}
+                size={lg ? "lg" : "xs"}
             />
         </span>
     );
@@ -62,7 +50,10 @@ function Ellipsis() {
 
     return (
         <span className="cap-icon-cell">
-            <FAIcon icon={{ id: "ellipsis", size: "2xs" }} />
+            <FontAwesomeIcon
+                icon={faEllipsis}
+                size="2xs"
+            />
         </span>
     );
 }

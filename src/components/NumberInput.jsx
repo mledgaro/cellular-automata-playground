@@ -1,5 +1,6 @@
 //
 
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { inputGroupClasses } from "../js/Utils";
 import Button from "./Button";
 
@@ -14,7 +15,7 @@ function DecreaseButton({ value, min }) {
 
     return (
         <Button
-            icon={{ id: "minus" }}
+            icon={faMinus}
             enabled={value.get > min}
             onClick={value.prev}
         />
@@ -26,7 +27,7 @@ function IncreaseButton({ value, max }) {
 
     return (
         <Button
-            icon={{ id: "plus" }}
+            icon={faPlus}
             enabled={value.get < max}
             onClick={value.next}
         />

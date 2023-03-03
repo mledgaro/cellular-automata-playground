@@ -1,6 +1,6 @@
 //
 
-import FAIcon from "./FAIcon";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Button({ icon, tooltipLabel, enabled, onClick }) {
     //
@@ -20,7 +20,7 @@ export default function Button({ icon, tooltipLabel, enabled, onClick }) {
             onClick={onClick}
             disabled={!enabled}
         >
-            <FAIcon icon={icon} />
+            <FontAwesomeIcon icon={icon} />
         </button>
     );
 }

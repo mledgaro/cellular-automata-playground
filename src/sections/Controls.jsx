@@ -1,5 +1,6 @@
 //
 
+import { faBroom, faCameraRetro, faForwardStep, faGaugeHigh, faMagnifyingGlass, faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
 import LevelSelector from "../components/LevelSelector";
 
@@ -10,11 +11,11 @@ function FlowCtrls() {
 
     return (
         <div className={inputGroupClasses("", "center", "")}>
-            <Button tooltipLabel="Next" icon={{ id: "forward-step" }} />
+            <Button tooltipLabel="Next" icon={faForwardStep} />
 
-            <Button tooltipLabel="Run" icon={{ id: "play" }} />
+            <Button tooltipLabel="Run" icon={faPlay} />
 
-            <Button tooltipLabel="Pause" icon={{ id: "pause" }} />
+            <Button tooltipLabel="Pause" icon={faPause} />
 
             {/* <Button tooltipLabel="Stop" icon={{ id: "stop" }} /> */}
         </div>
@@ -26,9 +27,9 @@ function CanvasCtrls() {
 
     return (
         <div className={inputGroupClasses("", "center", "")}>
-            <Button tooltipLabel="Clear" icon={{ id: "broom" }} />
+            <Button tooltipLabel="Clear" icon={faBroom} />
 
-            <Button tooltipLabel="Screenshot" icon={{ id: "camera-retro" }} />
+            <Button tooltipLabel="Screenshot" icon={faCameraRetro} />
         </div>
     );
 }
@@ -48,7 +49,7 @@ export default function Controls() {
                 <LevelSelector
                     numLevels={5}
                     tooltipLabel="Speed"
-                    iconId="gauge-high"
+                    icon={faGaugeHigh}
                     alignment="center"
                 />
             </div>
@@ -58,7 +59,7 @@ export default function Controls() {
                 <LevelSelector
                     numLevels={5}
                     tooltipLabel="Zoom"
-                    iconId="magnifying-glass"
+                    icon={faMagnifyingGlass}
                     alignment="center"
                 />
             </div>

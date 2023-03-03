@@ -6,6 +6,8 @@ import SectionSelector from "../../components/SectionSelector";
 import NumberInput from "../../components/NumberInput";
 import { useBoolArrState } from "../../components/CustomHooks";
 import { Cell, SelectedCell, Ellipses } from "../../components/Cells";
+import Button from "../../components/Button";
+import { faDiagramProject } from "@fortawesome/free-solid-svg-icons";
 
 const WidthCtx = createContext();
 const TypeCtx = createContext();
@@ -138,19 +140,23 @@ function Content() {
 
     return (
         <div>
-            <div className="row mx-auto" style={{ width: "80%" }}>
+            <div className="row mx-auto" style={{ width: "85%" }}>
                 {/* */}
 
-                <div className="col d-flex align-items-center">
+                <div className="col-3 d-flex align-items-center">
                     <Width />
                 </div>
 
-                <div className="col">
+                <div className="col-4">
                     <Type />
                 </div>
 
-                <div className="col d-flex align-items-center">
+                <div className="col-4 d-flex align-items-center">
                     <MainCellSelector />
+                </div>
+
+                <div className="col-1 d-flex align-items-center">
+                    <Button icon={faDiagramProject} tooltipLabel="Change neighborhoods" />
                 </div>
             </div>
 

@@ -1,7 +1,9 @@
 //
 
+import { faSquare as faSquareRegular, faSquareMinus } from "@fortawesome/free-regular-svg-icons";
+import { faSquare as faSquareSolid } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import FAIcon from "../../components/FAIcon";
 import { diagonalNeighbors } from "../../js/Utils";
 
 function Rule2D() {
@@ -12,13 +14,13 @@ function Rule2D() {
 
     switch (state) {
         case 1:
-            icon = { id: "square", style: "regular", size: "xl" };
+            icon = faSquareRegular;
             break;
         case 2:
-            icon = { id: "square", style: "solid", size: "xl" };
+            icon = faSquareSolid;
             break;
         default:
-            icon = { id: "square-minus", style: "regular", size: "xl" };
+            icon = faSquareMinus;
     }
 
     return (
@@ -26,7 +28,10 @@ function Rule2D() {
             className=""
             onClick={() => setState(state === 2 ? 0 : state + 1)}
         >
-            <FAIcon icon={icon} />
+            <FontAwesomeIcon
+                icon={icon}
+                size="xl"
+            />
         </span>
     );
 }

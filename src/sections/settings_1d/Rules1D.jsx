@@ -1,10 +1,12 @@
 //
 
+import { faSquare as faSquareRegular } from "@fortawesome/free-regular-svg-icons";
+import { faArrowRight, faRightLeft, faShuffle, faSquare as faSquareSolid } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect } from "react";
 import Button from "../../components/Button";
 import { Cell, Ellipses } from "../../components/Cells";
 import { useStateObj } from "../../components/CustomHooks";
-import FAIcon from "../../components/FAIcon";
 import {
     boolArray,
     boolArrayNot,
@@ -37,7 +39,7 @@ function Controls({ rulesState }) {
             <div className={inputGroupClasses("", "center", "")}>
                 <Button
                     tooltipLabel="Random"
-                    icon={{ id: "shuffle" }}
+                    icon={faShuffle}
                     onClick={() =>
                         rulesState.set(randomBoolArray(rulesState.get.length))
                     }
@@ -45,13 +47,13 @@ function Controls({ rulesState }) {
 
                 <Button
                     tooltipLabel="Swap"
-                    icon={{ id: "right-left" }}
+                    icon={faRightLeft}
                     onClick={() => rulesState.set(boolArrayNot(rulesState.get))}
                 />
 
                 <Button
                     tooltipLabel="All alive"
-                    icon={{ id: "square", style: "solid" }}
+                    icon={faSquareSolid}
                     onClick={() =>
                         rulesState.set(boolArray(rulesState.get.length, true))
                     }
@@ -59,7 +61,7 @@ function Controls({ rulesState }) {
 
                 <Button
                     tooltipLabel="All dead"
-                    icon={{ id: "square", style: "regular" }}
+                    icon={faSquareRegular}
                     onClick={() =>
                         rulesState.set(boolArray(rulesState.get.length, false))
                     }
@@ -85,8 +87,10 @@ function Rule({ type, index, nbhdWidth, mainCell, selection }) {
             <Ellipses cells={cells} mainCell={mainCell} style={type} />
 
             <span className="cap-icon-cell">
-                <FAIcon
-                    icon={{ id: "arrow-right", style: "solid", size: "sm" }}
+                
+                <FontAwesomeIcon
+                    icon={faArrowRight}
+                    size="sm"
                 />
             </span>
 

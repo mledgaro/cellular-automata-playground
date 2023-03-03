@@ -1,9 +1,10 @@
 //
 
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { inputGroupClasses } from "../js/Utils";
 import Button from "./Button";
 import { useRangeReducer } from "./CustomHooks";
-import FAIcon from "./FAIcon";
 
 function Level({ on }) {
     //
@@ -18,7 +19,7 @@ function Level({ on }) {
 }
 
 export default function LevelSelector({
-    iconId,
+    icon,
     numLevels,
     tooltipLabel,
     size,
@@ -42,11 +43,13 @@ export default function LevelSelector({
                 data-bs-placement="bottom"
                 title={tooltipLabel}
             >
-                <FAIcon icon={{ id: iconId }} />
+                <FontAwesomeIcon
+                    icon={icon}
+                />
             </span>
 
             <Button
-                icon={{ id: "minus" }}
+                icon={faMinus}
                 enabled={level.get > 0}
                 onClick={level.prev}
             />
@@ -54,7 +57,7 @@ export default function LevelSelector({
             {levels}
 
             <Button
-                icon={{ id: "plus" }}
+                icon={faPlus}
                 enabled={level.get < numLevels}
                 onClick={level.next}
             />

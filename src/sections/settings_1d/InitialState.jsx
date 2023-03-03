@@ -6,6 +6,7 @@ import NumberInput from "../../components/NumberInput";
 import SectionSelector from "../../components/SectionSelector";
 import { useRangeReducer, useStateObj } from "../../components/CustomHooks";
 import { buildState } from "../../js/Utils";
+import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
 
 function ISNumberInput({ title, value, min, max }) {
     //
@@ -119,7 +120,8 @@ function BuildStateButton({
 }) {
     return (
         <Button
-            icon={{ id: "arrow-turn-down", size: "2xl" }}
+            // icon={{ id: "arrow-turn-down", size: "2xl" }}
+            icon={faArrowTurnDown}
             tooltipLabel="Set state"
             onClick={() => {
                 cellsState.set(
