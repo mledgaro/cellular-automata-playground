@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import Button from "../../components/Button";
-import CellsSet from "../../components/CellsState";
 import NumberInput from "../../components/NumberInput";
 import SectionSelector from "../../components/SectionSelector";
 import { useRangeReducer, useStateObj } from "../../components/CustomHooks";
@@ -135,6 +134,26 @@ function BuildStateButton({
                 );
             }}
         />
+    );
+}
+
+function Cell({ alive }) {
+    //
+
+    const classes = `cap-cell cap-cell-${alive.get ? "on" : "off"}`;
+
+    return <span className={classes} onClick={alive.toggle}></span>;
+}
+
+function CellsSet({ cellsState }) {
+    //
+
+    return (
+        <div className="row mx-auto ps-2" style={{ width: "90%" }}>
+            {cellsState.get.map((e, i) => (
+                <Cell key={i} alive={{get: e, toggle: () => cellsState.toggle(i)}} />
+            ))}
+        </div>
     );
 }
 
