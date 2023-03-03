@@ -5,8 +5,8 @@ import { useContext } from "react";
 import FAIcon from "./FAIcon";
 import NumberInput from "./NumberInput";
 
-import { NbhdContext2D } from "../sections/settings/Neighborhood";
 import { intToBoolArray } from "../js/Utils";
+import { NbhdContext2D } from "../sections/settings_2d/Neighborhood2D";
 
 function DeactivatedCell({ onClick }) {
     //

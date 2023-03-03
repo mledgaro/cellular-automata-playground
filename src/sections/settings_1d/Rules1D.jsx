@@ -1,18 +1,10 @@
 //
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Button from "../../components/Button";
 import { Rule } from "../../components/CellGroup";
-import FAIcon from "../../components/FAIcon";
 import { useStateObj } from "../../components/CustomHooks";
-import {
-    diagonalNeighbors,
-    inputGroupClasses,
-    boolArray,
-    boolArrayNot,
-    boolArrayToInt,
-    randomBoolArray,
-} from "../../js/Utils";
+import { boolArray, boolArrayNot, boolArrayToInt, inputGroupClasses, randomBoolArray } from "../../js/Utils";
 
 function RuleNumber({ value }) {
     //
@@ -100,7 +92,7 @@ function RulesSet1D({ nbhdType, nbhdWidth, mainCell, states }) {
     );
 }
 
-export function Rules1D({ nbhdType, nbhdWidth, mainCell, rulesState }) {
+export default function Rules1D({ nbhdType, nbhdWidth, mainCell, rulesState }) {
     //
 
     const ruleNumber = useStateObj(boolArrayToInt(rulesState.get));
@@ -124,75 +116,5 @@ export function Rules1D({ nbhdType, nbhdWidth, mainCell, rulesState }) {
                 states={rulesState}
             />
         </div>
-    );
-}
-
-function Rule2D() {
-    //
-
-    const [state, setState] = useState(0);
-    let icon;
-
-    switch (state) {
-        case 1:
-            icon = { id: "square", style: "regular", size: "xl" };
-            break;
-        case 2:
-            icon = { id: "square", style: "solid", size: "xl" };
-            break;
-        default:
-            icon = { id: "square-minus", style: "regular", size: "xl" };
-    }
-
-    return (
-        <span
-            className=""
-            onClick={() => setState(state === 2 ? 0 : state + 1)}
-        >
-            <FAIcon icon={icon} />
-        </span>
-    );
-}
-export function Rules2D({ nbhdType, nbhdWidth, nbhdHeight, mainCell }) {
-    //
-
-    let numRules;
-
-    if (nbhdType === "vonneumann") {
-        numRules = nbhdWidth + nbhdHeight - 2;
-    } else if (nbhdType === "diagonal") {
-        numRules = diagonalNeighbors(
-            nbhdWidth,
-            nbhdHeight,
-            mainCell.r,
-            mainCell.c
-        );
-    } else {
-        // moore
-        numRules = nbhdWidth * nbhdHeight - 1;
-    }
-
-    let rules = [];
-
-    let headers = [];
-
-    headers.push(<td className="cap-icon-cell">Neighbors</td>);
-    rules.push(<td className="cap-icon-cell">State</td>);
-
-    for (let i = 0; i <= numRules; i++) {
-        headers.push(<td className="cap-icon-cell">{i}</td>);
-
-        rules.push(
-            <td>
-                <Rule2D />
-            </td>
-        );
-    }
-
-    return (
-        <table className="cap-container-dark-1 w-75 mx-auto">
-            <tr>{headers}</tr>
-            <tr>{rules}</tr>
-        </table>
     );
 }

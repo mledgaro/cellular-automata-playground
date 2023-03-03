@@ -1,9 +1,9 @@
 //
 
-import { createContext, useCallback, useContext } from "react";
+import { createContext, useContext } from "react";
 
 import SectionSelector from "../../components/SectionSelector";
-import { NbhdInput, NbhdInput2D } from "../../components/CellGroup";
+import { NbhdInput } from "../../components/CellGroup";
 import NumberInput from "../../components/NumberInput";
 import { useBoolArrState } from "../../components/CustomHooks";
 
@@ -12,8 +12,6 @@ const TypeCtx = createContext();
 const MainCellCtx = createContext();
 const CellsNbhdsCtx = createContext();
 const APICtx = createContext();
-
-export const NbhdContext2D = createContext();
 
 function Width() {
     //
@@ -145,7 +143,7 @@ function Content() {
     );
 }
 
-export function Neighborhood1D({ width, type, mainCell, cellsNbhds }) {
+export default function Neighborhood1D({ width, type, mainCell, cellsNbhds }) {
     //
 
     const api = {
@@ -174,43 +172,5 @@ export function Neighborhood1D({ width, type, mainCell, cellsNbhds }) {
                 </MainCellCtx.Provider>
             </TypeCtx.Provider>
         </WidthCtx.Provider>
-    );
-}
-
-export function Neighborhood2D({ nbhdType, nbhdWidth, nbhdHeight, mainCell }) {
-    //
-
-    return (
-        <NbhdContext2D.Provider
-            value={{
-                nbhdWidth: nbhdWidth,
-                nbhdHeight: nbhdHeight,
-                mainCell: mainCell,
-            }}
-        >
-            <SectionSelector
-                sections={[
-                    {
-                        label: "Moore",
-                        value: "moore",
-                        component: <NbhdInput2D type="moore" />,
-                    },
-                    {
-                        label: "Von Neumann",
-                        value: "vonneuman",
-                        component: <NbhdInput2D type="vonneumann" />,
-                    },
-                    {
-                        label: "Diagonal",
-                        value: "diagonal",
-                        component: <NbhdInput2D type="diagonal" />,
-                    },
-                ]}
-                selected={nbhdType}
-                size="sm"
-                alignment="center"
-                bs5Class="w-75 mx-auto"
-            />
-        </NbhdContext2D.Provider>
     );
 }

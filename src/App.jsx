@@ -5,7 +5,6 @@ import "./css/App.css";
 import {
     useArrayState,
     useBoolArrState,
-    useBoolState,
     useRangeReducer,
     useStateObj,
 } from "./components/CustomHooks";
@@ -14,9 +13,11 @@ import { intToBoolArray } from "./js/Utils";
 import Title from "./sections/Title";
 import Canvas from "./sections/Canvas";
 import Controls from "./sections/Controls";
-import { Settings1D, Settings2D } from "./sections/settings/Settings";
+
 import Footer from "./sections/Footer";
 import CellularAutomaton from "./js/CellularAutomaton";
+import Settings1D from "./sections/settings_1d/Settings1D";
+import Settings2D from "./sections/settings_2d/Settings2D";
 
 const numCells = 256;
 
