@@ -55,3 +55,37 @@ export function useEnumReducer(enumValues, initIndex) {
         set: index.set,
     };
 }
+
+export function useBoolState(initValue) {
+    //
+
+    let value = useStateObj(initValue);
+
+    return { get: value.get, toggle: () => value.set(!value.get) };
+}
+
+export function useArrayState(initValue) {
+
+    const array = useStateObj(initValue);
+
+    return {
+        get: array.get,
+        set: array.set,
+        setAt: (val, i) =>
+            array.set(array.get.map((e, j) => (j === i ? val : e))),
+    };
+}
+
+export function useBoolArrState(length) {
+    //
+
+    const arr = useArrayState(Array(length).fill(false));
+
+    return {
+        get: arr.get,
+        set: arr.set,
+        toggle: (i) => arr.setAt(!arr.get[i], i),
+        on: (i) => arr.setAt(true, i),
+        off: (i) => arr.setAt(false, i),
+    };
+}
