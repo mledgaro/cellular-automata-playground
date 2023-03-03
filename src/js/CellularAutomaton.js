@@ -1,22 +1,61 @@
 //
 
-class CellularAutomaton {
+export default class CellularAutomaton {
     //
 
-    #neighborhoodSize;
-    #ruleNum;
+    #MAX_CELLS = 512;
 
-    #atomicRulesNum;
-    #maxRuleNum;
+    #cellsNumber; // Integer
+    #nbhdWidth; // Integer
+    #cellsNbhd; // Array(Array(Integer))[cellsNumber][nbhdWidth]
+    #numRules; // Int = 2^nbhdWidth
+    #rules; // Array(Bool)[numRules]
+    #state; // Array(Bool)[cellsNumber]
 
-    #rules;
+    constructor() {
+        //
 
-    state;
-    neighborhoods;
+        this.#nbhdWidth = 3;
+        // this.#nbhdType = "insitu";
+        // this.#nbhdMainCell;
+    }
 
-    constructor() {}
+    get cellsNumber() {
+        return this.#cellsNumber;
+    }
 
-    // private
+    set cellsNumber(number) {
+        this.#cellsNumber = Math.min(Math.max(number, 0), this.#MAX_CELLS);
+    }
+
+    get nbhdWidth() {
+        return this.#nbhdWidth;
+    }
+
+    set nbhdWidth(width) {
+        this.#nbhdWidth = width;
+        this.#numRules = Math.pow(2, width);
+    }
+
+    cellNbhd(index) {
+        return this.#cellsNbhd[index];
+    }
+
+    setNbhds(type, subtype, mainCell) {}
+
+    get numRules() {
+        return this.#numRules;
+    }
+
+    ruleState(rule) {}
+
+    setRule(rule, state) {}
+
+    get state() {
+        return this.#state;
+    }
+
+    set state(state) {}
 
     #cellNextState(index) {
         //
@@ -31,30 +70,6 @@ class CellularAutomaton {
         return nstate;
     }
 
-    //public
-
-    setRandomNeighborhoods() {
-        this.neighborhoods = CellularAutomaton.randomScatteredNeighborhoods(
-            this.state.length,
-            this.neighborhoodSize
-        );
-    }
-
-    setRandomContiguousNeighborhoods() {
-        this.neighborhoods = CellularAutomaton.randomGroupedNeighborhoods(
-            this.state.length,
-            this.neighborhoodSize
-        );
-    }
-
-    setContiguousNeighborhoods(alignment) {
-        this.neighborhoods = CellularAutomaton.inSituNeighborhoods(
-            this.state.length,
-            this.neighborhoodSize,
-            alignment
-        );
-    }
-
     nextState() {
         let nstate = this.state.map((cell, i, state_) =>
             this.#cellNextState(i)
@@ -65,138 +80,96 @@ class CellularAutomaton {
         return nstate;
     }
 
-    // getters
+    // static functions
 
-    get ruleNumber() {
-        return this.#ruleNum;
+    static adjacentNbhd(index, width, main, numCells) {
+        //
+
+        let nbhd = [];
+        let a = index - main;
+        let b = a + width;
+
+        for (let i = a; i < b; i++) {
+            nbhd.push(i);
+        }
+
+        if (a < 0) {
+            nbhd = nbhd.map((e) => e < 0 ? numCells + e : e);
+        }
+
+        if (b >= numCells) {
+            nbhd = nbhd.map((e) => e % numCells);
+        }
+
+        return nbhd;
     }
 
-    get neighborhoodSize() {
-        return this.#neighborhoodSize;
+    static groupedNbhd(index, width, main, numCells) {
+        //
+
+        let nbhd = [];
+        let a = Math.round(Math.random() + numCells);
+        let b = a + width;
+
+        for (let i = a; i < b; i++) {
+            nbhd.push(i);
+        }
+
+        if (a < 0) {
+            nbhd = nbhd.map((e) => e < 0 ? numCells + e : e);
+        }
+        
+        if (b >= numCells) {
+            nbhd = nbhd.map((e) => e % numCells);
+        }
+
+        if (main >= 0) {
+            nbhd.splice(main, 1, index);
+        }
+
+        return nbhd;
     }
 
-    get rules() {
-        return this.#rules;
+    static scatteredNbhd(index, width, main, numCells) {
+        //
+
+        let nbhd = [];
+
+        for (let i = 0; i < width; i++) {
+            nbhd.push(Math.round(Math.random() + numCells));
+        }
+
+        if (main >= 0) {
+            nbhd.splice(main, 1, index);
+        }
+
+        return nbhd;
     }
 
-    // setters
+    static cellsNbhds(type, numCells, nbhdWidth, mainCell) {
+        //
 
-    set neighborhoodSize(size) {
-        this.#neighborhoodSize = size;
-        this.#atomicRulesNum = Math.pow(2, size);
-        this.#maxRuleNum = Math.pow(2, this.#atomicRulesNum) - 1;
-    }
+        let nbhds = [];
+        let nbhdFunc;
 
-    set rules(ruleNumber) {
-        this.#ruleNum = Math.max(ruleNumber, 0);
-        this.#ruleNum = Math.min(this.#ruleNum, this.#maxRuleNum);
+        switch (type) {
+            case "grouped":
+                nbhdFunc = this.groupedNbhd;
+                break;
+            case "scattered":
+                nbhdFunc = this.scatteredNbhd;
+                break;
+            default:
+                // "adjacent"
+                nbhdFunc = this.adjacentNbhd;
+        }
 
-        this.#rules = CellularAutomaton.intToBoolArray(
-            ruleNumber,
-            this.#atomicRulesNum
-        );
-    }
+        for (let i = 0; i < numCells; i++) {
+            nbhds.push(nbhdFunc(i, nbhdWidth, mainCell, numCells));
+        }
 
-    /**
-     * Converts an integer number to an array of booleans that represents
-     * the digits of its binary representation.
-     * E.G.
-     * 30 -> 00011110_b -> [false, true, true, true, true, false, false, false]
-     * @param {int} int integer number
-     * @param {int} size array size
-     * @returns {Array} array of booleans
-     */
-    static intToBoolArray(int, size) {
-        let arr;
+        console.log(nbhds);
 
-        arr = "0".repeat(size) + int.toString(2);
-        arr = arr.slice(-size);
-        arr = arr.split("");
-        arr = arr.map((e) => e == "1");
-        arr = arr.reverse();
-
-        return arr;
-    }
-
-    /**
-     * Converts a boolean array to an integer number whose binary digits are
-     * the booleans of the array.
-     * E.G.
-     * [false, true, true, true, true, false, false, false] -> 00011110_b -> 30
-     * @param {Array} arr boolean array
-     * @returns {int} integer number
-     */
-    static boolArrayToInt(arr, reverse) {
-        let int;
-
-        int = reverse ? arr.reverse() : arr;
-        int = int.map((e) => (e ? "1" : "0"));
-        int = int.join("");
-        int = parseInt(int, 2);
-
-        return int;
-    }
-
-    static randomState(cellsNumber, density) {
-        return Array(cellsNumber)
-            .fill()
-            .map(() => Math.random() < density);
-    }
-
-    static cellsGroup(index, cellsNumber, neighboorhoodSize, alignment) {
-        let offset;
-
-        offset = Math.floor((neighboorhoodSize - 1) / 2);
-        offset += neighboorhoodSize % 2 == 0 && alignment == "right" ? 1 : 0;
-        offset = index - offset;
-
-        return Array(neighboorhoodSize)
-            .fill()
-            .map((e, i, arr) => {
-                let n;
-                n = i + offset;
-                n = n < 0 ? cellsNumber + n : n;
-                n = n >= cellsNumber ? n % cellsNumber : n;
-
-                return n;
-            });
-    }
-
-    static randomScatteredNeighborhoods(cellsNumber, neighborhoodSize) {
-        return Array(cellsNumber)
-            .fill()
-            .map(() =>
-                Array(neighborhoodSize)
-                    .fill()
-                    .map(() => Math.floor(Math.random() * cellsNumber))
-            );
-    }
-
-    static randomGroupedNeighborhoods(cellsNumber, neighborhoodSize) {
-        let func = () =>
-            CellularAutomaton.cellsGroup(
-                Math.floor(Math.random() * cellsNumber),
-                cellsNumber,
-                neighborhoodSize,
-                "left"
-            );
-
-        return Array(cellsNumber)
-            .fill()
-            .map(() => func());
-    }
-
-    static inSituNeighborhoods(cellsNumber, neighboorhoodSize, alignment) {
-        let func = (i) =>
-            CellularAutomaton.cellsGroup(
-                i,
-                cellsNumber,
-                neighboorhoodSize,
-                alignment
-            );
-
-        return Array(cellsNumber)
-            .fill()
-            .map((e, i, arr) => func(i));
+        return nbhds;
     }
 }
