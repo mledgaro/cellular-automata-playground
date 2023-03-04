@@ -1,76 +1,81 @@
 //
 
+import { boolArrayToInt, randomBoolArray } from "./Utils";
+
 export default class CellularAutomaton {
     //
 
     #MAX_CELLS = 512;
 
-    #cellsNumber; // Integer
-    #nbhdWidth; // Integer
-    #cellsNbhd; // Array(Array(Integer))[cellsNumber][nbhdWidth]
-    #numRules; // Int = 2^nbhdWidth
-    #rules; // Array(Bool)[numRules]
-    #state; // Array(Bool)[cellsNumber]
+    #cellsNumber: number = 256; // Integer
+    #nbhdWidth: number = 3; // Integer
+    #cellsNbhd: number[][] = CellularAutomaton.cellsNbhds(
+        "adjacent",
+        this.#cellsNumber,
+        this.#nbhdWidth,
+        1
+    ); // Array(Array(Integer))[cellsNumber][nbhdWidth]
+    #numRules: number = Math.pow(2, this.#nbhdWidth); // Int = 2^nbhdWidth
+    #rules: boolean[] = randomBoolArray(this.#numRules); // Array(Bool)[numRules]
+    #state: boolean[] = randomBoolArray(this.#cellsNumber); // Array(Bool)[cellsNumber]
 
-    constructor() {
-        //
+    // constructor() {
+    //     //
+    // }
 
-        this.#nbhdWidth = 3;
-        // this.#nbhdType = "insitu";
-        // this.#nbhdMainCell;
-    }
-
-    get cellsNumber() {
+    get cellsNumber(): number {
         return this.#cellsNumber;
     }
 
-    set cellsNumber(number) {
+    set cellsNumber(number: number) {
         this.#cellsNumber = Math.min(Math.max(number, 0), this.#MAX_CELLS);
     }
 
-    get nbhdWidth() {
+    get nbhdWidth(): number {
         return this.#nbhdWidth;
     }
 
-    set nbhdWidth(width) {
+    set nbhdWidth(width: number) {
         this.#nbhdWidth = width;
         this.#numRules = Math.pow(2, width);
     }
 
-    cellNbhd(index) {
+    cellNbhd(index: number): number[] {
         return this.#cellsNbhd[index];
     }
 
-    setNbhds(type, subtype, mainCell) {}
+    setNbhds(type: NbhdType, mainCell: number) {}
 
-    get numRules() {
+    get numRules(): number {
         return this.#numRules;
     }
 
-    ruleState(rule) {}
+    ruleState(rule: number) {}
 
-    setRule(rule, state) {}
+    setRule(rule: number, state: boolean) {}
 
-    get state() {
+    get state(): boolean[] {
         return this.#state;
     }
 
-    set state(state) {}
+    set state(state: boolean[]) {}
 
-    #cellNextState(index) {
+    #cellNextState(index: number): boolean {
         //
 
         let nstate;
 
-        nstate = this.neighborhoods[index];
+        nstate = this.#cellsNbhd[index];
         nstate = nstate.map((e) => this.state[e]);
-        nstate = CellularAutomaton.boolArrayToInt(nstate, false);
+        nstate = boolArrayToInt(nstate, false);
         nstate = this.#rules[nstate];
 
         return nstate;
     }
 
-    nextState() {
+    nextState(): boolean[] {
+        //
+
         let nstate = this.state.map((cell, i, state_) =>
             this.#cellNextState(i)
         );
@@ -82,7 +87,12 @@ export default class CellularAutomaton {
 
     // static functions
 
-    static adjacentNbhd(index, width, main, numCells) {
+    static adjacentNbhd(
+        index: number,
+        width: number,
+        main: number,
+        numCells: number
+    ): number[] {
         //
 
         let nbhd = [];
@@ -94,7 +104,7 @@ export default class CellularAutomaton {
         }
 
         if (a < 0) {
-            nbhd = nbhd.map((e) => e < 0 ? numCells + e : e);
+            nbhd = nbhd.map((e) => (e < 0 ? numCells + e : e));
         }
 
         if (b >= numCells) {
@@ -104,7 +114,12 @@ export default class CellularAutomaton {
         return nbhd;
     }
 
-    static groupedNbhd(index, width, main, numCells) {
+    static groupedNbhd(
+        index: number,
+        width: number,
+        main: number,
+        numCells: number
+    ): number[] {
         //
 
         let nbhd = [];
@@ -116,9 +131,9 @@ export default class CellularAutomaton {
         }
 
         if (a < 0) {
-            nbhd = nbhd.map((e) => e < 0 ? numCells + e : e);
+            nbhd = nbhd.map((e) => (e < 0 ? numCells + e : e));
         }
-        
+
         if (b >= numCells) {
             nbhd = nbhd.map((e) => e % numCells);
         }
@@ -130,7 +145,12 @@ export default class CellularAutomaton {
         return nbhd;
     }
 
-    static scatteredNbhd(index, width, main, numCells) {
+    static scatteredNbhd(
+        index: number,
+        width: number,
+        main: number,
+        numCells: number
+    ): number[] {
         //
 
         let nbhd = [];
@@ -146,22 +166,27 @@ export default class CellularAutomaton {
         return nbhd;
     }
 
-    static cellsNbhds(type, numCells, nbhdWidth, mainCell) {
+    static cellsNbhds(
+        type: NbhdType,
+        numCells: number,
+        nbhdWidth: number,
+        mainCell: number
+    ): number[][] {
         //
 
         let nbhds = [];
         let nbhdFunc;
 
         switch (type) {
+            case "adjacent":
+                nbhdFunc = this.adjacentNbhd;
+                break;
             case "grouped":
                 nbhdFunc = this.groupedNbhd;
                 break;
             case "scattered":
                 nbhdFunc = this.scatteredNbhd;
                 break;
-            default:
-                // "adjacent"
-                nbhdFunc = this.adjacentNbhd;
         }
 
         for (let i = 0; i < numCells; i++) {
@@ -173,3 +198,5 @@ export default class CellularAutomaton {
         return nbhds;
     }
 }
+
+export type NbhdType = "adjacent" | "grouped" | "scattered";

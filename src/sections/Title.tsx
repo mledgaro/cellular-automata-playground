@@ -1,9 +1,13 @@
 //
 
+import React from "react";
+
+import { RangeReducerHook } from "src/CustomHooks";
+
 import { fa1, fa2, faD } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function Title({ dimension }) {
+export default function Title({ dimension }: { dimension: RangeReducerHook }) {
     //
 
     return (
@@ -17,10 +21,7 @@ export default function Title({ dimension }) {
                     icon={dimension.get === 1 ? fa1 : fa2}
                     size="2xl"
                 />
-                <FontAwesomeIcon
-                    icon={faD}
-                    size="2xl"
-                />
+                <FontAwesomeIcon icon={faD} size="2xl" />
             </button>
 
             <span

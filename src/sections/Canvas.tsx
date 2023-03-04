@@ -1,14 +1,16 @@
 //
 
+import React from "react";
+
 import { useEffect, useMemo, useRef } from "react";
-import CanvasCntrl from "../js/CanvasCntrl";
+import CanvasCntrl from "../ts/CanvasCntrl";
 
 const canvasId = "cap-canvas";
 
 export default function Canvas() {
     //
 
-    const cntrl = useRef();
+    // const cntrl = useRef();
     const width = useMemo(
         () => Math.floor(window.innerWidth * 0.95),
         [window.innerWidth]
@@ -18,11 +20,11 @@ export default function Canvas() {
         [window.innerHeight]
     );
 
-    useEffect(() => {
-        const gr = document.getElementById("cap-canvas").getContext("2d");
-        cntrl.current = new CanvasCntrl(gr, width, height);
-        cntrl.current.paintCell(0, 1, true);
-    }, []);
+    // useEffect(() => {
+    //     const gr = document.getElementById("cap-canvas").getContext("2d");
+    //     cntrl.current = new CanvasCntrl(gr, width, height);
+    //     cntrl.current.paintCell(0, 1, true);
+    // }, []);
 
     console.log(`canvas: ${width}x${height}`);
 

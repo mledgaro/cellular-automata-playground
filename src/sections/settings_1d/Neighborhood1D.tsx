@@ -1,19 +1,45 @@
 //
 
+import React from "react";
+
 import { createContext, useContext } from "react";
 
-import SectionSelector from "../../components/SectionSelector";
+import { OptionGroup } from "../../components/SectionSelector";
 import NumberInput from "../../components/NumberInput";
-import { useBoolArrState } from "../../components/CustomHooks";
-import { Cell, SelectedCell, Ellipses } from "../../components/Cells";
+import {
+    ArrayStateHook,
+    BoolArrHook,
+    RangeReducerHook,
+    StateObjHook,
+    useBoolArrState,
+} from "../../CustomHooks";
+import {
+    Cell,
+    SelectedCell,
+    Ellipses,
+    EllipsesStyle,
+} from "../../components/Cells";
 import Button from "../../components/Button";
 import { faDiagramProject } from "@fortawesome/free-solid-svg-icons";
+import { boolArray } from "src/ts/Utils";
 
-const WidthCtx = createContext();
-const TypeCtx = createContext();
-const MainCellCtx = createContext();
-const CellsNbhdsCtx = createContext();
-const APICtx = createContext();
+const WidthCtx = createContext(3);
+const TypeCtx = createContext("none");
+const MainCellCtx = createContext(1);
+const CellsNbhdsCtx = createContext([[0]]);
+const APICtx = createContext({
+    width: {
+        next: () => {},
+        prev: () => {},
+        set: (val: number) => {},
+    },
+    type: { set: (val: any) => {} },
+    mainCell: { set: (val: any) => {} },
+    cellsNbhds: {
+        set: (val: any) => {},
+        setAt: (val: any, index: number) => {},
+    },
+});
 
 function Width() {
     //
@@ -32,6 +58,7 @@ function Width() {
             }}
             min={2}
             max={8}
+            size="sm"
             alignment="center"
         />
     );
@@ -44,9 +71,9 @@ function Type() {
     const api = useContext(APICtx);
 
     return (
-        <SectionSelector
+        <OptionGroup
             title="Type"
-            sections={[
+            options={[
                 { label: "Adjacent", value: "none" },
                 { label: "Grouped", value: "main-cell" },
                 { label: "Scattered", value: "all" },
@@ -62,7 +89,7 @@ function MainCellSelector() {
     //
 
     const width = useContext(WidthCtx);
-    const type = useContext(TypeCtx);
+    const type = useContext(TypeCtx) as EllipsesStyle;
     const mainCell = useContext(MainCellCtx);
     const api = useContext(APICtx);
 
@@ -90,14 +117,20 @@ function MainCellSelector() {
     );
 }
 
-function HighlightCell({ index, highlightedCells }) {
+function HighlightCell({
+    index,
+    highlightedCells,
+}: {
+    index: number;
+    highlightedCells: BoolArrHook;
+}) {
     //
 
-    const cellsNbhds = useContext(CellsNbhdsCtx);
+    const cellsNbhds = useContext(CellsNbhdsCtx) as number[][];
 
     const highlight = () => {
         let nArr = Array(cellsNbhds.length).fill(false);
-        cellsNbhds[index].forEach((e) => nArr[e] = true);
+        cellsNbhds[index].forEach((e) => (nArr[e] = true));
         highlightedCells.set(nArr);
     };
 
@@ -117,8 +150,10 @@ function HighlightCell({ index, highlightedCells }) {
 function NbhdsMap() {
     //
 
-    const cellsNbhds = useContext(CellsNbhdsCtx);
-    const highlightedCells = useBoolArrState(cellsNbhds.length);
+    const cellsNbhds = useContext(CellsNbhdsCtx) as number[][];
+    const highlightedCells = useBoolArrState(
+        boolArray(cellsNbhds.length, false)
+    );
 
     // console.log(highlightedCells.get);
 
@@ -156,7 +191,10 @@ function Content() {
                 </div>
 
                 <div className="col-1 d-flex align-items-center">
-                    <Button icon={faDiagramProject} tooltipLabel="Change neighborhoods" />
+                    <Button
+                        icon={faDiagramProject}
+                        tooltipLabel="Change neighborhoods"
+                    />
                 </div>
             </div>
 
@@ -165,7 +203,17 @@ function Content() {
     );
 }
 
-export default function Neighborhood1D({ width, type, mainCell, cellsNbhds }) {
+export default function Neighborhood1D({
+    width,
+    type,
+    mainCell,
+    cellsNbhds,
+}: {
+    width: RangeReducerHook;
+    type: StateObjHook;
+    mainCell: StateObjHook;
+    cellsNbhds: ArrayStateHook<number[]>;
+}) {
     //
 
     const api = {

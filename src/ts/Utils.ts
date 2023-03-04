@@ -9,7 +9,9 @@
  * @param {int} size array size
  * @returns {Array} array of booleans
  */
-export function intToBoolArray(int, size) {
+export function intToBoolArray(int: number, size: number): boolean[] {
+    //
+
     let arr;
 
     arr = "0".repeat(size) + int.toString(2);
@@ -29,17 +31,22 @@ export function intToBoolArray(int, size) {
  * @param {Array} arr boolean array
  * @returns {int} integer number
  */
-export function boolArrayToInt(arr, reverse) {
+export function boolArrayToInt(arr: boolean[], reverse?: boolean): number {
+    //
+
     let int;
 
     int = [...arr];
-    int = reverse ? int.reverse() : int;
+    int = (reverse || false) ? int.reverse() : int;
     int = int.map((e) => (e ? "1" : "0"));
     int = int.join("");
     int = parseInt(int, 2);
 
     return int;
 }
+
+export type Size = "sm" | "md" | "lg";
+export type Alignment = "start" | "center" | "end";
 
 /**
  * Builds a string with the corresponding BS5 input group classes.
@@ -48,13 +55,19 @@ export function boolArrayToInt(arr, reverse) {
  * @param {String} classes other classes
  * @returns {String} classes
  */
-export function inputGroupClasses(size, alignment, classes) {
+export function inputGroupClasses(
+    size: Size,
+    alignment: Alignment,
+    classes: string
+): string {
     //
 
+    let size_, alignment_;
+
     if (size === "sm" || size === "lg") {
-        size = `input-group-${size}`;
+        size_ = `input-group-${size}`;
     } else {
-        size = "";
+        size_ = "";
     }
 
     if (
@@ -62,12 +75,12 @@ export function inputGroupClasses(size, alignment, classes) {
         alignment === "center" ||
         alignment === "end"
     ) {
-        alignment = `d-flex justify-content-${alignment}`;
+        alignment_ = `d-flex justify-content-${alignment}`;
     } else {
-        alignment = "";
+        alignment_ = "";
     }
 
-    return `input-group ${size} ${alignment} ${classes}`;
+    return `input-group ${size_} ${alignment_} ${classes}`;
 }
 
 /**
@@ -78,15 +91,20 @@ export function inputGroupClasses(size, alignment, classes) {
  * @param {Int} col
  * @returns number of elements in the diagonal
  */
-export function diagonalSize(width, height, row, col) {
+export function diagonalSize(
+    width: number,
+    height: number,
+    row: number,
+    col: number
+): number {
     //
 
-    let d = col - row;
+    let diff = col - row;
 
-    if (0 > d) {
-        return Math.min(width, height) - Math.abs(d);
-    } else if (d > Math.abs(width - height)) {
-        return Math.max(width, height) - Math.abs(d);
+    if (0 > diff) {
+        return Math.min(width, height) - Math.abs(diff);
+    } else if (diff > Math.abs(width - height)) {
+        return Math.max(width, height) - Math.abs(diff);
     } else {
         // 0 <= d <= Math.abs(width - height)
         return Math.min(width, height);
@@ -101,7 +119,14 @@ export function diagonalSize(width, height, row, col) {
  * @param {Int} col
  * @returns number of elements in the diagonal
  */
-export function diagonalNeighbors(width, height, row, col) {
+export function diagonalNeighbors(
+    width: number,
+    height: number,
+    row: number,
+    col: number
+): number {
+    //
+
     return (
         diagonalSize(width, height, row, col) +
         diagonalSize(width, height, row, width - col) -
@@ -109,7 +134,7 @@ export function diagonalNeighbors(width, height, row, col) {
     );
 }
 
-export function randomBoolArray(size) {
+export function randomBoolArray(size: number): boolean[] {
     //
 
     let boolArr = [];
@@ -121,11 +146,15 @@ export function randomBoolArray(size) {
     return boolArr;
 }
 
-export function boolArray(length, bool) {
-    return Array(length).fill(bool);
+export function boolArray(length: number, fillValue: boolean) {
+    //
+
+    return Array(length).fill(fillValue);
 }
 
-export function boolArrayNot(boolArr) {
+export function boolArrayNot(boolArr: boolean[]): boolean[] {
+    //
+
     return boolArr.map((e) => !e);
 }
 
@@ -135,7 +164,11 @@ export function boolArrayNot(boolArr) {
  * @param {Int} maxVal max value
  * @param {Int} totalSum total sum
  */
-function variableDist(minVal, maxVal, totalSum) {
+function variableDist(
+    minVal: number,
+    maxVal: number,
+    totalSum: number
+): number[] {
     //
 
     let arr = [];
@@ -159,7 +192,7 @@ function variableDist(minVal, maxVal, totalSum) {
  * @param {Int} nums number of integers
  * @param {Int} totalSum total sum
  */
-function randomDist(nums, totalSum) {
+function randomDist(nums: number, totalSum: number): number[] {
     //
 
     let arr = [];
@@ -187,7 +220,13 @@ function randomDist(nums, totalSum) {
     return arr;
 }
 
-function normalizeBoolArr(arr, size, fill) {
+function normalizeBoolArr(
+    arr: boolean[],
+    size: number,
+    fill: boolean
+): boolean[] {
+    //
+
     let diff = size - arr.length;
     if (diff <= 0) {
         return arr.slice(0, size);
@@ -202,10 +241,14 @@ function normalizeBoolArr(arr, size, fill) {
  * @param {*} trueArr each element determines the size of true bool string
  * @param {*} length length of the resulting array
  */
-function interlacedBoolArrays(falseArr, trueArr, length) {
+function interlacedBoolArrays(
+    falseArr: number[],
+    trueArr: number[],
+    length: number
+): boolean[] {
     //
 
-    let arr = [];
+    let arr: boolean[] = [];
 
     for (let i = 0; i < trueArr.length; i++) {
         arr = arr.concat(
@@ -217,13 +260,13 @@ function interlacedBoolArrays(falseArr, trueArr, length) {
 }
 
 export function buildState(
-    liveCellsType,
-    distributionType,
-    numCells,
-    liveCells,
-    groupMinSize,
-    groupMaxSize
-) {
+    liveCellsType: 'num' | 'perc',
+    distributionType: 'rand' | 'even',
+    numCells: number,
+    liveCells: number,
+    groupMinSize: number,
+    groupMaxSize: number
+): boolean[] {
     //
 
     if (liveCellsType === "perc") {

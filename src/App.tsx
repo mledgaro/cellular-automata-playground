@@ -2,22 +2,25 @@
 
 import "./css/App.css";
 
+import React from "react";
+
 import {
     useArrayState,
     useBoolArrState,
     useRangeReducer,
     useStateObj,
-} from "./components/CustomHooks";
-import { intToBoolArray } from "./js/Utils";
+} from "./CustomHooks";
+import { intToBoolArray, randomBoolArray } from "./ts/Utils";
 
 import Title from "./sections/Title";
 import Canvas from "./sections/Canvas";
 import Controls from "./sections/Controls";
 
 import Footer from "./sections/Footer";
-import CellularAutomaton from "./js/CellularAutomaton";
+import CellularAutomaton from "./ts/CellularAutomaton";
 import Settings1D from "./sections/settings_1d/Settings1D";
 import Settings2D from "./sections/settings_2d/Settings2D";
+import { useEffect } from "react";
 
 const numCells = 256;
 
@@ -38,9 +41,19 @@ export default function App() {
         )
     );
 
-    const rules = useStateObj(intToBoolArray(90, Math.pow(2, nbhdWidth.get)));
+    const rules = useBoolArrState(
+        intToBoolArray(90, Math.pow(2, nbhdWidth.get))
+    );
 
-    const initState = useBoolArrState(numCells);
+    const initState = useBoolArrState(randomBoolArray(numCells));
+
+    useEffect(() => {
+        if (mainCell.get >= nbhdWidth.get) {
+            mainCell.set(nbhdWidth.get - 1);
+        }
+
+        rules.set(randomBoolArray(Math.pow(2, nbhdWidth.get)));
+    }, [nbhdWidth.get]);
 
     let settings;
 

@@ -1,13 +1,18 @@
 //
 
-import { useEffect } from "react";
-import { useStateObj } from "../../components/CustomHooks";
+import React from "react";
+
+import {
+    ArrayStateHook,
+    BoolArrHook,
+    RangeReducerHook,
+    StateObjHook,
+    useStateObj,
+} from "../../CustomHooks";
 import SectionSelector from "../../components/SectionSelector";
-import { randomBoolArray } from "../../js/Utils";
 import InitialState from "./InitialState";
 import Neighborhood1D from "./Neighborhood1D";
 import Rules1D from "./Rules1D";
-
 
 export default function Settings1D({
     numCells,
@@ -17,14 +22,18 @@ export default function Settings1D({
     cellsNbhds,
     rules,
     initState,
+}: {
+    numCells: number;
+    nbhdWidth: RangeReducerHook;
+    nbhdType: StateObjHook;
+    mainCell: StateObjHook;
+    cellsNbhds: ArrayStateHook<number[]>;
+    rules: BoolArrHook;
+    initState: BoolArrHook;
 }) {
     //
 
     const section = useStateObj("nbhd");
-
-    useEffect(() => {
-        rules.set(randomBoolArray(Math.pow(2, nbhdWidth.get)));
-    }, [nbhdWidth.get]);
 
     return (
         <SectionSelector
@@ -50,7 +59,7 @@ export default function Settings1D({
                             nbhdWidth={nbhdWidth.get}
                             nbhdType={nbhdType.get}
                             mainCell={mainCell.get}
-                            rulesState={rules}
+                            rules={rules}
                         />
                     ),
                 },
@@ -60,7 +69,7 @@ export default function Settings1D({
                     component: (
                         <InitialState
                             numCells={numCells}
-                            cellsState={initState}
+                            state={initState}
                         />
                     ),
                 },

@@ -78,5 +78,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - [ ] Common rules set options (classic game of life, etc)
 - [ ] Save rules and configurations
 - [ ] Run different configurations and rules on the same canvas (show as color layers)
-- [ ] 
+  - [ ] Two cells alive in the same cell on different layers produce another cell in another layer.
+- [ ] show the rules as image
+- [ ] show and change on every iteration the current state as image
+- [ ] show how the current state (as integer) change over iterations
+- [ ] Use a text field in input numbers
 
+
+## Notes
+- To mantain an updated version of the rules set state is necessary to update it when the state of a single rule changes. But change the sate of the set invokes the render of every single rule, even those which value was not changed. To avoid this, it is possible to make a single rule holds its own state. 

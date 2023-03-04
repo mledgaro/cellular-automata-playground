@@ -1,8 +1,25 @@
 //
 
-import { inputGroupClasses } from "../js/Utils";
+import React from "react";
 
-function OptionGroup({ title, options, selected, size, alignment, bs5Class }) {
+import { Alignment, inputGroupClasses, Size } from "../ts/Utils";
+import { StateObjHook } from "../CustomHooks";
+
+export function OptionGroup({
+    title,
+    options,
+    selected,
+    size,
+    alignment,
+    bs5Class,
+}: {
+    title: string;
+    options: { label: string; value: string }[];
+    selected: StateObjHook;
+    size: Size;
+    alignment: Alignment;
+    bs5Class?: string;
+}) {
     //
 
     let options_ = options.map((opt, i) => {
@@ -27,10 +44,10 @@ function OptionGroup({ title, options, selected, size, alignment, bs5Class }) {
         size === "sm" ? "small" : size === "lg" ? "large" : "medium";
 
     return (
-        <div className={`my-2 ${bs5Class}`}>
+        <div className={`my-2 ${bs5Class || ""}`}>
             {title != null && (
                 <div
-                    className="cap-section-selector-title cap-container-dark-1 mx-auto mb-1"
+                    className="cap-section-selector-title cap-container-dark-1 mx-auto mb-2"
                     style={{ fontSize: titleSize }}
                 >
                     {title}
@@ -43,6 +60,7 @@ function OptionGroup({ title, options, selected, size, alignment, bs5Class }) {
         </div>
     );
 }
+
 export default function SectionSelector({
     title,
     sections,
@@ -50,6 +68,13 @@ export default function SectionSelector({
     size,
     alignment,
     bs5Class,
+}: {
+    title: string;
+    sections: { label: string; value: string; component: JSX.Element }[];
+    selected: StateObjHook;
+    size: Size;
+    alignment: Alignment;
+    bs5Class?: string;
 }) {
     //
 
@@ -74,7 +99,7 @@ export default function SectionSelector({
                 selected={selected}
                 size={size}
                 alignment={alignment}
-                bs5Class={bs5Class}
+                bs5Class={bs5Class || ""}
             />
             {visibleSection}
         </div>

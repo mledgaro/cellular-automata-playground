@@ -1,12 +1,20 @@
 //
 
+import React from "react";
+
 import { faSquare as faSquareRegular } from "@fortawesome/free-regular-svg-icons";
-import { faArrowRight, faRightLeft, faShuffle, faSquare as faSquareSolid } from "@fortawesome/free-solid-svg-icons";
+import {
+    faArrowRight,
+    faRightLeft,
+    faShuffle,
+    faSquare as faSquareSolid,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect } from "react";
+import { BoolArrHook } from "src/CustomHooks";
 import Button from "../../components/Button";
-import { Cell, Ellipses } from "../../components/Cells";
-import { useStateObj } from "../../components/CustomHooks";
+import { Cell, Ellipses, EllipsesStyle } from "../../components/Cells";
+import { useStateObj } from "../../CustomHooks";
 import {
     boolArray,
     boolArrayNot,
@@ -14,9 +22,9 @@ import {
     inputGroupClasses,
     intToBoolArray,
     randomBoolArray,
-} from "../../js/Utils";
+} from "../../ts/Utils";
 
-function RuleNumber({ value }) {
+function RuleNumber({ num }: { num: number }) {
     //
 
     return (
@@ -25,45 +33,41 @@ function RuleNumber({ value }) {
                 className="cap-container-dark-1 px-3 py-1 mx-auto"
                 style={{ width: "fit-content" }}
             >
-                Rule number {value}
+                Rule number {num}
             </div>
         </div>
     );
 }
 
-function Controls({ rulesState }) {
+function Controls({ rules }: { rules: BoolArrHook }) {
     //
 
     return (
         <div className="col-lg">
-            <div className={inputGroupClasses("", "center", "")}>
+            <div className={inputGroupClasses("md", "center", "")}>
                 <Button
                     tooltipLabel="Random"
                     icon={faShuffle}
-                    onClick={() =>
-                        rulesState.set(randomBoolArray(rulesState.get.length))
-                    }
+                    onClick={() => rules.set(randomBoolArray(rules.get.length))}
                 />
 
                 <Button
                     tooltipLabel="Swap"
                     icon={faRightLeft}
-                    onClick={() => rulesState.set(boolArrayNot(rulesState.get))}
+                    onClick={() => rules.set(boolArrayNot(rules.get))}
                 />
 
                 <Button
                     tooltipLabel="All alive"
                     icon={faSquareSolid}
-                    onClick={() =>
-                        rulesState.set(boolArray(rulesState.get.length, true))
-                    }
+                    onClick={() => rules.set(boolArray(rules.get.length, true))}
                 />
 
                 <Button
                     tooltipLabel="All dead"
                     icon={faSquareRegular}
                     onClick={() =>
-                        rulesState.set(boolArray(rulesState.get.length, false))
+                        rules.set(boolArray(rules.get.length, false))
                     }
                 />
             </div>
@@ -71,7 +75,19 @@ function Controls({ rulesState }) {
     );
 }
 
-function Rule({ type, index, nbhdWidth, mainCell, selection }) {
+function Rule({
+    type,
+    index,
+    nbhdWidth,
+    mainCell,
+    selection,
+}: {
+    type: EllipsesStyle;
+    index: number;
+    nbhdWidth: number;
+    mainCell: number;
+    selection: { get: boolean; change: () => void };
+}) {
     //
 
     let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
@@ -87,11 +103,7 @@ function Rule({ type, index, nbhdWidth, mainCell, selection }) {
             <Ellipses cells={cells} mainCell={mainCell} style={type} />
 
             <span className="cap-icon-cell">
-                
-                <FontAwesomeIcon
-                    icon={faArrowRight}
-                    size="sm"
-                />
+                <FontAwesomeIcon icon={faArrowRight} size="sm" />
             </span>
 
             <Cell alive={selection.get} />
@@ -99,7 +111,17 @@ function Rule({ type, index, nbhdWidth, mainCell, selection }) {
     );
 }
 
-function RulesSet1D({ nbhdType, nbhdWidth, mainCell, states }) {
+function RulesSet1D({
+    nbhdType,
+    nbhdWidth,
+    mainCell,
+    states,
+}: {
+    nbhdType: EllipsesStyle;
+    nbhdWidth: number;
+    mainCell: number;
+    states: BoolArrHook;
+}) {
     //
 
     return (
@@ -130,28 +152,38 @@ function RulesSet1D({ nbhdType, nbhdWidth, mainCell, states }) {
     );
 }
 
-export default function Rules1D({ nbhdType, nbhdWidth, mainCell, rulesState }) {
+export default function Rules1D({
+    nbhdType,
+    nbhdWidth,
+    mainCell,
+    rules,
+}: {
+    nbhdType: EllipsesStyle;
+    nbhdWidth: number;
+    mainCell: number;
+    rules: BoolArrHook;
+}) {
     //
 
-    const ruleNumber = useStateObj(boolArrayToInt(rulesState.get));
+    const ruleNumber = useStateObj(boolArrayToInt(rules.get));
 
     useEffect(() => {
-        ruleNumber.set(boolArrayToInt(rulesState.get, true));
-    }, [rulesState.get]);
+        ruleNumber.set(boolArrayToInt(rules.get, true));
+    }, [rules.get]);
 
     return (
         <div className="mt-3">
             <div className="row mx-auto" style={{ width: "60%" }}>
-                <RuleNumber value={ruleNumber.get} />
+                <RuleNumber num={ruleNumber.get} />
 
-                <Controls rulesState={rulesState} />
+                <Controls rules={rules} />
             </div>
 
             <RulesSet1D
                 nbhdType={nbhdType}
                 nbhdWidth={nbhdWidth}
                 mainCell={mainCell}
-                states={rulesState}
+                states={rules}
             />
         </div>
     );

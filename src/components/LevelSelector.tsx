@@ -1,12 +1,15 @@
 //
 
+import React from "react";
+
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { inputGroupClasses } from "../js/Utils";
+import { Size, Alignment, inputGroupClasses } from "../ts/Utils";
 import Button from "./Button";
-import { useRangeReducer } from "./CustomHooks";
+import { useRangeReducer } from "../CustomHooks";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
-function Level({ on }) {
+function Level({ on }: { on: boolean }) {
     //
 
     return (
@@ -24,6 +27,12 @@ export default function LevelSelector({
     tooltipLabel,
     size,
     alignment,
+}: {
+    icon: IconDefinition;
+    numLevels: number;
+    tooltipLabel: string;
+    size?: Size;
+    alignment: Alignment;
 }) {
     //
 
@@ -36,16 +45,14 @@ export default function LevelSelector({
     }
 
     return (
-        <div className={inputGroupClasses(size, alignment, "")}>
+        <div className={inputGroupClasses(size || "md", alignment, "")}>
             <span
                 className="input-group-text cap-container-dark-1"
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
                 title={tooltipLabel}
             >
-                <FontAwesomeIcon
-                    icon={icon}
-                />
+                <FontAwesomeIcon icon={icon} />
             </span>
 
             <Button

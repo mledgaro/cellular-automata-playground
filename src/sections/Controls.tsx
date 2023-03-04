@@ -1,16 +1,26 @@
 //
 
-import { faBroom, faCameraRetro, faForwardStep, faGaugeHigh, faMagnifyingGlass, faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
+
+import {
+    faBroom,
+    faCameraRetro,
+    faForwardStep,
+    faGaugeHigh,
+    faMagnifyingGlass,
+    faPause,
+    faPlay,
+} from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
 import LevelSelector from "../components/LevelSelector";
 
-import { inputGroupClasses } from "../js/Utils";
+import { inputGroupClasses } from "../ts/Utils";
 
 function FlowCtrls() {
     //
 
     return (
-        <div className={inputGroupClasses("", "center", "")}>
+        <div className={inputGroupClasses("md", "center", "")}>
             <Button tooltipLabel="Next" icon={faForwardStep} />
 
             <Button tooltipLabel="Run" icon={faPlay} />
@@ -26,7 +36,7 @@ function CanvasCtrls() {
     //
 
     return (
-        <div className={inputGroupClasses("", "center", "")}>
+        <div className={inputGroupClasses("md", "center", "")}>
             <Button tooltipLabel="Clear" icon={faBroom} />
 
             <Button tooltipLabel="Screenshot" icon={faCameraRetro} />

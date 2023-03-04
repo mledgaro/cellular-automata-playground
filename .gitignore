@@ -23,5 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 cellular-automata-playground.code-workspace
 
-src/components/CAPCanvas.jsx
 .gitignore
+
+

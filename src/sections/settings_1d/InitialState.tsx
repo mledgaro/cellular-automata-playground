@@ -1,36 +1,36 @@
 //
 
+import React from "react";
 import { useEffect } from "react";
 import Button from "../../components/Button";
 import NumberInput from "../../components/NumberInput";
-import SectionSelector from "../../components/SectionSelector";
-import { useRangeReducer, useStateObj } from "../../components/CustomHooks";
-import { buildState } from "../../js/Utils";
+import { OptionGroup } from "../../components/SectionSelector";
+import {
+    BoolArrHook,
+    BoolState,
+    useRangeReducer,
+    useStateObj,
+} from "../../CustomHooks";
+import { buildState } from "../../ts/Utils";
 import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
+import { RangeReducerHook, StateObjHook } from "src/CustomHooks";
 
-function ISNumberInput({ title, value, min, max }) {
-    //
-
-    return (
-        <NumberInput
-            label={title}
-            value={value}
-            min={min}
-            max={max}
-            size="sm"
-            alignment="center"
-        />
-    );
-}
-
-function LiveCellsSelector({ selection, value, max }) {
+function LiveCellsSelector({
+    option,
+    value,
+    max,
+}: {
+    option: StateObjHook;
+    value: RangeReducerHook;
+    max: number;
+}) {
     //
 
     return (
         <div>
-            <SectionSelector
+            <OptionGroup
                 title="Live cells"
-                sections={[
+                options={[
                     {
                         label: "Number",
                         value: "num",
@@ -40,20 +40,31 @@ function LiveCellsSelector({ selection, value, max }) {
                         value: "perc",
                     },
                 ]}
-                selected={selection}
+                selected={option}
                 size="sm"
                 alignment="center"
             />
-            <ISNumberInput
+
+            <NumberInput
                 value={value}
                 min={1}
-                max={selection.get === "num" ? max : 100}
+                max={option.get === "num" ? max : 100}
+                size="sm"
+                alignment="center"
             />
         </div>
     );
 }
 
-function GroupSize({ minSizeVal, maxSizeVal, max }) {
+function GroupSize({
+    minSizeVal,
+    maxSizeVal,
+    max,
+}: {
+    minSizeVal: RangeReducerHook;
+    maxSizeVal: RangeReducerHook;
+    max: number;
+}) {
     //
 
     useEffect(() => {
@@ -71,20 +82,27 @@ function GroupSize({ minSizeVal, maxSizeVal, max }) {
                 Group size
             </div>
             <div className="mx-auto" style={{ width: "80%" }}>
+                {/*  */}
+
                 <div className="my-2">
-                    <ISNumberInput
-                        title={"Min"}
+                    <NumberInput
+                        label="Min"
                         value={minSizeVal}
                         min={1}
                         max={max}
+                        size="sm"
+                        alignment="center"
                     />
                 </div>
+
                 <div className="my-2">
-                    <ISNumberInput
-                        title={"Max"}
+                    <NumberInput
+                        label="Max"
                         value={maxSizeVal}
                         min={minSizeVal.get}
                         max={max}
+                        size="sm"
+                        alignment="center"
                     />
                 </div>
             </div>
@@ -92,17 +110,17 @@ function GroupSize({ minSizeVal, maxSizeVal, max }) {
     );
 }
 
-function DistributionSelector({ selection }) {
+function DistributionSelector({ option }: { option: StateObjHook }) {
     //
 
     return (
-        <SectionSelector
+        <OptionGroup
             title="Distribution"
-            sections={[
+            options={[
                 { label: "Random", value: "rand" },
                 { label: "Even", value: "even" },
             ]}
-            selected={selection}
+            selected={option}
             size="sm"
             alignment="center"
         />
@@ -110,21 +128,30 @@ function DistributionSelector({ selection }) {
 }
 
 function BuildStateButton({
-    cellsState,
+    setState,
     liveCellsType,
     distributionType,
     numCells,
     liveCells,
     groupMinSize,
     groupMaxSize,
+}: {
+    setState: (arr: boolean[]) => void;
+    liveCellsType: "num" | "perc";
+    distributionType: "rand" | "even";
+    numCells: number;
+    liveCells: number;
+    groupMinSize: number;
+    groupMaxSize: number;
 }) {
+    //
+
     return (
         <Button
-            // icon={{ id: "arrow-turn-down", size: "2xl" }}
             icon={faArrowTurnDown}
             tooltipLabel="Set state"
             onClick={() => {
-                cellsState.set(
+                setState(
                     buildState(
                         liveCellsType,
                         distributionType,
@@ -139,7 +166,7 @@ function BuildStateButton({
     );
 }
 
-function Cell({ alive }) {
+function Cell({ alive }: { alive: BoolState }) {
     //
 
     const classes = `cap-cell cap-cell-${alive.get ? "on" : "off"}`;
@@ -147,19 +174,28 @@ function Cell({ alive }) {
     return <span className={classes} onClick={alive.toggle}></span>;
 }
 
-function CellsSet({ cellsState }) {
+function CellsSet({ state }: { state: BoolArrHook }) {
     //
 
     return (
         <div className="row mx-auto ps-2" style={{ width: "90%" }}>
-            {cellsState.get.map((e, i) => (
-                <Cell key={i} alive={{get: e, toggle: () => cellsState.toggle(i)}} />
+            {state.get.map((e, i) => (
+                <Cell
+                    key={i}
+                    alive={{ get: e, toggle: () => state.toggle(i) }}
+                />
             ))}
         </div>
     );
 }
 
-export default function InitialState({ numCells, cellsState }) {
+export default function InitialState({
+    numCells,
+    state,
+}: {
+    numCells: number;
+    state: BoolArrHook;
+}) {
     //
 
     let liveCellsType = useStateObj("num");
@@ -179,7 +215,7 @@ export default function InitialState({ numCells, cellsState }) {
             <div className="row mb-2 mx-auto" style={{ width: "80%" }}>
                 <div className="col-4">
                     <LiveCellsSelector
-                        selection={liveCellsType}
+                        option={liveCellsType}
                         value={liveCells}
                         max={numCells}
                     />
@@ -194,12 +230,12 @@ export default function InitialState({ numCells, cellsState }) {
                 </div>
 
                 <div className="col-4">
-                    <DistributionSelector selection={distributionType} />
+                    <DistributionSelector option={distributionType} />
                 </div>
 
                 <div className="col-1 d-flex align-items-center">
                     <BuildStateButton
-                        cellsState={cellsState}
+                        setState={state.set}
                         liveCellsType={liveCellsType.get}
                         distributionType={distributionType.get}
                         numCells={numCells}
@@ -210,7 +246,7 @@ export default function InitialState({ numCells, cellsState }) {
                 </div>
             </div>
 
-            <CellsSet cellsState={cellsState} />
+            <CellsSet state={state} />
         </div>
     );
 }
