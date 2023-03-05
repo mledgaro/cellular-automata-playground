@@ -2,8 +2,7 @@
 
 import "./css/App.css";
 
-import React from "react";
-
+import React, { useEffect } from "react";
 import {
     useArrayState,
     useBoolArrState,
@@ -15,12 +14,11 @@ import { intToBoolArray, randomBoolArray } from "./ts/Utils";
 import Title from "./sections/Title";
 import Canvas from "./sections/Canvas";
 import Controls from "./sections/Controls";
-
-import Footer from "./sections/Footer";
-import CellularAutomaton from "./ts/CellularAutomaton";
 import Settings1D from "./sections/settings_1d/Settings1D";
 import Settings2D from "./sections/settings_2d/Settings2D";
-import { useEffect } from "react";
+import Footer from "./sections/Footer";
+
+import CellularAutomaton from "./ts/CellularAutomaton";
 
 const numCells = 256;
 
@@ -30,7 +28,7 @@ export default function App() {
     const dimension = useRangeReducer(1, 2, 1, true);
 
     const nbhdWidth = useRangeReducer(2, 8, 3, false);
-    const nbhdType = useStateObj("none");
+    const nbhdType = useStateObj("adjacent");
     const mainCell = useStateObj(1);
     const cellsNbhds = useArrayState(
         CellularAutomaton.cellsNbhds(

@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect } from "react";
 import { BoolArrHook } from "src/CustomHooks";
 import Button from "../../components/Button";
-import { Cell, Ellipses, EllipsesStyle } from "../../components/Cells";
+import { Cell, Ellipses } from "../../components/Cells";
 import { useStateObj } from "../../CustomHooks";
 import {
     boolArray,
@@ -23,6 +23,7 @@ import {
     intToBoolArray,
     randomBoolArray,
 } from "../../ts/Utils";
+import { NbhdType } from "src/ts/CellularAutomaton";
 
 function RuleNumber({ num }: { num: number }) {
     //
@@ -76,13 +77,13 @@ function Controls({ rules }: { rules: BoolArrHook }) {
 }
 
 function Rule({
-    type,
+    nbhdType,
     index,
     nbhdWidth,
     mainCell,
     selection,
 }: {
-    type: EllipsesStyle;
+    nbhdType: NbhdType;
     index: number;
     nbhdWidth: number;
     mainCell: number;
@@ -100,7 +101,7 @@ function Rule({
             style={{ padding: "8px", width: "max-content" }}
             onClick={selection.change}
         >
-            <Ellipses cells={cells} mainCell={mainCell} style={type} />
+            <Ellipses cells={cells} mainCell={mainCell} nbhdType={nbhdType} />
 
             <span className="cap-icon-cell">
                 <FontAwesomeIcon icon={faArrowRight} size="sm" />
@@ -117,7 +118,7 @@ function RulesSet1D({
     mainCell,
     states,
 }: {
-    nbhdType: EllipsesStyle;
+    nbhdType: NbhdType;
     nbhdWidth: number;
     mainCell: number;
     states: BoolArrHook;
@@ -131,7 +132,7 @@ function RulesSet1D({
                     <div className="col-3 my-1">
                         <Rule
                             key={i}
-                            type={nbhdType}
+                            nbhdType={nbhdType}
                             index={i}
                             nbhdWidth={nbhdWidth}
                             mainCell={mainCell}
@@ -158,7 +159,7 @@ export default function Rules1D({
     mainCell,
     rules,
 }: {
-    nbhdType: EllipsesStyle;
+    nbhdType: NbhdType;
     nbhdWidth: number;
     mainCell: number;
     rules: BoolArrHook;

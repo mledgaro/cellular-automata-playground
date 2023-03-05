@@ -42,8 +42,6 @@ export function useRangeReducer(
                     return state === min ? (cycle ? max : state) : state - 1;
                 case "set":
                     return Math.max(min, Math.min(action.index || 0, max));
-                default:
-                    return state;
             }
         },
         [min, max, cycle]

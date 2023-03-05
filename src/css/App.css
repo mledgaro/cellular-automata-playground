@@ -97,6 +97,10 @@
     border-color: var(--clear2);
 }
 
+.cap-deactivated-cell {
+    color: var(--dark2);
+}
+
 
 .cap-level {
     width: 3vmin;

@@ -14,6 +14,16 @@ import InitialState from "./InitialState";
 import Neighborhood1D from "./Neighborhood1D";
 import Rules1D from "./Rules1D";
 
+type Settings1DProps = {
+    numCells: number;
+    nbhdWidth: RangeReducerHook;
+    nbhdType: StateObjHook;
+    mainCell: StateObjHook;
+    cellsNbhds: ArrayStateHook<number[]>;
+    rules: BoolArrHook;
+    initState: BoolArrHook;
+};
+
 export default function Settings1D({
     numCells,
     nbhdWidth,
@@ -22,15 +32,7 @@ export default function Settings1D({
     cellsNbhds,
     rules,
     initState,
-}: {
-    numCells: number;
-    nbhdWidth: RangeReducerHook;
-    nbhdType: StateObjHook;
-    mainCell: StateObjHook;
-    cellsNbhds: ArrayStateHook<number[]>;
-    rules: BoolArrHook;
-    initState: BoolArrHook;
-}) {
+}: Settings1DProps) {
     //
 
     const section = useStateObj("nbhd");
@@ -67,10 +69,7 @@ export default function Settings1D({
                     label: "Initial state",
                     value: "initstate",
                     component: (
-                        <InitialState
-                            numCells={numCells}
-                            state={initState}
-                        />
+                        <InitialState numCells={numCells} state={initState} />
                     ),
                 },
             ]}

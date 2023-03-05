@@ -175,25 +175,45 @@ export default class CellularAutomaton {
         //
 
         let nbhds = [];
-        let nbhdFunc;
 
         switch (type) {
             case "adjacent":
-                nbhdFunc = this.adjacentNbhd;
+                for (let i = 0; i < numCells; i++) {
+                    nbhds.push(
+                        CellularAutomaton.adjacentNbhd(
+                            i,
+                            nbhdWidth,
+                            mainCell,
+                            numCells
+                        )
+                    );
+                }
                 break;
             case "grouped":
-                nbhdFunc = this.groupedNbhd;
+                for (let i = 0; i < numCells; i++) {
+                    nbhds.push(
+                        CellularAutomaton.groupedNbhd(
+                            i,
+                            nbhdWidth,
+                            mainCell,
+                            numCells
+                        )
+                    );
+                }
                 break;
             case "scattered":
-                nbhdFunc = this.scatteredNbhd;
+                for (let i = 0; i < numCells; i++) {
+                    nbhds.push(
+                        CellularAutomaton.scatteredNbhd(
+                            i,
+                            nbhdWidth,
+                            mainCell,
+                            numCells
+                        )
+                    );
+                }
                 break;
         }
-
-        for (let i = 0; i < numCells; i++) {
-            nbhds.push(nbhdFunc(i, nbhdWidth, mainCell, numCells));
-        }
-
-        console.log(nbhds);
 
         return nbhds;
     }

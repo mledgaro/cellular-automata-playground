@@ -1,11 +1,16 @@
 //
 
-import React from "react";
-
-import { createContext, useContext } from "react";
+import React, { createContext, useContext, useCallback } from "react";
+import { faDiagramProject } from "@fortawesome/free-solid-svg-icons";
 
 import { OptionGroup } from "../../components/SectionSelector";
 import NumberInput from "../../components/NumberInput";
+import Button from "../../components/Button";
+import {
+    Cell,
+    SelectedCell,
+    Ellipses,
+} from "../../components/Cells";
 import {
     ArrayStateHook,
     BoolArrHook,
@@ -13,15 +18,9 @@ import {
     StateObjHook,
     useBoolArrState,
 } from "../../CustomHooks";
-import {
-    Cell,
-    SelectedCell,
-    Ellipses,
-    EllipsesStyle,
-} from "../../components/Cells";
-import Button from "../../components/Button";
-import { faDiagramProject } from "@fortawesome/free-solid-svg-icons";
+
 import { boolArray } from "src/ts/Utils";
+import { NbhdType } from "src/ts/CellularAutomaton";
 
 const WidthCtx = createContext(3);
 const TypeCtx = createContext("none");
@@ -74,9 +73,9 @@ function Type() {
         <OptionGroup
             title="Type"
             options={[
-                { label: "Adjacent", value: "none" },
-                { label: "Grouped", value: "main-cell" },
-                { label: "Scattered", value: "all" },
+                { label: "Adjacent", value: "adjacent" },
+                { label: "Grouped", value: "grouped" },
+                { label: "Scattered", value: "scattered" },
             ]}
             selected={{ get: type, set: api.type.set }}
             size="sm"
@@ -89,7 +88,7 @@ function MainCellSelector() {
     //
 
     const width = useContext(WidthCtx);
-    const type = useContext(TypeCtx) as EllipsesStyle;
+    const type = useContext(TypeCtx) as NbhdType;
     const mainCell = useContext(MainCellCtx);
     const api = useContext(APICtx);
 
@@ -112,7 +111,7 @@ function MainCellSelector() {
             className="cap-container-dark-1 mx-auto"
             style={{ padding: "8px", width: "max-content" }}
         >
-            <Ellipses cells={cells} mainCell={mainCell} style={type} />
+            <Ellipses cells={cells} mainCell={mainCell} nbhdType={type} />
         </div>
     );
 }
@@ -128,11 +127,14 @@ function HighlightCell({
 
     const cellsNbhds = useContext(CellsNbhdsCtx) as number[][];
 
-    const highlight = () => {
+    const highlight = useCallback(() => {
+        //
+
         let nArr = Array(cellsNbhds.length).fill(false);
         cellsNbhds[index].forEach((e) => (nArr[e] = true));
         highlightedCells.set(nArr);
-    };
+    }, [cellsNbhds]);
+
 
     const classes = `cap-cell cap-cell-off ${
         highlightedCells.get[index] ? "cap-cell-high" : ""
@@ -142,7 +144,7 @@ function HighlightCell({
         <span
             className={classes}
             onMouseOver={highlight}
-            onMouseOut={highlight}
+            // onMouseOut={highlight}
         />
     );
 }
@@ -151,11 +153,10 @@ function NbhdsMap() {
     //
 
     const cellsNbhds = useContext(CellsNbhdsCtx) as number[][];
+
     const highlightedCells = useBoolArrState(
         boolArray(cellsNbhds.length, false)
     );
-
-    // console.log(highlightedCells.get);
 
     return (
         <div className="row mx-auto ps-2 mt-2" style={{ width: "90%" }}>
@@ -203,17 +204,19 @@ function Content() {
     );
 }
 
+type Neighborhood1DProps = {
+    width: RangeReducerHook;
+    type: StateObjHook;
+    mainCell: StateObjHook;
+    cellsNbhds: ArrayStateHook<number[]>;
+}
+
 export default function Neighborhood1D({
     width,
     type,
     mainCell,
     cellsNbhds,
-}: {
-    width: RangeReducerHook;
-    type: StateObjHook;
-    mainCell: StateObjHook;
-    cellsNbhds: ArrayStateHook<number[]>;
-}) {
+}: Neighborhood1DProps) {
     //
 
     const api = {

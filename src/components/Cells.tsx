@@ -1,6 +1,7 @@
 //
 import React from "react";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faSquareCheck,
     faSquare as faSquareRegular,
@@ -10,16 +11,20 @@ import {
     faSquare as faSquareSolid,
     faSquareXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export function DeactivatedCell({ onClick }: { onClick?: () => void }) {
+import { NbhdType } from "src/ts/CellularAutomaton";
+
+export function DeactivatedCell({
+    onClick = () => {},
+}: {
+    onClick?: () => void;
+}) {
     //
 
     return (
         <span
-            className="cap-icon-cell"
-            onClick={onClick || (() => {})}
-            style={{ color: "#6c757d" }}
+            className="cap-icon-cell cap-deactivated-cell"
+            onClick={onClick}
         >
             <FontAwesomeIcon icon={faSquareXmark} size="sm" />
         </span>
@@ -37,9 +42,9 @@ export function SelectedCell({ onClick }: { onClick: () => void }) {
 }
 
 export function Cell({
-    alive,
-    lg,
-    onClick,
+    alive = false,
+    lg = true,
+    onClick = () => {},
 }: {
     alive?: boolean;
     lg?: boolean;
@@ -48,10 +53,10 @@ export function Cell({
     //
 
     return (
-        <span className="cap-icon-cell" onClick={onClick || (() => {})}>
+        <span className="cap-icon-cell" onClick={onClick}>
             <FontAwesomeIcon
-                icon={alive || false ? faSquareSolid : faSquareRegular}
-                size={lg || true ? "lg" : "xs"}
+                icon={alive ? faSquareSolid : faSquareRegular}
+                size={lg ? "lg" : "xs"}
             />
         </span>
     );
@@ -67,40 +72,37 @@ function Ellipsis() {
     );
 }
 
-export type EllipsesStyle = "none" | "main-cell" | "all";
-
-/**
- *
- * @param {Array} cells
- * @param {Integer} mainCell
- * @param {String} style 'none' | 'main-cell' | 'all'
- */
 export function Ellipses({
     cells,
     mainCell,
-    style,
+    nbhdType,
 }: {
     cells: JSX.Element[];
     mainCell: number;
-    style: EllipsesStyle;
+    nbhdType: NbhdType;
 }) {
     //
 
     let cells_ = [...cells];
     const lastIdx = cells_.length - 1;
 
-    if (style === "main-cell") {
-        if (mainCell >= 0 && mainCell < lastIdx) {
-            cells_.splice(mainCell + 1, 0, <Ellipsis />);
-        }
+    switch (nbhdType) {
+        case "adjacent":
+            break;
+        case "grouped":
+            if (mainCell >= 0 && mainCell < lastIdx) {
+                cells_.splice(mainCell + 1, 0, <Ellipsis />);
+            }
 
-        if (mainCell > 0 && mainCell <= lastIdx) {
-            cells_.splice(mainCell, 0, <Ellipsis />);
-        }
-    } else if (style === "all") {
-        for (let i = lastIdx; i > 0; i--) {
-            cells_.splice(i, 0, <Ellipsis />);
-        }
+            if (mainCell > 0 && mainCell <= lastIdx) {
+                cells_.splice(mainCell, 0, <Ellipsis />);
+            }
+            break;
+        case "scattered":
+            for (let i = lastIdx; i > 0; i--) {
+                cells_.splice(i, 0, <Ellipsis />);
+            }
+            break;
     }
 
     return <span>{cells_}</span>;
