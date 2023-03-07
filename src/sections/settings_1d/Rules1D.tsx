@@ -1,7 +1,8 @@
 //
 
-import React from "react";
+import React, { useContext } from "react";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare as faSquareRegular } from "@fortawesome/free-regular-svg-icons";
 import {
     faArrowRight,
@@ -9,24 +10,28 @@ import {
     faShuffle,
     faSquare as faSquareSolid,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect } from "react";
-import { BoolArrHook } from "src/CustomHooks";
+
 import Button from "../../components/Button";
 import { Cell, Ellipses } from "../../components/Cells";
-import { useStateObj } from "../../CustomHooks";
+
 import {
-    boolArray,
-    boolArrayNot,
-    boolArrayToInt,
     inputGroupClasses,
     intToBoolArray,
-    randomBoolArray,
 } from "../../ts/Utils";
 import { NbhdType } from "src/ts/CellularAutomaton";
 
-function RuleNumber({ num }: { num: number }) {
+import {
+    APICtx,
+    MainCellCtx,
+    NbhdTypeCtx,
+    NbhdWidthCtx,
+    RulesCtx,
+} from "src/App";
+
+function RuleNumber() {
     //
+
+    const rules = useContext(RulesCtx);
 
     return (
         <div className="col-lg">
@@ -34,14 +39,16 @@ function RuleNumber({ num }: { num: number }) {
                 className="cap-container-dark-1 px-3 py-1 mx-auto"
                 style={{ width: "fit-content" }}
             >
-                Rule number {num}
+                Rule number {rules.num}
             </div>
         </div>
     );
 }
 
-function Controls({ rules }: { rules: BoolArrHook }) {
+function Controls() {
     //
+
+    const api = useContext(APICtx);
 
     return (
         <div className="col-lg">
@@ -49,47 +56,39 @@ function Controls({ rules }: { rules: BoolArrHook }) {
                 <Button
                     tooltipLabel="Random"
                     icon={faShuffle}
-                    onClick={() => rules.set(randomBoolArray(rules.get.length))}
+                    onClick={api.rules.random}
                 />
 
                 <Button
                     tooltipLabel="Swap"
                     icon={faRightLeft}
-                    onClick={() => rules.set(boolArrayNot(rules.get))}
+                    onClick={api.rules.invert}
                 />
 
                 <Button
                     tooltipLabel="All alive"
                     icon={faSquareSolid}
-                    onClick={() => rules.set(boolArray(rules.get.length, true))}
+                    onClick={api.rules.allAlive}
                 />
 
                 <Button
                     tooltipLabel="All dead"
                     icon={faSquareRegular}
-                    onClick={() =>
-                        rules.set(boolArray(rules.get.length, false))
-                    }
+                    onClick={api.rules.allDead}
                 />
             </div>
         </div>
     );
 }
 
-function Rule({
-    nbhdType,
-    index,
-    nbhdWidth,
-    mainCell,
-    selection,
-}: {
-    nbhdType: NbhdType;
-    index: number;
-    nbhdWidth: number;
-    mainCell: number;
-    selection: { get: boolean; change: () => void };
-}) {
+function Rule({ index }: { index: number }) {
     //
+
+    const nbhdType = useContext(NbhdTypeCtx) as NbhdType;
+    const nbhdWidth = useContext(NbhdWidthCtx);
+    const mainCell = useContext(MainCellCtx);
+    const rules = useContext(RulesCtx);
+    const api = useContext(APICtx);
 
     let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
         <Cell key={i} alive={e} lg={i === mainCell} />
@@ -99,7 +98,7 @@ function Rule({
         <div
             className="cap-container-dark-1 mx-auto"
             style={{ padding: "8px", width: "max-content" }}
-            onClick={selection.change}
+            onClick={() => api.rules.toggle(index)}
         >
             <Ellipses cells={cells} mainCell={mainCell} nbhdType={nbhdType} />
 
@@ -107,85 +106,45 @@ function Rule({
                 <FontAwesomeIcon icon={faArrowRight} size="sm" />
             </span>
 
-            <Cell alive={selection.get} />
+            <Cell alive={rules.get(index)} />
         </div>
     );
 }
 
-function RulesSet1D({
-    nbhdType,
-    nbhdWidth,
-    mainCell,
-    states,
-}: {
-    nbhdType: NbhdType;
-    nbhdWidth: number;
-    mainCell: number;
-    states: BoolArrHook;
-}) {
+function RulesSet1D() {
     //
+
+    const rules = useContext(RulesCtx);
+
+    let rulesArr = [];
+
+    for (let i = 0; i < rules.num; i++) {
+        rulesArr.push(
+            <div className="col-3 my-1">
+                <Rule key={i} index={i} />
+            </div>
+        );
+    }
 
     return (
         <div className="row mt-3 w-75 mx-auto">
-            {states.get.map((e, i) => {
-                return (
-                    <div className="col-3 my-1">
-                        <Rule
-                            key={i}
-                            nbhdType={nbhdType}
-                            index={i}
-                            nbhdWidth={nbhdWidth}
-                            mainCell={mainCell}
-                            selection={{
-                                get: e,
-                                change: () =>
-                                    states.set(
-                                        states.get.map((e, j) =>
-                                            j === i ? !e : e
-                                        )
-                                    ),
-                            }}
-                        />
-                    </div>
-                );
-            })}
+            {rulesArr}
         </div>
     );
 }
 
-export default function Rules1D({
-    nbhdType,
-    nbhdWidth,
-    mainCell,
-    rules,
-}: {
-    nbhdType: NbhdType;
-    nbhdWidth: number;
-    mainCell: number;
-    rules: BoolArrHook;
-}) {
+export default function Rules1D() {
     //
-
-    const ruleNumber = useStateObj(boolArrayToInt(rules.get));
-
-    useEffect(() => {
-        ruleNumber.set(boolArrayToInt(rules.get, true));
-    }, [rules.get]);
 
     return (
         <div className="mt-3">
             <div className="row mx-auto" style={{ width: "60%" }}>
-                <RuleNumber num={ruleNumber.get} />
+                <RuleNumber />
 
-                <Controls rules={rules} />
+                <Controls />
             </div>
 
-            <RulesSet1D
-                nbhdType={nbhdType}
-                nbhdWidth={nbhdWidth}
-                mainCell={mainCell}
-                states={rules}
-            />
+            <RulesSet1D />
         </div>
     );
 }

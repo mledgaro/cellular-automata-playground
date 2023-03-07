@@ -3,6 +3,7 @@
 import { boolArrayToInt } from "./Utils";
 
 export type NbhdType = "adjacent" | "grouped" | "scattered";
+export type DistributionType = "rand" | "even";
 
 export default class CellularAutomaton {
     //
@@ -10,14 +11,17 @@ export default class CellularAutomaton {
     #numCells: number;
     #cellsNbhd: number[][]; // Array(Array(Integer))[cellsNumber][nbhdWidth]
     #rules: boolean[];
-    #state: boolean[];
+    #currentState: boolean[];
+    #initState: boolean[];
 
-    constructor() {
+    constructor(numCells: number) {
         //
-        this.#numCells = 256;
+
+        this.#numCells = numCells;
         this.#cellsNbhd = [];
         this.#rules = [];
-        this.#state = Array(this.#numCells).fill(false);
+        this.#currentState = Array(this.#numCells).fill(false);
+        this.#initState = Array(this.#numCells).fill(false);
 
         this.setCellsNbhds(3, "adjacent", 1);
     }
@@ -157,8 +161,24 @@ export default class CellularAutomaton {
         }
     }
 
+    setInvertRules() {
+        //
+
+        for (let i = 0; i < this.#rules.length; i++) {
+            this.#rules[i] = !this.#rules[i];
+        }
+    }
+
     getRule(index: number): boolean {
         return this.#rules[index];
+    }
+
+    get ruleAsNum(): number {
+        return boolArrayToInt(this.#rules);
+    }
+
+    get numRules(): number {
+        return this.#rules.length;
     }
 
     /**
@@ -224,14 +244,14 @@ export default class CellularAutomaton {
      * @param liveCells Mumber of live cells. If it is smaller than one, it will be considered as percentage.
      * @param groupMinSize
      * @param groupMaxSize
-     * @param distributionType
+     * @param distribution
      * @returns
      */
-    setState(
+    setInitState(
         liveCells: number,
         groupMinSize: number,
         groupMaxSize: number,
-        distributionType: "rand" | "even"
+        distribution: DistributionType
     ) {
         //
 
@@ -255,7 +275,7 @@ export default class CellularAutomaton {
             );
         }
 
-        if (distributionType === "rand") {
+        if (distribution === "rand") {
             falseArr = this.#randomDist(trueArr.length + 1, deadCells);
         } else {
             falseArr = Array(trueArr.length + 1).fill(
@@ -280,12 +300,23 @@ export default class CellularAutomaton {
             arr.concat(Array(diff).fill(false));
         }
 
-        this.#state = arr;
+        this.#initState = arr;
+        this.#currentState = arr;
     }
 
-    get state(): boolean[] {
-        return this.#state;
+    toggleCell(index: number) {
+        this.#initState[index] = !this.#initState[index];
     }
+
+    get initState(): boolean[] {
+        return this.#initState;
+    }
+
+    get currentState(): boolean[] {
+        return this.#currentState;
+    }
+
+    
 
     #cellNextState(index: number): boolean {
         //
@@ -293,7 +324,7 @@ export default class CellularAutomaton {
         let nstate;
 
         nstate = this.#cellsNbhd[index];
-        nstate = nstate.map((e) => this.#state[e]);
+        nstate = nstate.map((e) => this.#currentState[e]);
         nstate = boolArrayToInt(nstate, false);
         nstate = this.#rules[nstate];
 
@@ -303,9 +334,11 @@ export default class CellularAutomaton {
     nextState(): boolean[] {
         //
 
-        let nstate = this.#state.map((cell, i) => this.#cellNextState(i));
+        let nstate = this.#currentState.map((cell, i) =>
+            this.#cellNextState(i)
+        );
 
-        this.#state = nstate;
+        this.#currentState = nstate;
 
         return nstate;
     }

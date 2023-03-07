@@ -2,37 +2,14 @@
 
 import React from "react";
 
-import {
-    ArrayStateHook,
-    BoolArrHook,
-    RangeReducerHook,
-    StateObjHook,
-    useStateObj,
-} from "../../CustomHooks";
+import { useStateObj } from "../../CustomHooks";
+
 import SectionSelector from "../../components/SectionSelector";
-import InitialState from "./InitialState";
 import Neighborhood1D from "./Neighborhood1D";
 import Rules1D from "./Rules1D";
+import InitialState from "./InitialState";
 
-type Settings1DProps = {
-    numCells: number;
-    nbhdWidth: RangeReducerHook;
-    nbhdType: StateObjHook;
-    mainCell: StateObjHook;
-    cellsNbhds: ArrayStateHook<number[]>;
-    rules: BoolArrHook;
-    initState: BoolArrHook;
-};
-
-export default function Settings1D({
-    numCells,
-    nbhdWidth,
-    nbhdType,
-    mainCell,
-    cellsNbhds,
-    rules,
-    initState,
-}: Settings1DProps) {
+export default function Settings1D() {
     //
 
     const section = useStateObj("nbhd");
@@ -44,33 +21,17 @@ export default function Settings1D({
                 {
                     label: "Neighborhood",
                     value: "nbhd",
-                    component: (
-                        <Neighborhood1D
-                            width={nbhdWidth}
-                            type={nbhdType}
-                            mainCell={mainCell}
-                            cellsNbhds={cellsNbhds}
-                        />
-                    ),
+                    component: <Neighborhood1D />,
                 },
                 {
                     label: "Rules",
                     value: "rules",
-                    component: (
-                        <Rules1D
-                            nbhdWidth={nbhdWidth.get}
-                            nbhdType={nbhdType.get}
-                            mainCell={mainCell.get}
-                            rules={rules}
-                        />
-                    ),
+                    component: <Rules1D />,
                 },
                 {
                     label: "Initial state",
                     value: "initstate",
-                    component: (
-                        <InitialState numCells={numCells} state={initState} />
-                    ),
+                    component: <InitialState />,
                 },
             ]}
             selected={section}

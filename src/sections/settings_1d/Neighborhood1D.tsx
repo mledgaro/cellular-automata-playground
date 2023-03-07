@@ -1,6 +1,6 @@
 //
 
-import React, { createContext, useContext, useCallback } from "react";
+import React, { useContext, useCallback } from "react";
 import { faDiagramProject } from "@fortawesome/free-solid-svg-icons";
 
 import { OptionGroup } from "../../components/SectionSelector";
@@ -12,38 +12,19 @@ import {
     Ellipses,
 } from "../../components/Cells";
 import {
-    ArrayStateHook,
     BoolArrHook,
-    RangeReducerHook,
-    StateObjHook,
     useBoolArrState,
 } from "../../CustomHooks";
-
-import { boolArray } from "src/ts/Utils";
+import { APICtx, CellsNbhdsCtx, MainCellCtx, NbhdTypeCtx, NbhdWidthCtx, NumCellsCtx } from "src/App";
 import { NbhdType } from "src/ts/CellularAutomaton";
+import { boolArray } from "src/ts/Utils";
 
-const WidthCtx = createContext(3);
-const TypeCtx = createContext("none");
-const MainCellCtx = createContext(1);
-const CellsNbhdsCtx = createContext([[0]]);
-const APICtx = createContext({
-    width: {
-        next: () => {},
-        prev: () => {},
-        set: (val: number) => {},
-    },
-    type: { set: (val: any) => {} },
-    mainCell: { set: (val: any) => {} },
-    cellsNbhds: {
-        set: (val: any) => {},
-        setAt: (val: any, index: number) => {},
-    },
-});
+
 
 function Width() {
     //
 
-    const width = useContext(WidthCtx);
+    const width = useContext(NbhdWidthCtx);
     const api = useContext(APICtx);
 
     return (
@@ -51,9 +32,9 @@ function Width() {
             label="Width"
             value={{
                 get: width,
-                prev: api.width.prev,
-                next: api.width.next,
-                set: api.width.set,
+                prev: api.nbhdWidth.prev,
+                next: api.nbhdWidth.next,
+                set: api.nbhdWidth.set,
             }}
             min={2}
             max={8}
@@ -66,7 +47,7 @@ function Width() {
 function Type() {
     //
 
-    const type = useContext(TypeCtx);
+    const type = useContext(NbhdTypeCtx);
     const api = useContext(APICtx);
 
     return (
@@ -77,7 +58,7 @@ function Type() {
                 { label: "Grouped", value: "grouped" },
                 { label: "Scattered", value: "scattered" },
             ]}
-            selected={{ get: type, set: api.type.set }}
+            selected={{ get: type, set: api.nbhdType.set }}
             size="sm"
             alignment="center"
         />
@@ -87,8 +68,8 @@ function Type() {
 function MainCellSelector() {
     //
 
-    const width = useContext(WidthCtx);
-    const type = useContext(TypeCtx) as NbhdType;
+    const width = useContext(NbhdWidthCtx);
+    const type = useContext(NbhdTypeCtx) as NbhdType;
     const mainCell = useContext(MainCellCtx);
     const api = useContext(APICtx);
 
@@ -125,13 +106,14 @@ function HighlightCell({
 }) {
     //
 
-    const cellsNbhds = useContext(CellsNbhdsCtx) as number[][];
+    const numCells = useContext(NumCellsCtx);
+    const cellsNbhds = useContext(CellsNbhdsCtx);
 
     const highlight = useCallback(() => {
         //
 
-        let nArr = Array(cellsNbhds.length).fill(false);
-        cellsNbhds[index].forEach((e) => (nArr[e] = true));
+        let nArr = Array(numCells).fill(false);
+        cellsNbhds(index).forEach((e) => (nArr[e] = true));
         highlightedCells.set(nArr);
     }, [cellsNbhds]);
 
@@ -144,7 +126,6 @@ function HighlightCell({
         <span
             className={classes}
             onMouseOver={highlight}
-            // onMouseOut={highlight}
         />
     );
 }
@@ -152,11 +133,9 @@ function HighlightCell({
 function NbhdsMap() {
     //
 
-    const cellsNbhds = useContext(CellsNbhdsCtx) as number[][];
+    const numCells = useContext(NumCellsCtx);
 
-    const highlightedCells = useBoolArrState(
-        boolArray(cellsNbhds.length, false)
-    );
+    const highlightedCells = useBoolArrState(boolArray(numCells, false));
 
     return (
         <div className="row mx-auto ps-2 mt-2" style={{ width: "90%" }}>
@@ -171,7 +150,7 @@ function NbhdsMap() {
     );
 }
 
-function Content() {
+export default function Neighborhood1D() {
     //
 
     return (
@@ -201,49 +180,5 @@ function Content() {
 
             <NbhdsMap />
         </div>
-    );
-}
-
-type Neighborhood1DProps = {
-    width: RangeReducerHook;
-    type: StateObjHook;
-    mainCell: StateObjHook;
-    cellsNbhds: ArrayStateHook<number[]>;
-}
-
-export default function Neighborhood1D({
-    width,
-    type,
-    mainCell,
-    cellsNbhds,
-}: Neighborhood1DProps) {
-    //
-
-    const api = {
-        width: {
-            next: width.next,
-            prev: width.prev,
-            set: width.set,
-        },
-        type: { set: type.set },
-        mainCell: { set: mainCell.set },
-        cellsNbhds: {
-            set: cellsNbhds.set,
-            setAt: cellsNbhds.setAt,
-        },
-    };
-
-    return (
-        <WidthCtx.Provider value={width.get}>
-            <TypeCtx.Provider value={type.get}>
-                <MainCellCtx.Provider value={mainCell.get}>
-                    <CellsNbhdsCtx.Provider value={cellsNbhds.get}>
-                        <APICtx.Provider value={api}>
-                            <Content />
-                        </APICtx.Provider>
-                    </CellsNbhdsCtx.Provider>
-                </MainCellCtx.Provider>
-            </TypeCtx.Provider>
-        </WidthCtx.Provider>
     );
 }
