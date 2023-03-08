@@ -72,6 +72,12 @@
     border-width: 3px;
 }
 
+.cap-cell:hover {
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--dark2);
+}
+
 .cap-cell-off {
     background-color: var(--dark1);
     border-color: var(--dark1);

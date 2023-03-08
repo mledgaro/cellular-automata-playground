@@ -1,6 +1,6 @@
 //
 
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 
 import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
 
@@ -76,6 +76,12 @@ function GroupSize() {
     const minSize = useContext(GroupMinSizeCtx);
     const maxSize = useContext(GroupMaxSizeCtx);
     const api = useContext(ISAPICtx);
+
+    useEffect(() => {
+        if (maxSize < minSize) {
+            api.groupMaxSize.set(minSize);    
+        }
+    }, [minSize]);
 
     return (
         <div>
@@ -162,7 +168,7 @@ function BuildStateButton() {
             onClick={() => {
                 api.initState.set(
                     liveCellsType === "perc"
-                        ? Math.round(liveCells / 100)
+                        ? (liveCells / 100)
                         : liveCells,
                     groupMinSize,
                     groupMaxSize,
@@ -178,7 +184,7 @@ function Cell({ alive, toggle }: { alive: boolean; toggle: () => void }) {
 
     const classes = `cap-cell cap-cell-${alive ? "on" : "off"}`;
 
-    return <span className={classes} onClick={toggle}></span>;
+    return <span className={classes} onClick={toggle} />;
 }
 
 function CellsSet() {
@@ -189,7 +195,7 @@ function CellsSet() {
 
     return (
         <div className="row mx-auto ps-2" style={{ width: "90%" }}>
-            {initState.map((e, i) => (
+            {initState.arr.map((e, i) => (
                 <Cell
                     key={i}
                     alive={e}

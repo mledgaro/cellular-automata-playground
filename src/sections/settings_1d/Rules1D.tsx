@@ -14,10 +14,7 @@ import {
 import Button from "../../components/Button";
 import { Cell, Ellipses } from "../../components/Cells";
 
-import {
-    inputGroupClasses,
-    intToBoolArray,
-} from "../../ts/Utils";
+import { inputGroupClasses, intToBoolArray } from "../../ts/Utils";
 import { NbhdType } from "src/ts/CellularAutomaton";
 
 import {
@@ -39,7 +36,7 @@ function RuleNumber() {
                 className="cap-container-dark-1 px-3 py-1 mx-auto"
                 style={{ width: "fit-content" }}
             >
-                Rule number {rules.num}
+                Rule number {rules.asNum}
             </div>
         </div>
     );
@@ -126,15 +123,15 @@ function RulesSet1D() {
         );
     }
 
-    return (
-        <div className="row mt-3 w-75 mx-auto">
-            {rulesArr}
-        </div>
-    );
+    return <div className="row mt-3 w-75 mx-auto">{rulesArr}</div>;
 }
 
 export default function Rules1D() {
     //
+
+    // const api = useContext(APICtx);
+
+    // api.rules.random();
 
     return (
         <div className="mt-3">

@@ -6,20 +6,18 @@ import { faDiagramProject } from "@fortawesome/free-solid-svg-icons";
 import { OptionGroup } from "../../components/SectionSelector";
 import NumberInput from "../../components/NumberInput";
 import Button from "../../components/Button";
+import { Cell, SelectedCell, Ellipses } from "../../components/Cells";
+import { BoolArrHook, useBoolArrState } from "../../CustomHooks";
 import {
-    Cell,
-    SelectedCell,
-    Ellipses,
-} from "../../components/Cells";
-import {
-    BoolArrHook,
-    useBoolArrState,
-} from "../../CustomHooks";
-import { APICtx, CellsNbhdsCtx, MainCellCtx, NbhdTypeCtx, NbhdWidthCtx, NumCellsCtx } from "src/App";
+    APICtx,
+    CellsNbhdsCtx,
+    MainCellCtx,
+    NbhdTypeCtx,
+    NbhdWidthCtx,
+    NumCellsCtx,
+} from "src/App";
 import { NbhdType } from "src/ts/CellularAutomaton";
 import { boolArray } from "src/ts/Utils";
-
-
 
 function Width() {
     //
@@ -97,6 +95,23 @@ function MainCellSelector() {
     );
 }
 
+function UpdateNbhds() {
+    //
+
+    const nbhdWidth = useContext(NbhdWidthCtx);
+    const nbhdType = useContext(NbhdTypeCtx) as NbhdType;
+    const mainCell = useContext(MainCellCtx);
+    const api = useContext(APICtx);
+
+    return (
+        <Button
+            icon={faDiagramProject}
+            tooltipLabel="Change neighborhoods"
+            onClick={() => api.cellsNbhds.set(nbhdWidth, nbhdType, mainCell)}
+        />
+    );
+}
+
 function HighlightCell({
     index,
     highlightedCells,
@@ -111,23 +126,16 @@ function HighlightCell({
 
     const highlight = useCallback(() => {
         //
-
         let nArr = Array(numCells).fill(false);
         cellsNbhds(index).forEach((e) => (nArr[e] = true));
         highlightedCells.set(nArr);
     }, [cellsNbhds]);
 
-
     const classes = `cap-cell cap-cell-off ${
         highlightedCells.get[index] ? "cap-cell-high" : ""
     }`;
 
-    return (
-        <span
-            className={classes}
-            onMouseOver={highlight}
-        />
-    );
+    return <span className={classes} onMouseOver={highlight} />;
 }
 
 function NbhdsMap() {
@@ -171,10 +179,7 @@ export default function Neighborhood1D() {
                 </div>
 
                 <div className="col-1 d-flex align-items-center">
-                    <Button
-                        icon={faDiagramProject}
-                        tooltipLabel="Change neighborhoods"
-                    />
+                    <UpdateNbhds />
                 </div>
             </div>
 

@@ -90,6 +90,12 @@ export function Ellipses({
         case "adjacent":
             break;
         case "grouped":
+
+            if (mainCell === -1) {
+                cells_.splice(0, 0, <Ellipsis />);
+                cells_.push(<Ellipsis />);
+            }
+
             if (mainCell >= 0 && mainCell < lastIdx) {
                 cells_.splice(mainCell + 1, 0, <Ellipsis />);
             }

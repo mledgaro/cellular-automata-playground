@@ -56,7 +56,7 @@ export default class CellularAutomaton {
         //
 
         let nbhd = [];
-        let a = Math.round(Math.random() + this.#numCells);
+        let a = Math.round(Math.random() * this.#numCells);
         let b = a + width;
 
         for (let i = a; i < b; i++) {
@@ -84,7 +84,7 @@ export default class CellularAutomaton {
         let nbhd = [];
 
         for (let i = 0; i < width; i++) {
-            nbhd.push(Math.round(Math.random() + this.#numCells));
+            nbhd.push(Math.round(Math.random() * this.#numCells));
         }
 
         if (mainCell >= 0) {
@@ -121,6 +121,7 @@ export default class CellularAutomaton {
 
         this.#cellsNbhd = nbhds;
         this.#rules = Array(Math.pow(2, width)).fill(false);
+        this.setRandomRules();
     }
 
     getCellNbhd(index: number): number[] {
@@ -174,7 +175,7 @@ export default class CellularAutomaton {
     }
 
     get ruleAsNum(): number {
-        return boolArrayToInt(this.#rules);
+        return boolArrayToInt(this.#rules, true);
     }
 
     get numRules(): number {
@@ -295,9 +296,9 @@ export default class CellularAutomaton {
 
         let diff = this.#numCells - arr.length;
         if (diff <= 0) {
-            arr.slice(0, this.#numCells);
+            arr = arr.slice(0, this.#numCells);
         } else {
-            arr.concat(Array(diff).fill(false));
+            arr = arr.concat(Array(diff).fill(false));
         }
 
         this.#initState = arr;

@@ -6,6 +6,7 @@ import React, { createContext, useEffect, useRef } from "react";
 import {
     useArrayState,
     useBoolArrState,
+    useBoolState,
     useRangeReducer,
     useStateObj,
 } from "./CustomHooks";
@@ -18,7 +19,10 @@ import Settings1D from "./sections/settings_1d/Settings1D";
 import Settings2D from "./sections/settings_2d/Settings2D";
 import Footer from "./sections/Footer";
 
-import CellularAutomaton, { NbhdType } from "./ts/CellularAutomaton";
+import CellularAutomaton, {
+    DistributionType,
+    NbhdType,
+} from "./ts/CellularAutomaton";
 
 export const NbhdWidthCtx = createContext(3);
 export const NbhdTypeCtx = createContext("adjacent");
@@ -27,11 +31,12 @@ export const MainCellCtx = createContext(1);
 export const NumCellsCtx = createContext(256);
 export const CellsNbhdsCtx = createContext((index: number) => [0]);
 export const RulesCtx = createContext({
+    update: false,
     get: (index: number): boolean => false,
     asNum: 0,
     num: 0,
 });
-export const InitStateCtx = createContext([false]);
+export const InitStateCtx = createContext({update: false, arr: [false]});
 
 export const APICtx = createContext({
     nbhdWidth: {
@@ -73,6 +78,9 @@ export default function App() {
     const nbhdType = useStateObj("adjacent");
     const mainCell = useStateObj(1);
 
+    const rulesUpdate = useBoolState(false);
+    const initStateUpdate = useBoolState(false);
+
     const apiCtx = {
         nbhdWidth: {
             next: nbhdWidth.next,
@@ -86,28 +94,79 @@ export default function App() {
             set: mainCell.set,
         },
         cellsNbhds: {
-            set: caModel1d.current.setCellsNbhds,
+            set: (width: number, type: NbhdType, mainCell: number) =>
+                caModel1d.current.setCellsNbhds(width, type, mainCell),
         },
         rules: {
-            toggle: caModel1d.current.toggleRule,
-            random: caModel1d.current.setRandomRules,
-            invert: caModel1d.current.setInvertRules,
-            allAlive: caModel1d.current.setRulesAlive,
-            allDead: caModel1d.current.setRulesDead,
+            toggle: (index: number) => {
+                caModel1d.current.toggleRule(index);
+                rulesUpdate.toggle();
+            },
+            random: () => {
+                caModel1d.current.setRandomRules();
+                rulesUpdate.toggle();
+            },
+            invert: () => {
+                caModel1d.current.setInvertRules();
+                rulesUpdate.toggle();
+            },
+            allAlive: () => {
+                caModel1d.current.setRulesAlive();
+                rulesUpdate.toggle();
+            },
+            allDead: () => {
+                caModel1d.current.setRulesDead();
+                rulesUpdate.toggle();
+            },
         },
         initState: {
-            set: caModel1d.current.setInitState,
-            toggleCell: caModel1d.current.toggleCell,
+            set: (
+                liveCells: number,
+                groupMinSize: number,
+                groupMaxSize: number,
+                distribution: DistributionType
+            ) => {
+                caModel1d.current.setInitState(
+                    liveCells,
+                    groupMinSize,
+                    groupMaxSize,
+                    distribution
+                );
+                initStateUpdate.toggle();
+            },
+            toggleCell: (index: number) => {
+                caModel1d.current.toggleCell(index);
+                initStateUpdate.toggle();
+            },
         },
+    };
+
+    let rulesCtx = {
+        update: rulesUpdate.get,
+        get: (index: number) => caModel1d.current.getRule(index),
+        asNum: caModel1d.current.ruleAsNum,
+        num: caModel1d.current.numRules,
+    };
+
+    let initStateCtx = {
+        update: initStateUpdate.get,
+        arr: caModel1d.current.initState,
     };
 
     useEffect(() => {
         if (mainCell.get >= nbhdWidth.get) {
             mainCell.set(nbhdWidth.get - 1);
         }
-
-        rules.set(randomBoolArray(Math.pow(2, nbhdWidth.get)));
     }, [nbhdWidth.get]);
+
+    useEffect(() => {
+        caModel1d.current.setCellsNbhds(
+            nbhdWidth.get,
+            nbhdType.get,
+            mainCell.get
+        );
+        rulesUpdate.toggle();
+    }, [nbhdWidth.get, nbhdType.get, mainCell.get]);
 
     let settings;
 
@@ -131,16 +190,9 @@ export default function App() {
                                     caModel1d.current.getCellNbhd(index)
                                 }
                             >
-                                <RulesCtx.Provider
-                                    value={{
-                                        get: (index: number) =>
-                                            caModel1d.current.getRule(index),
-                                        asNum: caModel1d.current.ruleAsNum,
-                                        num: caModel1d.current.numRules,
-                                    }}
-                                >
+                                <RulesCtx.Provider value={rulesCtx}>
                                     <InitStateCtx.Provider
-                                        value={caModel1d.current.initState}
+                                        value={initStateCtx}
                                     >
                                         <APICtx.Provider value={apiCtx}>
                                             {/*  */}

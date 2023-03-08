@@ -31,13 +31,13 @@ export function intToBoolArray(int: number, size: number): boolean[] {
  * @param {Array} arr boolean array
  * @returns {int} integer number
  */
-export function boolArrayToInt(arr: boolean[], reverse?: boolean): number {
+export function boolArrayToInt(arr: boolean[], reverse: boolean = false): number {
     //
 
     let int;
 
     int = [...arr];
-    int = (reverse || false) ? int.reverse() : int;
+    int = reverse ? int.reverse() : int;
     int = int.map((e) => (e ? "1" : "0"));
     int = int.join("");
     int = parseInt(int, 2);
