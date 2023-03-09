@@ -6,7 +6,7 @@ import { faDiagramProject } from "@fortawesome/free-solid-svg-icons";
 import { OptionGroup } from "../../components/SectionSelector";
 import NumberInput from "../../components/NumberInput";
 import Button from "../../components/Button";
-import { Cell, SelectedCell, Ellipses } from "../../components/Cells";
+import { IconCell, SelectedCell, Ellipses } from "../../components/Cells";
 import { BoolArrHook, useBoolArrState } from "../../CustomHooks";
 import {
     APICtx,
@@ -74,7 +74,7 @@ function MainCellSelector() {
     let cells = [];
 
     for (let i = 0; i < width; i++) {
-        cells.push(<Cell onClick={() => api.mainCell.set(i)} />);
+        cells.push(<IconCell onClick={() => api.mainCell.set(i)} size="lg" />);
     }
 
     if (mainCell !== -1) {

@@ -12,7 +12,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../components/Button";
-import { Cell, Ellipses } from "../../components/Cells";
+import {
+    IconCell,
+    Ellipses,
+    RoundCell,
+} from "../../components/Cells";
 
 import { inputGroupClasses, intToBoolArray } from "../../ts/Utils";
 import { NbhdType } from "src/ts/CellularAutomaton";
@@ -24,6 +28,7 @@ import {
     NbhdWidthCtx,
     RulesCtx,
 } from "src/App";
+import { useStateObj } from "src/CustomHooks";
 
 function RuleNumber() {
     //
@@ -88,7 +93,7 @@ function Rule({ index }: { index: number }) {
     const api = useContext(APICtx);
 
     let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
-        <Cell key={i} alive={e} lg={i === mainCell} />
+        <IconCell key={i} alive={e} size={i === mainCell ? "lg" : "xs"} />
     ));
 
     return (
@@ -103,7 +108,7 @@ function Rule({ index }: { index: number }) {
                 <FontAwesomeIcon icon={faArrowRight} size="sm" />
             </span>
 
-            <Cell alive={rules.get(index)} />
+            <IconCell alive={rules.get(index)} />
         </div>
     );
 }
@@ -126,6 +131,56 @@ function RulesSet1D() {
     return <div className="row mt-3 w-75 mx-auto">{rulesArr}</div>;
 }
 
+function RulePreview({ index }: { index: number }) {
+    //
+
+    const nbhdType = useContext(NbhdTypeCtx) as NbhdType;
+    const nbhdWidth = useContext(NbhdWidthCtx);
+    const mainCell = useContext(MainCellCtx);
+
+    let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
+        <IconCell key={i} alive={e} size={i === mainCell ? "2xl" : "lg"} />
+    ));
+
+    return (
+        <div
+            className="cap-container-dark-1"
+            style={{ padding: "8px", width: "max-content" }}
+        >
+            <Ellipses cells={cells} mainCell={mainCell} nbhdType={nbhdType} />
+        </div>
+    );
+}
+
+function RulesSet({setHoverCell}: {setHoverCell: (val: number) => void}) {
+    //
+
+    const rules = useContext(RulesCtx);
+    const api = useContext(APICtx);
+
+    let rulesArr = [];
+
+    for (let i = rules.num - 1; i >= 0; i--) {
+        rulesArr.push(
+            <RoundCell
+                key={i}
+                alive={rules.get(i)}
+                toggle={() => api.rules.toggle(i)}
+                onMouseOver={() => setHoverCell(i)}
+            />
+        );
+    }
+
+    return (
+        <div
+            className="row mx-auto my-2 d-flex justify-content-center"
+            style={{ width: "85%" }}
+        >
+            {rulesArr}
+        </div>
+    );
+}
+
 export default function Rules1D() {
     //
 
@@ -133,15 +188,23 @@ export default function Rules1D() {
 
     // api.rules.random();
 
+    const onHoverCell = useStateObj(0);
+
     return (
         <div className="mt-3">
             <div className="row mx-auto" style={{ width: "60%" }}>
+                {/*  */}
+
                 <RuleNumber />
 
                 <Controls />
             </div>
 
-            <RulesSet1D />
+            <RulesSet setHoverCell={onHoverCell.set} />
+
+            <div className="mt-2 mx-auto" style={{ width: "max-content" }}>
+                <RulePreview index={onHoverCell.get} />
+            </div>
         </div>
     );
 }

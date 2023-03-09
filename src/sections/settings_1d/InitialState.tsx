@@ -10,6 +10,7 @@ import { OptionGroup } from "../../components/SectionSelector";
 import { useRangeReducer, useStateObj } from "src/CustomHooks";
 import { APICtx, InitStateCtx, NumCellsCtx } from "src/App";
 import { DistributionType } from "src/ts/CellularAutomaton";
+import { SpanCell } from "src/components/Cells";
 
 type LiveCellsType = "num" | "perc";
 
@@ -79,7 +80,7 @@ function GroupSize() {
 
     useEffect(() => {
         if (maxSize < minSize) {
-            api.groupMaxSize.set(minSize);    
+            api.groupMaxSize.set(minSize);
         }
     }, [minSize]);
 
@@ -167,9 +168,7 @@ function BuildStateButton() {
             tooltipLabel="Set state"
             onClick={() => {
                 api.initState.set(
-                    liveCellsType === "perc"
-                        ? (liveCells / 100)
-                        : liveCells,
+                    liveCellsType === "perc" ? liveCells / 100 : liveCells,
                     groupMinSize,
                     groupMaxSize,
                     distr
@@ -177,14 +176,6 @@ function BuildStateButton() {
             }}
         />
     );
-}
-
-function Cell({ alive, toggle }: { alive: boolean; toggle: () => void }) {
-    //
-
-    const classes = `cap-cell cap-cell-${alive ? "on" : "off"}`;
-
-    return <span className={classes} onClick={toggle} />;
 }
 
 function CellsSet() {
@@ -196,7 +187,7 @@ function CellsSet() {
     return (
         <div className="row mx-auto ps-2" style={{ width: "90%" }}>
             {initState.arr.map((e, i) => (
-                <Cell
+                <SpanCell
                     key={i}
                     alive={e}
                     toggle={() => api.initState.toggleCell(i)}

@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { NbhdType } from "src/ts/CellularAutomaton";
+import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 
 export function DeactivatedCell({
     onClick = () => {},
@@ -22,10 +23,7 @@ export function DeactivatedCell({
     //
 
     return (
-        <span
-            className="cap-icon-cell cap-deactivated-cell"
-            onClick={onClick}
-        >
+        <span className="cap-icon-cell cap-deactivated-cell" onClick={onClick}>
             <FontAwesomeIcon icon={faSquareXmark} size="sm" />
         </span>
     );
@@ -41,13 +39,13 @@ export function SelectedCell({ onClick }: { onClick: () => void }) {
     );
 }
 
-export function Cell({
+export function IconCell({
     alive = false,
-    lg = true,
+    size = "5x",
     onClick = () => {},
 }: {
     alive?: boolean;
-    lg?: boolean;
+    size?: SizeProp;
     onClick?: () => void;
 }) {
     //
@@ -56,10 +54,40 @@ export function Cell({
         <span className="cap-icon-cell" onClick={onClick}>
             <FontAwesomeIcon
                 icon={alive ? faSquareSolid : faSquareRegular}
-                size={lg ? "lg" : "xs"}
+                size={size}
             />
         </span>
     );
+}
+
+export function SpanCell({
+    alive,
+    toggle,
+}: {
+    alive: boolean;
+    toggle: () => void;
+}) {
+    //
+
+    const classes = `cap-cell cap-cell-${alive ? "on" : "off"}`;
+
+    return <span className={classes} onClick={toggle} />;
+}
+
+export function RoundCell({
+    alive,
+    toggle,
+    onMouseOver,
+}: {
+    alive: boolean;
+    toggle: () => void;
+    onMouseOver: () => void;
+}) {
+    //
+
+    const classes = `cap-cell-round cap-cell-${alive ? "on" : "off"}`;
+
+    return <span className={classes} onClick={toggle} onMouseOver={onMouseOver} />;
 }
 
 function Ellipsis() {
@@ -90,7 +118,6 @@ export function Ellipses({
         case "adjacent":
             break;
         case "grouped":
-
             if (mainCell === -1) {
                 cells_.splice(0, 0, <Ellipsis />);
                 cells_.push(<Ellipsis />);

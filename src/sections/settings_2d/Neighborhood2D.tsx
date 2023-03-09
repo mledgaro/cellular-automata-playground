@@ -2,7 +2,11 @@
 
 import React from "react";
 import { RangeReducerHook, StateObjHook } from "src/CustomHooks";
-import { Cell, DeactivatedCell, SelectedCell } from "../../components/Cells";
+import {
+    IconCell,
+    DeactivatedCell,
+    SelectedCell,
+} from "../../components/Cells";
 import NumberInput from "../../components/NumberInput";
 import { OptionGroup } from "../../components/SectionSelector";
 
@@ -56,7 +60,7 @@ function MainCellSelector({
                         onClick={() => selected.set({ r: -1, c: -1 })}
                     />
                 ) : (
-                    <Cell onClick={() => selected.set({ r: r, c: c })} />
+                    <IconCell onClick={() => selected.set({ r: r, c: c })} />
                 )
             ) : (
                 <DeactivatedCell onClick={() => selected.set({ r: r, c: c })} />
