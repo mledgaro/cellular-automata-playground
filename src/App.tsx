@@ -9,7 +9,7 @@ import {
     useBoolState,
     useRangeReducer,
     useStateObj,
-} from "./CustomHooks";
+} from "./ts/CustomHooks";
 import { intToBoolArray, randomBoolArray } from "./ts/Utils";
 
 import Title from "./sections/Title";
@@ -36,7 +36,7 @@ export const RulesCtx = createContext({
     asNum: 0,
     num: 0,
 });
-export const InitStateCtx = createContext({update: false, arr: [false]});
+export const InitStateCtx = createContext({ update: false, arr: [false] });
 
 export const APICtx = createContext({
     nbhdWidth: {
@@ -191,9 +191,7 @@ export default function App() {
                                 }
                             >
                                 <RulesCtx.Provider value={rulesCtx}>
-                                    <InitStateCtx.Provider
-                                        value={initStateCtx}
-                                    >
+                                    <InitStateCtx.Provider value={initStateCtx}>
                                         <APICtx.Provider value={apiCtx}>
                                             {/*  */}
 
