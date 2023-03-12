@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { RangeReducerHook } from "src/CustomHooks";
+import { RangeReducerHook } from "src/ts/CustomHooks";
 
 import { fa1, fa2, faD } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

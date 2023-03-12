@@ -7,7 +7,7 @@ import { OptionGroup } from "../../components/SectionSelector";
 import NumberInput from "../../components/NumberInput";
 import Button from "../../components/Button";
 import { IconCell, SelectedCell, Ellipses } from "../../components/Cells";
-import { BoolArrHook, useBoolArrState } from "../../CustomHooks";
+import { BoolArrHook, useBoolArrState } from "../../ts/CustomHooks";
 import {
     APICtx,
     CellsNbhdsCtx,

@@ -1,7 +1,7 @@
 //
 
 import React from "react";
-import { RangeReducerHook, StateObjHook } from "src/CustomHooks";
+import { RangeReducerHook, StateObjHook } from "src/ts/CustomHooks";
 import {
     IconCell,
     DeactivatedCell,

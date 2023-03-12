@@ -6,7 +6,7 @@ import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Size, Alignment, inputGroupClasses } from "../ts/Utils";
 import Button from "./Button";
-import { useRangeReducer } from "../CustomHooks";
+import { useRangeReducer } from "../ts/CustomHooks";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 function Level({ on }: { on: boolean }) {

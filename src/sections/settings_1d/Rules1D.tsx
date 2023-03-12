@@ -12,11 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../components/Button";
-import {
-    IconCell,
-    Ellipses,
-    RoundCell,
-} from "../../components/Cells";
+import { IconCell, Ellipses, RoundCell } from "../../components/Cells";
 
 import { inputGroupClasses, intToBoolArray } from "../../ts/Utils";
 import { NbhdType } from "src/ts/CellularAutomaton";
@@ -28,7 +24,7 @@ import {
     NbhdWidthCtx,
     RulesCtx,
 } from "src/App";
-import { useStateObj } from "src/CustomHooks";
+import { useStateObj } from "src/ts/CustomHooks";
 
 function RuleNumber() {
     //
@@ -152,7 +148,7 @@ function RulePreview({ index }: { index: number }) {
     );
 }
 
-function RulesSet({setHoverCell}: {setHoverCell: (val: number) => void}) {
+function RulesSet({ setHoverCell }: { setHoverCell: (val: number) => void }) {
     //
 
     const rules = useContext(RulesCtx);

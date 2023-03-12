@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { useStateObj } from "../../CustomHooks";
+import { useStateObj } from "../../ts/CustomHooks";
 
 import SectionSelector from "../../components/SectionSelector";
 import Neighborhood1D from "./Neighborhood1D";

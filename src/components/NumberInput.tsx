@@ -5,7 +5,7 @@ import React from "react";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Size, Alignment, inputGroupClasses } from "../ts/Utils";
 import Button from "./Button";
-import { RangeReducerHook } from "../CustomHooks";
+import { RangeReducerHook } from "../ts/CustomHooks";
 
 function Label({ text }: { text: string }) {
     //

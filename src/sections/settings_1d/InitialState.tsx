@@ -7,7 +7,7 @@ import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
 import Button from "../../components/Button";
 import NumberInput from "../../components/NumberInput";
 import { OptionGroup } from "../../components/SectionSelector";
-import { useRangeReducer, useStateObj } from "src/CustomHooks";
+import { useRangeReducer, useStateObj } from "src/ts/CustomHooks";
 import { APICtx, InitStateCtx, NumCellsCtx } from "src/App";
 import { DistributionType } from "src/ts/CellularAutomaton";
 import { SpanCell } from "src/components/Cells";
