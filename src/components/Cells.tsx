@@ -74,22 +74,6 @@ export function SpanCell({
     return <span className={classes} onClick={toggle} />;
 }
 
-export function RoundCell({
-    alive,
-    toggle,
-    onMouseOver,
-}: {
-    alive: boolean;
-    toggle: () => void;
-    onMouseOver: () => void;
-}) {
-    //
-
-    const classes = `cap-cell-round cap-cell-${alive ? "on" : "off"}`;
-
-    return <span className={classes} onClick={toggle} onMouseOver={onMouseOver} />;
-}
-
 function Ellipsis() {
     //
 

@@ -72,7 +72,7 @@
     border-width: 3px;
 }
 
-.cap-cell:hover, .cap-cell-round:hover {
+.cap-cell:hover {
     border-style: solid;
     border-width: 2px;
     border-color: var(--dark2);
@@ -107,18 +107,38 @@
     color: var(--dark2);
 }
 
-.cap-cell-round {
-
+.cap-rule-cell {
     padding: 0;
-        width: 2em;
-        height: 2em;
-        font-size: 0.8em;
-        margin: 2px;
-        border-style: solid;
-        
-
+    width: 2.4em;
+    height: 2.2em;
+    font-size: 0.9em;
+    margin: 2px;
+    border-style: solid;
     border-radius: 3px;
+    text-align: center;
+    font-weight: 600;
+    user-select: none;
 }
+
+.cap-rule-cell-on {
+    background-color: var(--clear1);
+    border-color: var(--clear1);
+    color: var(--dark1);
+}
+
+.cap-rule-cell-off {
+    background-color: var(--dark1);
+    border-color: var(--dark1);
+    color: var(--clear1);
+}
+
+.cap-rule-cell:hover {
+    font-weight: 900;
+    outline-color: #f8f9fa;
+    outline-style: solid;
+    outline-width: 2px;
+}
+
 
 .cap-level {
     width: 3vmin;
