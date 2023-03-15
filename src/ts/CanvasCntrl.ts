@@ -31,7 +31,7 @@ export default class CanvasCntrl {
         this.#maxWidth = width;
         this.#maxHeight = height;
 
-        this.cellSize = 10;
+        this.cellSize = 8;
 
         // get colors from css file
 
@@ -120,22 +120,39 @@ export default class CanvasCntrl {
         this.#paintCellAtCoords(x, y, state);
     }
 
-    paintCells(cells: boolean[][]) {
+    paintRow(row: number, cellsStates: boolean[]) {
         //
 
-        let rows, cols;
+        let diff = this.#columns - cellsStates.length;
+        let s = Math.round(Math.abs(diff) / 2);
 
-        rows = Math.min(cells.length, this.#rows);
-        cols = Math.min(cells[0].length, this.#columns);
-
-        this.clear();
-
-        for (let r = 0, c; r < rows; r++) {
-            for (c = 0; c < cols; c++) {
-                this.paintCell(r, c, cells[r][c]);
+        if (diff > 0) {
+            for (let c = 0; c < cellsStates.length; c++) {
+                this.paintCell(row, c + s, cellsStates[c]);
+            }
+        } else {
+            for (let c = 0; c < this.#columns; c++) {
+                this.paintCell(row, c, cellsStates[c + s]);
             }
         }
     }
+
+    // paintCells(cells: boolean[][]) {
+    //     //
+
+    //     let rows, cols;
+
+    //     rows = Math.min(cells.length, this.#rows);
+    //     cols = Math.min(cells[0].length, this.#columns);
+
+    //     this.clear();
+
+    //     for (let r = 0, c; r < rows; r++) {
+    //         for (c = 0; c < cols; c++) {
+    //             this.paintCell(r, c, cells[r][c]);
+    //         }
+    //     }
+    // }
 
     saveScene(fileName: string) {
         //
@@ -164,5 +181,13 @@ export default class CanvasCntrl {
 
         this.#origX = Math.floor((this.#maxWidth - this.#width) / 2);
         this.#origY = Math.floor((this.#maxHeight - this.#height) / 2);
+    }
+
+    get rows(): number {
+        return this.#rows;
+    }
+
+    get columns(): number {
+        return this.#columns;
     }
 }

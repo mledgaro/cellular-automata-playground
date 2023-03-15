@@ -53,7 +53,7 @@ export default function Rules1D() {
 function RuleNumber() {
     //
 
-    const rules = useContext(RulesCtx);
+    const rules = useContext(RulesCtx)!;
 
     return (
         <div className="col-lg">
@@ -70,7 +70,7 @@ function RuleNumber() {
 function Controls() {
     //
 
-    const api = useContext(APICtx);
+    const api = useContext(APICtx)!;
 
     return (
         <div className="col-lg">
@@ -78,25 +78,25 @@ function Controls() {
                 <Button
                     tooltipLabel="Random"
                     icon={faShuffle}
-                    onClick={api.rules.random}
+                    onClick={api.automaton.rules.setRandom}
                 />
 
                 <Button
-                    tooltipLabel="Swap"
+                    tooltipLabel="Invert"
                     icon={faRightLeft}
-                    onClick={api.rules.invert}
+                    onClick={api.automaton.rules.setInverse}
                 />
 
                 <Button
                     tooltipLabel="All alive"
                     icon={faSquareSolid}
-                    onClick={api.rules.allAlive}
+                    onClick={api.automaton.rules.setAlive}
                 />
 
                 <Button
                     tooltipLabel="All dead"
                     icon={faSquareRegular}
-                    onClick={api.rules.allDead}
+                    onClick={api.automaton.rules.setDead}
                 />
             </div>
         </div>
@@ -129,18 +129,25 @@ function RuleCell({
     on,
     toggle,
     onMouseOver,
+    onMouseOut,
 }: {
     index: number;
     on: boolean;
     toggle: () => void;
     onMouseOver: () => void;
+    onMouseOut: () => void;
 }) {
     //
 
     const classes = `cap-rule-cell cap-rule-cell-${on ? "on" : "off"}`;
 
     return (
-        <span className={classes} onClick={toggle} onMouseOver={onMouseOver}>
+        <span
+            className={classes}
+            onClick={toggle}
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}
+        >
             {index}
         </span>
     );
@@ -149,8 +156,8 @@ function RuleCell({
 function RulesSet({ setHoverCell }: { setHoverCell: (val: number) => void }) {
     //
 
-    const rules = useContext(RulesCtx);
-    const api = useContext(APICtx);
+    const rules = useContext(RulesCtx)!;
+    const api = useContext(APICtx)!;
 
     let rulesArr = [];
 
@@ -160,8 +167,9 @@ function RulesSet({ setHoverCell }: { setHoverCell: (val: number) => void }) {
                 key={i}
                 index={i}
                 on={rules.get(i)}
-                toggle={() => api.rules.toggle(i)}
+                toggle={() => api.automaton.rules.toggle(i)}
                 onMouseOver={() => setHoverCell(i)}
+                onMouseOut={() => setHoverCell(0)}
             />
         );
     }
@@ -182,8 +190,8 @@ function RuleToggle({ index }: { index: number }) {
     const nbhdType = useContext(NbhdTypeCtx) as NbhdType;
     const nbhdWidth = useContext(NbhdWidthCtx);
     const mainCell = useContext(MainCellCtx);
-    const rules = useContext(RulesCtx);
-    const api = useContext(APICtx);
+    const rules = useContext(RulesCtx)!;
+    const api = useContext(APICtx)!;
 
     let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
         <IconCell key={i} alive={e} size={i === mainCell ? "lg" : "xs"} />
@@ -193,7 +201,7 @@ function RuleToggle({ index }: { index: number }) {
         <div
             className="cap-container-dark-1 mx-auto"
             style={{ padding: "8px", width: "max-content" }}
-            onClick={() => api.rules.toggle(index)}
+            onClick={() => api.automaton.rules.toggle(index)}
         >
             <Ellipses cells={cells} mainCell={mainCell} nbhdType={nbhdType} />
 

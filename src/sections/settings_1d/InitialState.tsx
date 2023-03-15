@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect } from "react";
 
-import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
+import { faArrowTurnDown, faRotate } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../components/Button";
 import NumberInput from "../../components/NumberInput";
@@ -26,6 +26,83 @@ const ISAPICtx = createContext({
     groupMinSize: { set: (val: number) => {}, next: () => {}, prev: () => {} },
     groupMaxSize: { set: (val: number) => {}, next: () => {}, prev: () => {} },
 });
+
+export default function InitialState() {
+    //
+
+    const numCells = useContext(NumCellsCtx);
+
+    const liveCellsType = useStateObj("num");
+    const distributionType = useStateObj("rand");
+
+    const liveCells = useRangeReducer(1, numCells, 1, false);
+    const groupMinSize = useRangeReducer(1, numCells, 1, false);
+    const groupMaxSize = useRangeReducer(
+        groupMinSize.get,
+        numCells,
+        groupMinSize.get,
+        false
+    );
+
+    const api = {
+        liveCellsType: liveCellsType.set,
+        distType: distributionType.set,
+        liveCells: {
+            set: liveCells.set,
+            next: liveCells.next,
+            prev: liveCells.prev,
+        },
+        groupMinSize: {
+            set: groupMinSize.set,
+            next: groupMinSize.next,
+            prev: groupMinSize.prev,
+        },
+        groupMaxSize: {
+            set: groupMaxSize.set,
+            next: groupMaxSize.next,
+            prev: groupMaxSize.prev,
+        },
+    };
+
+    return (
+        <LiveCellsTypeCtx.Provider value={liveCellsType.get}>
+            <DistTypeCtx.Provider value={distributionType.get}>
+                <LiveCellsCtx.Provider value={liveCells.get}>
+                    <GroupMinSizeCtx.Provider value={groupMinSize.get}>
+                        <GroupMaxSizeCtx.Provider value={groupMaxSize.get}>
+                            <ISAPICtx.Provider value={api}>
+                                <div
+                                    className="row mb-2 mx-auto"
+                                    style={{ width: "80%" }}
+                                >
+                                    {/*  */}
+
+                                    <div className="col-4">
+                                        <LiveCellsSelector />
+                                    </div>
+
+                                    <div className="col-3">
+                                        <GroupSize />
+                                    </div>
+
+                                    <div className="col-4">
+                                        <DistributionSelector />
+                                    </div>
+
+                                    <div className="col-1 d-flex align-items-center">
+                                        <ReloadBtn />
+                                    </div>
+                                </div>
+
+                                <CellsSet />
+                            </ISAPICtx.Provider>
+                        </GroupMaxSizeCtx.Provider>
+                    </GroupMinSizeCtx.Provider>
+                </LiveCellsCtx.Provider>
+            </DistTypeCtx.Provider>
+        </LiveCellsTypeCtx.Provider>
+    );
+}
 
 function LiveCellsSelector() {
     //
@@ -151,7 +228,7 @@ function DistributionSelector() {
     );
 }
 
-function BuildStateButton() {
+function ReloadBtn() {
     //
 
     const liveCellsType = useContext(LiveCellsTypeCtx) as LiveCellsType;
@@ -160,14 +237,14 @@ function BuildStateButton() {
     const groupMinSize = useContext(GroupMinSizeCtx);
     const groupMaxSize = useContext(GroupMaxSizeCtx);
 
-    const api = useContext(APICtx);
+    const api = useContext(APICtx)!;
 
     return (
         <Button
-            icon={faArrowTurnDown}
-            tooltipLabel="Set state"
+            icon={faRotate}
+            tooltipLabel="Reload init state"
             onClick={() => {
-                api.initState.set(
+                api.automaton.state.set(
                     liveCellsType === "perc" ? liveCells / 100 : liveCells,
                     groupMinSize,
                     groupMaxSize,
@@ -181,8 +258,8 @@ function BuildStateButton() {
 function CellsSet() {
     //
 
-    const initState = useContext(InitStateCtx);
-    const api = useContext(APICtx);
+    const initState = useContext(InitStateCtx)!;
+    const api = useContext(APICtx)!;
 
     return (
         <div className="row mx-auto ps-2" style={{ width: "90%" }}>
@@ -190,86 +267,9 @@ function CellsSet() {
                 <SpanCell
                     key={i}
                     alive={e}
-                    toggle={() => api.initState.toggleCell(i)}
+                    toggle={() => api.automaton.state.toggleCell(i)}
                 />
             ))}
         </div>
-    );
-}
-
-export default function InitialState() {
-    //
-
-    const numCells = useContext(NumCellsCtx);
-
-    const liveCellsType = useStateObj("num");
-    const distributionType = useStateObj("rand");
-
-    const liveCells = useRangeReducer(1, numCells, 1, false);
-    const groupMinSize = useRangeReducer(1, numCells, 1, false);
-    const groupMaxSize = useRangeReducer(
-        groupMinSize.get,
-        numCells,
-        groupMinSize.get,
-        false
-    );
-
-    const api = {
-        liveCellsType: liveCellsType.set,
-        distType: distributionType.set,
-        liveCells: {
-            set: liveCells.set,
-            next: liveCells.next,
-            prev: liveCells.prev,
-        },
-        groupMinSize: {
-            set: groupMinSize.set,
-            next: groupMinSize.next,
-            prev: groupMinSize.prev,
-        },
-        groupMaxSize: {
-            set: groupMaxSize.set,
-            next: groupMaxSize.next,
-            prev: groupMaxSize.prev,
-        },
-    };
-
-    return (
-        <LiveCellsTypeCtx.Provider value={liveCellsType.get}>
-            <DistTypeCtx.Provider value={distributionType.get}>
-                <LiveCellsCtx.Provider value={liveCells.get}>
-                    <GroupMinSizeCtx.Provider value={groupMinSize.get}>
-                        <GroupMaxSizeCtx.Provider value={groupMaxSize.get}>
-                            <ISAPICtx.Provider value={api}>
-                                <div
-                                    className="row mb-2 mx-auto"
-                                    style={{ width: "80%" }}
-                                >
-                                    {/*  */}
-
-                                    <div className="col-4">
-                                        <LiveCellsSelector />
-                                    </div>
-
-                                    <div className="col-3">
-                                        <GroupSize />
-                                    </div>
-
-                                    <div className="col-4">
-                                        <DistributionSelector />
-                                    </div>
-
-                                    <div className="col-1 d-flex align-items-center">
-                                        <BuildStateButton />
-                                    </div>
-                                </div>
-
-                                <CellsSet />
-                            </ISAPICtx.Provider>
-                        </GroupMaxSizeCtx.Provider>
-                    </GroupMinSizeCtx.Provider>
-                </LiveCellsCtx.Provider>
-            </DistTypeCtx.Provider>
-        </LiveCellsTypeCtx.Provider>
     );
 }

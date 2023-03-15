@@ -11,8 +11,7 @@ export default class CellularAutomaton {
     #numCells: number;
     #cellsNbhd: number[][]; // Array(Array(Integer))[cellsNumber][nbhdWidth]
     #rules: boolean[];
-    #currentState: boolean[];
-    #initState: boolean[];
+    #state: boolean[];
 
     constructor(numCells: number) {
         //
@@ -20,10 +19,11 @@ export default class CellularAutomaton {
         this.#numCells = numCells;
         this.#cellsNbhd = [];
         this.#rules = [];
-        this.#currentState = Array(this.#numCells).fill(false);
-        this.#initState = Array(this.#numCells).fill(false);
+        this.#state = Array(this.#numCells).fill(false);
 
         this.setCellsNbhds(3, "adjacent", 1);
+        this.setRulesRandom();
+        this.setCellsState(1, 1, 1, "even");
     }
 
     get cellsNumber(): number {
@@ -121,7 +121,6 @@ export default class CellularAutomaton {
 
         this.#cellsNbhd = nbhds;
         this.#rules = Array(Math.pow(2, width)).fill(false);
-        this.setRandomRules();
     }
 
     getCellNbhd(index: number): number[] {
@@ -138,7 +137,7 @@ export default class CellularAutomaton {
         this.#rules[index] = !this.#rules[index];
     }
 
-    setRandomRules() {
+    setRulesRandom() {
         //
 
         for (let i = 0; i < this.#rules.length; i++) {
@@ -162,7 +161,7 @@ export default class CellularAutomaton {
         }
     }
 
-    setInvertRules() {
+    setRulesInverse() {
         //
 
         for (let i = 0; i < this.#rules.length; i++) {
@@ -174,7 +173,7 @@ export default class CellularAutomaton {
         return this.#rules[index];
     }
 
-    get ruleAsNum(): number {
+    get rulesAsNum(): number {
         return boolArrayToInt(this.#rules, true);
     }
 
@@ -248,7 +247,7 @@ export default class CellularAutomaton {
      * @param distribution
      * @returns
      */
-    setInitState(
+    setCellsState(
         liveCells: number,
         groupMinSize: number,
         groupMaxSize: number,
@@ -301,45 +300,36 @@ export default class CellularAutomaton {
             arr = arr.concat(Array(diff).fill(false));
         }
 
-        this.#initState = arr;
-        this.#currentState = arr;
+        this.#state = arr;
     }
 
-    toggleCell(index: number) {
-        this.#initState[index] = !this.#initState[index];
+    toggleCellState(index: number) {
+        this.#state[index] = !this.#state[index];
     }
 
-    get initState(): boolean[] {
-        return this.#initState;
+    get cellsState(): boolean[] {
+        return this.#state;
     }
 
-    get currentState(): boolean[] {
-        return this.#currentState;
-    }
-
-    
-
-    #cellNextState(index: number): boolean {
+    #nextCellState(index: number): boolean {
         //
 
         let nstate;
 
         nstate = this.#cellsNbhd[index];
-        nstate = nstate.map((e) => this.#currentState[e]);
+        nstate = nstate.map((e) => this.#state[e]);
         nstate = boolArrayToInt(nstate, false);
         nstate = this.#rules[nstate];
 
         return nstate;
     }
 
-    nextState(): boolean[] {
+    nextCellsState(): boolean[] {
         //
 
-        let nstate = this.#currentState.map((cell, i) =>
-            this.#cellNextState(i)
-        );
+        let nstate = this.#state.map((cell, i) => this.#nextCellState(i));
 
-        this.#currentState = nstate;
+        this.#state = nstate;
 
         return nstate;
     }

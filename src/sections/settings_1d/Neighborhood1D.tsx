@@ -1,7 +1,7 @@
 //
 
 import React, { useContext, useCallback } from "react";
-import { faDiagramProject } from "@fortawesome/free-solid-svg-icons";
+import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 import { OptionGroup } from "../../components/SectionSelector";
 import NumberInput from "../../components/NumberInput";
@@ -10,7 +10,6 @@ import { IconCell, SelectedCell, Ellipses } from "../../components/Cells";
 import { BoolArrHook, useBoolArrState } from "../../ts/CustomHooks";
 import {
     APICtx,
-    CellsNbhdsCtx,
     MainCellCtx,
     NbhdTypeCtx,
     NbhdWidthCtx,
@@ -23,7 +22,7 @@ function Width() {
     //
 
     const width = useContext(NbhdWidthCtx);
-    const api = useContext(APICtx);
+    const api = useContext(APICtx)!;
 
     return (
         <NumberInput
@@ -46,7 +45,7 @@ function Type() {
     //
 
     const type = useContext(NbhdTypeCtx);
-    const api = useContext(APICtx);
+    const api = useContext(APICtx)!;
 
     return (
         <OptionGroup
@@ -56,7 +55,7 @@ function Type() {
                 { label: "Grouped", value: "grouped" },
                 { label: "Scattered", value: "scattered" },
             ]}
-            selected={{ get: type, set: api.nbhdType.set }}
+            selected={{ get: type, set: api.setNbhdType }}
             size="sm"
             alignment="center"
         />
@@ -69,19 +68,19 @@ function MainCellSelector() {
     const width = useContext(NbhdWidthCtx);
     const type = useContext(NbhdTypeCtx) as NbhdType;
     const mainCell = useContext(MainCellCtx);
-    const api = useContext(APICtx);
+    const api = useContext(APICtx)!;
 
     let cells = [];
 
     for (let i = 0; i < width; i++) {
-        cells.push(<IconCell onClick={() => api.mainCell.set(i)} size="lg" />);
+        cells.push(<IconCell onClick={() => api.setMainCell(i)} size="lg" />);
     }
 
     if (mainCell !== -1) {
         cells.splice(
             mainCell,
             1,
-            <SelectedCell onClick={() => api.mainCell.set(-1)} />
+            <SelectedCell onClick={() => api.setMainCell(-1)} />
         );
     }
 
@@ -101,13 +100,15 @@ function UpdateNbhds() {
     const nbhdWidth = useContext(NbhdWidthCtx);
     const nbhdType = useContext(NbhdTypeCtx) as NbhdType;
     const mainCell = useContext(MainCellCtx);
-    const api = useContext(APICtx);
+    const api = useContext(APICtx)!;
 
     return (
         <Button
-            icon={faDiagramProject}
-            tooltipLabel="Change neighborhoods"
-            onClick={() => api.cellsNbhds.set(nbhdWidth, nbhdType, mainCell)}
+            icon={faRotate}
+            tooltipLabel="Reload neighborhoods"
+            onClick={() =>
+                api.automaton.cellsNbhds.set(nbhdWidth, nbhdType, mainCell)
+            }
         />
     );
 }
@@ -122,14 +123,14 @@ function HighlightCell({
     //
 
     const numCells = useContext(NumCellsCtx);
-    const cellsNbhds = useContext(CellsNbhdsCtx);
+    const api = useContext(APICtx)!;
 
     const highlight = useCallback(() => {
         //
         let nArr = Array(numCells).fill(false);
-        cellsNbhds(index).forEach((e) => (nArr[e] = true));
+        api.automaton.cellsNbhds.get(index).forEach((e) => (nArr[e] = true));
         highlightedCells.set(nArr);
-    }, [cellsNbhds]);
+    }, []);
 
     const classes = `cap-cell cap-cell-off ${
         highlightedCells.get[index] ? "cap-cell-high" : ""
