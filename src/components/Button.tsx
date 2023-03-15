@@ -7,9 +7,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Button({
     icon,
-    tooltipLabel,
+    tooltipLabel = "",
     enabled = true,
-    onClick,
+    onClick = () => {},
 }: {
     icon: IconDefinition;
     tooltipLabel?: string;
@@ -21,13 +21,13 @@ export default function Button({
     return (
         <button
             type="button"
-            title={tooltipLabel || ""}
+            className="btn cap-btn"
+            title={tooltipLabel}
+            data-bs-original-title={tooltipLabel}
             data-bs-toggle="tooltip"
             data-bs-placement="bottom"
-            data-bs-original-title={tooltipLabel || ""}
-            className="btn cap-container-clear-1"
-            onClick={onClick || (() => {})}
-            disabled={!enabled || false}
+            onClick={onClick}
+            disabled={!enabled}
         >
             <FontAwesomeIcon icon={icon} />
         </button>

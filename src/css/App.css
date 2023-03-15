@@ -30,6 +30,27 @@
 }
 
 
+.cap-btn {
+    background-color: var(--clear1);
+    color: var(--dark1);
+    font-size: larger;
+    border-style: solid;
+    border-color: var(--clear1);
+        border-width: 2px;
+}
+
+.cap-btn:hover {
+    border-color: var(--clear2);
+}
+
+.cap-btn:active {
+    font-size: medium;
+    border-color: var(--clear1);
+}
+
+.cap-btn:visited {
+    background-color: var(--dark1);
+}
 
 .cap-btn-group-select {
     background-color: var(--dark1);
@@ -134,7 +155,7 @@
 
 .cap-rule-cell:hover {
     font-weight: 900;
-    outline-color: #f8f9fa;
+    outline-color: var(--clear2);
     outline-style: solid;
     outline-width: 2px;
 }

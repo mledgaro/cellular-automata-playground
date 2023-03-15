@@ -3,18 +3,10 @@
 import "./css/App.css";
 
 import React, { createContext, useEffect, useRef } from "react";
-import {
-    useArrayState,
-    useBoolArrState,
-    useBoolState,
-    useRangeReducer,
-    useStateObj,
-} from "./ts/CustomHooks";
-import { intToBoolArray, randomBoolArray } from "./ts/Utils";
+import { useBoolState, useRangeReducer, useStateObj } from "./ts/CustomHooks";
 
 import Title from "./sections/Title";
 import Canvas from "./sections/Canvas";
-import Controls from "./sections/Controls";
 import Settings1D from "./sections/settings_1d/Settings1D";
 import Settings2D from "./sections/settings_2d/Settings2D";
 import Footer from "./sections/Footer";
