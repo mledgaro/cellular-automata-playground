@@ -23,12 +23,18 @@ import Button from "../components/Button";
 import LevelSelector from "../components/LevelSelector";
 
 import { inputGroupClasses } from "../ts/Utils";
-import { APICtx } from "src/App";
+import { APICtx, APICtxType } from "src/App";
 import CanvasCntrl from "src/ts/CanvasCntrl";
+import {
+    EnumReducerType,
+    useBoolState,
+    useEnumReducer,
+} from "src/ts/CustomHooks";
 
 type CanvasAPICtxType = {
     next: () => void;
     run: () => void;
+    pause: () => void;
     stop: () => void;
     clear: () => void;
     saveScene: () => void;
@@ -37,30 +43,25 @@ type CanvasAPICtxType = {
 const canvasId = "cap-canvas";
 
 const CanvasAPICtx = createContext<CanvasAPICtxType | null>(null);
+const IsRunningCtx = createContext(false);
+const SpeedLvlCtx = createContext<EnumReducerType | null>(null);
+const ZoomLvlCtx = createContext<EnumReducerType | null>(null);
 
 export default function Canvas() {
     //
+
+    const api = useContext<APICtxType | null>(APICtx)!;
 
     const cntrl = useRef<CanvasCntrl>();
     const genCount = useRef(0);
     const runInterval = useRef<NodeJS.Timer>();
 
-    const api = useContext(APICtx)!;
+    const isRunning = useBoolState(false);
+    const speedLvl = useEnumReducer([800, 600, 400, 200, 1], 2);
+    const zoomLvl = useEnumReducer([4, 6, 8, 12, 16], 2);
 
-    const width = useMemo(
-        () => Math.floor(window.innerWidth * 0.95),
-        [window.innerWidth]
-    );
-    const height = useMemo(
-        () => Math.floor(window.innerHeight * 0.7),
-        [window.innerHeight]
-    );
-
-    useEffect(() => {
-        cntrl.current = new CanvasCntrl(canvasId, width, height);
-        console.log("canvas cntrl rows: " + cntrl.current.rows);
-        console.log("canvas cntrl cols: " + cntrl.current.columns);
-    }, []);
+    const width = Math.floor(window.innerWidth * 0.95);
+    const height = Math.floor(window.innerHeight * 0.7);
 
     const nextState = useCallback(() => {
         if (genCount.current < (cntrl.current?.rows ?? 0)) {
@@ -74,33 +75,74 @@ export default function Canvas() {
         }
     }, [api.automaton]);
 
+    const pause = useCallback(() => {
+        isRunning.setFalse();
+        clearInterval(runInterval.current);
+    }, [isRunning]);
+
+    const clear = useCallback(() => {
+        genCount.current = 0;
+        cntrl.current?.clear();
+    }, []);
+
+    useEffect(() => {
+        cntrl.current = new CanvasCntrl(canvasId, width, height);
+    }, [width, height]);
+
+    useEffect(() => {
+        cntrl.current!.cellSize = zoomLvl.get;
+    }, [zoomLvl.get]);
+
+    useEffect(() => {
+        if (isRunning.get) {
+            clearInterval(runInterval.current);
+            runInterval.current = setInterval(nextState, speedLvl.get);
+        }
+    }, [speedLvl.get]);
+
+    useEffect(() => {
+        if (!isRunning.get) {
+            cntrl.current?.clear();
+        }
+    }, [zoomLvl.get]);
+
     const canvasAPICtx = {
         next: nextState,
         run: () => {
-            runInterval.current = setInterval(nextState, 500);
+            isRunning.setTrue();
+            runInterval.current = setInterval(nextState, speedLvl.get);
         },
-        stop: () => clearInterval(runInterval.current),
-        clear: () => {
-            genCount.current = 0;
-            cntrl.current?.clear();
+        pause: pause,
+        stop: () => {
+            pause();
+            clear();
         },
+        clear: clear,
         saveScene: () => cntrl.current?.saveScene("cellular_automaton"),
     };
 
     return (
         <CanvasAPICtx.Provider value={canvasAPICtx}>
-            <div>
-                <div id="canvas-container" className="">
-                    <canvas
-                        id={canvasId}
-                        className=""
-                        width={width}
-                        height={height}
-                    />
-                </div>
+            <IsRunningCtx.Provider value={isRunning.get}>
+                <ZoomLvlCtx.Provider value={zoomLvl}>
+                    <SpeedLvlCtx.Provider value={speedLvl}>
+                        {/*  */}
 
-                <Controls />
-            </div>
+                        <div>
+                            <div id="canvas-container" className="">
+                                <canvas
+                                    id={canvasId}
+                                    className=""
+                                    width={width}
+                                    height={height}
+                                />
+                            </div>
+
+                            <Controls />
+                        </div>
+                    </SpeedLvlCtx.Provider>
+                </ZoomLvlCtx.Provider>
+            </IsRunningCtx.Provider>
         </CanvasAPICtx.Provider>
     );
 }
@@ -109,6 +151,7 @@ function FlowCtrls() {
     //
 
     const canvasApi = useContext(CanvasAPICtx)!;
+    const isRunning = useContext(IsRunningCtx);
 
     return (
         <div className={inputGroupClasses("md", "center", "")}>
@@ -118,20 +161,28 @@ function FlowCtrls() {
                 tooltipLabel="Next"
                 icon={faForwardStep}
                 onClick={canvasApi.next}
+                enabled={!isRunning}
             />
 
-            <Button tooltipLabel="Run" icon={faPlay} onClick={canvasApi.run} />
+            <Button
+                tooltipLabel="Run"
+                icon={faPlay}
+                onClick={canvasApi.run}
+                enabled={!isRunning}
+            />
 
             <Button
                 tooltipLabel="Pause"
                 icon={faPause}
-                // onClick={canvasApi.pause}
+                onClick={canvasApi.pause}
+                enabled={isRunning}
             />
 
             <Button
                 tooltipLabel="Stop"
                 icon={faStop}
                 onClick={canvasApi.stop}
+                enabled={isRunning}
             />
         </div>
     );
@@ -164,6 +215,9 @@ function CanvasCtrls() {
 function Controls() {
     //
 
+    const zoom = useContext(ZoomLvlCtx)!;
+    const speed = useContext(SpeedLvlCtx)!;
+
     return (
         <div className="row my-3">
             {/* <!-- Flow --> */}
@@ -174,20 +228,18 @@ function Controls() {
             {/* <!-- Speed --> */}
             <div className="col-lg">
                 <LevelSelector
-                    numLevels={5}
                     tooltipLabel="Speed"
                     icon={faGaugeHigh}
-                    alignment="center"
+                    enumReducer={speed}
                 />
             </div>
 
             {/* <!-- Zoom --> */}
             <div className="col-lg">
                 <LevelSelector
-                    numLevels={5}
                     tooltipLabel="Zoom"
                     icon={faMagnifyingGlass}
-                    alignment="center"
+                    enumReducer={zoom}
                 />
             </div>
 

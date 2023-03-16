@@ -41,7 +41,7 @@ export function useRangeReducer(
                 case "prev":
                     return state === min ? (cycle ? max : state) : state - 1;
                 case "set":
-                    return Math.max(min, Math.min(action.index || 0, max));
+                    return Math.max(min, Math.min(action.index ?? 0, max));
             }
         },
         [min, max, cycle]
@@ -60,39 +60,58 @@ export function useRangeReducer(
     };
 }
 
+export type EnumReducerType = {
+    get: any;
+    index: number;
+    length: number;
+    prev: () => void;
+    next: () => void;
+    set: (index: number) => void;
+};
+
 export function useEnumReducer(
     enumValues: any[],
     initIndex: number
-): {
-    get: any;
-    index: number;
-    prev: () => void;
-    next: () => void;
-    set: (val: any) => void;
-} {
+): EnumReducerType {
     //
 
     const enums = useRef(enumValues);
 
-    const index = useRangeReducer(0, enums.current.length - 1, initIndex, true);
+    const index = useRangeReducer(
+        0,
+        enums.current.length - 1,
+        initIndex,
+        false
+    );
 
     return {
         get: enums.current[index.get],
         index: index.get,
+        length: enums.current.length,
         prev: index.prev,
         next: index.next,
         set: index.set,
     };
 }
 
-export type BoolState = { get: boolean; toggle: () => void };
+export type BoolState = {
+    get: boolean;
+    toggle: () => void;
+    setTrue: () => void;
+    setFalse: () => void;
+};
 
 export function useBoolState(initValue: boolean): BoolState {
     //
 
     let value = useStateObj(initValue);
 
-    return { get: value.get, toggle: () => value.set(!value.get) };
+    return {
+        get: value.get,
+        toggle: () => value.set(!value.get),
+        setTrue: () => value.set(true),
+        setFalse: () => value.set(false),
+    };
 }
 
 export type ArrayStateHook<T> = {

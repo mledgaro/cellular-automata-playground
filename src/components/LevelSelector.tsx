@@ -6,7 +6,7 @@ import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Size, Alignment, inputGroupClasses } from "../ts/Utils";
 import Button from "./Button";
-import { useRangeReducer } from "../ts/CustomHooks";
+import { EnumReducerType } from "../ts/CustomHooks";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 function Level({ on }: { on: boolean }) {
@@ -23,29 +23,27 @@ function Level({ on }: { on: boolean }) {
 
 export default function LevelSelector({
     icon,
-    numLevels,
     tooltipLabel,
-    size,
-    alignment,
+    enumReducer,
+    size = "md",
+    alignment = "center",
 }: {
     icon: IconDefinition;
-    numLevels: number;
     tooltipLabel: string;
+    enumReducer: EnumReducerType;
     size?: Size;
-    alignment: Alignment;
+    alignment?: Alignment;
 }) {
     //
 
-    const level = useRangeReducer(0, numLevels, 0, false);
-
     let levels = [];
 
-    for (let i = 0; i < numLevels; i++) {
-        levels.push(<Level key={i} on={i < level.get} />);
+    for (let i = 0; i < enumReducer.length; i++) {
+        levels.push(<Level key={i} on={i <= enumReducer.index} />);
     }
 
     return (
-        <div className={inputGroupClasses(size || "md", alignment, "")}>
+        <div className={inputGroupClasses(size, alignment, "")}>
             <span
                 className="input-group-text cap-container-dark-1"
                 data-bs-toggle="tooltip"
@@ -57,16 +55,16 @@ export default function LevelSelector({
 
             <Button
                 icon={faMinus}
-                enabled={level.get > 0}
-                onClick={level.prev}
+                enabled={enumReducer.index > 0}
+                onClick={enumReducer.prev}
             />
 
             {levels}
 
             <Button
                 icon={faPlus}
-                enabled={level.get < numLevels}
-                onClick={level.next}
+                enabled={enumReducer.index < enumReducer.length - 1}
+                onClick={enumReducer.next}
             />
         </div>
     );
