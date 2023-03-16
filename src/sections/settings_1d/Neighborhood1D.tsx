@@ -17,6 +17,7 @@ import {
 } from "src/App";
 import { NbhdType } from "src/ts/CellularAutomaton";
 import { boolArray } from "src/ts/Utils";
+import Title from "src/components/Title";
 
 function Width() {
     //
@@ -48,17 +49,19 @@ function Type() {
     const api = useContext(APICtx)!;
 
     return (
-        <OptionGroup
-            title="Type"
-            options={[
-                { label: "Adjacent", value: "adjacent" },
-                { label: "Grouped", value: "grouped" },
-                { label: "Scattered", value: "scattered" },
-            ]}
-            selected={{ get: type, set: api.setNbhdType }}
-            size="sm"
-            alignment="center"
-        />
+        <div>
+            <Title text="Type" size="small" />
+            <OptionGroup
+                options={[
+                    { label: "Adjacent", value: "adjacent" },
+                    { label: "Grouped", value: "grouped" },
+                    { label: "Scattered", value: "scattered" },
+                ]}
+                selected={{ get: type, set: api.setNbhdType }}
+                size="sm"
+                alignment="center"
+            />
+        </div>
     );
 }
 

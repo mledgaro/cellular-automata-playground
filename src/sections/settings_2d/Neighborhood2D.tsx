@@ -1,6 +1,7 @@
 //
 
 import React from "react";
+import Title from "src/components/Title";
 import { RangeReducerHook, StateObjHook } from "src/ts/CustomHooks";
 import {
     IconCell,
@@ -142,8 +143,9 @@ export default function Neighborhood2D({
 
     return (
         <div>
+            <Title text="Type" size="small" />
+
             <OptionGroup
-                title="Type"
                 options={[
                     {
                         label: "Moore",

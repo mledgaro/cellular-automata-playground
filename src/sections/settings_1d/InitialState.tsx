@@ -11,6 +11,7 @@ import { useRangeReducer, useStateObj } from "src/ts/CustomHooks";
 import { APICtx, InitStateCtx, NumCellsCtx } from "src/App";
 import { DistributionType } from "src/ts/CellularAutomaton";
 import { SpanCell } from "src/components/Cells";
+import Title from "src/components/Title";
 
 type LiveCellsType = "num" | "perc";
 
@@ -114,8 +115,8 @@ function LiveCellsSelector() {
 
     return (
         <div>
+            <Title text="Live cells" size="small" />
             <OptionGroup
-                title="Live cells"
                 options={[
                     {
                         label: "Number",
@@ -163,12 +164,8 @@ function GroupSize() {
 
     return (
         <div>
-            <div
-                className="cap-container-dark-1 cap-section-selector-title mx-auto mb-1"
-                style={{ fontSize: "small" }}
-            >
-                Group size
-            </div>
+            <Title text="Group size" size="small" />
+
             <div className="mx-auto" style={{ width: "80%" }}>
                 {/*  */}
 
@@ -215,16 +212,18 @@ function DistributionSelector() {
     const api = useContext(ISAPICtx);
 
     return (
-        <OptionGroup
-            title="Distribution"
-            options={[
-                { label: "Random", value: "rand" },
-                { label: "Even", value: "even" },
-            ]}
-            selected={{ get: distr, set: api.distType }}
-            size="sm"
-            alignment="center"
-        />
+        <div>
+            <Title text="Distribution" size="small" />
+            <OptionGroup
+                options={[
+                    { label: "Random", value: "rand" },
+                    { label: "Even", value: "even" },
+                ]}
+                selected={{ get: distr, set: api.distType }}
+                size="sm"
+                alignment="center"
+            />
+        </div>
     );
 }
 

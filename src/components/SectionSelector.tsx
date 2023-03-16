@@ -4,16 +4,15 @@ import React from "react";
 
 import { Alignment, inputGroupClasses, Size } from "../ts/Utils";
 import { StateObjHook } from "../ts/CustomHooks";
+import Title from "./Title";
 
 export function OptionGroup({
-    title,
     options,
     selected,
     size,
     alignment,
-    bs5Class,
+    bs5Class = "",
 }: {
-    title: string;
     options: { label: string; value: string }[];
     selected: StateObjHook;
     size: Size;
@@ -22,41 +21,27 @@ export function OptionGroup({
 }) {
     //
 
-    let options_ = options.map((opt, i) => {
-        //
-
-        let selectedClass =
-            opt.value === selected.get ? "cap-btn-group-select-active" : "";
-
-        return (
-            <button
-                key={i}
-                type="button"
-                className={`btn cap-btn-group-select ${selectedClass}`}
-                onClick={() => selected.set(opt.value)}
-            >
-                {opt.label}
-            </button>
-        );
-    });
-
-    let titleSize =
-        size === "sm" ? "small" : size === "lg" ? "large" : "medium";
-
     return (
-        <div className={`my-2 ${bs5Class || ""}`}>
-            {title != null && (
-                <div
-                    className="cap-section-selector-title cap-container-dark-1 mx-auto mb-2"
-                    style={{ fontSize: titleSize }}
-                >
-                    {title}
-                </div>
-            )}
+        <div className={inputGroupClasses(size, alignment, `${bs5Class}`)}>
+            {options.map((opt, i) => {
+                //
 
-            <div className={inputGroupClasses(size, alignment, "")}>
-                {options_}
-            </div>
+                let selectedClass =
+                    opt.value === selected.get
+                        ? "cap-btn-group-select-active"
+                        : "";
+
+                return (
+                    <button
+                        key={i}
+                        type="button"
+                        className={`btn cap-btn-group-select ${selectedClass}`}
+                        onClick={() => selected.set(opt.value)}
+                    >
+                        {opt.label}
+                    </button>
+                );
+            })}
         </div>
     );
 }
@@ -67,7 +52,7 @@ export default function SectionSelector({
     selected,
     size,
     alignment,
-    bs5Class,
+    bs5Class = "",
 }: {
     title: string;
     sections: { label: string; value: string; component: JSX.Element }[];
@@ -93,13 +78,13 @@ export default function SectionSelector({
 
     return (
         <div className="">
+            <Title text={title} />
             <OptionGroup
-                title={title}
                 options={options}
                 selected={selected}
                 size={size}
                 alignment={alignment}
-                bs5Class={bs5Class || ""}
+                bs5Class={bs5Class}
             />
             {visibleSection}
         </div>
