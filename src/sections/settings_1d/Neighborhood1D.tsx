@@ -1,7 +1,11 @@
 //
 
 import React, { useContext, useCallback } from "react";
-import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import {
+    faArrowsLeftRightToLine,
+    faRotate,
+    faRulerHorizontal,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { OptionGroup } from "../../components/SectionSelector";
 import NumberInput from "../../components/NumberInput";
@@ -36,8 +40,6 @@ function Width() {
             }}
             min={2}
             max={8}
-            size="sm"
-            alignment="center"
         />
     );
 }

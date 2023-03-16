@@ -14,7 +14,7 @@ import {
 import Button from "../../components/Button";
 import { IconCell, Ellipses } from "../../components/Cells";
 
-import { inputGroupClasses, intToBoolArray } from "../../ts/Utils";
+import { intToBoolArray } from "../../ts/Utils";
 import { NbhdType } from "src/ts/CellularAutomaton";
 
 import {
@@ -25,6 +25,7 @@ import {
     RulesCtx,
 } from "src/App";
 import { useStateObj } from "src/ts/CustomHooks";
+import Group from "src/components/Group";
 
 export default function Rules1D() {
     //
@@ -74,31 +75,30 @@ function Controls() {
 
     return (
         <div className="col-lg">
-            <div className={inputGroupClasses("md", "center", "")}>
-                <Button
-                    tooltipLabel="Random"
-                    icon={faShuffle}
-                    onClick={api.automaton.rules.setRandom}
-                />
-
-                <Button
-                    tooltipLabel="Invert"
-                    icon={faRightLeft}
-                    onClick={api.automaton.rules.setInverse}
-                />
-
-                <Button
-                    tooltipLabel="All alive"
-                    icon={faSquareSolid}
-                    onClick={api.automaton.rules.setAlive}
-                />
-
-                <Button
-                    tooltipLabel="All dead"
-                    icon={faSquareRegular}
-                    onClick={api.automaton.rules.setDead}
-                />
-            </div>
+            <Group
+                elements={[
+                    <Button
+                        tooltipLabel="Random"
+                        icon={faShuffle}
+                        onClick={api.automaton.rules.setRandom}
+                    />,
+                    <Button
+                        tooltipLabel="Invert"
+                        icon={faRightLeft}
+                        onClick={api.automaton.rules.setInverse}
+                    />,
+                    <Button
+                        tooltipLabel="All alive"
+                        icon={faSquareSolid}
+                        onClick={api.automaton.rules.setAlive}
+                    />,
+                    <Button
+                        tooltipLabel="All dead"
+                        icon={faSquareRegular}
+                        onClick={api.automaton.rules.setDead}
+                    />,
+                ]}
+            />
         </div>
     );
 }

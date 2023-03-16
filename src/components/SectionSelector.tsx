@@ -2,8 +2,8 @@
 
 import React from "react";
 
-import { Alignment, inputGroupClasses, Size } from "../ts/Utils";
 import { StateObjHook } from "../ts/CustomHooks";
+import Group, { Alignment, Size } from "./Group";
 import Title from "./Title";
 
 export function OptionGroup({
@@ -11,19 +11,22 @@ export function OptionGroup({
     selected,
     size,
     alignment,
-    bs5Class = "",
+    additionalClasses,
 }: {
     options: { label: string; value: string }[];
     selected: StateObjHook;
-    size: Size;
-    alignment: Alignment;
-    bs5Class?: string;
+    size?: Size;
+    alignment?: Alignment;
+    additionalClasses?: string;
 }) {
     //
 
     return (
-        <div className={inputGroupClasses(size, alignment, `${bs5Class}`)}>
-            {options.map((opt, i) => {
+        <Group
+            size={size}
+            alignment={alignment}
+            additionalClasses={additionalClasses}
+            elements={options.map((opt, i) => {
                 //
 
                 let selectedClass =
@@ -42,7 +45,7 @@ export function OptionGroup({
                     </button>
                 );
             })}
-        </div>
+        />
     );
 }
 
@@ -52,14 +55,14 @@ export default function SectionSelector({
     selected,
     size,
     alignment,
-    bs5Class = "",
+    additionalClasses = "",
 }: {
     title: string;
     sections: { label: string; value: string; component: JSX.Element }[];
     selected: StateObjHook;
-    size: Size;
-    alignment: Alignment;
-    bs5Class?: string;
+    size?: Size;
+    alignment?: Alignment;
+    additionalClasses?: string;
 }) {
     //
 
@@ -84,7 +87,7 @@ export default function SectionSelector({
                 selected={selected}
                 size={size}
                 alignment={alignment}
-                bs5Class={bs5Class}
+                additionalClasses={additionalClasses}
             />
             {visibleSection}
         </div>

@@ -2,10 +2,15 @@
 
 import React from "react";
 
-import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { Size, Alignment, inputGroupClasses } from "../ts/Utils";
+import {
+    faMinus,
+    faPlus,
+    IconDefinition,
+} from "@fortawesome/free-solid-svg-icons";
+import { Position } from "../ts/Utils";
 import Button from "./Button";
 import { RangeReducerHook } from "../ts/CustomHooks";
+import Group, { Alignment, Size } from "./Group";
 
 function Label({ text }: { text: string }) {
     //
@@ -68,47 +73,52 @@ function InputNum({
 }
 
 export default function NumberInput({
+    icon,
+    label,
+    tooltipLabel,
+    tooltipPlacement,
+    size,
+    alignment,
+    additionalClasses,
     value,
     min,
     max,
-    label,
-    size,
-    alignment,
-    extraClasses,
 }: {
+    icon?: IconDefinition;
+    label?: string;
+    tooltipLabel?: string;
+    tooltipPlacement?: Position;
+    size?: Size;
+    alignment?: Alignment;
+    additionalClasses?: string;
     value: RangeReducerHook;
     min: number;
     max: number;
-    label?: string;
-    size: Size;
-    alignment: Alignment;
-    extraClasses?: string;
 }) {
     //
 
-    const contClasses = inputGroupClasses(
-        size,
-        alignment,
-        ` ${extraClasses || ""}`
-    );
-
     return (
-        <div className={contClasses}>
-            {label != null && <Label text={label} />}
-
-            <DecreaseButton
-                min={min}
-                value={value.get}
-                decreaseValue={value.prev}
-            />
-
-            <InputNum value={value.get} setValue={value.set} />
-
-            <IncreaseButton
-                max={max}
-                value={value.get}
-                increaseValue={value.next}
-            />
-        </div>
+        <Group
+            icon={icon}
+            label={label}
+            tooltipLabel={tooltipLabel}
+            tooltipPlacement={tooltipPlacement}
+            size={size}
+            alignment={alignment}
+            additionalClasses={additionalClasses}
+            elements={[
+                <DecreaseButton
+                    min={min}
+                    value={value.get}
+                    decreaseValue={value.prev}
+                />,
+                <InputNum value={value.get} setValue={value.set} />,
+                <IncreaseButton
+                    max={max}
+                    value={value.get}
+                    increaseValue={value.next}
+                />,
+            ]}
+        />
     );
 }

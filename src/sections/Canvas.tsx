@@ -22,7 +22,6 @@ import {
 import Button from "../components/Button";
 import LevelSelector from "../components/LevelSelector";
 
-import { inputGroupClasses } from "../ts/Utils";
 import { APICtx, APICtxType } from "src/App";
 import CanvasCntrl from "src/ts/CanvasCntrl";
 import {
@@ -30,6 +29,7 @@ import {
     useBoolState,
     useEnumReducer,
 } from "src/ts/CustomHooks";
+import Group from "src/components/Group";
 
 type CanvasAPICtxType = {
     next: () => void;
@@ -154,37 +154,34 @@ function FlowCtrls() {
     const isRunning = useContext(IsRunningCtx);
 
     return (
-        <div className={inputGroupClasses("md", "center", "")}>
-            {/*  */}
-
-            <Button
-                tooltipLabel="Next"
-                icon={faForwardStep}
-                onClick={canvasApi.next}
-                enabled={!isRunning}
-            />
-
-            <Button
-                tooltipLabel="Run"
-                icon={faPlay}
-                onClick={canvasApi.run}
-                enabled={!isRunning}
-            />
-
-            <Button
-                tooltipLabel="Pause"
-                icon={faPause}
-                onClick={canvasApi.pause}
-                enabled={isRunning}
-            />
-
-            <Button
-                tooltipLabel="Stop"
-                icon={faStop}
-                onClick={canvasApi.stop}
-                enabled={isRunning}
-            />
-        </div>
+        <Group
+            elements={[
+                <Button
+                    tooltipLabel="Next"
+                    icon={faForwardStep}
+                    onClick={canvasApi.next}
+                    enabled={!isRunning}
+                />,
+                <Button
+                    tooltipLabel="Run"
+                    icon={faPlay}
+                    onClick={canvasApi.run}
+                    enabled={!isRunning}
+                />,
+                <Button
+                    tooltipLabel="Pause"
+                    icon={faPause}
+                    onClick={canvasApi.pause}
+                    enabled={isRunning}
+                />,
+                <Button
+                    tooltipLabel="Stop"
+                    icon={faStop}
+                    onClick={canvasApi.stop}
+                    enabled={isRunning}
+                />,
+            ]}
+        />
     );
 }
 
@@ -194,21 +191,20 @@ function CanvasCtrls() {
     const canvasApi = useContext(CanvasAPICtx)!;
 
     return (
-        <div className={inputGroupClasses("md", "center", "")}>
-            {/*  */}
-
-            <Button
-                tooltipLabel="Clear"
-                icon={faBroom}
-                onClick={canvasApi.clear}
-            />
-
-            <Button
-                tooltipLabel="Screenshot"
-                icon={faCameraRetro}
-                onClick={canvasApi.saveScene}
-            />
-        </div>
+        <Group
+            elements={[
+                <Button
+                    tooltipLabel="Clear"
+                    icon={faBroom}
+                    onClick={canvasApi.clear}
+                />,
+                <Button
+                    tooltipLabel="Screenshot"
+                    icon={faCameraRetro}
+                    onClick={canvasApi.saveScene}
+                />,
+            ]}
+        />
     );
 }
 

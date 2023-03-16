@@ -1,5 +1,7 @@
 //
 
+export type Position = "none" | "top" | "right" | "bottom" | "left";
+
 /**
  * Converts an integer number to an array of booleans that represents
  * the digits of its binary representation.
@@ -31,7 +33,10 @@ export function intToBoolArray(int: number, size: number): boolean[] {
  * @param {Array} arr boolean array
  * @returns {int} integer number
  */
-export function boolArrayToInt(arr: boolean[], reverse: boolean = false): number {
+export function boolArrayToInt(
+    arr: boolean[],
+    reverse: boolean = false
+): number {
     //
 
     let int;
@@ -43,44 +48,6 @@ export function boolArrayToInt(arr: boolean[], reverse: boolean = false): number
     int = parseInt(int, 2);
 
     return int;
-}
-
-export type Size = "sm" | "md" | "lg";
-export type Alignment = "start" | "center" | "end";
-
-/**
- * Builds a string with the corresponding BS5 input group classes.
- * @param {String} size size ('sm', 'lg', '')
- * @param {String} alignment alignment ('start', 'center', 'end', '')
- * @param {String} classes other classes
- * @returns {String} classes
- */
-export function inputGroupClasses(
-    size: Size,
-    alignment: Alignment,
-    classes: string
-): string {
-    //
-
-    let size_, alignment_;
-
-    if (size === "sm" || size === "lg") {
-        size_ = `input-group-${size}`;
-    } else {
-        size_ = "";
-    }
-
-    if (
-        alignment === "start" ||
-        alignment === "center" ||
-        alignment === "end"
-    ) {
-        alignment_ = `d-flex justify-content-${alignment}`;
-    } else {
-        alignment_ = "";
-    }
-
-    return `input-group ${size_} ${alignment_} ${classes}`;
 }
 
 /**
@@ -157,4 +124,3 @@ export function boolArrayNot(boolArr: boolean[]): boolean[] {
 
     return boolArr.map((e) => !e);
 }
-

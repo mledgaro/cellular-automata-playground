@@ -102,7 +102,7 @@ function NbhdInput2D({
                     max={8}
                     size="md"
                     alignment="center"
-                    extraClasses="mb-2"
+                    additionalClasses="mb-2"
                 />
 
                 <NumberInput
@@ -163,7 +163,7 @@ export default function Neighborhood2D({
                 selected={type}
                 size="sm"
                 alignment="center"
-                bs5Class="w-75 mx-auto"
+                additionalClasses="w-75 mx-auto"
             />
 
             <NbhdInput2D
