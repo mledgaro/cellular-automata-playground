@@ -3,18 +3,23 @@
 import "./css/App.css";
 
 import React, { createContext, useEffect, useRef } from "react";
-import { useBoolState, useRangeReducer, useStateObj } from "./ts/CustomHooks";
+import {
+    RangeReducerHook,
+    useBoolState,
+    useRangeReducer,
+    useStateObj,
+} from "./ts/CustomHooks";
 
-import Title from "./sections/Title";
 import Canvas from "./sections/Canvas";
 import Settings1D from "./sections/settings_1d/Settings1D";
 import Settings2D from "./sections/settings_2d/Settings2D";
-import Footer from "./sections/Footer";
 
 import CellularAutomaton, {
     DistributionType,
     NbhdType,
 } from "./ts/CellularAutomaton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { fa1, fa2, faD } from "@fortawesome/free-solid-svg-icons";
 
 export type RulesCtxType = {
     update: boolean;
@@ -171,15 +176,6 @@ export default function App() {
         rulesUpdate.toggle();
     }, [nbhdWidth.get, nbhdType.get, mainCell.get]);
 
-    let settings;
-
-    if (dimension.get === 1) {
-        settings = <Settings1D />;
-    } else {
-        // dimension.get === 2
-        settings = <Settings2D />;
-    }
-
     return (
         <div className="App">
             <NbhdWidthCtx.Provider value={nbhdWidth.get}>
@@ -193,13 +189,7 @@ export default function App() {
                                     <APICtx.Provider value={apiCtx}>
                                         {/*  */}
 
-                                        <Title dimension={dimension} />
-
-                                        <Canvas />
-
-                                        {settings}
-
-                                        <Footer />
+                                        <Content dimension={dimension} />
                                     </APICtx.Provider>
                                 </InitStateCtx.Provider>
                             </RulesCtx.Provider>
@@ -207,6 +197,62 @@ export default function App() {
                     </MainCellCtx.Provider>
                 </NbhdTypeCtx.Provider>
             </NbhdWidthCtx.Provider>
+        </div>
+    );
+}
+
+function Content({ dimension }: { dimension: RangeReducerHook }) {
+    //
+
+    let settings;
+
+    if (dimension.get === 1) {
+        settings = <Settings1D />;
+    } else {
+        // dimension.get === 2
+        settings = <Settings2D />;
+    }
+
+    return (
+        <div>
+            {/*  */}
+
+            {/* Title */}
+            <div className="input-group input-group-lg justify-content-center mt-2">
+                <button
+                    type="button"
+                    className="btn cap-container-clear-1"
+                    onClick={dimension.next}
+                >
+                    <FontAwesomeIcon
+                        icon={dimension.get === 1 ? fa1 : fa2}
+                        size="2xl"
+                    />
+                    <FontAwesomeIcon icon={faD} size="2xl" />
+                </button>
+
+                <span
+                    className="input-group-text cap-container-dark-1"
+                    id="app-title"
+                >
+                    Cellular Automata
+                </span>
+            </div>
+
+            <Canvas />
+
+            {settings}
+
+            {/* Footer */}
+            <div id="footer" className="mt-5 mb-3">
+                Universidad Nacional Autónoma de México - Facultad de Ciencias
+                <br />
+                Ciencias de la Computación - Vida Artificial 2022-2
+                <br />
+                Edgar Mendoza
+                <br />
+                mledgaro@ciencias.unam.mx
+            </div>
         </div>
     );
 }
