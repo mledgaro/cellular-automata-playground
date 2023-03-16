@@ -5,7 +5,6 @@ import React, {
     useCallback,
     useContext,
     useEffect,
-    useMemo,
     useRef,
 } from "react";
 
@@ -28,6 +27,7 @@ import {
     EnumReducerType,
     useBoolState,
     useEnumReducer,
+    useStateObj,
 } from "src/ts/CustomHooks";
 import Group from "src/components/Group";
 
@@ -43,9 +43,11 @@ type CanvasAPICtxType = {
 const canvasId = "cap-canvas";
 
 const CanvasAPICtx = createContext<CanvasAPICtxType | null>(null);
-const IsRunningCtx = createContext(false);
+const RunningStatusCtx = createContext<RunningStatus>("stopped");
 const SpeedLvlCtx = createContext<EnumReducerType | null>(null);
 const ZoomLvlCtx = createContext<EnumReducerType | null>(null);
+
+type RunningStatus = "stopped" | "paused" | "running";
 
 export default function Canvas() {
     //
@@ -56,7 +58,7 @@ export default function Canvas() {
     const genCount = useRef(0);
     const runInterval = useRef<NodeJS.Timer>();
 
-    const isRunning = useBoolState(false);
+    const runningStatus = useStateObj("stopped");
     const speedLvl = useEnumReducer([800, 600, 400, 200, 1], 2);
     const zoomLvl = useEnumReducer([4, 6, 8, 12, 16], 2);
 
@@ -75,11 +77,6 @@ export default function Canvas() {
         }
     }, [api.automaton]);
 
-    const pause = useCallback(() => {
-        isRunning.setFalse();
-        clearInterval(runInterval.current);
-    }, [isRunning]);
-
     const clear = useCallback(() => {
         genCount.current = 0;
         cntrl.current?.clear();
@@ -94,27 +91,34 @@ export default function Canvas() {
     }, [zoomLvl.get]);
 
     useEffect(() => {
-        if (isRunning.get) {
+        if (runningStatus.get === "running") {
             clearInterval(runInterval.current);
             runInterval.current = setInterval(nextState, speedLvl.get);
         }
     }, [speedLvl.get]);
 
     useEffect(() => {
-        if (!isRunning.get) {
+        if (runningStatus.get !== "running") {
             cntrl.current?.clear();
         }
     }, [zoomLvl.get]);
 
     const canvasAPICtx = {
-        next: nextState,
+        next: () => {
+            runningStatus.set("paused");
+            nextState();
+        },
         run: () => {
-            isRunning.setTrue();
+            runningStatus.set("running");
             runInterval.current = setInterval(nextState, speedLvl.get);
         },
-        pause: pause,
+        pause: () => {
+            runningStatus.set("paused");
+            clearInterval(runInterval.current);
+        },
         stop: () => {
-            pause();
+            runningStatus.set("stopped");
+            clearInterval(runInterval.current);
             clear();
         },
         clear: clear,
@@ -123,7 +127,7 @@ export default function Canvas() {
 
     return (
         <CanvasAPICtx.Provider value={canvasAPICtx}>
-            <IsRunningCtx.Provider value={isRunning.get}>
+            <RunningStatusCtx.Provider value={runningStatus.get}>
                 <ZoomLvlCtx.Provider value={zoomLvl}>
                     <SpeedLvlCtx.Provider value={speedLvl}>
                         {/*  */}
@@ -142,7 +146,7 @@ export default function Canvas() {
                         </div>
                     </SpeedLvlCtx.Provider>
                 </ZoomLvlCtx.Provider>
-            </IsRunningCtx.Provider>
+            </RunningStatusCtx.Provider>
         </CanvasAPICtx.Provider>
     );
 }
@@ -151,7 +155,7 @@ function FlowCtrls() {
     //
 
     const canvasApi = useContext(CanvasAPICtx)!;
-    const isRunning = useContext(IsRunningCtx);
+    const runningStatus = useContext(RunningStatusCtx)!;
 
     return (
         <Group
@@ -160,25 +164,25 @@ function FlowCtrls() {
                     tooltipLabel="Next"
                     icon={faForwardStep}
                     onClick={canvasApi.next}
-                    enabled={!isRunning}
+                    enabled={runningStatus !== "running"}
                 />,
                 <Button
                     tooltipLabel="Run"
                     icon={faPlay}
                     onClick={canvasApi.run}
-                    enabled={!isRunning}
+                    enabled={runningStatus !== "running"}
                 />,
                 <Button
                     tooltipLabel="Pause"
                     icon={faPause}
                     onClick={canvasApi.pause}
-                    enabled={isRunning}
+                    enabled={runningStatus === "running"}
                 />,
                 <Button
                     tooltipLabel="Stop"
                     icon={faStop}
                     onClick={canvasApi.stop}
-                    enabled={isRunning}
+                    enabled={runningStatus !== "stopped"}
                 />,
             ]}
         />
