@@ -4,32 +4,27 @@ export default class CanvasCntrl {
     //
 
     #canvas: HTMLCanvasElement;
+    #rows: number;
+    #columns: number;
+
     #graphics: CanvasRenderingContext2D;
-    #maxWidth: number;
-    #maxHeight: number;
     #cellSize: number = 0;
-    #rows: number = 0;
-    #columns: number = 0;
     #width: number = 0;
     #height: number = 0;
-    #origX: number = 0;
-    #origY: number = 0;
+
     #backgroundColor: string;
     #deadColor: string;
     #aliveColor: string;
 
-    // #maxRows;
-    // #maxColumns;
-
-    constructor(canvasId: string, width: number, height: number) {
+    constructor(canvasId: string, rows: number, columns: number) {
         //
 
         this.#canvas = document.getElementById(canvasId) as HTMLCanvasElement;
 
-        this.#graphics = this.#canvas.getContext("2d")!;
+        this.#rows = rows;
+        this.#columns = columns;
 
-        this.#maxWidth = width;
-        this.#maxHeight = height;
+        this.#graphics = this.#canvas.getContext("2d")!;
 
         this.cellSize = 8;
 
@@ -43,6 +38,8 @@ export default class CanvasCntrl {
         this.#aliveColor = rs.getPropertyValue("--clear1");
 
         this.clear();
+
+        console.log("canvas cntrl constructor");
     }
 
     // private
@@ -50,29 +47,24 @@ export default class CanvasCntrl {
     #drawGrid() {
         //
 
-        let pos, i, w, h;
-
-        w = this.#width + this.#origX;
-        h = this.#height + this.#origY;
-
         this.#graphics.lineWidth = 1;
         this.#graphics.strokeStyle = this.#backgroundColor;
 
         this.#graphics.beginPath();
 
         // horizontal  lines
-        for (i = 1; i < this.#rows; i++) {
-            pos = i * this.#cellSize + this.#origY;
-            this.#graphics.moveTo(this.#origX, pos);
-            this.#graphics.lineTo(w, pos);
+        for (let i = 1, pos; i < this.#rows; i++) {
+            pos = i * this.#cellSize;
+            this.#graphics.moveTo(0, pos);
+            this.#graphics.lineTo(this.#width, pos);
             this.#graphics.stroke();
         }
 
         // vertical  lines
-        for (i = 1; i < this.#columns; i++) {
-            pos = i * this.#cellSize + this.#origX;
-            this.#graphics.moveTo(pos, this.#origY);
-            this.#graphics.lineTo(pos, h);
+        for (let i = 1, pos; i < this.#columns; i++) {
+            pos = i * this.#cellSize;
+            this.#graphics.moveTo(pos, 0);
+            this.#graphics.lineTo(pos, this.#height);
             this.#graphics.stroke();
         }
     }
@@ -82,12 +74,7 @@ export default class CanvasCntrl {
 
         this.#graphics.fillStyle = state ? this.#aliveColor : this.#deadColor;
 
-        this.#graphics.fillRect(
-            this.#origX + x,
-            this.#origY + y,
-            this.#cellSize,
-            this.#cellSize
-        );
+        this.#graphics.fillRect(x, y, this.#cellSize, this.#cellSize);
     }
 
     // public
@@ -96,15 +83,10 @@ export default class CanvasCntrl {
         //
 
         this.#graphics.fillStyle = this.#backgroundColor;
-        this.#graphics.fillRect(0, 0, this.#maxWidth, this.#maxHeight);
+        this.#graphics.fillRect(0, 0, this.#width, this.#height);
 
         this.#graphics.fillStyle = this.#deadColor;
-        this.#graphics.fillRect(
-            this.#origX,
-            this.#origY,
-            this.#width,
-            this.#height
-        );
+        this.#graphics.fillRect(0, 0, this.#width, this.#height);
 
         this.#drawGrid();
     }
@@ -173,14 +155,11 @@ export default class CanvasCntrl {
 
         this.#cellSize = size;
 
-        this.#rows = Math.floor(this.#maxHeight / this.#cellSize);
-        this.#columns = Math.floor(this.#maxWidth / this.#cellSize);
-
         this.#width = this.#columns * this.#cellSize;
         this.#height = this.#rows * this.#cellSize;
 
-        this.#origX = Math.floor((this.#maxWidth - this.#width) / 2);
-        this.#origY = Math.floor((this.#maxHeight - this.#height) / 2);
+        this.#canvas.width = this.#width;
+        this.#canvas.height = this.#height;
     }
 
     get rows(): number {

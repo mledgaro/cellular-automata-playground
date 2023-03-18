@@ -25,7 +25,6 @@ import { APICtx, APICtxType } from "src/App";
 import CanvasCntrl from "src/ts/CanvasCntrl";
 import {
     EnumReducerType,
-    useBoolState,
     useEnumReducer,
     useStateObj,
 } from "src/ts/CustomHooks";
@@ -62,9 +61,6 @@ export default function Canvas() {
     const speedLvl = useEnumReducer([800, 600, 400, 200, 1], 2);
     const zoomLvl = useEnumReducer([4, 6, 8, 12, 16], 2);
 
-    const width = Math.floor(window.innerWidth * 0.95);
-    const height = Math.floor(window.innerHeight * 0.7);
-
     const nextState = useCallback(() => {
         if (genCount.current < (cntrl.current?.rows ?? 0)) {
             let state;
@@ -83,8 +79,8 @@ export default function Canvas() {
     }, []);
 
     useEffect(() => {
-        cntrl.current = new CanvasCntrl(canvasId, width, height);
-    }, [width, height]);
+        cntrl.current = new CanvasCntrl(canvasId, 128, 256);
+    }, []);
 
     useEffect(() => {
         cntrl.current!.cellSize = zoomLvl.get;
@@ -134,12 +130,7 @@ export default function Canvas() {
 
                         <div>
                             <div id="canvas-container" className="">
-                                <canvas
-                                    id={canvasId}
-                                    className=""
-                                    width={width}
-                                    height={height}
-                                />
+                                <canvas id={canvasId} className="border" />
                             </div>
 
                             <Controls />

@@ -202,12 +202,12 @@
 
 #canvas-container {
     margin: auto;
-    width: fit-content;
-    /* height: fit-content; */
+    width: 95vw;
+    height: 70vh;
     margin-top: 3vh;
     margin-bottom: 1vh;
-    /* overflow-x: scroll; */
-    /* overflow-y: scroll; */
+    overflow-x: scroll;
+    overflow-y: scroll;
 }
 
 #footer {
