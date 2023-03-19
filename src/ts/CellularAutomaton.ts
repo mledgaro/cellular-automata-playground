@@ -327,10 +327,8 @@ export default class CellularAutomaton {
     nextCellsState(): boolean[] {
         //
 
-        let nstate = this.#state.map((cell, i) => this.#nextCellState(i));
+        this.#state = this.#state.map((_, i) => this.#nextCellState(i));
 
-        this.#state = nstate;
-
-        return nstate;
+        return this.#state;
     }
 }

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect } from "react";
 
-import { faArrowTurnDown, faRotate } from "@fortawesome/free-solid-svg-icons";
+import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../components/Button";
 import NumberInput from "../../components/NumberInput";

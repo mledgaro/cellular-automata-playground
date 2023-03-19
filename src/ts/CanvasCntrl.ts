@@ -8,6 +8,8 @@ export default class CanvasCntrl {
     #columns: number;
 
     #graphics: CanvasRenderingContext2D;
+    #buffer: boolean[][] = [];
+    #currentRow: number = 0;
     #cellSize: number = 0;
     #width: number = 0;
     #height: number = 0;
@@ -37,12 +39,22 @@ export default class CanvasCntrl {
         this.#deadColor = rs.getPropertyValue("--dark1");
         this.#aliveColor = rs.getPropertyValue("--clear1");
 
-        this.clear();
-
-        console.log("canvas cntrl constructor");
+        this.restart();
     }
 
     // private
+
+    #clear() {
+        //
+
+        this.#graphics.fillStyle = this.#backgroundColor;
+        this.#graphics.fillRect(0, 0, this.#width, this.#height);
+
+        this.#graphics.fillStyle = this.#deadColor;
+        this.#graphics.fillRect(0, 0, this.#width, this.#height);
+
+        this.#drawGrid();
+    }
 
     #drawGrid() {
         //
@@ -79,62 +91,54 @@ export default class CanvasCntrl {
 
     // public
 
-    clear() {
+    restart() {
         //
 
-        this.#graphics.fillStyle = this.#backgroundColor;
-        this.#graphics.fillRect(0, 0, this.#width, this.#height);
+        this.#buffer = Array(this.#rows).fill(Array(this.#columns).fill(false));
+        this.#currentRow = 0;
 
-        this.#graphics.fillStyle = this.#deadColor;
-        this.#graphics.fillRect(0, 0, this.#width, this.#height);
-
+        this.#clear();
         this.#drawGrid();
     }
 
     paintCell(row: number, col: number, state: boolean) {
         //
 
-        let x, y;
-
-        x = col * this.#cellSize;
-        y = row * this.#cellSize;
-
-        this.#paintCellAtCoords(x, y, state);
+        this.#paintCellAtCoords(
+            col * this.#cellSize,
+            row * this.#cellSize,
+            state
+        );
     }
 
-    paintRow(row: number, cellsStates: boolean[]) {
+    paintRow(cellsState: boolean[]) {
         //
 
-        let diff = this.#columns - cellsStates.length;
-        let s = Math.round(Math.abs(diff) / 2);
-
-        if (diff > 0) {
-            for (let c = 0; c < cellsStates.length; c++) {
-                this.paintCell(row, c + s, cellsStates[c]);
+        if (this.#currentRow < this.#rows) {
+            for (let i = 0; i < cellsState.length; i++) {
+                this.paintCell(this.#currentRow, i, cellsState[i]);
             }
+            this.#buffer.splice(this.#currentRow, 1, cellsState);
+            this.#currentRow++;
         } else {
-            for (let c = 0; c < this.#columns; c++) {
-                this.paintCell(row, c, cellsStates[c + s]);
-            }
+            this.#buffer.shift();
+            this.#buffer.push(cellsState);
+
+            this.paintCells(this.#buffer);
         }
     }
 
-    // paintCells(cells: boolean[][]) {
-    //     //
+    paintCells(cells: boolean[][]) {
+        //
 
-    //     let rows, cols;
+        this.#clear();
 
-    //     rows = Math.min(cells.length, this.#rows);
-    //     cols = Math.min(cells[0].length, this.#columns);
-
-    //     this.clear();
-
-    //     for (let r = 0, c; r < rows; r++) {
-    //         for (c = 0; c < cols; c++) {
-    //             this.paintCell(r, c, cells[r][c]);
-    //         }
-    //     }
-    // }
+        for (let r = 0; r < this.#rows; r++) {
+            for (let c = 0; c < this.#columns; c++) {
+                this.paintCell(r, c, cells[r][c]);
+            }
+        }
+    }
 
     saveScene(fileName: string) {
         //
@@ -161,6 +165,8 @@ export default class CanvasCntrl {
         this.#canvas.width = this.#width;
         this.#canvas.height = this.#height;
     }
+
+    // getters
 
     get rows(): number {
         return this.#rows;

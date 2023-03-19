@@ -9,26 +9,26 @@ import React, {
 } from "react";
 
 import {
-    faForwardStep,
-    faPlay,
-    faStop,
-    faGaugeHigh,
-    faMagnifyingGlass,
     faBroom,
     faCameraRetro,
+    faForwardStep,
+    faGaugeHigh,
+    faMagnifyingGlass,
     faPause,
+    faPlay,
+    faStop,
 } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
 import LevelSelector from "../components/LevelSelector";
 
-import { APICtx, APICtxType } from "src/App";
+import { APICtx, APICtxType, NumCellsCtx } from "src/App";
+import Group from "src/components/Group";
 import CanvasCntrl from "src/ts/CanvasCntrl";
 import {
     EnumReducerType,
     useEnumReducer,
     useStateObj,
 } from "src/ts/CustomHooks";
-import Group from "src/components/Group";
 
 type CanvasAPICtxType = {
     next: () => void;
@@ -52,6 +52,7 @@ export default function Canvas() {
     //
 
     const api = useContext<APICtxType | null>(APICtx)!;
+    const numCells = useContext(NumCellsCtx);
 
     const cntrl = useRef<CanvasCntrl>();
     const genCount = useRef(0);
@@ -62,24 +63,23 @@ export default function Canvas() {
     const zoomLvl = useEnumReducer([4, 6, 8, 12, 16], 2);
 
     const nextState = useCallback(() => {
-        if (genCount.current < (cntrl.current?.rows ?? 0)) {
-            let state;
-            if (genCount.current === 0) {
-                state = api.automaton.state.get();
-            } else {
-                state = api.automaton.state.next();
-            }
-            cntrl.current?.paintRow(genCount.current++, state);
+        let state;
+        if (genCount.current === 0) {
+            state = api.automaton.state.get();
+        } else {
+            state = api.automaton.state.next();
         }
+        genCount.current++;
+        cntrl.current?.paintRow(state);
     }, [api.automaton]);
 
     const clear = useCallback(() => {
         genCount.current = 0;
-        cntrl.current?.clear();
+        cntrl.current?.restart();
     }, []);
 
     useEffect(() => {
-        cntrl.current = new CanvasCntrl(canvasId, 128, 256);
+        cntrl.current = new CanvasCntrl(canvasId, 64, numCells);
     }, []);
 
     useEffect(() => {
@@ -95,7 +95,7 @@ export default function Canvas() {
 
     useEffect(() => {
         if (runningStatus.get !== "running") {
-            cntrl.current?.clear();
+            cntrl.current?.restart();
         }
     }, [zoomLvl.get]);
 
@@ -130,7 +130,7 @@ export default function Canvas() {
 
                         <div>
                             <div id="canvas-container" className="">
-                                <canvas id={canvasId} className="border" />
+                                <canvas id={canvasId} className="" />
                             </div>
 
                             <Controls />

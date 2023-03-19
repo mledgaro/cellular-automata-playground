@@ -83,7 +83,7 @@ export default function App() {
     const nbhdType = useStateObj("adjacent");
     const mainCell = useStateObj(1);
 
-    const automaton1d = useRef(new CellularAutomaton(256));
+    const automaton1d = useRef(new CellularAutomaton(128));
 
     const rulesUpdate = useBoolState(false);
     const initStateUpdate = useBoolState(false);
