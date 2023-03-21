@@ -160,7 +160,7 @@ function GroupSize() {
         if (maxSize < minSize) {
             api.groupMaxSize.set(minSize);
         }
-    }, [minSize]);
+    }, [api.groupMaxSize, maxSize, minSize]);
 
     return (
         <div>

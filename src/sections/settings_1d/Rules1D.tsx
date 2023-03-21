@@ -17,15 +17,11 @@ import { IconCell, Ellipses } from "../../components/Cells";
 import { intToBoolArray } from "../../ts/Utils";
 import { NbhdType } from "src/ts/CellularAutomaton";
 
-import {
-    APICtx,
-    MainCellCtx,
-    NbhdTypeCtx,
-    NbhdWidthCtx,
-    RulesCtx,
-} from "src/App";
+import { APICtx, MainCellCtx, NbhdTypeCtx, RulesCtx } from "src/App";
 import { useStateObj } from "src/ts/CustomHooks";
 import Group from "src/components/Group";
+import { useAppSelector } from "src/app/hooks";
+import { selectNbhdWidth } from "src/features/nbhdWidth";
 
 export default function Rules1D() {
     //
@@ -107,7 +103,7 @@ function RulePreview({ index }: { index: number }) {
     //
 
     const nbhdType = useContext(NbhdTypeCtx) as NbhdType;
-    const nbhdWidth = useContext(NbhdWidthCtx);
+    const nbhdWidth = useAppSelector(selectNbhdWidth);
     const mainCell = useContext(MainCellCtx);
 
     let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
@@ -184,11 +180,12 @@ function RulesSet({ setHoverCell }: { setHoverCell: (val: number) => void }) {
     );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function RuleToggle({ index }: { index: number }) {
     //
 
     const nbhdType = useContext(NbhdTypeCtx) as NbhdType;
-    const nbhdWidth = useContext(NbhdWidthCtx);
+    const nbhdWidth = useAppSelector(selectNbhdWidth);
     const mainCell = useContext(MainCellCtx);
     const rules = useContext(RulesCtx)!;
     const api = useContext(APICtx)!;

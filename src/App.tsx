@@ -20,6 +20,8 @@ import CellularAutomaton, {
 } from "./ts/CellularAutomaton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fa1, fa2, faD } from "@fortawesome/free-solid-svg-icons";
+import { selectNbhdWidth } from "./features/nbhdWidth";
+import { useAppSelector } from "./app/hooks";
 
 export type RulesCtxType = {
     update: boolean;
@@ -31,11 +33,6 @@ export type RulesCtxType = {
 export type InitStateCtxType = { update: boolean; arr: boolean[] };
 
 export type APICtxType = {
-    nbhdWidth: {
-        set: (val: number) => void;
-        prev: () => void;
-        next: () => void;
-    };
     setNbhdType: (val: NbhdType) => void;
     setMainCell: (val: number) => void;
     automaton: {
@@ -64,7 +61,6 @@ export type APICtxType = {
     };
 };
 
-export const NbhdWidthCtx = createContext(3);
 export const NbhdTypeCtx = createContext<NbhdType>("adjacent");
 export const MainCellCtx = createContext(1);
 
@@ -79,7 +75,8 @@ export default function App() {
 
     const dimension = useRangeReducer(1, 2, 1, true);
 
-    const nbhdWidth = useRangeReducer(2, 8, 3, false);
+    const nbhdWidth = useAppSelector(selectNbhdWidth);
+
     const nbhdType = useStateObj("adjacent");
     const mainCell = useStateObj(1);
 
@@ -101,11 +98,6 @@ export default function App() {
     };
 
     const apiCtx = {
-        nbhdWidth: {
-            set: nbhdWidth.set,
-            prev: nbhdWidth.prev,
-            next: nbhdWidth.next,
-        },
         setNbhdType: nbhdType.set,
         setMainCell: mainCell.set,
         automaton: {
@@ -162,41 +154,39 @@ export default function App() {
     };
 
     useEffect(() => {
-        if (mainCell.get >= nbhdWidth.get) {
-            mainCell.set(nbhdWidth.get - 1);
+        if (mainCell.get >= nbhdWidth) {
+            mainCell.set(nbhdWidth - 1);
         }
-    }, [nbhdWidth.get]);
+    }, [mainCell, nbhdWidth]);
 
     useEffect(() => {
         automaton1d.current.setCellsNbhds(
-            nbhdWidth.get,
+            nbhdWidth,
             nbhdType.get,
             mainCell.get
         );
         rulesUpdate.toggle();
-    }, [nbhdWidth.get, nbhdType.get, mainCell.get]);
+    }, [nbhdWidth, nbhdType.get, mainCell.get, rulesUpdate]);
 
     return (
         <div className="App">
-            <NbhdWidthCtx.Provider value={nbhdWidth.get}>
-                <NbhdTypeCtx.Provider value={nbhdType.get}>
-                    <MainCellCtx.Provider value={mainCell.get}>
-                        <NumCellsCtx.Provider
-                            value={automaton1d.current.cellsNumber}
-                        >
-                            <RulesCtx.Provider value={rulesCtx}>
-                                <InitStateCtx.Provider value={initStateCtx}>
-                                    <APICtx.Provider value={apiCtx}>
-                                        {/*  */}
+            <NbhdTypeCtx.Provider value={nbhdType.get}>
+                <MainCellCtx.Provider value={mainCell.get}>
+                    <NumCellsCtx.Provider
+                        value={automaton1d.current.cellsNumber}
+                    >
+                        <RulesCtx.Provider value={rulesCtx}>
+                            <InitStateCtx.Provider value={initStateCtx}>
+                                <APICtx.Provider value={apiCtx}>
+                                    {/*  */}
 
-                                        <Content dimension={dimension} />
-                                    </APICtx.Provider>
-                                </InitStateCtx.Provider>
-                            </RulesCtx.Provider>
-                        </NumCellsCtx.Provider>
-                    </MainCellCtx.Provider>
-                </NbhdTypeCtx.Provider>
-            </NbhdWidthCtx.Provider>
+                                    <Content dimension={dimension} />
+                                </APICtx.Provider>
+                            </InitStateCtx.Provider>
+                        </RulesCtx.Provider>
+                    </NumCellsCtx.Provider>
+                </MainCellCtx.Provider>
+            </NbhdTypeCtx.Provider>
         </div>
     );
 }

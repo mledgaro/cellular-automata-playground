@@ -1,42 +1,39 @@
 //
 
 import React, { useContext, useCallback } from "react";
-import {
-    faArrowsLeftRightToLine,
-    faRotate,
-    faRulerHorizontal,
-} from "@fortawesome/free-solid-svg-icons";
+import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 import { OptionGroup } from "../../components/SectionSelector";
 import NumberInput from "../../components/NumberInput";
 import Button from "../../components/Button";
 import { IconCell, SelectedCell, Ellipses } from "../../components/Cells";
 import { BoolArrHook, useBoolArrState } from "../../ts/CustomHooks";
-import {
-    APICtx,
-    MainCellCtx,
-    NbhdTypeCtx,
-    NbhdWidthCtx,
-    NumCellsCtx,
-} from "src/App";
+import { APICtx, MainCellCtx, NbhdTypeCtx, NumCellsCtx } from "src/App";
 import { NbhdType } from "src/ts/CellularAutomaton";
 import { boolArray } from "src/ts/Utils";
 import Title from "src/components/Title";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import {
+    decrement,
+    increment,
+    selectNbhdWidth,
+    set,
+} from "src/features/nbhdWidth";
 
 function Width() {
     //
 
-    const width = useContext(NbhdWidthCtx);
-    const api = useContext(APICtx)!;
+    const width = useAppSelector(selectNbhdWidth);
+    const dispatch = useAppDispatch();
 
     return (
         <NumberInput
             label="Width"
             value={{
                 get: width,
-                prev: api.nbhdWidth.prev,
-                next: api.nbhdWidth.next,
-                set: api.nbhdWidth.set,
+                prev: () => dispatch(decrement()),
+                next: () => dispatch(increment()),
+                set: (val: number) => dispatch(set(val)),
             }}
             min={2}
             max={8}
@@ -70,7 +67,7 @@ function Type() {
 function MainCellSelector() {
     //
 
-    const width = useContext(NbhdWidthCtx);
+    const width = useAppSelector(selectNbhdWidth);
     const type = useContext(NbhdTypeCtx) as NbhdType;
     const mainCell = useContext(MainCellCtx);
     const api = useContext(APICtx)!;
@@ -102,7 +99,7 @@ function MainCellSelector() {
 function UpdateNbhds() {
     //
 
-    const nbhdWidth = useContext(NbhdWidthCtx);
+    const nbhdWidth = useAppSelector(selectNbhdWidth);
     const nbhdType = useContext(NbhdTypeCtx) as NbhdType;
     const mainCell = useContext(MainCellCtx);
     const api = useContext(APICtx)!;
@@ -135,7 +132,7 @@ function HighlightCell({
         let nArr = Array(numCells).fill(false);
         api.automaton.cellsNbhds.get(index).forEach((e) => (nArr[e] = true));
         highlightedCells.set(nArr);
-    }, []);
+    }, [api.automaton.cellsNbhds, highlightedCells, index, numCells]);
 
     const classes = `cap-cell cap-cell-off ${
         highlightedCells.get[index] ? "cap-cell-high" : ""
