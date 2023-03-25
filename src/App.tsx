@@ -3,12 +3,7 @@
 import "./css/App.css";
 
 import React, { createContext, useEffect, useRef } from "react";
-import {
-    RangeReducerHook,
-    useBoolState,
-    useRangeReducer,
-    useStateObj,
-} from "./ts/CustomHooks";
+import { useBoolState, useRangeReducer } from "./ts/CustomHooks";
 
 import Canvas from "./sections/Canvas";
 import Settings1D from "./sections/settings_1d/Settings1D";
@@ -20,8 +15,9 @@ import CellularAutomaton, {
 } from "./ts/CellularAutomaton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fa1, fa2, faD } from "@fortawesome/free-solid-svg-icons";
-import { selectNbhdWidth } from "./features/nbhdWidth";
-import { useAppSelector } from "./app/hooks";
+import { useAppDispatch } from "./app/hooks";
+import { setMainCell } from "./features/mainCell";
+import { dataStore } from "./app/store";
 
 export type RulesCtxType = {
     update: boolean;
@@ -33,8 +29,6 @@ export type RulesCtxType = {
 export type InitStateCtxType = { update: boolean; arr: boolean[] };
 
 export type APICtxType = {
-    setNbhdType: (val: NbhdType) => void;
-    setMainCell: (val: number) => void;
     automaton: {
         cellsNbhds: {
             set: (width: number, type: NbhdType, mainCell: number) => void;
@@ -61,13 +55,8 @@ export type APICtxType = {
     };
 };
 
-export const NbhdTypeCtx = createContext<NbhdType>("adjacent");
-export const MainCellCtx = createContext(1);
-
-export const NumCellsCtx = createContext(256);
 export const RulesCtx = createContext<RulesCtxType | null>(null);
 export const InitStateCtx = createContext<InitStateCtxType | null>(null);
-
 export const APICtx = createContext<APICtxType | null>(null);
 
 export default function App() {
@@ -75,12 +64,14 @@ export default function App() {
 
     const dimension = useRangeReducer(1, 2, 1, true);
 
-    const nbhdWidth = useAppSelector(selectNbhdWidth);
+    const numCells = dataStore.numCells();
+    const nbhdWidth = dataStore.nbhdWidth();
+    const nbhdType = dataStore.nbhdType();
+    const mainCell = dataStore.mainCell();
 
-    const nbhdType = useStateObj("adjacent");
-    const mainCell = useStateObj(1);
+    const dispatch = useAppDispatch();
 
-    const automaton1d = useRef(new CellularAutomaton(128));
+    const automaton1d = useRef(new CellularAutomaton(numCells));
 
     const rulesUpdate = useBoolState(false);
     const initStateUpdate = useBoolState(false);
@@ -98,8 +89,6 @@ export default function App() {
     };
 
     const apiCtx = {
-        setNbhdType: nbhdType.set,
-        setMainCell: mainCell.set,
         automaton: {
             cellsNbhds: {
                 set: (width: number, type: NbhdType, mainCell: number) =>
@@ -154,45 +143,16 @@ export default function App() {
     };
 
     useEffect(() => {
-        if (mainCell.get >= nbhdWidth) {
-            mainCell.set(nbhdWidth - 1);
+        if (mainCell >= nbhdWidth) {
+            dispatch(setMainCell(nbhdWidth - 1));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mainCell, nbhdWidth]);
 
     useEffect(() => {
-        automaton1d.current.setCellsNbhds(
-            nbhdWidth,
-            nbhdType.get,
-            mainCell.get
-        );
+        automaton1d.current.setCellsNbhds(nbhdWidth, nbhdType, mainCell);
         rulesUpdate.toggle();
-    }, [nbhdWidth, nbhdType.get, mainCell.get, rulesUpdate]);
-
-    return (
-        <div className="App">
-            <NbhdTypeCtx.Provider value={nbhdType.get}>
-                <MainCellCtx.Provider value={mainCell.get}>
-                    <NumCellsCtx.Provider
-                        value={automaton1d.current.cellsNumber}
-                    >
-                        <RulesCtx.Provider value={rulesCtx}>
-                            <InitStateCtx.Provider value={initStateCtx}>
-                                <APICtx.Provider value={apiCtx}>
-                                    {/*  */}
-
-                                    <Content dimension={dimension} />
-                                </APICtx.Provider>
-                            </InitStateCtx.Provider>
-                        </RulesCtx.Provider>
-                    </NumCellsCtx.Provider>
-                </MainCellCtx.Provider>
-            </NbhdTypeCtx.Provider>
-        </div>
-    );
-}
-
-function Content({ dimension }: { dimension: RangeReducerHook }) {
-    //
+    }, [nbhdWidth, nbhdType, mainCell, rulesUpdate]);
 
     let settings;
 
@@ -204,45 +164,50 @@ function Content({ dimension }: { dimension: RangeReducerHook }) {
     }
 
     return (
-        <div>
-            {/*  */}
+        <div className="App">
+            <RulesCtx.Provider value={rulesCtx}>
+                <InitStateCtx.Provider value={initStateCtx}>
+                    <APICtx.Provider value={apiCtx}>
+                        {/* Title */}
+                        <div className="input-group input-group-lg justify-content-center mt-2">
+                            <button
+                                type="button"
+                                className="btn cap-container-clear-1"
+                                onClick={dimension.next}
+                            >
+                                <FontAwesomeIcon
+                                    icon={dimension.get === 1 ? fa1 : fa2}
+                                    size="2xl"
+                                />
+                                <FontAwesomeIcon icon={faD} size="2xl" />
+                            </button>
 
-            {/* Title */}
-            <div className="input-group input-group-lg justify-content-center mt-2">
-                <button
-                    type="button"
-                    className="btn cap-container-clear-1"
-                    onClick={dimension.next}
-                >
-                    <FontAwesomeIcon
-                        icon={dimension.get === 1 ? fa1 : fa2}
-                        size="2xl"
-                    />
-                    <FontAwesomeIcon icon={faD} size="2xl" />
-                </button>
+                            <span
+                                className="input-group-text cap-container-dark-1"
+                                id="app-title"
+                            >
+                                Cellular Automata
+                            </span>
+                        </div>
 
-                <span
-                    className="input-group-text cap-container-dark-1"
-                    id="app-title"
-                >
-                    Cellular Automata
-                </span>
-            </div>
+                        <Canvas />
 
-            <Canvas />
+                        {settings}
 
-            {settings}
-
-            {/* Footer */}
-            <div id="footer" className="mt-5 mb-3">
-                Universidad Nacional Autónoma de México - Facultad de Ciencias
-                <br />
-                Ciencias de la Computación - Vida Artificial 2022-2
-                <br />
-                Edgar Mendoza
-                <br />
-                mledgaro@ciencias.unam.mx
-            </div>
+                        {/* Footer */}
+                        <div id="footer" className="mt-5 mb-3">
+                            Universidad Nacional Autónoma de México - Facultad
+                            de Ciencias
+                            <br />
+                            Ciencias de la Computación - Vida Artificial 2022-2
+                            <br />
+                            Edgar Mendoza
+                            <br />
+                            mledgaro@ciencias.unam.mx
+                        </div>
+                    </APICtx.Provider>
+                </InitStateCtx.Provider>
+            </RulesCtx.Provider>
         </div>
     );
 }

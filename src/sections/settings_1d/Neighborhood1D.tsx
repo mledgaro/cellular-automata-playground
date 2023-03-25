@@ -8,32 +8,37 @@ import NumberInput from "../../components/NumberInput";
 import Button from "../../components/Button";
 import { IconCell, SelectedCell, Ellipses } from "../../components/Cells";
 import { BoolArrHook, useBoolArrState } from "../../ts/CustomHooks";
-import { APICtx, MainCellCtx, NbhdTypeCtx, NumCellsCtx } from "src/App";
+import { APICtx } from "src/App";
 import { NbhdType } from "src/ts/CellularAutomaton";
 import { boolArray } from "src/ts/Utils";
 import Title from "src/components/Title";
-import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import { useAppDispatch } from "src/app/hooks";
 import {
-    decrement,
-    increment,
-    selectNbhdWidth,
-    set,
+    decrementNbhdWidth,
+    incrementNbhdWidth,
+    setNbhdWidth,
 } from "src/features/nbhdWidth";
+import { setNbhdType } from "src/features/nbhdType";
+import { setMainCell } from "src/features/mainCell";
+import { dataStore } from "src/app/store";
 
 function Width() {
     //
 
-    const width = useAppSelector(selectNbhdWidth);
+    const width = dataStore.nbhdWidth();
     const dispatch = useAppDispatch();
+    const increment = () => dispatch(incrementNbhdWidth());
+    const decrement = () => dispatch(decrementNbhdWidth());
+    const set = (val: number) => dispatch(setNbhdWidth(val));
 
     return (
         <NumberInput
             label="Width"
             value={{
                 get: width,
-                prev: () => dispatch(decrement()),
-                next: () => dispatch(increment()),
-                set: (val: number) => dispatch(set(val)),
+                prev: decrement,
+                next: increment,
+                set: set,
             }}
             min={2}
             max={8}
@@ -44,8 +49,9 @@ function Width() {
 function Type() {
     //
 
-    const type = useContext(NbhdTypeCtx);
-    const api = useContext(APICtx)!;
+    const type = dataStore.nbhdType();
+    const dispatch = useAppDispatch();
+    const set = (val: NbhdType) => dispatch(setNbhdType(val));
 
     return (
         <div>
@@ -56,7 +62,10 @@ function Type() {
                     { label: "Grouped", value: "grouped" },
                     { label: "Scattered", value: "scattered" },
                 ]}
-                selected={{ get: type, set: api.setNbhdType }}
+                selected={{
+                    get: type,
+                    set: set,
+                }}
                 size="sm"
                 alignment="center"
             />
@@ -67,23 +76,21 @@ function Type() {
 function MainCellSelector() {
     //
 
-    const width = useAppSelector(selectNbhdWidth);
-    const type = useContext(NbhdTypeCtx) as NbhdType;
-    const mainCell = useContext(MainCellCtx);
-    const api = useContext(APICtx)!;
+    const width = dataStore.nbhdWidth();
+    const type = dataStore.nbhdType();
+    const mainCell = dataStore.mainCell();
+    const dispatch = useAppDispatch();
+
+    const set = (val: number) => dispatch(setMainCell(val));
 
     let cells = [];
 
     for (let i = 0; i < width; i++) {
-        cells.push(<IconCell onClick={() => api.setMainCell(i)} size="lg" />);
+        cells.push(<IconCell onClick={() => set(i)} size="lg" />);
     }
 
     if (mainCell !== -1) {
-        cells.splice(
-            mainCell,
-            1,
-            <SelectedCell onClick={() => api.setMainCell(-1)} />
-        );
+        cells.splice(mainCell, 1, <SelectedCell onClick={() => set(-1)} />);
     }
 
     return (
@@ -99,9 +106,9 @@ function MainCellSelector() {
 function UpdateNbhds() {
     //
 
-    const nbhdWidth = useAppSelector(selectNbhdWidth);
-    const nbhdType = useContext(NbhdTypeCtx) as NbhdType;
-    const mainCell = useContext(MainCellCtx);
+    const nbhdWidth = dataStore.nbhdWidth();
+    const nbhdType = dataStore.nbhdType();
+    const mainCell = dataStore.mainCell();
     const api = useContext(APICtx)!;
 
     return (
@@ -124,7 +131,7 @@ function HighlightCell({
 }) {
     //
 
-    const numCells = useContext(NumCellsCtx);
+    const numCells = dataStore.numCells();
     const api = useContext(APICtx)!;
 
     const highlight = useCallback(() => {
@@ -144,7 +151,7 @@ function HighlightCell({
 function NbhdsMap() {
     //
 
-    const numCells = useContext(NumCellsCtx);
+    const numCells = dataStore.numCells();
 
     const highlightedCells = useBoolArrState(boolArray(numCells, false));
 

@@ -4,7 +4,6 @@ import React from "react";
 
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Button from "./Button";
-import { EnumReducerType } from "../ts/CustomHooks";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import Group, { Alignment, Size } from "./Group";
 import { Position } from "src/ts/Utils";
@@ -27,36 +26,38 @@ export default function LevelSelector({
     tooltipPlacement,
     size,
     alignment,
-    enumReducer,
+    index,
+    numLevels,
+    increment,
+    decrement,
 }: {
     icon: IconDefinition;
     tooltipLabel?: string;
     tooltipPlacement?: Position;
     size?: Size;
     alignment?: Alignment;
-    enumReducer: EnumReducerType;
+    index: number;
+    numLevels: number;
+    increment: () => void;
+    decrement: () => void;
 }) {
     //
 
     let elements = [];
 
     elements.push(
-        <Button
-            icon={faMinus}
-            enabled={enumReducer.index > 0}
-            onClick={enumReducer.prev}
-        />
+        <Button icon={faMinus} enabled={index > 0} onClick={decrement} />
     );
 
-    for (let i = 0; i < enumReducer.length; i++) {
-        elements.push(<Level key={i} on={i <= enumReducer.index} />);
+    for (let i = 0; i < numLevels; i++) {
+        elements.push(<Level key={i} on={i <= index} />);
     }
 
     elements.push(
         <Button
             icon={faPlus}
-            enabled={enumReducer.index < enumReducer.length - 1}
-            onClick={enumReducer.next}
+            enabled={index < numLevels - 1}
+            onClick={increment}
         />
     );
 

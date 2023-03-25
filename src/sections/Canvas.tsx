@@ -21,14 +21,17 @@ import {
 import Button from "../components/Button";
 import LevelSelector from "../components/LevelSelector";
 
-import { APICtx, APICtxType, NumCellsCtx } from "src/App";
+import { APICtx, APICtxType } from "src/App";
 import Group from "src/components/Group";
 import CanvasCntrl from "src/ts/CanvasCntrl";
+import { dataStore } from "src/app/store";
+import { useAppDispatch } from "src/app/hooks";
+import { setRunningStatus } from "src/features/runningStatus";
+import { decrementCellSize, incrementCellSize } from "src/features/cellSize";
 import {
-    EnumReducerType,
-    useEnumReducer,
-    useStateObj,
-} from "src/ts/CustomHooks";
+    decrementRefreshTime,
+    incrementRefreshTime,
+} from "src/features/refreshTime";
 
 type CanvasAPICtxType = {
     next: () => void;
@@ -42,25 +45,21 @@ type CanvasAPICtxType = {
 const canvasId = "cap-canvas";
 
 const CanvasAPICtx = createContext<CanvasAPICtxType | null>(null);
-const RunningStatusCtx = createContext<RunningStatus>("stopped");
-const SpeedLvlCtx = createContext<EnumReducerType | null>(null);
-const ZoomLvlCtx = createContext<EnumReducerType | null>(null);
-
-type RunningStatus = "stopped" | "paused" | "running";
 
 export default function Canvas() {
     //
 
     const api = useContext<APICtxType | null>(APICtx)!;
-    const numCells = useContext(NumCellsCtx);
 
     const cntrl = useRef<CanvasCntrl>();
     const genCount = useRef(0);
     const runInterval = useRef<NodeJS.Timer>();
 
-    const runningStatus = useStateObj("stopped");
-    const speedLvl = useEnumReducer([800, 600, 400, 200, 1], 2);
-    const zoomLvl = useEnumReducer([4, 6, 8, 12, 16], 2);
+    const numCells = dataStore.numCells();
+    const runningStatus = dataStore.runningStatus();
+    const cellSize = dataStore.cellSize();
+    const refreshTime = dataStore.refreshTime();
+    const dispatch = useAppDispatch();
 
     const nextState = useCallback(() => {
         let state;
@@ -80,40 +79,43 @@ export default function Canvas() {
 
     useEffect(() => {
         cntrl.current = new CanvasCntrl(canvasId, 64, numCells);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        cntrl.current!.cellSize = zoomLvl.get;
-    }, [zoomLvl.get]);
+        cntrl.current!.cellSize = cellSize;
+    }, [cellSize]);
 
     useEffect(() => {
-        if (runningStatus.get === "running") {
+        if (runningStatus === "running") {
             clearInterval(runInterval.current);
-            runInterval.current = setInterval(nextState, speedLvl.get);
+            runInterval.current = setInterval(nextState, refreshTime);
         }
-    }, [speedLvl.get]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [refreshTime]);
 
     useEffect(() => {
-        if (runningStatus.get !== "running") {
+        if (runningStatus !== "running") {
             cntrl.current?.restart();
         }
-    }, [zoomLvl.get]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cellSize]);
 
     const canvasAPICtx = {
         next: () => {
-            runningStatus.set("paused");
+            dispatch(setRunningStatus("paused"));
             nextState();
         },
         run: () => {
-            runningStatus.set("running");
-            runInterval.current = setInterval(nextState, speedLvl.get);
+            dispatch(setRunningStatus("running"));
+            runInterval.current = setInterval(nextState, refreshTime);
         },
         pause: () => {
-            runningStatus.set("paused");
+            dispatch(setRunningStatus("paused"));
             clearInterval(runInterval.current);
         },
         stop: () => {
-            runningStatus.set("stopped");
+            dispatch(setRunningStatus("stopped"));
             clearInterval(runInterval.current);
             clear();
         },
@@ -123,21 +125,15 @@ export default function Canvas() {
 
     return (
         <CanvasAPICtx.Provider value={canvasAPICtx}>
-            <RunningStatusCtx.Provider value={runningStatus.get}>
-                <ZoomLvlCtx.Provider value={zoomLvl}>
-                    <SpeedLvlCtx.Provider value={speedLvl}>
-                        {/*  */}
+            {/*  */}
 
-                        <div>
-                            <div id="canvas-container" className="">
-                                <canvas id={canvasId} className="" />
-                            </div>
+            <div>
+                <div id="canvas-container" className="">
+                    <canvas id={canvasId} className="" />
+                </div>
 
-                            <Controls />
-                        </div>
-                    </SpeedLvlCtx.Provider>
-                </ZoomLvlCtx.Provider>
-            </RunningStatusCtx.Provider>
+                <Controls />
+            </div>
         </CanvasAPICtx.Provider>
     );
 }
@@ -145,8 +141,8 @@ export default function Canvas() {
 function FlowCtrls() {
     //
 
+    const runningStatus = dataStore.runningStatus();
     const canvasApi = useContext(CanvasAPICtx)!;
-    const runningStatus = useContext(RunningStatusCtx)!;
 
     return (
         <Group
@@ -206,8 +202,11 @@ function CanvasCtrls() {
 function Controls() {
     //
 
-    const zoom = useContext(ZoomLvlCtx)!;
-    const speed = useContext(SpeedLvlCtx)!;
+    const refreshTimeIndex = dataStore.refreshTimeIndex();
+    const refreshTimeLength = dataStore.refreshTimeLength();
+    const cellSizeIndex = dataStore.cellSizeIndex();
+    const cellSizeLength = dataStore.cellSizeLength();
+    const dispatch = useAppDispatch();
 
     return (
         <div className="row my-3">
@@ -221,7 +220,10 @@ function Controls() {
                 <LevelSelector
                     tooltipLabel="Speed"
                     icon={faGaugeHigh}
-                    enumReducer={speed}
+                    index={refreshTimeIndex}
+                    numLevels={refreshTimeLength}
+                    increment={() => dispatch(incrementRefreshTime())}
+                    decrement={() => dispatch(decrementRefreshTime())}
                 />
             </div>
 
@@ -230,7 +232,10 @@ function Controls() {
                 <LevelSelector
                     tooltipLabel="Zoom"
                     icon={faMagnifyingGlass}
-                    enumReducer={zoom}
+                    index={cellSizeIndex}
+                    numLevels={cellSizeLength}
+                    increment={() => dispatch(incrementCellSize())}
+                    decrement={() => dispatch(decrementCellSize())}
                 />
             </div>
 

@@ -15,13 +15,11 @@ import Button from "../../components/Button";
 import { IconCell, Ellipses } from "../../components/Cells";
 
 import { intToBoolArray } from "../../ts/Utils";
-import { NbhdType } from "src/ts/CellularAutomaton";
 
-import { APICtx, MainCellCtx, NbhdTypeCtx, RulesCtx } from "src/App";
+import { APICtx, RulesCtx } from "src/App";
 import { useStateObj } from "src/ts/CustomHooks";
 import Group from "src/components/Group";
-import { useAppSelector } from "src/app/hooks";
-import { selectNbhdWidth } from "src/features/nbhdWidth";
+import { dataStore } from "src/app/store";
 
 export default function Rules1D() {
     //
@@ -102,9 +100,9 @@ function Controls() {
 function RulePreview({ index }: { index: number }) {
     //
 
-    const nbhdType = useContext(NbhdTypeCtx) as NbhdType;
-    const nbhdWidth = useAppSelector(selectNbhdWidth);
-    const mainCell = useContext(MainCellCtx);
+    const nbhdType = dataStore.nbhdType();
+    const nbhdWidth = dataStore.nbhdWidth();
+    const mainCell = dataStore.mainCell();
 
     let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
         <IconCell key={i} alive={e} size={i === mainCell ? "2xl" : "lg"} />
@@ -184,9 +182,9 @@ function RulesSet({ setHoverCell }: { setHoverCell: (val: number) => void }) {
 function RuleToggle({ index }: { index: number }) {
     //
 
-    const nbhdType = useContext(NbhdTypeCtx) as NbhdType;
-    const nbhdWidth = useAppSelector(selectNbhdWidth);
-    const mainCell = useContext(MainCellCtx);
+    const nbhdType = dataStore.nbhdType();
+    const nbhdWidth = dataStore.nbhdWidth();
+    const mainCell = dataStore.mainCell();
     const rules = useContext(RulesCtx)!;
     const api = useContext(APICtx)!;
 

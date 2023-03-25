@@ -1,117 +1,73 @@
 //
 
-import React, { createContext, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../components/Button";
 import NumberInput from "../../components/NumberInput";
 import { OptionGroup } from "../../components/SectionSelector";
-import { useRangeReducer, useStateObj } from "src/ts/CustomHooks";
-import { APICtx, InitStateCtx, NumCellsCtx } from "src/App";
+import { APICtx, InitStateCtx } from "src/App";
 import { DistributionType } from "src/ts/CellularAutomaton";
 import { SpanCell } from "src/components/Cells";
 import Title from "src/components/Title";
-
-type LiveCellsType = "num" | "perc";
-
-const LiveCellsTypeCtx = createContext("num");
-const DistTypeCtx = createContext("rand");
-const LiveCellsCtx = createContext(1);
-const GroupMinSizeCtx = createContext(1);
-const GroupMaxSizeCtx = createContext(1);
-const ISAPICtx = createContext({
-    liveCellsType: (val: LiveCellsType) => {},
-    distType: (val: DistributionType) => {},
-    liveCells: { set: (val: number) => {}, next: () => {}, prev: () => {} },
-    groupMinSize: { set: (val: number) => {}, next: () => {}, prev: () => {} },
-    groupMaxSize: { set: (val: number) => {}, next: () => {}, prev: () => {} },
-});
+import { dataStore } from "src/app/store";
+import { useAppDispatch } from "src/app/hooks";
+import { LiveCellsType, setLiveCellsType } from "src/features/liveCellsType";
+import {
+    decrementLiveCells,
+    incrementLiveCells,
+    setLiveCells,
+} from "src/features/liveCells";
+import {
+    decrementGroupMaxSize,
+    incrementGroupMaxSize,
+    setGroupMaxSize,
+} from "src/features/groupMaxSize";
+import {
+    decrementGroupMinSize,
+    incrementGroupMinSize,
+    setGroupMinSize,
+} from "src/features/groupMinSize";
+import { setDistributionType } from "src/features/distributionType";
 
 export default function InitialState() {
     //
 
-    const numCells = useContext(NumCellsCtx);
-
-    const liveCellsType = useStateObj("num");
-    const distributionType = useStateObj("rand");
-
-    const liveCells = useRangeReducer(1, numCells, 1, false);
-    const groupMinSize = useRangeReducer(1, numCells, 1, false);
-    const groupMaxSize = useRangeReducer(
-        groupMinSize.get,
-        numCells,
-        groupMinSize.get,
-        false
-    );
-
-    const api = {
-        liveCellsType: liveCellsType.set,
-        distType: distributionType.set,
-        liveCells: {
-            set: liveCells.set,
-            next: liveCells.next,
-            prev: liveCells.prev,
-        },
-        groupMinSize: {
-            set: groupMinSize.set,
-            next: groupMinSize.next,
-            prev: groupMinSize.prev,
-        },
-        groupMaxSize: {
-            set: groupMaxSize.set,
-            next: groupMaxSize.next,
-            prev: groupMaxSize.prev,
-        },
-    };
-
     return (
-        <LiveCellsTypeCtx.Provider value={liveCellsType.get}>
-            <DistTypeCtx.Provider value={distributionType.get}>
-                <LiveCellsCtx.Provider value={liveCells.get}>
-                    <GroupMinSizeCtx.Provider value={groupMinSize.get}>
-                        <GroupMaxSizeCtx.Provider value={groupMaxSize.get}>
-                            <ISAPICtx.Provider value={api}>
-                                <div
-                                    className="row mb-2 mx-auto"
-                                    style={{ width: "80%" }}
-                                >
-                                    {/*  */}
+        <div>
+            <div className="row mb-2 mx-auto" style={{ width: "80%" }}>
+                {/*  */}
 
-                                    <div className="col-4">
-                                        <LiveCellsSelector />
-                                    </div>
+                <div className="col-4">
+                    <LiveCellsSelector />
+                </div>
 
-                                    <div className="col-3">
-                                        <GroupSize />
-                                    </div>
+                <div className="col-3">
+                    <GroupSize />
+                </div>
 
-                                    <div className="col-4">
-                                        <DistributionSelector />
-                                    </div>
+                <div className="col-4">
+                    <DistributionSelector />
+                </div>
 
-                                    <div className="col-1 d-flex align-items-center">
-                                        <ReloadBtn />
-                                    </div>
-                                </div>
+                <div className="col-1 d-flex align-items-center">
+                    <ReloadBtn />
+                </div>
+            </div>
 
-                                <CellsSet />
-                            </ISAPICtx.Provider>
-                        </GroupMaxSizeCtx.Provider>
-                    </GroupMinSizeCtx.Provider>
-                </LiveCellsCtx.Provider>
-            </DistTypeCtx.Provider>
-        </LiveCellsTypeCtx.Provider>
+            <CellsSet />
+        </div>
     );
 }
 
 function LiveCellsSelector() {
     //
 
-    const numCells = useContext(NumCellsCtx);
-    const type = useContext(LiveCellsTypeCtx);
-    const liveCells = useContext(LiveCellsCtx);
-    const api = useContext(ISAPICtx);
+    const numCells = dataStore.numCells();
+    const type = dataStore.liveCellsType();
+    const liveCells = dataStore.liveCells();
+    const dispatch = useAppDispatch();
 
     return (
         <div>
@@ -127,7 +83,11 @@ function LiveCellsSelector() {
                         value: "perc",
                     },
                 ]}
-                selected={{ get: type, set: api.liveCellsType }}
+                selected={{
+                    get: type,
+                    set: (value: LiveCellsType) =>
+                        dispatch(setLiveCellsType(value)),
+                }}
                 size="sm"
                 alignment="center"
             />
@@ -135,9 +95,9 @@ function LiveCellsSelector() {
             <NumberInput
                 value={{
                     get: liveCells,
-                    set: api.liveCells.set,
-                    next: api.liveCells.next,
-                    prev: api.liveCells.prev,
+                    set: (val: number) => dispatch(setLiveCells(val)),
+                    next: () => dispatch(incrementLiveCells()),
+                    prev: () => dispatch(decrementLiveCells()),
                 }}
                 min={1}
                 max={type === "num" ? numCells : 100}
@@ -151,16 +111,16 @@ function LiveCellsSelector() {
 function GroupSize() {
     //
 
-    const numCells = useContext(NumCellsCtx);
-    const minSize = useContext(GroupMinSizeCtx);
-    const maxSize = useContext(GroupMaxSizeCtx);
-    const api = useContext(ISAPICtx);
+    const numCells = dataStore.numCells();
+    const minSize = dataStore.groupMinSize();
+    const maxSize = dataStore.groupMaxSize();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (maxSize < minSize) {
-            api.groupMaxSize.set(minSize);
+            dispatch(setGroupMaxSize(minSize));
         }
-    }, [api.groupMaxSize, maxSize, minSize]);
+    }, [maxSize, minSize]);
 
     return (
         <div>
@@ -174,9 +134,10 @@ function GroupSize() {
                         label="Min"
                         value={{
                             get: minSize,
-                            set: api.groupMinSize.set,
-                            next: api.groupMinSize.next,
-                            prev: api.groupMinSize.prev,
+                            set: (val: number) =>
+                                dispatch(setGroupMinSize(val)),
+                            next: () => dispatch(incrementGroupMinSize()),
+                            prev: () => dispatch(decrementGroupMinSize()),
                         }}
                         min={1}
                         max={numCells}
@@ -190,9 +151,10 @@ function GroupSize() {
                         label="Max"
                         value={{
                             get: maxSize,
-                            set: api.groupMaxSize.set,
-                            next: api.groupMaxSize.next,
-                            prev: api.groupMaxSize.prev,
+                            set: (val: number) =>
+                                dispatch(setGroupMaxSize(val)),
+                            next: () => dispatch(incrementGroupMaxSize()),
+                            prev: () => dispatch(decrementGroupMaxSize()),
                         }}
                         min={minSize}
                         max={numCells}
@@ -208,8 +170,8 @@ function GroupSize() {
 function DistributionSelector() {
     //
 
-    const distr = useContext(DistTypeCtx);
-    const api = useContext(ISAPICtx);
+    const distr = dataStore.distributionType();
+    const dispatch = useAppDispatch();
 
     return (
         <div>
@@ -219,7 +181,11 @@ function DistributionSelector() {
                     { label: "Random", value: "rand" },
                     { label: "Even", value: "even" },
                 ]}
-                selected={{ get: distr, set: api.distType }}
+                selected={{
+                    get: distr,
+                    set: (val: DistributionType) =>
+                        dispatch(setDistributionType(val)),
+                }}
                 size="sm"
                 alignment="center"
             />
@@ -230,11 +196,11 @@ function DistributionSelector() {
 function ReloadBtn() {
     //
 
-    const liveCellsType = useContext(LiveCellsTypeCtx) as LiveCellsType;
-    const distr = useContext(DistTypeCtx) as DistributionType;
-    const liveCells = useContext(LiveCellsCtx);
-    const groupMinSize = useContext(GroupMinSizeCtx);
-    const groupMaxSize = useContext(GroupMaxSizeCtx);
+    const liveCellsType = dataStore.liveCellsType();
+    const distr = dataStore.distributionType();
+    const liveCells = dataStore.liveCells();
+    const groupMinSize = dataStore.groupMinSize();
+    const groupMaxSize = dataStore.groupMaxSize();
 
     const api = useContext(APICtx)!;
 

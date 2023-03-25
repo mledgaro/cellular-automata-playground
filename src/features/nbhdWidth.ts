@@ -19,8 +19,12 @@ export const nbhdWidthSlice = createSlice({
     },
 });
 
-export const { increment, decrement, set } = nbhdWidthSlice.actions;
-
 export const selectNbhdWidth = (state: RootState) => state.nbhdWidth.value;
+
+const { increment, decrement, set } = nbhdWidthSlice.actions;
+
+export const incrementNbhdWidth = increment;
+export const decrementNbhdWidth = decrement;
+export const setNbhdWidth = set;
 
 export default nbhdWidthSlice.reducer;
