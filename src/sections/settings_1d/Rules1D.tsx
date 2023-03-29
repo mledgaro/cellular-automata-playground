@@ -16,10 +16,17 @@ import { IconCell, Ellipses } from "../../components/Cells";
 
 import { intToBoolArray } from "../../ts/Utils";
 
-import { APICtx, RulesCtx } from "src/App";
 import { useStateObj } from "src/ts/CustomHooks";
 import Group from "src/components/Group";
 import { dataStore } from "src/app/store";
+import { useAppDispatch } from "src/app/hooks";
+import {
+    allAliveRules,
+    allDeadRules,
+    inverseRules,
+    randomRules,
+    toggleRule,
+} from "src/features/rules";
 
 export default function Rules1D() {
     //
@@ -48,7 +55,7 @@ export default function Rules1D() {
 function RuleNumber() {
     //
 
-    const rules = useContext(RulesCtx)!;
+    const ruleNum = dataStore.rules.integer;
 
     return (
         <div className="col-lg">
@@ -56,7 +63,7 @@ function RuleNumber() {
                 className="cap-container-dark-1 px-3 py-1 mx-auto"
                 style={{ width: "fit-content" }}
             >
-                Rule number {rules.asNum}
+                Rule number {ruleNum}
             </div>
         </div>
     );
@@ -65,7 +72,7 @@ function RuleNumber() {
 function Controls() {
     //
 
-    const api = useContext(APICtx)!;
+    const dispatch = useAppDispatch();
 
     return (
         <div className="col-lg">
@@ -74,22 +81,22 @@ function Controls() {
                     <Button
                         tooltipLabel="Random"
                         icon={faShuffle}
-                        onClick={api.automaton.rules.setRandom}
+                        onClick={() => dispatch(randomRules())}
                     />,
                     <Button
                         tooltipLabel="Invert"
                         icon={faRightLeft}
-                        onClick={api.automaton.rules.setInverse}
+                        onClick={() => dispatch(inverseRules())}
                     />,
                     <Button
                         tooltipLabel="All alive"
                         icon={faSquareSolid}
-                        onClick={api.automaton.rules.setAlive}
+                        onClick={() => dispatch(allAliveRules())}
                     />,
                     <Button
                         tooltipLabel="All dead"
                         icon={faSquareRegular}
-                        onClick={api.automaton.rules.setDead}
+                        onClick={() => dispatch(allDeadRules())}
                     />,
                 ]}
             />
@@ -100,9 +107,9 @@ function Controls() {
 function RulePreview({ index }: { index: number }) {
     //
 
-    const nbhdType = dataStore.nbhdType();
-    const nbhdWidth = dataStore.nbhdWidth();
-    const mainCell = dataStore.mainCell();
+    const nbhdType = dataStore.nbhdType;
+    const nbhdWidth = dataStore.nbhdWidth;
+    const mainCell = dataStore.mainCell;
 
     let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
         <IconCell key={i} alive={e} size={i === mainCell ? "2xl" : "lg"} />
@@ -150,18 +157,19 @@ function RuleCell({
 function RulesSet({ setHoverCell }: { setHoverCell: (val: number) => void }) {
     //
 
-    const rules = useContext(RulesCtx)!;
-    const api = useContext(APICtx)!;
+    const rules = dataStore.rules.arr;
+
+    const dispatch = useAppDispatch();
 
     let rulesArr = [];
 
-    for (let i = rules.num - 1; i >= 0; i--) {
+    for (let i = rules.length - 1; i >= 0; i--) {
         rulesArr.push(
             <RuleCell
                 key={i}
                 index={i}
-                on={rules.get(i)}
-                toggle={() => api.automaton.rules.toggle(i)}
+                on={rules[i]}
+                toggle={() => dispatch(toggleRule(i))}
                 onMouseOver={() => setHoverCell(i)}
                 onMouseOut={() => setHoverCell(0)}
             />
@@ -182,11 +190,12 @@ function RulesSet({ setHoverCell }: { setHoverCell: (val: number) => void }) {
 function RuleToggle({ index }: { index: number }) {
     //
 
-    const nbhdType = dataStore.nbhdType();
-    const nbhdWidth = dataStore.nbhdWidth();
-    const mainCell = dataStore.mainCell();
-    const rules = useContext(RulesCtx)!;
-    const api = useContext(APICtx)!;
+    const nbhdType = dataStore.nbhdType;
+    const nbhdWidth = dataStore.nbhdWidth;
+    const mainCell = dataStore.mainCell;
+    const rules = dataStore.rules.arr;
+
+    const dispatch = useAppDispatch();
 
     let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
         <IconCell key={i} alive={e} size={i === mainCell ? "lg" : "xs"} />
@@ -196,7 +205,7 @@ function RuleToggle({ index }: { index: number }) {
         <div
             className="cap-container-dark-1 mx-auto"
             style={{ padding: "8px", width: "max-content" }}
-            onClick={() => api.automaton.rules.toggle(index)}
+            onClick={() => dispatch(toggleRule(index))}
         >
             <Ellipses cells={cells} mainCell={mainCell} nbhdType={nbhdType} />
 
@@ -204,7 +213,7 @@ function RuleToggle({ index }: { index: number }) {
                 <FontAwesomeIcon icon={faArrowRight} size="sm" />
             </span>
 
-            <IconCell alive={rules.get(index)} />
+            <IconCell alive={rules[index]} />
         </div>
     );
 }

@@ -1,6 +1,6 @@
 //
 
-import React, { useContext, useCallback } from "react";
+import React, { useCallback } from "react";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 import { OptionGroup } from "../../components/SectionSelector";
@@ -8,8 +8,7 @@ import NumberInput from "../../components/NumberInput";
 import Button from "../../components/Button";
 import { IconCell, SelectedCell, Ellipses } from "../../components/Cells";
 import { BoolArrHook, useBoolArrState } from "../../ts/CustomHooks";
-import { APICtx } from "src/App";
-import { NbhdType } from "src/ts/CellularAutomaton";
+import { NbhdType } from "src/features/nbhdType";
 import { boolArray } from "src/ts/Utils";
 import Title from "src/components/Title";
 import { useAppDispatch } from "src/app/hooks";
@@ -21,152 +20,7 @@ import {
 import { setNbhdType } from "src/features/nbhdType";
 import { setMainCell } from "src/features/mainCell";
 import { dataStore } from "src/app/store";
-
-function Width() {
-    //
-
-    const width = dataStore.nbhdWidth();
-    const dispatch = useAppDispatch();
-    const increment = () => dispatch(incrementNbhdWidth());
-    const decrement = () => dispatch(decrementNbhdWidth());
-    const set = (val: number) => dispatch(setNbhdWidth(val));
-
-    return (
-        <NumberInput
-            label="Width"
-            value={{
-                get: width,
-                prev: decrement,
-                next: increment,
-                set: set,
-            }}
-            min={2}
-            max={8}
-        />
-    );
-}
-
-function Type() {
-    //
-
-    const type = dataStore.nbhdType();
-    const dispatch = useAppDispatch();
-    const set = (val: NbhdType) => dispatch(setNbhdType(val));
-
-    return (
-        <div>
-            <Title text="Type" size="small" />
-            <OptionGroup
-                options={[
-                    { label: "Adjacent", value: "adjacent" },
-                    { label: "Grouped", value: "grouped" },
-                    { label: "Scattered", value: "scattered" },
-                ]}
-                selected={{
-                    get: type,
-                    set: set,
-                }}
-                size="sm"
-                alignment="center"
-            />
-        </div>
-    );
-}
-
-function MainCellSelector() {
-    //
-
-    const width = dataStore.nbhdWidth();
-    const type = dataStore.nbhdType();
-    const mainCell = dataStore.mainCell();
-    const dispatch = useAppDispatch();
-
-    const set = (val: number) => dispatch(setMainCell(val));
-
-    let cells = [];
-
-    for (let i = 0; i < width; i++) {
-        cells.push(<IconCell onClick={() => set(i)} size="lg" />);
-    }
-
-    if (mainCell !== -1) {
-        cells.splice(mainCell, 1, <SelectedCell onClick={() => set(-1)} />);
-    }
-
-    return (
-        <div
-            className="cap-container-dark-1 mx-auto"
-            style={{ padding: "8px", width: "max-content" }}
-        >
-            <Ellipses cells={cells} mainCell={mainCell} nbhdType={type} />
-        </div>
-    );
-}
-
-function UpdateNbhds() {
-    //
-
-    const nbhdWidth = dataStore.nbhdWidth();
-    const nbhdType = dataStore.nbhdType();
-    const mainCell = dataStore.mainCell();
-    const api = useContext(APICtx)!;
-
-    return (
-        <Button
-            icon={faRotate}
-            tooltipLabel="Reload neighborhoods"
-            onClick={() =>
-                api.automaton.cellsNbhds.set(nbhdWidth, nbhdType, mainCell)
-            }
-        />
-    );
-}
-
-function HighlightCell({
-    index,
-    highlightedCells,
-}: {
-    index: number;
-    highlightedCells: BoolArrHook;
-}) {
-    //
-
-    const numCells = dataStore.numCells();
-    const api = useContext(APICtx)!;
-
-    const highlight = useCallback(() => {
-        //
-        let nArr = Array(numCells).fill(false);
-        api.automaton.cellsNbhds.get(index).forEach((e) => (nArr[e] = true));
-        highlightedCells.set(nArr);
-    }, [api.automaton.cellsNbhds, highlightedCells, index, numCells]);
-
-    const classes = `cap-cell cap-cell-off ${
-        highlightedCells.get[index] ? "cap-cell-high" : ""
-    }`;
-
-    return <span className={classes} onMouseOver={highlight} />;
-}
-
-function NbhdsMap() {
-    //
-
-    const numCells = dataStore.numCells();
-
-    const highlightedCells = useBoolArrState(boolArray(numCells, false));
-
-    return (
-        <div className="row mx-auto ps-2 mt-2" style={{ width: "90%" }}>
-            {highlightedCells.get.map((e, i) => (
-                <HighlightCell
-                    key={i}
-                    index={i}
-                    highlightedCells={highlightedCells}
-                />
-            ))}
-        </div>
-    );
-}
+import { setCellsNbhds } from "src/features/cellsNbhds";
 
 export default function Neighborhood1D() {
     //
@@ -194,6 +48,158 @@ export default function Neighborhood1D() {
             </div>
 
             <NbhdsMap />
+        </div>
+    );
+}
+
+function Width() {
+    //
+
+    const width = dataStore.nbhdWidth;
+
+    const dispatch = useAppDispatch();
+
+    const increment = () => dispatch(incrementNbhdWidth());
+    const decrement = () => dispatch(decrementNbhdWidth());
+    const set = (val: number) => dispatch(setNbhdWidth(val));
+
+    return (
+        <NumberInput
+            label="Width"
+            value={{
+                get: width,
+                prev: decrement,
+                next: increment,
+                set: set,
+            }}
+            min={2}
+            max={8}
+        />
+    );
+}
+
+function Type() {
+    //
+
+    const type = dataStore.nbhdType;
+
+    const dispatch = useAppDispatch();
+
+    const set = (val: NbhdType) => dispatch(setNbhdType(val));
+
+    return (
+        <div>
+            <Title text="Type" size="small" />
+            <OptionGroup
+                options={[
+                    { label: "Adjacent", value: "adjacent" },
+                    { label: "Grouped", value: "grouped" },
+                    { label: "Scattered", value: "scattered" },
+                ]}
+                selected={{
+                    get: type,
+                    set: set,
+                }}
+                size="sm"
+                alignment="center"
+            />
+        </div>
+    );
+}
+
+function MainCellSelector() {
+    //
+
+    const width = dataStore.nbhdWidth;
+    const type = dataStore.nbhdType;
+    const mainCell = dataStore.mainCell;
+
+    const dispatch = useAppDispatch();
+
+    const set = (val: number) => dispatch(setMainCell(val));
+
+    let cells = [];
+
+    for (let i = 0; i < width; i++) {
+        cells.push(<IconCell onClick={() => set(i)} size="lg" />);
+    }
+
+    if (mainCell !== -1) {
+        cells.splice(mainCell, 1, <SelectedCell onClick={() => set(-1)} />);
+    }
+
+    return (
+        <div
+            className="cap-container-dark-1 mx-auto"
+            style={{ padding: "8px", width: "max-content" }}
+        >
+            <Ellipses cells={cells} mainCell={mainCell} nbhdType={type} />
+        </div>
+    );
+}
+
+function UpdateNbhds() {
+    //
+
+    const params = {
+        numCells: dataStore.numCells,
+        width: dataStore.nbhdWidth,
+        type: dataStore.nbhdType,
+        mainCell: dataStore.mainCell,
+    };
+    const dispatch = useAppDispatch();
+
+    return (
+        <Button
+            icon={faRotate}
+            tooltipLabel="Reload neighborhoods"
+            onClick={() => dispatch(setCellsNbhds(params))}
+        />
+    );
+}
+
+function HighlightCell({
+    index,
+    highlightedCells,
+}: {
+    index: number;
+    highlightedCells: BoolArrHook;
+}) {
+    //
+
+    const numCells = dataStore.numCells;
+    const cellsNbhds = dataStore.cellsNbhds.arr;
+
+    const highlight = useCallback(() => {
+        //
+        let nArr = Array(numCells).fill(false);
+        cellsNbhds[index].forEach((e) => (nArr[e] = true));
+        highlightedCells.set(nArr);
+    }, [cellsNbhds, highlightedCells, index, numCells]);
+
+    const classes = `cap-cell cap-cell-off ${
+        highlightedCells.get[index] ? "cap-cell-high" : ""
+    }`;
+
+    return <span className={classes} onMouseOver={highlight} />;
+}
+
+function NbhdsMap() {
+    //
+
+    const numCells = dataStore.numCells;
+
+    const highlightedCells = useBoolArrState(boolArray(numCells, false));
+
+    return (
+        <div className="row mx-auto ps-2 mt-2" style={{ width: "90%" }}>
+            {highlightedCells.get.map((e, i) => (
+                <HighlightCell
+                    key={i}
+                    index={i}
+                    highlightedCells={highlightedCells}
+                />
+            ))}
         </div>
     );
 }

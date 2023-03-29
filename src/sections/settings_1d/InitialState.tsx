@@ -1,14 +1,13 @@
 //
 
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../components/Button";
 import NumberInput from "../../components/NumberInput";
 import { OptionGroup } from "../../components/SectionSelector";
-import { APICtx, InitStateCtx } from "src/App";
-import { DistributionType } from "src/ts/CellularAutomaton";
+import { DistributionType } from "src/features/distributionType";
 import { SpanCell } from "src/components/Cells";
 import Title from "src/components/Title";
 import { dataStore } from "src/app/store";
@@ -30,6 +29,7 @@ import {
     setGroupMinSize,
 } from "src/features/groupMinSize";
 import { setDistributionType } from "src/features/distributionType";
+import { setInitState, toggleCellInitState } from "src/features/initState";
 
 export default function InitialState() {
     //
@@ -64,9 +64,10 @@ export default function InitialState() {
 function LiveCellsSelector() {
     //
 
-    const numCells = dataStore.numCells();
-    const type = dataStore.liveCellsType();
-    const liveCells = dataStore.liveCells();
+    const numCells = dataStore.numCells;
+    const type = dataStore.liveCellsType;
+    const liveCells = dataStore.liveCells;
+
     const dispatch = useAppDispatch();
 
     return (
@@ -111,9 +112,10 @@ function LiveCellsSelector() {
 function GroupSize() {
     //
 
-    const numCells = dataStore.numCells();
-    const minSize = dataStore.groupMinSize();
-    const maxSize = dataStore.groupMaxSize();
+    const numCells = dataStore.numCells;
+    const minSize = dataStore.groupMinSize;
+    const maxSize = dataStore.groupMaxSize;
+
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -170,7 +172,8 @@ function GroupSize() {
 function DistributionSelector() {
     //
 
-    const distr = dataStore.distributionType();
+    const distr = dataStore.distributionType;
+
     const dispatch = useAppDispatch();
 
     return (
@@ -196,26 +199,24 @@ function DistributionSelector() {
 function ReloadBtn() {
     //
 
-    const liveCellsType = dataStore.liveCellsType();
-    const distr = dataStore.distributionType();
-    const liveCells = dataStore.liveCells();
-    const groupMinSize = dataStore.groupMinSize();
-    const groupMaxSize = dataStore.groupMaxSize();
+    const liveCells = dataStore.liveCells;
+    const liveCellsType = dataStore.liveCellsType;
 
-    const api = useContext(APICtx)!;
+    const params = {
+        numCells: dataStore.numCells,
+        liveCells: liveCellsType === "perc" ? liveCells / 100 : liveCells,
+        groupMinSize: dataStore.groupMinSize,
+        groupMaxSize: dataStore.groupMaxSize,
+        distribution: dataStore.distributionType,
+    };
+
+    const dispatch = useAppDispatch();
 
     return (
         <Button
             icon={faRotate}
             tooltipLabel="Reload init state"
-            onClick={() => {
-                api.automaton.state.set(
-                    liveCellsType === "perc" ? liveCells / 100 : liveCells,
-                    groupMinSize,
-                    groupMaxSize,
-                    distr
-                );
-            }}
+            onClick={() => dispatch(setInitState(params))}
         />
     );
 }
@@ -223,16 +224,17 @@ function ReloadBtn() {
 function CellsSet() {
     //
 
-    const initState = useContext(InitStateCtx)!;
-    const api = useContext(APICtx)!;
+    const initState = dataStore.initState.arr;
+
+    const dispatch = useAppDispatch();
 
     return (
         <div className="row mx-auto ps-2" style={{ width: "90%" }}>
-            {initState.arr.map((e, i) => (
+            {initState.map((e, i) => (
                 <SpanCell
                     key={i}
                     alive={e}
-                    toggle={() => api.automaton.state.toggleCell(i)}
+                    toggle={() => dispatch(toggleCellInitState(i))}
                 />
             ))}
         </div>

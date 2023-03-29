@@ -2,7 +2,8 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "src/app/store";
-import { NbhdType } from "src/ts/CellularAutomaton";
+
+export type NbhdType = "adjacent" | "grouped" | "scattered";
 
 interface NbhdTypeState {
     value: NbhdType;
