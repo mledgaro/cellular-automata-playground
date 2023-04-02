@@ -1,7 +1,11 @@
 //
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { NbhdType } from "./nbhdType";
+
+import { initialState as numCells } from "./numCells";
+import { initialState as nbhdWidth } from "./nbhdWidth";
+import { initialState as nbhdType, NbhdType } from "./nbhdType";
+import { initialState as mainCell } from "./mainCell";
 
 interface CellsNbhdsState {
     value: number[][];
@@ -14,8 +18,13 @@ interface SetParams {
     mainCell: number;
 }
 
-const initialState: CellsNbhdsState = {
-    value: [],
+export const initialState: CellsNbhdsState = {
+    value: buildNbhd({
+        numCells: numCells.value,
+        width: nbhdWidth.value,
+        type: nbhdType.value,
+        mainCell: mainCell.value,
+    }),
 };
 
 function adjacentNbhd(
@@ -97,58 +106,58 @@ function scatteredNbhd(
     return nbhd;
 }
 
+function buildNbhd(params: SetParams) {
+    //
+    let arr = [];
+    let getNbhd;
+
+    switch (params.type) {
+        case "adjacent":
+            getNbhd = (index: number) =>
+                adjacentNbhd(
+                    index,
+                    params.numCells,
+                    params.width,
+                    params.mainCell
+                );
+            break;
+        case "grouped":
+            getNbhd = (index: number) =>
+                groupedNbhd(
+                    index,
+                    params.numCells,
+                    params.width,
+                    params.mainCell
+                );
+            break;
+        case "scattered":
+            getNbhd = (index: number) =>
+                scatteredNbhd(
+                    index,
+                    params.numCells,
+                    params.width,
+                    params.mainCell
+                );
+            break;
+    }
+
+    for (let i = 0; i < params.numCells; i++) {
+        arr.push(getNbhd(i));
+    }
+
+    return arr;
+}
+
 export const cellsNbhdsSlice = createSlice({
     name: "cellsNbhds",
     initialState,
     reducers: {
-        set: (state, action: PayloadAction<SetParams>) => {
-            //
-
-            let arr = [];
-            let getNbhd;
-            let params = action.payload;
-
-            switch (params.type) {
-                case "adjacent":
-                    getNbhd = (index: number) =>
-                        adjacentNbhd(
-                            index,
-                            params.numCells,
-                            params.width,
-                            params.mainCell
-                        );
-                    break;
-                case "grouped":
-                    getNbhd = (index: number) =>
-                        groupedNbhd(
-                            index,
-                            params.numCells,
-                            params.width,
-                            params.mainCell
-                        );
-                    break;
-                case "scattered":
-                    getNbhd = (index: number) =>
-                        scatteredNbhd(
-                            index,
-                            params.numCells,
-                            params.width,
-                            params.mainCell
-                        );
-                    break;
-            }
-
-            for (let i = 0; i < params.numCells; i++) {
-                arr.push(getNbhd(i));
-            }
-
-            state.value = arr;
+        setCellsNbhds: (state, action: PayloadAction<SetParams>) => {
+            state.value = buildNbhd(action.payload);
         },
     },
 });
 
-const { set } = cellsNbhdsSlice.actions;
-
-export const setCellsNbhds = set;
+export const { setCellsNbhds } = cellsNbhdsSlice.actions;
 
 export default cellsNbhdsSlice.reducer;

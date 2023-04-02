@@ -4,41 +4,30 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useAppSelector } from "./hooks";
 import { NbhdType } from "src/features/nbhdType";
-import numCellsReducer, { selectNumCells } from "src/features/numCells";
-import nbhdWidthReducer, { selectNbhdWidth } from "src/features/nbhdWidth";
-import nbhdTypeReducer, { selectNbhdType } from "src/features/nbhdType";
-import mainCellReducer, { selectMainCell } from "src/features/mainCell";
+import numCellsReducer from "src/features/numCells";
+import nbhdWidthReducer from "src/features/nbhdWidth";
+import nbhdTypeReducer from "src/features/nbhdType";
+import mainCellReducer from "src/features/mainCell";
 import liveCellsTypeReducer, {
     LiveCellsType,
-    selectLiveCellsType,
 } from "src/features/liveCellsType";
 import distributionTypeReducer, {
     DistributionType,
-    selectDistributionType,
 } from "src/features/distributionType";
-import liveCellsReducer, { selectLiveCells } from "src/features/liveCells";
-import groupMinSizeReducer, {
-    selectGroupMinSize,
-} from "src/features/groupMinSize";
-import groupMaxSizeReducer, {
-    selectGroupMaxSize,
-} from "src/features/groupMaxSize";
+import liveCellsReducer from "src/features/liveCells";
+import groupMinSizeReducer from "src/features/groupMinSize";
+import groupMaxSizeReducer from "src/features/groupMaxSize";
 import runningStatusReducer, {
     RunningStatusType,
-    selectRunningStatus,
 } from "src/features/runningStatus";
-import refreshTimeReducer, {
-    selectRefreshTime,
-    selectRefreshTimeIndex,
-} from "src/features/refreshTime";
-import cellSizeReducer, {
-    selectCellSize,
-    selectCellSizeIndex,
-} from "src/features/cellSize";
+import refreshTimeReducer from "src/features/refreshTime";
+import cellSizeReducer from "src/features/cellSize";
 import rulesReducer from "src/features/rules";
 import initStateReducer from "src/features/initState";
 import cellsNbhdsReducer from "src/features/cellsNbhds";
 import { boolArrayToInt } from "src/ts/Utils";
+import { values as refreshTimeValues } from "src/features/refreshTime";
+import { values as cellSizeValues } from "src/features/cellSize";
 
 export const store = configureStore({
     reducer: {
@@ -65,46 +54,48 @@ export type AppDispatch = typeof store.dispatch;
 
 export const dataStore = {
     get numCells(): number {
-        return useAppSelector(selectNumCells);
+        return useAppSelector((state) => state.numCells.value);
     },
     get nbhdWidth(): number {
-        return useAppSelector(selectNbhdWidth);
+        return useAppSelector((state) => state.nbhdWidth.value);
     },
     get nbhdType(): NbhdType {
-        return useAppSelector(selectNbhdType);
+        return useAppSelector((state) => state.nbhdType.value);
     },
     get mainCell(): number {
-        return useAppSelector(selectMainCell);
+        return useAppSelector((state) => state.mainCell.value);
     },
     get liveCellsType(): LiveCellsType {
-        return useAppSelector(selectLiveCellsType);
+        return useAppSelector((state) => state.liveCellsType.value);
     },
     get distributionType(): DistributionType {
-        return useAppSelector(selectDistributionType);
+        return useAppSelector((state) => state.distributionType.value);
     },
     get liveCells(): number {
-        return useAppSelector(selectLiveCells);
+        return useAppSelector((state) => state.liveCells.value);
     },
     get groupMinSize(): number {
-        return useAppSelector(selectGroupMinSize);
+        return useAppSelector((state) => state.groupMinSize.value);
     },
     get groupMaxSize(): number {
-        return useAppSelector(selectGroupMaxSize);
+        return useAppSelector((state) => state.groupMaxSize.value);
     },
     get runningStatus(): RunningStatusType {
-        return useAppSelector(selectRunningStatus);
+        return useAppSelector((state) => state.runningStatus.value);
     },
     get refreshTime(): number {
-        return useAppSelector(selectRefreshTime);
+        return useAppSelector(
+            (state) => refreshTimeValues[state.refreshTime.value]
+        );
     },
     get refreshTimeIndex(): number {
-        return useAppSelector(selectRefreshTimeIndex);
+        return useAppSelector((state) => state.refreshTime.value);
     },
     get cellSize(): number {
-        return useAppSelector(selectCellSize);
+        return useAppSelector((state) => cellSizeValues[state.cellSize.value]);
     },
     get cellSizeIndex(): number {
-        return useAppSelector(selectCellSizeIndex);
+        return useAppSelector((state) => state.cellSize.value);
     },
     cellsNbhds: {
         get arr(): number[][] {

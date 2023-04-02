@@ -1,13 +1,12 @@
 //
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "src/app/store";
 
 interface LiveCellsState {
     value: number;
 }
 
-const initialState: LiveCellsState = {
+export const initialState: LiveCellsState = {
     value: 1,
 };
 
@@ -15,24 +14,19 @@ export const liveCellsSlice = createSlice({
     name: "liveCells",
     initialState,
     reducers: {
-        increment: (state) => {
+        incrementLiveCells: (state) => {
             state.value++;
         },
-        decrement: (state) => {
+        decrementLiveCells: (state) => {
             state.value--;
         },
-        set: (state, action: PayloadAction<number>) => {
+        setLiveCells: (state, action: PayloadAction<number>) => {
             state.value = action.payload;
         },
     },
 });
 
-export const selectLiveCells = (state: RootState) => state.liveCells.value;
-
-const { increment, decrement, set } = liveCellsSlice.actions;
-
-export const incrementLiveCells = increment;
-export const decrementLiveCells = decrement;
-export const setLiveCells = set;
+export const { incrementLiveCells, decrementLiveCells, setLiveCells } =
+    liveCellsSlice.actions;
 
 export default liveCellsSlice.reducer;

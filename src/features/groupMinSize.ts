@@ -1,13 +1,12 @@
 //
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "src/app/store";
 
 interface GroupMinSizeState {
     value: number;
 }
 
-const initialState: GroupMinSizeState = {
+export const initialState: GroupMinSizeState = {
     value: 1,
 };
 
@@ -15,25 +14,19 @@ export const groupMinSizeSlice = createSlice({
     name: "groupMinSize",
     initialState,
     reducers: {
-        increment: (state) => {
+        incrementGroupMinSize: (state) => {
             state.value++;
         },
-        decrement: (state) => {
+        decrementGroupMinSize: (state) => {
             state.value--;
         },
-        set: (state, action: PayloadAction<number>) => {
+        setGroupMinSize: (state, action: PayloadAction<number>) => {
             state.value = action.payload;
         },
     },
 });
 
-export const selectGroupMinSize = (state: RootState) =>
-    state.groupMinSize.value;
-
-const { increment, decrement, set } = groupMinSizeSlice.actions;
-
-export const incrementGroupMinSize = increment;
-export const decrementGroupMinSize = decrement;
-export const setGroupMinSize = set;
+export const { incrementGroupMinSize, decrementGroupMinSize, setGroupMinSize } =
+    groupMinSizeSlice.actions;
 
 export default groupMinSizeSlice.reducer;

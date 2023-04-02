@@ -3,6 +3,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DistributionType } from "./distributionType";
 
+import { initialState as numCells } from "./numCells";
+import { initialState as liveCells } from "./liveCells";
+import { initialState as groupMinSize } from "./groupMinSize";
+import { initialState as groupMaxSize } from "./groupMaxSize";
+import { initialState as distribution } from "./distributionType";
+
 interface InitStateState {
     value: boolean[];
 }
@@ -15,8 +21,14 @@ interface SetParams {
     distribution: DistributionType;
 }
 
-const initialState: InitStateState = {
-    value: [],
+export const initialState: InitStateState = {
+    value: buildState({
+        numCells: numCells.value,
+        liveCells: liveCells.value,
+        groupMinSize: groupMinSize.value,
+        groupMaxSize: groupMaxSize.value,
+        distribution: distribution.value,
+    }),
 };
 
 function variableDist(
@@ -75,73 +87,70 @@ function randomDist(nums: number, totalSum: number): number[] {
     return arr;
 }
 
+function buildState(params: SetParams) {
+    //
+
+    if (params.liveCells >= 0 && params.liveCells < 1) {
+        params.liveCells = Math.round(params.liveCells * params.numCells);
+    } else {
+        params.liveCells = Math.max(
+            1,
+            Math.min(params.liveCells, params.numCells)
+        );
+    }
+
+    let deadCells = params.numCells - params.liveCells;
+
+    let groupSizeDiff = Math.abs(params.groupMaxSize - params.groupMinSize);
+
+    let trueArr, falseArr;
+
+    if (groupSizeDiff > 0) {
+        trueArr = variableDist(
+            params.groupMinSize,
+            params.groupMaxSize,
+            params.liveCells
+        );
+    } else {
+        trueArr = Array(
+            Math.round(params.liveCells / params.groupMinSize)
+        ).fill(params.groupMinSize);
+    }
+
+    if (params.distribution === "rand") {
+        falseArr = randomDist(trueArr.length + 1, deadCells);
+    } else {
+        falseArr = Array(trueArr.length + 1).fill(
+            Math.round(deadCells / (trueArr.length + 1))
+        );
+    }
+
+    let arr: boolean[] = [];
+
+    for (let i = 0; i < trueArr.length; i++) {
+        arr = arr.concat(
+            Array(falseArr[i]).fill(false).concat(Array(trueArr[i]).fill(true))
+        );
+    }
+
+    let diff = params.numCells - arr.length;
+    if (diff <= 0) {
+        arr = arr.slice(0, params.numCells);
+    } else {
+        arr = arr.concat(Array(diff).fill(false));
+    }
+
+    return arr;
+}
+
 export const initStateSlice = createSlice({
     name: "initState",
     initialState,
     reducers: {
-        set: (state, action: PayloadAction<SetParams>) => {
-            //
-            const params = action.payload;
-
-            if (params.liveCells >= 0 && params.liveCells < 1) {
-                params.liveCells = Math.round(
-                    params.liveCells * params.numCells
-                );
-            } else {
-                params.liveCells = Math.max(
-                    1,
-                    Math.min(params.liveCells, params.numCells)
-                );
-            }
-
-            let deadCells = params.numCells - params.liveCells;
-
-            let groupSizeDiff = Math.abs(
-                params.groupMaxSize - params.groupMinSize
-            );
-
-            let trueArr, falseArr;
-
-            if (groupSizeDiff > 0) {
-                trueArr = variableDist(
-                    params.groupMinSize,
-                    params.groupMaxSize,
-                    params.liveCells
-                );
-            } else {
-                trueArr = Array(
-                    Math.round(params.liveCells / params.groupMinSize)
-                ).fill(params.groupMinSize);
-            }
-
-            if (params.distribution === "rand") {
-                falseArr = randomDist(trueArr.length + 1, deadCells);
-            } else {
-                falseArr = Array(trueArr.length + 1).fill(
-                    Math.round(deadCells / (trueArr.length + 1))
-                );
-            }
-
-            let arr: boolean[] = [];
-
-            for (let i = 0; i < trueArr.length; i++) {
-                arr = arr.concat(
-                    Array(falseArr[i])
-                        .fill(false)
-                        .concat(Array(trueArr[i]).fill(true))
-                );
-            }
-
-            let diff = params.numCells - arr.length;
-            if (diff <= 0) {
-                arr = arr.slice(0, params.numCells);
-            } else {
-                arr = arr.concat(Array(diff).fill(false));
-            }
-
-            state.value = arr;
+        setInitState: (state, action: PayloadAction<SetParams>) => {
+            state.value = buildState(action.payload);
         },
-        toggleCell: (state, action: PayloadAction<number>) => {
+        toggleInitStateCell: (state, action: PayloadAction<number>) => {
             state.value = state.value.map((e, i) =>
                 i === action.payload ? !e : e
             );
@@ -149,9 +158,6 @@ export const initStateSlice = createSlice({
     },
 });
 
-const { set, toggleCell } = initStateSlice.actions;
-
-export const setInitState = set;
-export const toggleCellInitState = toggleCell;
+export const { setInitState, toggleInitStateCell } = initStateSlice.actions;
 
 export default initStateSlice.reducer;
