@@ -15,7 +15,7 @@ import {
 import Button from "../components/Button";
 import LevelSelector from "../components/LevelSelector";
 import Group from "src/components/Group";
-import CanvasCntrl from "src/ts/CanvasCntrl";
+import CanvasController from "src/ts/CanvasController";
 import { dataStore } from "src/app/store";
 import { useAppDispatch } from "src/app/hooks";
 import { setRunningStatus } from "src/features/runningStatus";
@@ -29,9 +29,9 @@ import { numValues as refreshTimeNumValues } from "src/features/refreshTime";
 import { numValues as cellSizeNumValues } from "src/features/cellSize";
 
 const canvasId = "cap-canvas";
+const bufferSize = 64;
 const automaton = new CellularAutomaton();
-
-let controller: CanvasCntrl;
+let canvasCntrl: CanvasController;
 let runInterval: NodeJS.Timer;
 
 export default function Canvas() {
@@ -39,15 +39,17 @@ export default function Canvas() {
 
     const numCells = dataStore.numCells;
 
+    // const canvasCntrl = useRef<CanvasController>();
+
     useEffect(() => {
-        controller = new CanvasCntrl(canvasId, 64, numCells);
+        canvasCntrl = new CanvasController(canvasId, bufferSize, numCells);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <div>
-            <div id="canvas-container" className="">
-                <canvas id={canvasId} className="" />
+            <div id="canvas-container">
+                <canvas id={canvasId} />
             </div>
 
             <div className="row my-3">
@@ -86,35 +88,44 @@ function FlowCtrls() {
 
     const dispatch = useAppDispatch();
 
-    const nextState = () => {
+    const init = () => {
         if (runningStatus === "stopped") {
             automaton.state = initState;
-        } else {
-            automaton.nextState(cellsNbhds, rules);
+            canvasCntrl?.paintNextRow(automaton.state);
+            return true;
         }
-        // genCount.current++;
-        controller.paintRow(automaton.state);
+        return false;
+    };
+
+    const nextState = () => {
+        automaton.nextState(cellsNbhds, rules);
+        canvasCntrl?.paintNextRow(automaton.state);
     };
 
     const next = () => {
-        dispatch(setRunningStatus("paused"));
-        nextState();
+        if (!init()) {
+            nextState();
+        }
+        if (runningStatus === "stopped") {
+            dispatch(setRunningStatus("paused"));
+        }
     };
 
     const run = () => {
+        init();
         dispatch(setRunningStatus("running"));
         runInterval = setInterval(nextState, refreshTime);
     };
 
     const pause = () => {
-        dispatch(setRunningStatus("paused"));
         clearInterval(runInterval);
+        dispatch(setRunningStatus("paused"));
     };
 
     const stop = () => {
-        dispatch(setRunningStatus("stopped"));
         clearInterval(runInterval);
-        controller.restart();
+        canvasCntrl.restart();
+        dispatch(setRunningStatus("stopped"));
     };
 
     useEffect(() => {
@@ -186,10 +197,11 @@ function ZoomSelector() {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        controller.cellSize = cellSize;
-
+        //
+        // canvasCntrl!.cellSize = cellSize;
+        canvasCntrl?.setCellSize(cellSize);
         if (runningStatus !== "running") {
-            controller.restart();
+            canvasCntrl?.restart();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cellSize]);
@@ -215,12 +227,12 @@ function CanvasCtrls() {
                 <Button
                     tooltipLabel="Clear"
                     icon={faBroom}
-                    onClick={() => controller.restart()}
+                    onClick={() => canvasCntrl?.restart()}
                 />,
                 <Button
                     tooltipLabel="Screenshot"
                     icon={faCameraRetro}
-                    onClick={() => controller.saveScene("cellular_automaton")}
+                    onClick={() => canvasCntrl?.saveScene("cellular_automaton")}
                 />,
             ]}
         />

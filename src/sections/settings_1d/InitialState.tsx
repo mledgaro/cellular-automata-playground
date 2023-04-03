@@ -29,7 +29,7 @@ import {
     setGroupMinSize,
 } from "src/features/groupMinSize";
 import { setDistributionType } from "src/features/distributionType";
-import { setInitState, toggleCellInitState } from "src/features/initState";
+import { setInitState, toggleInitStateCell } from "src/features/initState";
 
 export default function InitialState() {
     //
@@ -122,6 +122,7 @@ function GroupSize() {
         if (maxSize < minSize) {
             dispatch(setGroupMaxSize(minSize));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [maxSize, minSize]);
 
     return (
@@ -181,8 +182,8 @@ function DistributionSelector() {
             <Title text="Distribution" size="small" />
             <OptionGroup
                 options={[
-                    { label: "Random", value: "rand" },
                     { label: "Even", value: "even" },
+                    { label: "Random", value: "rand" },
                 ]}
                 selected={{
                     get: distr,
@@ -212,6 +213,12 @@ function ReloadBtn() {
 
     const dispatch = useAppDispatch();
 
+    useEffect(() => {
+        //
+        dispatch(setInitState(params));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [params]);
+
     return (
         <Button
             icon={faRotate}
@@ -234,7 +241,7 @@ function CellsSet() {
                 <SpanCell
                     key={i}
                     alive={e}
-                    toggle={() => dispatch(toggleCellInitState(i))}
+                    toggle={() => dispatch(toggleInitStateCell(i))}
                 />
             ))}
         </div>

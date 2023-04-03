@@ -6,7 +6,7 @@ import React from "react";
 import { useRangeReducer } from "./ts/CustomHooks";
 
 import Canvas from "./sections/Canvas";
-import Settings1D from "./sections/settings_1d/Settings1D";
+import Settings1D from "./sections/Settings1D";
 import Settings2D from "./sections/settings_2d/Settings2D";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -1,6 +1,6 @@
 //
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 import { OptionGroup } from "../../components/SectionSelector";
@@ -128,6 +128,14 @@ function MainCellSelector() {
         cells.splice(mainCell, 1, <SelectedCell onClick={() => set(-1)} />);
     }
 
+    useEffect(() => {
+        //
+        if (mainCell === width) {
+            dispatch(setMainCell(mainCell - 1));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [width]);
+
     return (
         <div
             className="cap-container-dark-1 mx-auto"
@@ -148,6 +156,12 @@ function UpdateNbhds() {
         mainCell: dataStore.mainCell,
     };
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        //
+        dispatch(setCellsNbhds(params));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [params]);
 
     return (
         <Button

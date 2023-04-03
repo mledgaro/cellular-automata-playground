@@ -1,6 +1,6 @@
 //
 
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare as faSquareRegular } from "@fortawesome/free-regular-svg-icons";
@@ -21,10 +21,12 @@ import Group from "src/components/Group";
 import { dataStore } from "src/app/store";
 import { useAppDispatch } from "src/app/hooks";
 import {
-    allAliveRules,
-    allDeadRules,
+    allRulesAlive,
+    allRulesDead,
     inverseRules,
     randomRules,
+    resizeRules,
+    setRulesByNumber,
     toggleRule,
 } from "src/features/rules";
 
@@ -91,12 +93,12 @@ function Controls() {
                     <Button
                         tooltipLabel="All alive"
                         icon={faSquareSolid}
-                        onClick={() => dispatch(allAliveRules())}
+                        onClick={() => dispatch(allRulesAlive())}
                     />,
                     <Button
                         tooltipLabel="All dead"
                         icon={faSquareRegular}
-                        onClick={() => dispatch(allDeadRules())}
+                        onClick={() => dispatch(allRulesDead())}
                     />,
                 ]}
             />
@@ -157,6 +159,7 @@ function RuleCell({
 function RulesSet({ setHoverCell }: { setHoverCell: (val: number) => void }) {
     //
 
+    const nbhdWidth = dataStore.nbhdWidth;
     const rules = dataStore.rules.arr;
 
     const dispatch = useAppDispatch();
@@ -175,6 +178,13 @@ function RulesSet({ setHoverCell }: { setHoverCell: (val: number) => void }) {
             />
         );
     }
+
+    useEffect(() => {
+        //
+        dispatch(resizeRules(Math.pow(2, nbhdWidth)));
+        dispatch(setRulesByNumber(90));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nbhdWidth]);
 
     return (
         <div

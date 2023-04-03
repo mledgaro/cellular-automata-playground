@@ -2,12 +2,12 @@
 
 import React from "react";
 
-import { useStateObj } from "../../ts/CustomHooks";
+import { useStateObj } from "../ts/CustomHooks";
 
-import SectionSelector from "../../components/SectionSelector";
-import Neighborhood1D from "./Neighborhood1D";
-import Rules1D from "./Rules1D";
-import InitialState from "./InitialState";
+import SectionSelector from "../components/SectionSelector";
+import Neighborhood1D from "./settings_1d/Neighborhood1D";
+import Rules1D from "./settings_1d/Rules1D";
+import InitialState from "./settings_1d/InitialState";
 
 export default function Settings1D() {
     //
