@@ -134,7 +134,7 @@ function FlowCtrls() {
             runInterval = setInterval(nextState, refreshTime);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [refreshTime]);
+    }, [refreshTime, rules]);
 
     return (
         <Group
