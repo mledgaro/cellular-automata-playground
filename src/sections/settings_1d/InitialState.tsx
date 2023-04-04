@@ -13,11 +13,7 @@ import Title from "src/components/Title";
 import { dataStore } from "src/app/store";
 import { useAppDispatch } from "src/app/hooks";
 import { LiveCellsType, setLiveCellsType } from "src/features/liveCellsType";
-import {
-    decrementLiveCells,
-    incrementLiveCells,
-    setLiveCells,
-} from "src/features/liveCells";
+import { decrementLiveCells, incrementLiveCells } from "src/features/liveCells";
 import {
     decrementGroupMaxSize,
     incrementGroupMaxSize,
@@ -26,7 +22,6 @@ import {
 import {
     decrementGroupMinSize,
     incrementGroupMinSize,
-    setGroupMinSize,
 } from "src/features/groupMinSize";
 import { setDistributionType } from "src/features/distributionType";
 import { setInitState, toggleInitStateCell } from "src/features/initState";
@@ -94,12 +89,9 @@ function LiveCellsSelector() {
             />
 
             <NumberInput
-                value={{
-                    get: liveCells,
-                    set: (val: number) => dispatch(setLiveCells(val)),
-                    next: () => dispatch(incrementLiveCells()),
-                    prev: () => dispatch(decrementLiveCells()),
-                }}
+                value={liveCells}
+                increment={() => dispatch(incrementLiveCells())}
+                decrement={() => dispatch(decrementLiveCells())}
                 min={1}
                 max={type === "num" ? numCells : 100}
                 size="sm"
@@ -135,13 +127,9 @@ function GroupSize() {
                 <div className="my-2">
                     <NumberInput
                         label="Min"
-                        value={{
-                            get: minSize,
-                            set: (val: number) =>
-                                dispatch(setGroupMinSize(val)),
-                            next: () => dispatch(incrementGroupMinSize()),
-                            prev: () => dispatch(decrementGroupMinSize()),
-                        }}
+                        value={minSize}
+                        increment={() => dispatch(incrementGroupMinSize())}
+                        decrement={() => dispatch(decrementGroupMinSize())}
                         min={1}
                         max={numCells}
                         size="sm"
@@ -152,13 +140,9 @@ function GroupSize() {
                 <div className="my-2">
                     <NumberInput
                         label="Max"
-                        value={{
-                            get: maxSize,
-                            set: (val: number) =>
-                                dispatch(setGroupMaxSize(val)),
-                            next: () => dispatch(incrementGroupMaxSize()),
-                            prev: () => dispatch(decrementGroupMaxSize()),
-                        }}
+                        value={maxSize}
+                        increment={() => dispatch(incrementGroupMaxSize())}
+                        decrement={() => dispatch(decrementGroupMaxSize())}
                         min={minSize}
                         max={numCells}
                         size="sm"

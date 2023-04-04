@@ -12,11 +12,7 @@ import { NbhdType } from "src/features/nbhdType";
 import { boolArray } from "src/ts/Utils";
 import Title from "src/components/Title";
 import { useAppDispatch } from "src/app/hooks";
-import {
-    decrementNbhdWidth,
-    incrementNbhdWidth,
-    setNbhdWidth,
-} from "src/features/nbhdWidth";
+import { decrementNbhdWidth, incrementNbhdWidth } from "src/features/nbhdWidth";
 import { setNbhdType } from "src/features/nbhdType";
 import { setMainCell } from "src/features/mainCell";
 import { dataStore } from "src/app/store";
@@ -30,12 +26,16 @@ export default function Neighborhood1D() {
             <div className="row mx-auto" style={{ width: "85%" }}>
                 {/* */}
 
-                <div className="col-3 d-flex align-items-center">
+                {/* <div className="col-2 d-flex align-items-center">
                     <Width />
+                </div> */}
+
+                <div className="col-3">
+                    <Type />
                 </div>
 
-                <div className="col-4">
-                    <Type />
+                <div className="col-4 border">
+                    <Nbhd />
                 </div>
 
                 <div className="col-4 d-flex align-items-center">
@@ -59,19 +59,12 @@ function Width() {
 
     const dispatch = useAppDispatch();
 
-    const increment = () => dispatch(incrementNbhdWidth());
-    const decrement = () => dispatch(decrementNbhdWidth());
-    const set = (val: number) => dispatch(setNbhdWidth(val));
-
     return (
         <NumberInput
             label="Width"
-            value={{
-                get: width,
-                prev: decrement,
-                next: increment,
-                set: set,
-            }}
+            value={width}
+            increment={() => dispatch(incrementNbhdWidth())}
+            decrement={() => dispatch(decrementNbhdWidth())}
             min={2}
             max={8}
         />
@@ -142,6 +135,60 @@ function MainCellSelector() {
             style={{ padding: "8px", width: "max-content" }}
         >
             <Ellipses cells={cells} mainCell={mainCell} nbhdType={type} />
+        </div>
+    );
+}
+
+function Nbhd() {
+    //
+
+    const width = dataStore.nbhdWidth;
+    const type = dataStore.nbhdType;
+    const mainCell = dataStore.mainCell;
+
+    const dispatch = useAppDispatch();
+
+    const set = (val: number) => dispatch(setMainCell(val));
+
+    let cells = [];
+
+    for (let i = 0; i < width; i++) {
+        cells.push(<IconCell onClick={() => set(i)} size="lg" />);
+    }
+
+    if (mainCell !== -1) {
+        cells.splice(mainCell, 1, <SelectedCell onClick={() => set(-1)} />);
+    }
+
+    useEffect(() => {
+        //
+        if (mainCell === width) {
+            dispatch(setMainCell(mainCell - 1));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [width]);
+
+    return (
+        <div className="row border" style={{}}>
+            <div
+                className="d-flex align-items-center border"
+                style={{ width: "fit-content" }}
+            >
+                <NumberInput
+                    size="sm"
+                    value={width}
+                    increment={() => dispatch(incrementNbhdWidth())}
+                    decrement={() => dispatch(decrementNbhdWidth())}
+                    min={2}
+                    max={8}
+                />
+            </div>
+            <div
+                className="cap-container-dark-1 border"
+                style={{ padding: "8px", width: "max-content" }}
+            >
+                <Ellipses cells={cells} mainCell={mainCell} nbhdType={type} />
+            </div>
         </div>
     );
 }

@@ -97,7 +97,9 @@ function NbhdInput2D({
             <div className="col">
                 <NumberInput
                     label="Width"
-                    value={width}
+                    value={width.get}
+                    increment={width.next}
+                    decrement={width.prev}
                     min={2}
                     max={8}
                     size="md"
@@ -107,7 +109,9 @@ function NbhdInput2D({
 
                 <NumberInput
                     label="Height"
-                    value={height}
+                    value={height.get}
+                    increment={height.next}
+                    decrement={height.prev}
                     min={2}
                     max={8}
                     size="md"
