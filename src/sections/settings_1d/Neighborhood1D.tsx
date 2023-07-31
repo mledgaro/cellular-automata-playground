@@ -26,16 +26,12 @@ export default function Neighborhood1D() {
             <div className="row mx-auto" style={{ width: "85%" }}>
                 {/* */}
 
-                {/* <div className="col-2 d-flex align-items-center">
+                <div className="col-3 d-flex align-items-center">
                     <Width />
-                </div> */}
-
-                <div className="col-3">
-                    <Type />
                 </div>
 
-                <div className="col-4 border">
-                    <Nbhd />
+                <div className="col-4">
+                    <Type />
                 </div>
 
                 <div className="col-4 d-flex align-items-center">
@@ -61,6 +57,7 @@ function Width() {
 
     return (
         <NumberInput
+            size="sm"
             label="Width"
             value={width}
             increment={() => dispatch(incrementNbhdWidth())}
