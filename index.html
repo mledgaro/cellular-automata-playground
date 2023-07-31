@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html  lang="es">
+
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>Cellular Automata</title>
+
+    <head>
+        <!-- Bootstrap 5 -->
+        <link href="bootstrap/bootstrap.css" rel="stylesheet">
+        <script src="bootstrap/bootstrap.bundle.js"></script> 
+
+        <!-- Font Awesome Icons -->
+        <link href="fontawesome/css/all.css" rel="stylesheet">
+
+        <link href="css/style.css" rel="stylesheet">
+
+        <script src="js/jquery-3.6.0.min.js"></script>
+
+        <script src="js/components/CAPButton.js"></script>
+        <script src="js/components/CAPButtonGroupSelector.js"></script>
+        <script src="js/components/CAPCanvas.js"></script>
+        <script src="js/components/CAPCellsState.js"></script>
+        <script src="js/components/CAPLevelSelector.js"></script>
+        <script src="js/components/CAPCellButton.js"></script>
+        <script src="js/components/CAPToggleButton.js"></script>
+        <script src="js/components/CAPCheck.js"></script>
+        <script src="js/components/CAPRuleCheck1D.js"></script>
+        <script src="js/components/CAPRulesChecker1D.js"></script>
+        <script src="js/components/CAPRuleCheck2D.js"></script>
+        <script src="js/components/CAPRulesChecker2D.js"></script>
+
+        <script src="js/gui/GUIControls.js"></script>
+        <script src="js/gui/GUISectionNeighborhood.js"></script>
+        <script src="js/gui/GUISectionRules.js"></script>
+        <script src="js/gui/GUISectionInitialState.js"></script>
+        <script src="js/gui/GUI.js"></script>
+
+        <script src="js/models/CellularAutomaton.js"></script>
+        <script src="js/models/CellularAutomaton2D.js"></script>
+
+        <script src="js/Controller.js"></script>
+
+        <script>
+            let CONTROLLER;
+            $(document).ready(
+                function ()
+                {
+                    CONTROLLER = new Controller();
+                }
+            );
+        </script>
+    </head>
+
+    <body class="bg-secondary text-white">
+    <div class="container-fluid">
+
+        <!-- Title -->
+        <div class="row mt-3">
+            <div class="input-group input-group-lg 
+                        d-flex justify-content-center">
+                
+                <button id="dimension-selector-btn" class="pe-0"></button>
+
+                <span class="input-group-text ps-0 bg-warning border 
+                            border-warning">
+                    <i class="fa-d fa-solid fa-2xl"></i>
+                </span>
+
+                <span class="input-group-text cap-text-label" id="title-page">
+                    Cellular Automata
+                </span>
+
+            </div>
+        </div>
+
+
+        <!-- Cells canvas -->
+        <div class="row mt-4 mb-0" id="canvas-container-1d" style="margin:auto;">
+            <!-- <canvas class="p-0" id="cells-canvas"></canvas> -->
+        </div>
+
+
+        <!-- Controls -->
+        <div class="row mt-0">
+
+            <!-- Flow -->
+            <div class="col-lg my-2">
+                <div class="input-group d-flex justify-content-center"
+                        id="controls-flow-container">
+
+                    <!-- Next -->
+                    <button id="next-control-btn"></button>
+
+                    <!-- Run -->
+                    <button id="run-control-btn"></button>
+
+                    <!-- Pause -->
+                    <button id="pause-control-btn"></button>
+
+                    <!-- Stop -->
+                    <button id="stop-control-btn"></button>
+
+                </div>
+            </div>
+
+            <!-- Canvas -->
+            <div class="col-lg my-2">
+                <div class="input-group d-flex justify-content-center"
+                        id="controls-canvas-container">
+
+                        <!-- Clear -->
+                        <button id="clear-controls-canvas-btn"></button>
+
+                        <!-- Screenshot -->
+                        <button id="screenshot-controls-canvas-btn"></button>
+
+                </div>
+            </div>
+
+            <!-- Speed -->
+            <div class="col-lg my-2" id="speed-level-container">
+                <!-- JS LOAD -->
+            </div>
+
+            <!-- Zoom -->
+            <div class="col-lg my-2" id="zoom-level-container">
+                <!-- JS Load -->
+            </div>
+
+        </div>
+
+
+        <!-- Section selector -->
+        <div class="mt-5 mb-3" id="section-selector-container"></div>
+
+
+        <!-- Neighborhood -->
+        <div class="row cap-section" id="section-neighborhood-container">
+
+            <!-- Size -->
+            <div class="col-lg">
+                <div class="input-group input-group-lg d-flex 
+                            justify-content-center">
+
+                    <span class="input-group-text cap-text-label">
+                        Size
+                    </span>
+    
+                    <!-- 1D -->
+                    <input type="number" 
+                            class="form-control rounded-end cap-input 
+                                    cap-1d-component cap-section-neighborhood" 
+                            id="neighborhood-size-input-1d" 
+                            value="3" min="1" max="8" step="1"
+                            style="max-width:5rem;">
+
+                    <!-- 2D -->
+                    <input type="number" 
+                            class="form-control rounded-end cap-input 
+                                    cap-2d-component cap-section-neighborhood" 
+                            id="neighborhood-size-input-2d" 
+                            value="3" min="1" max="8" step="1"
+                            style="max-width:5rem;">
+                </div>
+            </div>
+
+            <!-- Type -->
+            <div class="col-lg">
+                <div class="input-group input-group-lg d-flex 
+                            justify-content-center">
+
+                    <span class="input-group-text cap-text-label">
+                        Type
+                    </span>
+
+                    <!-- 1D -->
+                    <select class="cap-1d-component rounded-end cap-input 
+                                    form-select cap-section-neighborhood"
+                            style="max-width:10rem;"        
+                            id="neighborhood-type-selector-1d">
+
+                        <option value="insitu" selected>In situ</option>
+                        <option value="scattered">Scattered</option>
+                        <option value="grouped">Grouped</option>
+                    </select>
+
+                    <!-- 2D -->
+                    <select class="cap-2d-component rounded-end cap-input 
+                                    form-select cap-section-neighborhood"
+                            style="max-width:12rem;"
+                            id="neighborhood-type-selector-2d">
+
+                        <option value="moore" selected>Moore</option>
+                        <option value="vonneumann">Von Neumann</option>
+                        <option value="diagonal">Diagonal</option>
+                    </select>
+
+                </div>
+            </div>
+
+            <!-- Alignment -->
+            <div class="col-lg">
+                <div class="input-group input-group-lg d-flex 
+                            justify-content-center">
+
+                    <span class="input-group-text cap-text-label">
+                        Alignment
+                    </span>
+
+                    <!-- 1D -->
+                    <select class="cap-input rounded-end cap-1d-component 
+                                    form-select cap-section-neighborhood" 
+                            style="max-width:8rem;"
+                            id="neighborhood-alignment-selector-1d">
+
+                        <option value="left" selected>Left</option>
+                        <option value="right">Right</option>
+                    </select>
+
+                    <!-- 2D -->
+                    <select class="cap-input rounded-end cap-2d-component 
+                                    form-select cap-section-neighborhood" 
+                            style="max-width:12rem;"
+                            id="neighborhood-alignment-selector-2d">
+
+                        <option value="topleft" selected>Top Left</option>
+                        <option value="topright">Top Right</option>
+                        <option value="bottomleft">Bottom Left</option>
+                        <option value="bottomright">Bottom Right</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- Rules -->
+        <div class="cap-section" id="section-rules-container">
+
+            <!-- 1D -->
+            <div class="cap-1d-component">
+
+                <div class="row">
+
+                    <!-- Rule number -->
+                    <div class="col-lg">
+                        <div class="input-group input-group-lg d-flex 
+                                    justify-content-center">
+
+                            <span class="input-group-text cap-text-label">
+                                Rule number
+                            </span>
+
+                            <input type="number" 
+                                    class="form-control cap-input 
+                                            cap-section-rules" 
+                                    value="90" min="0" step="1" 
+                                    style="max-width:10rem;"
+                                    id="rules-rule-number">
+
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="col-lg">
+                        <div class="input-group input-group-lg d-flex 
+                                    justify-content-center">
+
+                            <!-- Random -->
+                            <button class="cap-section-rules" 
+                                    id="rules-random-rule-btn"></button>
+
+                            <!-- Uncheck all -->
+                            <button class="cap-section-rules" 
+                                    id="rules-uncheck-all-rules-btn"></button>
+
+                            <!-- Check all -->
+                            <button class="cap-section-rules" 
+                                    id="rules-check-all-rules-btn"></button>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mt-3" id="rules-atomic-rules-cont"></div>
+
+            </div>
+
+            <!-- 2D -->
+            <div class="row cap-2d-component" id="rules-2d-cont">
+            </div>
+
+        </div>
+
+
+        <!-- Initial state -->
+        <div class="cap-section" id="section-initial-state">
+
+            <!-- Buttons -->
+            <div class="row mb-2">
+
+                <div class="col-lg">
+                    <div class="input-group input-group-lg d-flex 
+                                justify-content-center">
+
+                        <!-- Clear -->
+                        <button class="cap-section-initial-state" 
+                                id="initial-state-clear-btn"></button>
+
+                        <!-- Random density -->
+                        <input type="number" 
+                                class="form-control cap-section-initial-state"
+                                value="0,3" min="0,1" max="1" step="0.1"
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="bottom"
+                                title="Density"
+                                style="max-width:6rem;"
+                                id="initial-state-random-density">
+
+                        <!-- Random -->
+                        <button class="cap-section-initial-state" 
+                                id="initial-state-random-btn"></button>
+
+                        <!-- Neighborhoods -->
+                        <button class="cap-section-initial-state" 
+                                id="initial-state-neighborhoods-btn"></button>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Initial state cells -->
+            <div class="row px-5" style="text-align:center;" 
+                    id="initial-state-cells"></div>
+
+        </div>
+
+
+        <!-- Footer -->
+        <div id="footer" class="mt-5 mb-3">
+            Universidad Nacional Autónoma de México - Facultad de Ciencias
+            <br>
+            Ciencias de la Computación - Vida Artificial 2022-2
+            <br>
+            Edgar Mendoza
+            <br>
+            mledgaro@ciencias.unam.mx
+        </div>
+
+
+    </div>
+    </body>
+
+</html>

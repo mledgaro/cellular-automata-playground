@@ -1,0 +1,176 @@
+:root
+{
+    --background: #6c757d;
+    --cellOff: #212529;
+    --cellOn: #ffc107;
+    --highlight: #f8f9fa;
+}
+
+.cap-text-label
+{
+    font-size: large;
+    font-weight: 500;
+    text-align: center;
+    background-color: var(--cellOff);
+    color: var(--cellOn);
+    border: var(--cellOff);
+}
+
+.cap-text-label-2
+{
+    width: 30%;
+    margin: auto;
+    margin-bottom: 0.5rem;
+    margin-top: 0.8rem;
+    font-size: 1.5rem;
+    border-radius: 3px;
+}
+
+.cap-text-label-light
+{
+    font-weight: 400;
+    text-align: center;
+    background-color: var(--highlight);
+    color: var(--cellOff);
+    border: var(--highlight);
+}
+
+.cap-btn
+{
+    background-color: var(--cellOn);
+    color: var(--cellOff);
+}
+
+.cap-btn-group-select
+{
+    background-color: var(--cellOff);
+    color: var(--cellOn);
+    width: 30%;
+}
+
+.cap-btn-group-select:hover
+{
+    color: var(--cellOn);
+    font-weight: 800;
+}
+
+.cap-btn-group-select.cap-btn-group-select-active
+{
+    background-color: var(--cellOn);
+    color: var(--cellOff);
+    font-weight: 600;
+}
+
+
+
+.cap-cell-btn
+{
+    padding: 0;
+    width: 3em;
+    height: 3em;
+    font-size: 0.8em;
+    font-weight: 500;
+    margin: 2px;
+    border-style: solid;
+    border-width: 5px;
+}
+
+.cap-num-neighbors-rule-btn
+{
+    padding: "0.5rem";
+    margin: "2px";
+    border: "none";
+    width: "2.5rem";
+    height: "2.5rem";
+}
+
+.cap-cell-btn-off
+{
+    background-color: var(--cellOff);
+    color: var(--cellOn);
+    border-color: var(--cellOff);
+}
+
+.cap-cell-btn-off-high
+{
+    background-color: var(--highlight);
+    color: var(--cellOff);
+    border-color: var(--cellOff);
+}
+
+.cap-cell-btn-on
+{
+    background-color: var(--cellOn);
+    color: var(--cellOff);
+    border-color: var(--cellOn);
+}
+
+.cap-cell-btn-on-high
+{
+    background-color: var(--highlight);
+    color: var(--cellOff);
+    border-color: var(--cellOn);
+}
+
+.bin-rule-label
+{
+    width: 3.5em;
+}
+
+.cap-input
+{
+    text-align: center;
+    font-size: large !important;
+}
+
+.cap-progress-cell
+{
+    padding: 0;
+    border: 0;
+    width: 2vmin;
+    background-color: var(--cellOff);
+}
+
+.cap-progress-cell.cap-cell-on
+{
+    background-color: var(--cellOn);
+}
+
+.cap-progress-cell:nth-of-type(2)
+{
+    border-style: solid;
+    border-color: var(--cellOff);
+    border-left-width: 0.4vmin;
+}
+
+.cap-progress-cell:nth-last-of-type(1)
+{
+    border-style: solid;
+    border-color: var(--cellOff);
+    border-right-width: 0.4vmin;
+}
+
+
+#title-page
+{
+    font-size: 3em;
+    font-weight: 800;
+    width: fit-content;
+}
+
+#cells-canvas-container
+{
+    margin: auto;
+    width: 95vw;
+    height: 70vh;
+    /* overflow-x: scroll; */
+    /* overflow-y: scroll; */
+}
+
+
+#footer
+{
+    font-size: small;
+    font-weight: 500;
+    text-align: center;
+}
