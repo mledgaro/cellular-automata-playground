@@ -2,9 +2,9 @@
 
 import React from "react";
 
-import { StateObjHook } from "../ts/CustomHooks";
 import Group, { Alignment, Size } from "./Group";
 import Title from "./Title";
+import { StateHookObj } from "src/app/hooks";
 
 export function OptionGroup({
     options,
@@ -14,7 +14,7 @@ export function OptionGroup({
     additionalClasses,
 }: {
     options: { label: string; value: string }[];
-    selected: StateObjHook;
+    selected: StateHookObj;
     size?: Size;
     alignment?: Alignment;
     additionalClasses?: string;
@@ -59,7 +59,7 @@ export default function SectionSelector({
 }: {
     title: string;
     sections: { label: string; value: string; component: JSX.Element }[];
-    selected: StateObjHook;
+    selected: StateHookObj;
     size?: Size;
     alignment?: Alignment;
     additionalClasses?: string;

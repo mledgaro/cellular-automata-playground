@@ -16,7 +16,7 @@ import { IconCell, Ellipses } from "../../components/Cells";
 
 import { intToBoolArray } from "../../ts/Utils";
 
-import { useStateObj } from "src/ts/CustomHooks";
+import { useStateObj } from "src/app/hooks";
 import Group from "src/components/Group";
 import { dataStore } from "src/app/store";
 import { useAppDispatch } from "src/app/hooks";

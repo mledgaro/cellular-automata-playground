@@ -2,7 +2,7 @@
 
 import React from "react";
 import Title from "src/components/Title";
-import { RangeReducerHook, StateObjHook } from "src/ts/CustomHooks";
+import { RangeReducerHook } from "src/ts/CustomHooks";
 import {
     IconCell,
     DeactivatedCell,
@@ -10,6 +10,7 @@ import {
 } from "../../components/Cells";
 import NumberInput from "../../components/NumberInput";
 import { OptionGroup } from "../../components/SectionSelector";
+import { StateHookObj } from "src/app/hooks";
 
 export type NbhdType2D = "moore" | "vonneumann" | "diagonal";
 
@@ -23,7 +24,7 @@ function MainCellSelector({
     type: NbhdType2D;
     width: number;
     height: number;
-    selected: StateObjHook;
+    selected: StateHookObj;
     extraClasses?: string;
 }) {
     //
@@ -88,7 +89,7 @@ function NbhdInput2D({
     type: NbhdType2D;
     width: RangeReducerHook;
     height: RangeReducerHook;
-    mainCell: StateObjHook;
+    mainCell: StateHookObj;
 }) {
     //
 
@@ -138,10 +139,10 @@ export default function Neighborhood2D({
     height,
     mainCell,
 }: {
-    type: StateObjHook;
+    type: StateHookObj;
     width: RangeReducerHook;
     height: RangeReducerHook;
-    mainCell: StateObjHook;
+    mainCell: StateHookObj;
 }) {
     //
 

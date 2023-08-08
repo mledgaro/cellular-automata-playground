@@ -12,58 +12,61 @@ import Settings2D from "./sections/settings_2d/Settings2D";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fa1, fa2, faD } from "@fortawesome/free-solid-svg-icons";
 
+import Button from "@mui/material/Button";
+import { StateHookObj, useStateObj } from "./app/hooks";
+
 export default function App() {
     //
 
-    const dimension = useRangeReducer(1, 2, 1, true);
+    const dimension = useStateObj(1);
 
-    let settings;
-
-    if (dimension.get === 1) {
-        settings = <Settings1D />;
-    } else {
-        // dimension.get === 2
-        settings = <Settings2D />;
-    }
+    const settings = dimension.get === 1 ? <Settings1D /> : <Settings2D />;
 
     return (
-        <div className="App">
-            {/* Title */}
-            <div className="input-group input-group-lg justify-content-center mt-2">
-                <button
-                    type="button"
-                    className="btn cap-container-clear-1"
-                    onClick={dimension.next}
-                >
-                    <FontAwesomeIcon
-                        icon={dimension.get === 1 ? fa1 : fa2}
-                        size="2xl"
-                    />
-                    <FontAwesomeIcon icon={faD} size="2xl" />
-                </button>
+        <div className="bg-french-gray">
+            <Title dimState={dimension} />
 
-                <span
-                    className="input-group-text cap-container-dark-1"
-                    id="app-title"
-                >
-                    Cellular Automata
-                </span>
-            </div>
+            {/* <Canvas /> */}
 
-            <Canvas />
+            {/* {settings} */}
 
-            {settings}
+            {/* <Footer /> */}
+        </div>
+    );
+}
 
-            {/* Footer */}
-            <div id="footer" className="mt-5 mb-3">
-                Universidad Nacional Autónoma de México - Facultad de Ciencias
-                <br />
-                Ciencias de la Computación - Vida Artificial 2022-2
-                <br />
-                Edgar Mendoza
-                <br />
-                mledgaro@ciencias.unam.mx
-            </div>
+function Title({ dimState }: { dimState: StateHookObj }) {
+    return (
+        <div className="flex justify-center py-4">
+            <Button
+                className="bg-sunglow text-jet rounded-s-lg rounded-e-none"
+                variant="contained"
+                onClick={() => dimState.set(dimState.get === 1 ? 2 : 1)}
+            >
+                <FontAwesomeIcon
+                    icon={dimState.get === 1 ? fa1 : fa2}
+                    size="3x"
+                />
+                <FontAwesomeIcon icon={faD} size="3x" />
+            </Button>
+
+            <span className="bg-jet text-sunglow text-4xl py-2 px-3 rounded-e-lg select-none">
+                Cellular Automata
+            </span>
+        </div>
+    );
+}
+
+function Footer() {
+    return (
+        <div id="footer" className="mt-5 mb-3">
+            Universidad Nacional Autónoma de México - Facultad de Ciencias
+            <br />
+            Ciencias de la Computación - Vida Artificial 2022-2
+            <br />
+            Edgar Mendoza
+            <br />
+            mledgaro@ciencias.unam.mx
         </div>
     );
 }

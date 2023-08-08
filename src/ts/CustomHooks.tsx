@@ -1,19 +1,7 @@
 //
 
-import { useCallback, useReducer, useRef, useState } from "react";
-
-export type StateObjHook = {
-    get: any;
-    set: (val: any) => void;
-};
-
-export function useStateObj(initValue: any): StateObjHook {
-    //
-
-    const [getState, setState] = useState(initValue);
-
-    return { get: getState, set: setState };
-}
+import { useCallback, useReducer, useRef } from "react";
+import { useStateObj } from "src/app/hooks";
 
 export type RangeReducerHook = {
     get: number;
