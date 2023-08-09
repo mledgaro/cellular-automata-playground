@@ -7,21 +7,25 @@ import { OptionGroup } from "../../components/SectionSelector";
 import NumberInput from "../../components/NumberInput";
 import Button from "../../components/Button";
 import { IconCell, SelectedCell, Ellipses } from "../../components/Cells";
-import { BoolArrHook, useBoolArrState } from "../../ts/CustomHooks";
-import { NbhdType } from "src/features/nbhdType";
+import { NbhdType } from "src/app/slices/nbhdType";
 import { boolArray } from "src/ts/Utils";
 import Title from "src/components/Title";
-import { useAppDispatch } from "src/app/hooks";
+import {
+    BoolArrHook,
+    useAppDispatch,
+    useAppSelector,
+    useBoolArrState,
+} from "src/app/hooks";
 import {
     decrementNbhdWidth,
     incrementNbhdWidth,
     setNbhdWidth,
-} from "src/features/nbhdWidth";
-import { setNbhdType } from "src/features/nbhdType";
-import { setMainCell } from "src/features/mainCell";
-import { dataStore } from "src/app/store";
-import { setCellsNbhds } from "src/features/cellsNbhds";
-import { Box, Slider, SliderProps, styled } from "@mui/material";
+} from "src/app/slices/nbhdWidth";
+import { setNbhdType } from "src/app/slices/nbhdType";
+import { setMainCell } from "src/app/slices/mainCell";
+
+import { setCellsNbhds } from "src/app/slices/cellsNbhds";
+import { Box } from "@mui/material";
 import CustomSlider from "src/components/Slider";
 
 export default function Neighborhood1D() {
@@ -67,7 +71,7 @@ export default function Neighborhood1D() {
 function Width() {
     //
 
-    const width = dataStore.nbhdWidth;
+    const width = useAppSelector((state) => state.nbhdWidth.value);
 
     const dispatch = useAppDispatch();
 
@@ -99,7 +103,7 @@ function Width() {
 function Type() {
     //
 
-    const type = dataStore.nbhdType;
+    const type = useAppSelector((state) => state.nbhdType.value);
 
     const dispatch = useAppDispatch();
 
@@ -128,9 +132,9 @@ function Type() {
 function MainCellSelector() {
     //
 
-    const width = dataStore.nbhdWidth;
-    const type = dataStore.nbhdType;
-    const mainCell = dataStore.mainCell;
+    const width = useAppSelector((state) => state.nbhdWidth.value);
+    const type = useAppSelector((state) => state.nbhdType.value);
+    const mainCell = useAppSelector((state) => state.mainCell.value);
 
     const dispatch = useAppDispatch();
 
@@ -167,9 +171,9 @@ function MainCellSelector() {
 function Nbhd() {
     //
 
-    const width = dataStore.nbhdWidth;
-    const type = dataStore.nbhdType;
-    const mainCell = dataStore.mainCell;
+    const width = useAppSelector((state) => state.nbhdWidth.value);
+    const type = useAppSelector((state) => state.nbhdType.value);
+    const mainCell = useAppSelector((state) => state.mainCell.value);
 
     const dispatch = useAppDispatch();
 
@@ -222,10 +226,10 @@ function UpdateNbhds() {
     //
 
     const params = {
-        numCells: dataStore.numCells,
-        width: dataStore.nbhdWidth,
-        type: dataStore.nbhdType,
-        mainCell: dataStore.mainCell,
+        numCells: useAppSelector((state) => state.numCells.value),
+        width: useAppSelector((state) => state.nbhdWidth.value),
+        type: useAppSelector((state) => state.nbhdType.value),
+        mainCell: useAppSelector((state) => state.mainCell.value),
     };
     const dispatch = useAppDispatch();
 
@@ -253,8 +257,8 @@ function HighlightCell({
 }) {
     //
 
-    const numCells = dataStore.numCells;
-    const cellsNbhds = dataStore.cellsNbhds.arr;
+    const numCells = useAppSelector((state) => state.numCells.value);
+    const cellsNbhds = useAppSelector((state) => state.cellsNbhds.value);
 
     const highlight = useCallback(() => {
         //
@@ -273,7 +277,7 @@ function HighlightCell({
 function NbhdsMap() {
     //
 
-    const numCells = dataStore.numCells;
+    const numCells = useAppSelector((state) => state.numCells.value);
 
     const highlightedCells = useBoolArrState(boolArray(numCells, false));
 

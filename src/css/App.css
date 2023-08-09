@@ -3,6 +3,7 @@
     --dark2: #6c757d;
     --clear1: #ffc107;
     --clear2: #f8f9fa;
+    /*#202c56 #ac965a*/
 }
 
 .cap-container-clear-1 {
@@ -35,7 +36,7 @@
     font-size: larger;
     border-style: solid;
     border-color: var(--clear1);
-        border-width: 2px;
+    border-width: 2px;
 }
 
 .cap-btn:hover {
@@ -201,7 +202,7 @@
 
 #canvas-container {
     margin: auto;
-    width: fit-content;    
+    width: fit-content;
     max-width: 95vw;
     max-height: 70vh;
     margin-top: 3vh;

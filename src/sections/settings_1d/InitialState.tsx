@@ -7,24 +7,27 @@ import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import Button from "../../components/Button";
 import NumberInput from "../../components/NumberInput";
 import { OptionGroup } from "../../components/SectionSelector";
-import { DistributionType } from "src/features/distributionType";
+import { DistributionType } from "src/app/slices/distributionType";
 import { SpanCell } from "src/components/Cells";
 import Title from "src/components/Title";
-import { dataStore } from "src/app/store";
-import { useAppDispatch } from "src/app/hooks";
-import { LiveCellsType, setLiveCellsType } from "src/features/liveCellsType";
-import { decrementLiveCells, incrementLiveCells } from "src/features/liveCells";
+
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import { LiveCellsType, setLiveCellsType } from "src/app/slices/liveCellsType";
+import {
+    decrementLiveCells,
+    incrementLiveCells,
+} from "src/app/slices/liveCells";
 import {
     decrementGroupMaxSize,
     incrementGroupMaxSize,
     setGroupMaxSize,
-} from "src/features/groupMaxSize";
+} from "src/app/slices/groupMaxSize";
 import {
     decrementGroupMinSize,
     incrementGroupMinSize,
-} from "src/features/groupMinSize";
-import { setDistributionType } from "src/features/distributionType";
-import { setInitState, toggleInitStateCell } from "src/features/initState";
+} from "src/app/slices/groupMinSize";
+import { setDistributionType } from "src/app/slices/distributionType";
+import { setInitState, toggleInitStateCell } from "src/app/slices/initState";
 
 export default function InitialState() {
     //
@@ -59,9 +62,9 @@ export default function InitialState() {
 function LiveCellsSelector() {
     //
 
-    const numCells = dataStore.numCells;
-    const type = dataStore.liveCellsType;
-    const liveCells = dataStore.liveCells;
+    const numCells = useAppSelector((state) => state.numCells.value);
+    const type = useAppSelector((state) => state.liveCellsType.value);
+    const liveCells = useAppSelector((state) => state.liveCells.value);
 
     const dispatch = useAppDispatch();
 
@@ -104,9 +107,9 @@ function LiveCellsSelector() {
 function GroupSize() {
     //
 
-    const numCells = dataStore.numCells;
-    const minSize = dataStore.groupMinSize;
-    const maxSize = dataStore.groupMaxSize;
+    const numCells = useAppSelector((state) => state.numCells.value);
+    const minSize = useAppSelector((state) => state.groupMinSize.value);
+    const maxSize = useAppSelector((state) => state.groupMaxSize.value);
 
     const dispatch = useAppDispatch();
 
@@ -157,7 +160,7 @@ function GroupSize() {
 function DistributionSelector() {
     //
 
-    const distr = dataStore.distributionType;
+    const distr = useAppSelector((state) => state.distributionType.value);
 
     const dispatch = useAppDispatch();
 
@@ -184,15 +187,15 @@ function DistributionSelector() {
 function ReloadBtn() {
     //
 
-    const liveCells = dataStore.liveCells;
-    const liveCellsType = dataStore.liveCellsType;
+    const liveCells = useAppSelector((state) => state.liveCells.value);
+    const liveCellsType = useAppSelector((state) => state.liveCellsType.value);
 
     const params = {
-        numCells: dataStore.numCells,
+        numCells: useAppSelector((state) => state.numCells.value),
         liveCells: liveCellsType === "perc" ? liveCells / 100 : liveCells,
-        groupMinSize: dataStore.groupMinSize,
-        groupMaxSize: dataStore.groupMaxSize,
-        distribution: dataStore.distributionType,
+        groupMinSize: useAppSelector((state) => state.groupMinSize.value),
+        groupMaxSize: useAppSelector((state) => state.groupMaxSize.value),
+        distribution: useAppSelector((state) => state.distributionType.value),
     };
 
     const dispatch = useAppDispatch();
@@ -215,7 +218,7 @@ function ReloadBtn() {
 function CellsSet() {
     //
 
-    const initState = dataStore.initState.arr;
+    const initState = useAppSelector((state) => state.initState.value);
 
     const dispatch = useAppDispatch();
 

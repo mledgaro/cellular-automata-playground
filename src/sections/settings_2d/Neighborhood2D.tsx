@@ -2,7 +2,6 @@
 
 import React from "react";
 import Title from "src/components/Title";
-import { RangeReducerHook } from "src/ts/CustomHooks";
 import {
     IconCell,
     DeactivatedCell,
@@ -10,7 +9,7 @@ import {
 } from "../../components/Cells";
 import NumberInput from "../../components/NumberInput";
 import { OptionGroup } from "../../components/SectionSelector";
-import { StateHookObj } from "src/app/hooks";
+import { RangeReducerHook, StateHookObj } from "src/app/hooks";
 
 export type NbhdType2D = "moore" | "vonneumann" | "diagonal";
 

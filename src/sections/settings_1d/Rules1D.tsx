@@ -14,11 +14,11 @@ import {
 import Button from "../../components/Button";
 import { IconCell, Ellipses } from "../../components/Cells";
 
-import { intToBoolArray } from "../../ts/Utils";
+import { boolArrayToInt, intToBoolArray } from "../../ts/Utils";
 
-import { useStateObj } from "src/app/hooks";
+import { useAppSelector, useStateObj } from "src/app/hooks";
 import Group from "src/components/Group";
-import { dataStore } from "src/app/store";
+
 import { useAppDispatch } from "src/app/hooks";
 import {
     allRulesAlive,
@@ -28,7 +28,7 @@ import {
     resizeRules,
     setRulesByNumber,
     toggleRule,
-} from "src/features/rules";
+} from "src/app/slices/rules";
 
 export default function Rules1D() {
     //
@@ -57,7 +57,9 @@ export default function Rules1D() {
 function RuleNumber() {
     //
 
-    const ruleNum = dataStore.rules.integer;
+    const ruleNum = useAppSelector((state) =>
+        boolArrayToInt(state.rules.value, true)
+    );
 
     return (
         <div className="col-lg">
@@ -109,9 +111,9 @@ function Controls() {
 function RulePreview({ index }: { index: number }) {
     //
 
-    const nbhdType = dataStore.nbhdType;
-    const nbhdWidth = dataStore.nbhdWidth;
-    const mainCell = dataStore.mainCell;
+    const nbhdType = useAppSelector((state) => state.nbhdType.value);
+    const nbhdWidth = useAppSelector((state) => state.nbhdWidth.value);
+    const mainCell = useAppSelector((state) => state.mainCell.value);
 
     let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
         <IconCell key={i} alive={e} size={i === mainCell ? "2xl" : "lg"} />
@@ -159,8 +161,8 @@ function RuleCell({
 function RulesSet({ setHoverCell }: { setHoverCell: (val: number) => void }) {
     //
 
-    const nbhdWidth = dataStore.nbhdWidth;
-    const rules = dataStore.rules.arr;
+    const nbhdWidth = useAppSelector((state) => state.nbhdWidth.value);
+    const rules = useAppSelector((state) => state.rules.value);
 
     const dispatch = useAppDispatch();
 
@@ -200,10 +202,10 @@ function RulesSet({ setHoverCell }: { setHoverCell: (val: number) => void }) {
 function RuleToggle({ index }: { index: number }) {
     //
 
-    const nbhdType = dataStore.nbhdType;
-    const nbhdWidth = dataStore.nbhdWidth;
-    const mainCell = dataStore.mainCell;
-    const rules = dataStore.rules.arr;
+    const nbhdType = useAppSelector((state) => state.nbhdType.value);
+    const nbhdWidth = useAppSelector((state) => state.nbhdWidth.value);
+    const mainCell = useAppSelector((state) => state.mainCell.value);
+    const rules = useAppSelector((state) => state.rules.value);
 
     const dispatch = useAppDispatch();
 

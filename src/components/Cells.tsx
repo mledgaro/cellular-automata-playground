@@ -12,7 +12,7 @@ import {
     faSquareXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { NbhdType } from "src/features/nbhdType";
+import { NbhdType } from "src/app/slices/nbhdType";
 import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 
 export function DeactivatedCell({

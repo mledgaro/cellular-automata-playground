@@ -3,7 +3,6 @@
 import "./css/App.css";
 
 import React from "react";
-import { useRangeReducer } from "./ts/CustomHooks";
 
 import Canvas from "./sections/Canvas";
 import Settings2D from "./sections/settings_2d/Settings2D";

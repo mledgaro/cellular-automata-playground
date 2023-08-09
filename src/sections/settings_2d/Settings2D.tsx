@@ -1,10 +1,9 @@
 //
 import React from "react";
-import { useRangeReducer } from "src/ts/CustomHooks";
 import SectionSelector from "../../components/SectionSelector";
 import Neighborhood2D from "./Neighborhood2D";
 import { Rules2D } from "./Rules2D";
-import { useStateObj } from "src/app/hooks";
+import { useRangeReducer, useStateObj } from "src/app/hooks";
 
 export default function Settings2D() {
     //

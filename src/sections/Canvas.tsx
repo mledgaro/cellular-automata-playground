@@ -16,17 +16,19 @@ import Button from "../components/Button";
 import LevelSelector from "../components/LevelSelector";
 import Group from "src/components/Group";
 import CanvasController from "src/ts/CanvasController";
-import { dataStore } from "src/app/store";
-import { useAppDispatch } from "src/app/hooks";
-import { setRunningStatus } from "src/features/runningStatus";
-import { decrementCellSize, incrementCellSize } from "src/features/cellSize";
+
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import { setRunningStatus } from "src/app/slices/runningStatus";
+import { decrementCellSize, incrementCellSize } from "src/app/slices/cellSize";
 import {
     decrementRefreshTime,
     incrementRefreshTime,
-} from "src/features/refreshTime";
+} from "src/app/slices/refreshTime";
 import CellularAutomaton from "src/ts/CellularAutomaton";
-import { numValues as refreshTimeNumValues } from "src/features/refreshTime";
-import { numValues as cellSizeNumValues } from "src/features/cellSize";
+import { numValues as refreshTimeNumValues } from "src/app/slices/refreshTime";
+import { numValues as cellSizeNumValues } from "src/app/slices/cellSize";
+import { values as refreshTimeValues } from "src/app/slices/refreshTime";
+import { values as cellSizeValues } from "src/app/slices/cellSize";
 
 const canvasId = "cap-canvas";
 const bufferSize = 64;
@@ -37,7 +39,7 @@ let runInterval: NodeJS.Timer;
 export default function Canvas() {
     //
 
-    const numCells = dataStore.numCells;
+    const numCells = useAppSelector((state) => state.numCells.value);
 
     // const canvasCntrl = useRef<CanvasController>();
 
@@ -80,11 +82,13 @@ export default function Canvas() {
 function FlowCtrls() {
     //
 
-    const runningStatus = dataStore.runningStatus;
-    const refreshTime = dataStore.refreshTime;
-    const cellsNbhds = dataStore.cellsNbhds.arr;
-    const initState = dataStore.initState.arr;
-    const rules = dataStore.rules.arr;
+    const runningStatus = useAppSelector((state) => state.runningStatus.value);
+    const refreshTime = useAppSelector(
+        (state) => refreshTimeValues[state.refreshTime.value]
+    );
+    const cellsNbhds = useAppSelector((state) => state.cellsNbhds.value);
+    const initState = useAppSelector((state) => state.initState.value);
+    const rules = useAppSelector((state) => state.rules.value);
 
     const dispatch = useAppDispatch();
 
@@ -171,7 +175,7 @@ function FlowCtrls() {
 function SpeedSelector() {
     //
 
-    const refreshTimeIndex = dataStore.refreshTimeIndex;
+    const refreshTimeIndex = useAppSelector((state) => state.refreshTime.value);
 
     const dispatch = useAppDispatch();
 
@@ -190,11 +194,12 @@ function SpeedSelector() {
 function ZoomSelector() {
     //
 
-    const cellSize = dataStore.cellSize;
-    const cellSizeIndex = dataStore.cellSizeIndex;
-    const runningStatus = dataStore.runningStatus;
+    const cellSizeIndex = useAppSelector((state) => state.cellSize.value);
+    const runningStatus = useAppSelector((state) => state.runningStatus.value);
 
     const dispatch = useAppDispatch();
+
+    const cellSize = cellSizeValues[cellSizeIndex];
 
     useEffect(() => {
         //
