@@ -12,39 +12,55 @@ import { NbhdType } from "src/features/nbhdType";
 import { boolArray } from "src/ts/Utils";
 import Title from "src/components/Title";
 import { useAppDispatch } from "src/app/hooks";
-import { decrementNbhdWidth, incrementNbhdWidth } from "src/features/nbhdWidth";
+import {
+    decrementNbhdWidth,
+    incrementNbhdWidth,
+    setNbhdWidth,
+} from "src/features/nbhdWidth";
 import { setNbhdType } from "src/features/nbhdType";
 import { setMainCell } from "src/features/mainCell";
 import { dataStore } from "src/app/store";
 import { setCellsNbhds } from "src/features/cellsNbhds";
+import { Box, Slider, SliderProps, styled } from "@mui/material";
+import CustomSlider from "src/components/Slider";
 
 export default function Neighborhood1D() {
     //
 
+    // return (
+    //     <div>
+    //         <div className="row mx-auto" style={{ width: "85%" }}>
+    //             {/* */}
+
+    //             <div className="col-3 d-flex align-items-center">
+    //                 <Width />
+    //             </div>
+
+    //             <div className="col-4">
+    //                 <Type />
+    //             </div>
+
+    //             <div className="col-4 d-flex align-items-center">
+    //                 <MainCellSelector />
+    //             </div>
+
+    //             <div className="col-1 d-flex align-items-center">
+    //                 <UpdateNbhds />
+    //             </div>
+    //         </div>
+
+    //         <NbhdsMap />
+    //     </div>
+    // );
+
     return (
-        <div>
-            <div className="row mx-auto" style={{ width: "85%" }}>
-                {/* */}
-
-                <div className="col-3 d-flex align-items-center">
-                    <Width />
-                </div>
-
-                <div className="col-4">
-                    <Type />
-                </div>
-
-                <div className="col-4 d-flex align-items-center">
-                    <MainCellSelector />
-                </div>
-
-                <div className="col-1 d-flex align-items-center">
-                    <UpdateNbhds />
-                </div>
-            </div>
-
+        <Box>
+            <Width />
+            <Type />
+            <MainCellSelector />
+            <UpdateNbhds />
             <NbhdsMap />
-        </div>
+        </Box>
     );
 }
 
@@ -55,15 +71,27 @@ function Width() {
 
     const dispatch = useAppDispatch();
 
+    // return (
+    //     <NumberInput
+    //         size="sm"
+    //         label="Width"
+    //         value={width}
+    //         increment={() => dispatch(incrementNbhdWidth())}
+    //         decrement={() => dispatch(decrementNbhdWidth())}
+    //         min={2}
+    //         max={8}
+    //     />
+    // );
+
     return (
-        <NumberInput
-            size="sm"
+        <CustomSlider
             label="Width"
+            minVal={2}
+            maxVal={8}
+            defaultVal={3}
+            step={1}
             value={width}
-            increment={() => dispatch(incrementNbhdWidth())}
-            decrement={() => dispatch(decrementNbhdWidth())}
-            min={2}
-            max={8}
+            onChange={(val: number) => dispatch(setNbhdWidth(val))}
         />
     );
 }
