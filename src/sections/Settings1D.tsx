@@ -1,41 +1,60 @@
 //
-
 import React from "react";
 
-import SectionSelector from "../components/SectionSelector";
+import CustomTabs from "src/components/Tabs";
 import Neighborhood1D from "./settings_1d/Neighborhood1D";
 import Rules1D from "./settings_1d/Rules1D";
 import InitialState from "./settings_1d/InitialState";
-import { useStateObj } from "src/app/hooks";
+
+// function Settings1D() {
+//     //
+
+//     const section = useStateObj("nbhd");
+
+//     return (
+//         <SectionSelector
+//             title="Settings"
+//             sections={[
+//                 {
+//                     label: "Neighborhood",
+//                     value: "nbhd",
+//                     component: <Neighborhood1D />,
+//                 },
+//                 {
+//                     label: "Rules",
+//                     value: "rules",
+//                     component: <Rules1D />,
+//                 },
+//                 {
+//                     label: "Initial state",
+//                     value: "initstate",
+//                     component: <InitialState />,
+//                 },
+//             ]}
+//             selected={section}
+//             size="lg"
+//             alignment="center"
+//         />
+//     );
+// }
 
 export default function Settings1D() {
-    //
-
-    const section = useStateObj("nbhd");
-
     return (
-        <SectionSelector
-            title="Settings"
-            sections={[
+        <CustomTabs
+            tabs={[
                 {
-                    label: "Neighborhood",
-                    value: "nbhd",
-                    component: <Neighborhood1D />,
+                    title: "Neighborhood",
+                    content: <Neighborhood1D />,
                 },
                 {
-                    label: "Rules",
-                    value: "rules",
-                    component: <Rules1D />,
+                    title: "Rules",
+                    content: <Rules1D />,
                 },
                 {
-                    label: "Initial state",
-                    value: "initstate",
-                    component: <InitialState />,
+                    title: "Initial state",
+                    content: <InitialState />,
                 },
             ]}
-            selected={section}
-            size="lg"
-            alignment="center"
         />
     );
 }

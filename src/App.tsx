@@ -6,7 +6,6 @@ import React from "react";
 import { useRangeReducer } from "./ts/CustomHooks";
 
 import Canvas from "./sections/Canvas";
-import Settings1D from "./sections/Settings1D";
 import Settings2D from "./sections/settings_2d/Settings2D";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,6 +13,8 @@ import { fa1, fa2, faD } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "@mui/material/Button";
 import { StateHookObj, useStateObj } from "./app/hooks";
+import Settings1D from "./sections/Settings1D";
+import { Skeleton } from "@mui/material";
 
 export default function App() {
     //
@@ -23,12 +24,18 @@ export default function App() {
     const settings = dimension.get === 1 ? <Settings1D /> : <Settings2D />;
 
     return (
-        <div className="bg-french-gray">
+        <div>
             <Title dimState={dimension} />
 
             {/* <Canvas /> */}
+            <Skeleton
+                variant="rectangular"
+                width="90vw"
+                height="60vh"
+                className="mx-auto"
+            />
 
-            {/* {settings} */}
+            {settings}
 
             {/* <Footer /> */}
         </div>
