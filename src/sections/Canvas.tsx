@@ -12,9 +12,9 @@ import {
     faPlay,
     faStop,
 } from "@fortawesome/free-solid-svg-icons";
-import Button from "../components/Button";
-import LevelSelector from "../components/LevelSelector";
-import Group from "src/components/Group";
+import Button from "../components/deprecated/Button";
+import LevelSelector from "../components/deprecated/LevelSelector";
+import Group from "src/components/deprecated/Group";
 import CanvasController from "src/ts/CanvasController";
 
 import { useAppDispatch, useAppSelector } from "src/app/hooks";

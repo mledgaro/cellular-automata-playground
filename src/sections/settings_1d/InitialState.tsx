@@ -4,9 +4,9 @@ import React, { useEffect } from "react";
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
-import Button from "../../components/Button";
-import NumberInput from "../../components/NumberInput";
-import { OptionGroup } from "../../components/SectionSelector";
+import Button from "../../components/deprecated/Button";
+import NumberInput from "../../components/deprecated/NumberInput";
+import { OptionGroup } from "../../components/deprecated/SectionSelector";
 import { DistributionType } from "src/app/slices/distributionType";
 import { SpanCell } from "src/components/Cells";
 import Title from "src/components/Title";

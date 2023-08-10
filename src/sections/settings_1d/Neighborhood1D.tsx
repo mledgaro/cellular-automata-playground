@@ -3,13 +3,10 @@
 import React, { useCallback, useEffect } from "react";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
-import { OptionGroup } from "../../components/SectionSelector";
-import NumberInput from "../../components/NumberInput";
-import Button from "../../components/Button";
+import NumberInput from "../../components/deprecated/NumberInput";
+import Button from "../../components/deprecated/Button";
 import { IconCell, SelectedCell, Ellipses } from "../../components/Cells";
-import { NbhdType } from "src/app/slices/nbhdType";
 import { boolArray } from "src/ts/Utils";
-import Title from "src/components/Title";
 import {
     BoolArrHook,
     useAppDispatch,
@@ -21,12 +18,13 @@ import {
     incrementNbhdWidth,
     setNbhdWidth,
 } from "src/app/slices/nbhdWidth";
-import { setNbhdType } from "src/app/slices/nbhdType";
+import { NbhdType, setNbhdType } from "src/app/slices/nbhdType";
 import { setMainCell } from "src/app/slices/mainCell";
 
 import { setCellsNbhds } from "src/app/slices/cellsNbhds";
 import { Box } from "@mui/material";
 import CustomSlider from "src/components/Slider";
+import CustomRadioGroup from "src/components/RadioGroup";
 
 export default function Neighborhood1D() {
     //
@@ -107,25 +105,36 @@ function Type() {
 
     const dispatch = useAppDispatch();
 
-    const set = (val: NbhdType) => dispatch(setNbhdType(val));
+    // return (
+    //     <div>
+    //         <Title text="Type" size="small" />
+    //         <OptionGroup
+    //             options={[
+    //                 { label: "Adjacent", value: "adjacent" },
+    //                 { label: "Grouped", value: "grouped" },
+    //                 { label: "Scattered", value: "scattered" },
+    //             ]}
+    //             selected={{
+    //                 get: type,
+    //                 set: set,
+    //             }}
+    //             size="sm"
+    //             alignment="center"
+    //         />
+    //     </div>
+    // );
 
     return (
-        <div>
-            <Title text="Type" size="small" />
-            <OptionGroup
-                options={[
-                    { label: "Adjacent", value: "adjacent" },
-                    { label: "Grouped", value: "grouped" },
-                    { label: "Scattered", value: "scattered" },
-                ]}
-                selected={{
-                    get: type,
-                    set: set,
-                }}
-                size="sm"
-                alignment="center"
-            />
-        </div>
+        <CustomRadioGroup
+            label="Type"
+            options={[
+                { label: "Adjacent", value: "adjacent" },
+                { label: "Grouped", value: "grouped" },
+                { label: "Scattered", value: "scattered" },
+            ]}
+            value={type}
+            onChange={(val: string) => dispatch(setNbhdType(val as NbhdType))}
+        />
     );
 }
 

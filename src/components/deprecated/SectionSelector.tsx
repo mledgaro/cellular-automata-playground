@@ -3,7 +3,7 @@
 import React from "react";
 
 import Group, { Alignment, Size } from "./Group";
-import Title from "./Title";
+import Title from "../Title";
 import { StateHookObj } from "src/app/hooks";
 
 export function OptionGroup({

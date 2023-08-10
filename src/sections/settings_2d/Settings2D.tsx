@@ -1,6 +1,6 @@
 //
 import React from "react";
-import SectionSelector from "../../components/SectionSelector";
+import SectionSelector from "../../components/deprecated/SectionSelector";
 import Neighborhood2D from "./Neighborhood2D";
 import { Rules2D } from "./Rules2D";
 import { useRangeReducer, useStateObj } from "src/app/hooks";

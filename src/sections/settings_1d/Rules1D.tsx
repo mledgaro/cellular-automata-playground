@@ -11,13 +11,13 @@ import {
     faSquare as faSquareSolid,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Button from "../../components/Button";
+import Button from "../../components/deprecated/Button";
 import { IconCell, Ellipses } from "../../components/Cells";
 
 import { boolArrayToInt, intToBoolArray } from "../../ts/Utils";
 
 import { useAppSelector, useStateObj } from "src/app/hooks";
-import Group from "src/components/Group";
+import Group from "src/components/deprecated/Group";
 
 import { useAppDispatch } from "src/app/hooks";
 import {

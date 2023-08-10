@@ -7,8 +7,8 @@ import {
     DeactivatedCell,
     SelectedCell,
 } from "../../components/Cells";
-import NumberInput from "../../components/NumberInput";
-import { OptionGroup } from "../../components/SectionSelector";
+import NumberInput from "../../components/deprecated/NumberInput";
+import { OptionGroup } from "../../components/deprecated/SectionSelector";
 import { RangeReducerHook, StateHookObj } from "src/app/hooks";
 
 export type NbhdType2D = "moore" | "vonneumann" | "diagonal";

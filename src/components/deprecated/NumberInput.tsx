@@ -7,7 +7,7 @@ import {
     faPlus,
     IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
-import { Position } from "../ts/Utils";
+import { Position } from "../../ts/Utils";
 import Button from "./Button";
 import Group, { Alignment, Size } from "./Group";
 
