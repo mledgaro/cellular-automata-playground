@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../components/deprecated/Button";
-import { IconCell, Ellipses } from "../../components/Cells";
+import { IconCell, Ellipses } from "src/features/Cells";
 
 import { boolArrayToInt, intToBoolArray } from "../../ts/Utils";
 

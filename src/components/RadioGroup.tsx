@@ -29,7 +29,7 @@ export default function CustomRadioGroup({
     onChange: (val: string) => void;
 }) {
     return (
-        <FormControl className="bg-jet text-sunglow pl-3 pt-1 mt-2 rounded-md">
+        <FormControl className="bg-jet text-sunglow pl-3 pt-1 rounded-md">
             <FormLabel
                 id="demo-radio-buttons-group-label"
                 className="text-sunglow font-black"
@@ -49,6 +49,7 @@ export default function CustomRadioGroup({
                 {options.map((e, i) => {
                     return (
                         <FormControlLabel
+                            key={i}
                             value={e.value}
                             control={<StyledRadio />}
                             label={e.label}

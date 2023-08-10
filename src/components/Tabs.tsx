@@ -5,7 +5,7 @@ import { useStateObj } from "src/app/hooks";
 const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
     "&.MuiTabs-root": {
         backgroundColor: "#323031",
-        marginBottom: "1rem",
+        marginBottom: "2vh",
     },
     "& .MuiTabs-indicator": {
         backgroundColor: "#ffd166",
@@ -31,7 +31,7 @@ export default function CustomTabs({
     const selected = useStateObj(0);
 
     return (
-        <Box sx={{ width: "80vw" }} className="mx-auto mt-3">
+        <Box sx={{ width: "80vw" }}>
             <Box>
                 <StyledTabs
                     value={selected.get}
@@ -42,6 +42,7 @@ export default function CustomTabs({
                     {tabs.map((e, i) => {
                         return (
                             <StyledTab
+                                key={i}
                                 label={e.title}
                                 id={`cstm-tab-${i}`}
                                 aria-controls={`cstm-tabpanel-${i}`}
@@ -53,6 +54,7 @@ export default function CustomTabs({
             {tabs.map((e, i) => {
                 return (
                     <div
+                        key={i}
                         role="tabpanel"
                         hidden={selected.get !== i}
                         id={`cstm-tabpanel-${i}`}

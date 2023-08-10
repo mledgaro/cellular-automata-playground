@@ -8,8 +8,8 @@ import Button from "../../components/deprecated/Button";
 import NumberInput from "../../components/deprecated/NumberInput";
 import { OptionGroup } from "../../components/deprecated/SectionSelector";
 import { DistributionType } from "src/app/slices/distributionType";
-import { SpanCell } from "src/components/Cells";
-import Title from "src/components/Title";
+import { SpanCell } from "src/features/Cells";
+import Title from "src/components/deprecated/Title";
 
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { LiveCellsType, setLiveCellsType } from "src/app/slices/liveCellsType";

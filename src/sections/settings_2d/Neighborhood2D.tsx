@@ -1,12 +1,8 @@
 //
 
 import React from "react";
-import Title from "src/components/Title";
-import {
-    IconCell,
-    DeactivatedCell,
-    SelectedCell,
-} from "../../components/Cells";
+import Title from "src/components/deprecated/Title";
+import { IconCell, DeactivatedCell, SelectedCell } from "src/features/Cells";
 import NumberInput from "../../components/deprecated/NumberInput";
 import { OptionGroup } from "../../components/deprecated/SectionSelector";
 import { RangeReducerHook, StateHookObj } from "src/app/hooks";

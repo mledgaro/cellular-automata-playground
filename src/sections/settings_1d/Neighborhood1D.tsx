@@ -2,10 +2,7 @@
 
 import React, { useCallback, useEffect } from "react";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
-
-import NumberInput from "../../components/deprecated/NumberInput";
-import Button from "../../components/deprecated/Button";
-import { IconCell, SelectedCell, Ellipses } from "../../components/Cells";
+import Button from "src/components/Button";
 import { boolArray } from "src/ts/Utils";
 import {
     BoolArrHook,
@@ -13,18 +10,13 @@ import {
     useAppSelector,
     useBoolArrState,
 } from "src/app/hooks";
-import {
-    decrementNbhdWidth,
-    incrementNbhdWidth,
-    setNbhdWidth,
-} from "src/app/slices/nbhdWidth";
+import { setNbhdWidth } from "src/app/slices/nbhdWidth";
 import { NbhdType, setNbhdType } from "src/app/slices/nbhdType";
-import { setMainCell } from "src/app/slices/mainCell";
-
 import { setCellsNbhds } from "src/app/slices/cellsNbhds";
 import { Box } from "@mui/material";
 import CustomSlider from "src/components/Slider";
 import CustomRadioGroup from "src/components/RadioGroup";
+import MainCellSelector from "src/features/MainCellSelector";
 
 export default function Neighborhood1D() {
     //
@@ -56,7 +48,7 @@ export default function Neighborhood1D() {
     // );
 
     return (
-        <Box>
+        <Box className="space-y-2">
             <Width />
             <Type />
             <MainCellSelector />
@@ -138,99 +130,6 @@ function Type() {
     );
 }
 
-function MainCellSelector() {
-    //
-
-    const width = useAppSelector((state) => state.nbhdWidth.value);
-    const type = useAppSelector((state) => state.nbhdType.value);
-    const mainCell = useAppSelector((state) => state.mainCell.value);
-
-    const dispatch = useAppDispatch();
-
-    const set = (val: number) => dispatch(setMainCell(val));
-
-    let cells = [];
-
-    for (let i = 0; i < width; i++) {
-        cells.push(<IconCell onClick={() => set(i)} size="lg" />);
-    }
-
-    if (mainCell !== -1) {
-        cells.splice(mainCell, 1, <SelectedCell onClick={() => set(-1)} />);
-    }
-
-    useEffect(() => {
-        //
-        if (mainCell === width) {
-            dispatch(setMainCell(mainCell - 1));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [width]);
-
-    return (
-        <div
-            className="cap-container-dark-1 mx-auto"
-            style={{ padding: "8px", width: "max-content" }}
-        >
-            <Ellipses cells={cells} mainCell={mainCell} nbhdType={type} />
-        </div>
-    );
-}
-
-function Nbhd() {
-    //
-
-    const width = useAppSelector((state) => state.nbhdWidth.value);
-    const type = useAppSelector((state) => state.nbhdType.value);
-    const mainCell = useAppSelector((state) => state.mainCell.value);
-
-    const dispatch = useAppDispatch();
-
-    const set = (val: number) => dispatch(setMainCell(val));
-
-    let cells = [];
-
-    for (let i = 0; i < width; i++) {
-        cells.push(<IconCell onClick={() => set(i)} size="lg" />);
-    }
-
-    if (mainCell !== -1) {
-        cells.splice(mainCell, 1, <SelectedCell onClick={() => set(-1)} />);
-    }
-
-    useEffect(() => {
-        //
-        if (mainCell === width) {
-            dispatch(setMainCell(mainCell - 1));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [width]);
-
-    return (
-        <div className="row border" style={{}}>
-            <div
-                className="d-flex align-items-center border"
-                style={{ width: "fit-content" }}
-            >
-                <NumberInput
-                    size="sm"
-                    value={width}
-                    increment={() => dispatch(incrementNbhdWidth())}
-                    decrement={() => dispatch(decrementNbhdWidth())}
-                    min={2}
-                    max={8}
-                />
-            </div>
-            <div
-                className="cap-container-dark-1 border"
-                style={{ padding: "8px", width: "max-content" }}
-            >
-                <Ellipses cells={cells} mainCell={mainCell} nbhdType={type} />
-            </div>
-        </div>
-    );
-}
-
 function UpdateNbhds() {
     //
 
@@ -251,6 +150,7 @@ function UpdateNbhds() {
     return (
         <Button
             icon={faRotate}
+            size="2xl"
             tooltipLabel="Reload neighborhoods"
             onClick={() => dispatch(setCellsNbhds(params))}
         />
