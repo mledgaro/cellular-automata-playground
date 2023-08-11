@@ -1,15 +1,9 @@
 //
 
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import Button from "src/components/Button";
-import { boolArray } from "src/ts/Utils";
-import {
-    BoolArrHook,
-    useAppDispatch,
-    useAppSelector,
-    useBoolArrState,
-} from "src/app/hooks";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { setNbhdWidth } from "src/app/slices/nbhdWidth";
 import { NbhdType, setNbhdType } from "src/app/slices/nbhdType";
 import { setCellsNbhds } from "src/app/slices/cellsNbhds";
@@ -17,6 +11,7 @@ import { Box } from "@mui/material";
 import CustomSlider from "src/components/Slider";
 import CustomRadioGroup from "src/components/RadioGroup";
 import MainCellSelector from "src/features/MainCellSelector";
+import NbhdsMap from "src/features/NbhdsMap";
 
 export default function Neighborhood1D() {
     //
@@ -132,7 +127,6 @@ function Type() {
 
 function UpdateNbhds() {
     //
-
     const params = {
         numCells: useAppSelector((state) => state.numCells.value),
         width: useAppSelector((state) => state.nbhdWidth.value),
@@ -154,51 +148,5 @@ function UpdateNbhds() {
             tooltipLabel="Reload neighborhoods"
             onClick={() => dispatch(setCellsNbhds(params))}
         />
-    );
-}
-
-function HighlightCell({
-    index,
-    highlightedCells,
-}: {
-    index: number;
-    highlightedCells: BoolArrHook;
-}) {
-    //
-
-    const numCells = useAppSelector((state) => state.numCells.value);
-    const cellsNbhds = useAppSelector((state) => state.cellsNbhds.value);
-
-    const highlight = useCallback(() => {
-        //
-        let nArr = Array(numCells).fill(false);
-        cellsNbhds[index].forEach((e) => (nArr[e] = true));
-        highlightedCells.set(nArr);
-    }, [cellsNbhds, highlightedCells, index, numCells]);
-
-    const classes = `cap-cell cap-cell-off ${
-        highlightedCells.get[index] ? "cap-cell-high" : ""
-    }`;
-
-    return <span className={classes} onMouseOver={highlight} />;
-}
-
-function NbhdsMap() {
-    //
-
-    const numCells = useAppSelector((state) => state.numCells.value);
-
-    const highlightedCells = useBoolArrState(boolArray(numCells, false));
-
-    return (
-        <div className="row mx-auto ps-2 mt-2" style={{ width: "90%" }}>
-            {highlightedCells.get.map((e, i) => (
-                <HighlightCell
-                    key={i}
-                    index={i}
-                    highlightedCells={highlightedCells}
-                />
-            ))}
-        </div>
     );
 }
