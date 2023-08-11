@@ -41,7 +41,7 @@ export default function MainCellSelector() {
     return (
         <Box className="bg-jet text-sunglow rounded-md w-max p-2 space-x-1.5">
             <Ellipses
-                size={"xs"}
+                size="xs"
                 cells={cells}
                 mainCell={mainCell}
                 nbhdType={type}

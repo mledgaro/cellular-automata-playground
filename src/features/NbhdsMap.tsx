@@ -1,4 +1,4 @@
-import { Box, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import React, { useCallback } from "react";
 import { BoolArrHook, useAppSelector, useBoolArrState } from "src/app/hooks";
 import { boolArray } from "src/ts/Utils";

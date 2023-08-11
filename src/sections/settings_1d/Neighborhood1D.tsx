@@ -14,36 +14,8 @@ import MainCellSelector from "src/features/MainCellSelector";
 import NbhdsMap from "src/features/NbhdsMap";
 
 export default function Neighborhood1D() {
-    //
-
-    // return (
-    //     <div>
-    //         <div className="row mx-auto" style={{ width: "85%" }}>
-    //             {/* */}
-
-    //             <div className="col-3 d-flex align-items-center">
-    //                 <Width />
-    //             </div>
-
-    //             <div className="col-4">
-    //                 <Type />
-    //             </div>
-
-    //             <div className="col-4 d-flex align-items-center">
-    //                 <MainCellSelector />
-    //             </div>
-
-    //             <div className="col-1 d-flex align-items-center">
-    //                 <UpdateNbhds />
-    //             </div>
-    //         </div>
-
-    //         <NbhdsMap />
-    //     </div>
-    // );
-
     return (
-        <Box className="space-y-2">
+        <Box className="space-y-2 mb-5">
             <Width />
             <Type />
             <MainCellSelector />
@@ -55,22 +27,9 @@ export default function Neighborhood1D() {
 
 function Width() {
     //
-
     const width = useAppSelector((state) => state.nbhdWidth.value);
 
     const dispatch = useAppDispatch();
-
-    // return (
-    //     <NumberInput
-    //         size="sm"
-    //         label="Width"
-    //         value={width}
-    //         increment={() => dispatch(incrementNbhdWidth())}
-    //         decrement={() => dispatch(decrementNbhdWidth())}
-    //         min={2}
-    //         max={8}
-    //     />
-    // );
 
     return (
         <CustomSlider
@@ -87,29 +46,9 @@ function Width() {
 
 function Type() {
     //
-
     const type = useAppSelector((state) => state.nbhdType.value);
 
     const dispatch = useAppDispatch();
-
-    // return (
-    //     <div>
-    //         <Title text="Type" size="small" />
-    //         <OptionGroup
-    //             options={[
-    //                 { label: "Adjacent", value: "adjacent" },
-    //                 { label: "Grouped", value: "grouped" },
-    //                 { label: "Scattered", value: "scattered" },
-    //             ]}
-    //             selected={{
-    //                 get: type,
-    //                 set: set,
-    //             }}
-    //             size="sm"
-    //             alignment="center"
-    //         />
-    //     </div>
-    // );
 
     return (
         <CustomRadioGroup
