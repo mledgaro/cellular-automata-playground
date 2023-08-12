@@ -3,6 +3,26 @@ import React, { useCallback } from "react";
 import { BoolArrHook, useAppSelector, useBoolArrState } from "src/app/hooks";
 import { boolArray } from "src/ts/Utils";
 
+export default function NbhdsMap() {
+    //
+
+    const numCells = useAppSelector((state) => state.numCells.value);
+
+    const highlightedCells = useBoolArrState(boolArray(numCells, false));
+
+    return (
+        <div className="cap-component-container cells-container">
+            {highlightedCells.get.map((e, i) => (
+                <HighlightCell
+                    key={i}
+                    index={i}
+                    highlightedCells={highlightedCells}
+                />
+            ))}
+        </div>
+    );
+}
+
 function HighlightCell({
     index,
     highlightedCells,
@@ -22,30 +42,7 @@ function HighlightCell({
         highlightedCells.set(nArr);
     }, [cellsNbhds, highlightedCells, index, numCells]);
 
-    const classes = `inline-block box-border w-4 h-4 mr-2 mb-2 ${
-        highlightedCells.get[index] ? "bg-sunglow" : "bg-french-gray"
-    }`;
+    const classes = `cap-cell ${highlightedCells.get[index] ? "on" : "off"}`;
 
-    // return <span className={classes} onMouseOver={highlight} />;
     return <Paper className={classes} onMouseOver={highlight} />;
-}
-
-export default function NbhdsMap() {
-    //
-
-    const numCells = useAppSelector((state) => state.numCells.value);
-
-    const highlightedCells = useBoolArrState(boolArray(numCells, false));
-
-    return (
-        <div className="bg-jet pl-2 pt-2 pb-0 pr-0 rounded-md">
-            {highlightedCells.get.map((e, i) => (
-                <HighlightCell
-                    key={i}
-                    index={i}
-                    highlightedCells={highlightedCells}
-                />
-            ))}
-        </div>
-    );
 }

@@ -2,8 +2,9 @@
 import { Box, Slider, SliderProps, styled } from "@mui/material";
 import React from "react";
 
-const StyledSlider = styled(Slider)<SliderProps>(({ theme }) => ({
-    width: "80%",
+export const StyledSlider = styled(Slider)<SliderProps>(({ theme }) => ({
+    width: "97%",
+    marginLeft: "1.5%",
     color: "#ffd166",
     "& .MuiSlider-rail": {
         backgroundColor: "#bbb5bd",
@@ -29,51 +30,39 @@ const StyledSlider = styled(Slider)<SliderProps>(({ theme }) => ({
 }));
 
 export default function CustomSlider({
-    label,
+    label = "",
     minVal,
     maxVal,
     defaultVal,
-    step,
+    step = 1,
+    marks = false,
     value,
     onChange,
 }: {
-    label: string;
+    label?: string;
     minVal: number;
     maxVal: number;
     defaultVal: number;
-    step: number;
-    value: number;
+    step?: number;
+    marks?: boolean;
+    value: number | number[];
     onChange: (val: number) => void;
 }) {
     return (
-        <Box className="bg-jet rounded-md h-10" sx={{ position: "relative" }}>
-            <span
-                className="font-black text-sunglow select-none pl-3"
-                style={{
-                    position: "absolute",
-                    margin: "0",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                }}
-            >
-                {label}
-            </span>
+        <Box className="cap-component-container pt-1">
+            {label !== "" && (
+                <Box className="cap-component-label ml-2">{label}</Box>
+            )}
 
             <StyledSlider
-                aria-label="Width"
+                className=""
+                aria-label={label}
                 defaultValue={defaultVal}
                 valueLabelDisplay="auto"
                 step={step}
-                marks
+                marks={marks}
                 min={minVal}
                 max={maxVal}
-                style={{
-                    left: "10%",
-                    position: "absolute",
-                    margin: "0",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                }}
                 value={value}
                 onChange={(
                     event: Event,

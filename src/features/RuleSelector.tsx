@@ -43,7 +43,7 @@ export default function RulesSelector({
     }, [nbhdWidth]);
 
     return (
-        <Box className="bg-jet pl-2 pt-2 pb-0 pr-0 rounded-md w-fit">
+        <Box className="cap-component-container pl-2 pt-2 pb-0 pr-0 w-fit">
             {rulesArr}
         </Box>
     );

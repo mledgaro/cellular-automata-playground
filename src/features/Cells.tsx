@@ -115,17 +115,3 @@ export function DeactivatedCell({
         </span>
     );
 }
-
-export function SpanCell({
-    alive,
-    toggle,
-}: {
-    alive: boolean;
-    toggle: () => void;
-}) {
-    //
-
-    const classes = `cap-cell cap-cell-${alive ? "on" : "off"}`;
-
-    return <span className={classes} onClick={toggle} />;
-}

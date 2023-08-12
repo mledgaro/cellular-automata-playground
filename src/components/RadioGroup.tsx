@@ -8,9 +8,9 @@ import {
     RadioProps,
     styled,
 } from "@mui/material";
-import React from "react";
+import React, { useId } from "react";
 
-const StyledRadio = styled(Radio)<RadioProps>(({ theme }) => ({
+export const StyledRadio = styled(Radio)<RadioProps>(({ theme }) => ({
     color: "#bbb5bd",
     "&.Mui-checked": {
         color: "#ffd166",
@@ -21,24 +21,25 @@ export default function CustomRadioGroup({
     label,
     options,
     value,
+    defaultVal,
     onChange,
 }: {
     label: string;
     options: { label: string; value: string }[];
     value: string;
+    defaultVal: string;
     onChange: (val: string) => void;
 }) {
+    const id = useId();
+
     return (
-        <FormControl className="bg-jet text-sunglow pl-3 pt-1 rounded-md">
-            <FormLabel
-                id="demo-radio-buttons-group-label"
-                className="text-sunglow font-black"
-            >
+        <FormControl className="cap-component-container pl-3 pt-1">
+            <FormLabel id={id} className="cap-component-label">
                 {label}
             </FormLabel>
             <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="adjacent"
+                aria-labelledby={id}
+                defaultValue={defaultVal}
                 name="radio-buttons-group"
                 row
                 value={value}

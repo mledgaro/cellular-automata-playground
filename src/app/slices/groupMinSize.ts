@@ -9,7 +9,7 @@ interface GroupMinSizeState {
 export const initialState: GroupMinSizeState = {
     value: 1,
 };
-
+//
 export const groupMinSizeSlice = createSlice({
     name: "groupMinSize",
     initialState,

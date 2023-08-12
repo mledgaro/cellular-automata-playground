@@ -2,60 +2,38 @@
 
 import React, { useEffect } from "react";
 
-import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import {
+    faHashtag,
+    faPercent,
+    faRotate,
+} from "@fortawesome/free-solid-svg-icons";
 
-import Button from "../../components/deprecated/Button";
-import NumberInput from "../../components/deprecated/NumberInput";
-import { OptionGroup } from "../../components/deprecated/SectionSelector";
+import Button from "../../components/Button";
 import { DistributionType } from "src/app/slices/distributionType";
-import { SpanCell } from "src/features/Cells";
-import Title from "src/components/deprecated/Title";
 
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { LiveCellsType, setLiveCellsType } from "src/app/slices/liveCellsType";
-import {
-    decrementLiveCells,
-    incrementLiveCells,
-} from "src/app/slices/liveCells";
-import {
-    decrementGroupMaxSize,
-    incrementGroupMaxSize,
-    setGroupMaxSize,
-} from "src/app/slices/groupMaxSize";
-import {
-    decrementGroupMinSize,
-    incrementGroupMinSize,
-} from "src/app/slices/groupMinSize";
+import { setLiveCells } from "src/app/slices/liveCells";
+import { setGroupMaxSize } from "src/app/slices/groupMaxSize";
+import { setGroupMinSize } from "src/app/slices/groupMinSize";
 import { setDistributionType } from "src/app/slices/distributionType";
-import { setInitState, toggleInitStateCell } from "src/app/slices/initState";
+import { setInitState } from "src/app/slices/initState";
+import { Box, FormControlLabel, FormLabel, RadioGroup } from "@mui/material";
+import CustomRadioGroup, { StyledRadio } from "src/components/RadioGroup";
+import CustomSlider from "src/components/Slider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CellsSet } from "src/features/InitialStateCells";
 
 export default function InitialState() {
     //
-
     return (
-        <div>
-            <div className="row mb-2 mx-auto" style={{ width: "80%" }}>
-                {/*  */}
-
-                <div className="col-4">
-                    <LiveCellsSelector />
-                </div>
-
-                <div className="col-3">
-                    <GroupSize />
-                </div>
-
-                <div className="col-4">
-                    <DistributionSelector />
-                </div>
-
-                <div className="col-1 d-flex align-items-center">
-                    <ReloadBtn />
-                </div>
-            </div>
-
+        <Box className="section-container">
+            <LiveCellsSelector />
+            <GroupSize />
+            <DistributionSelector />
+            <ReloadBtn />
             <CellsSet />
-        </div>
+        </Box>
     );
 }
 
@@ -69,38 +47,46 @@ function LiveCellsSelector() {
     const dispatch = useAppDispatch();
 
     return (
-        <div>
-            <Title text="Live cells" size="small" />
-            <OptionGroup
-                options={[
-                    {
-                        label: "Number",
-                        value: "num",
-                    },
-                    {
-                        label: "Percentage",
-                        value: "perc",
-                    },
-                ]}
-                selected={{
-                    get: type,
-                    set: (value: LiveCellsType) =>
-                        dispatch(setLiveCellsType(value)),
-                }}
-                size="sm"
-                alignment="center"
-            />
+        <Box className="cap-component-container p-2">
+            <FormLabel
+                id="live-cells-type-radio-group-label"
+                className="cap-component-label"
+            >
+                Live cells
+            </FormLabel>
+            <RadioGroup
+                aria-labelledby="live-cells-type-radio-group-label"
+                defaultValue="num"
+                name="live-cells-type-radio-group"
+                row
+                value={type}
+                onChange={(event: React.ChangeEvent, value: string) =>
+                    dispatch(setLiveCellsType(value as LiveCellsType))
+                }
+            >
+                <FormControlLabel
+                    key={1}
+                    value="num"
+                    control={<StyledRadio />}
+                    label={<FontAwesomeIcon icon={faHashtag} size="xl" />}
+                />
+                <FormControlLabel
+                    key={2}
+                    value="perc"
+                    control={<StyledRadio />}
+                    label={<FontAwesomeIcon icon={faPercent} size="xl" />}
+                />
+            </RadioGroup>
 
-            <NumberInput
+            <CustomSlider
+                minVal={1}
+                maxVal={type === "num" ? numCells : 100}
+                defaultVal={1}
+                step={1}
                 value={liveCells}
-                increment={() => dispatch(incrementLiveCells())}
-                decrement={() => dispatch(decrementLiveCells())}
-                min={1}
-                max={type === "num" ? numCells : 100}
-                size="sm"
-                alignment="center"
+                onChange={(val: number) => dispatch(setLiveCells(val))}
             />
-        </div>
+        </Box>
     );
 }
 
@@ -121,39 +107,18 @@ function GroupSize() {
     }, [maxSize, minSize]);
 
     return (
-        <div>
-            <Title text="Group size" size="small" />
-
-            <div className="mx-auto" style={{ width: "80%" }}>
-                {/*  */}
-
-                <div className="my-2">
-                    <NumberInput
-                        label="Min"
-                        value={minSize}
-                        increment={() => dispatch(incrementGroupMinSize())}
-                        decrement={() => dispatch(decrementGroupMinSize())}
-                        min={1}
-                        max={numCells}
-                        size="sm"
-                        alignment="center"
-                    />
-                </div>
-
-                <div className="my-2">
-                    <NumberInput
-                        label="Max"
-                        value={maxSize}
-                        increment={() => dispatch(incrementGroupMaxSize())}
-                        decrement={() => dispatch(decrementGroupMaxSize())}
-                        min={minSize}
-                        max={numCells}
-                        size="sm"
-                        alignment="center"
-                    />
-                </div>
-            </div>
-        </div>
+        <CustomSlider
+            label="Groups size"
+            minVal={1}
+            maxVal={numCells}
+            defaultVal={1}
+            value={[minSize, maxSize]}
+            onChange={(value: number | number[]) => {
+                let [min, max] = value as number[];
+                dispatch(setGroupMinSize(min));
+                dispatch(setGroupMaxSize(max));
+            }}
+        />
     );
 }
 
@@ -165,22 +130,18 @@ function DistributionSelector() {
     const dispatch = useAppDispatch();
 
     return (
-        <div>
-            <Title text="Distribution" size="small" />
-            <OptionGroup
-                options={[
-                    { label: "Even", value: "even" },
-                    { label: "Random", value: "rand" },
-                ]}
-                selected={{
-                    get: distr,
-                    set: (val: DistributionType) =>
-                        dispatch(setDistributionType(val)),
-                }}
-                size="sm"
-                alignment="center"
-            />
-        </div>
+        <CustomRadioGroup
+            label="Type"
+            options={[
+                { label: "Even", value: "even" },
+                { label: "Random", value: "rand" },
+            ]}
+            value={distr}
+            defaultVal="even"
+            onChange={(val: string) =>
+                dispatch(setDistributionType(val as DistributionType))
+            }
+        />
     );
 }
 
@@ -209,28 +170,9 @@ function ReloadBtn() {
     return (
         <Button
             icon={faRotate}
+            size="2xl"
             tooltipLabel="Reload init state"
             onClick={() => dispatch(setInitState(params))}
         />
-    );
-}
-
-function CellsSet() {
-    //
-
-    const initState = useAppSelector((state) => state.initState.value);
-
-    const dispatch = useAppDispatch();
-
-    return (
-        <div className="row mx-auto ps-2" style={{ width: "90%" }}>
-            {initState.map((e, i) => (
-                <SpanCell
-                    key={i}
-                    alive={e}
-                    toggle={() => dispatch(toggleInitStateCell(i))}
-                />
-            ))}
-        </div>
     );
 }

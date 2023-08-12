@@ -15,7 +15,7 @@ import NbhdsMap from "src/features/NbhdsMap";
 
 export default function Neighborhood1D() {
     return (
-        <Box className="space-y-2 mb-5">
+        <Box className="section-container">
             <Width />
             <Type />
             <MainCellSelector />
@@ -39,6 +39,7 @@ function Width() {
             defaultVal={3}
             step={1}
             value={width}
+            marks={true}
             onChange={(val: number) => dispatch(setNbhdWidth(val))}
         />
     );
@@ -58,6 +59,7 @@ function Type() {
                 { label: "Grouped", value: "grouped" },
                 { label: "Scattered", value: "scattered" },
             ]}
+            defaultVal="adjacent"
             value={type}
             onChange={(val: string) => dispatch(setNbhdType(val as NbhdType))}
         />

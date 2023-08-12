@@ -39,7 +39,7 @@ export default function MainCellSelector() {
     }, [width]);
 
     return (
-        <Box className="bg-jet text-sunglow rounded-md w-max p-2 space-x-1.5">
+        <Box className="cap-component-container w-max p-2 space-x-1.5">
             <Ellipses
                 size="xs"
                 cells={cells}

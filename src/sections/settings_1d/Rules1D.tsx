@@ -38,7 +38,7 @@ export default function Rules1D() {
     const onHoverCell = useStateObj(0);
 
     return (
-        <Box className="space-y-2 mb-5">
+        <Box className="section-container">
             <RuleNumber />
             <Controls />
             <RulePreview index={onHoverCell.get} />
@@ -55,7 +55,7 @@ function RuleNumber() {
     );
 
     return (
-        <Box className="bg-jet text-sunglow w-max p-2 rounded-md">
+        <Box className="cap-component-container cap-component-label w-max p-2">
             Rule number {ruleNum}
         </Box>
     );
@@ -108,10 +108,7 @@ function RulePreview({ index }: { index: number }) {
     ));
 
     return (
-        <Box
-            className="bg-jet text-sunglow rounded-md w-max p-2 space-x-1.5"
-            style={{ padding: "8px", width: "max-content" }}
-        >
+        <Box className="cap-component-container w-max p-2 space-x-1.5">
             <Ellipses
                 size="xs"
                 cells={cells}

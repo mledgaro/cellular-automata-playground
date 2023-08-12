@@ -1,10 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
     --dark1: #212529;
     --dark2: #6c757d;
     --clear1: #ffc107;
     --clear2: #f8f9fa;
     /*#202c56 #ac965a*/
+    --jet: #323031;
+    /* rgb(50, 48, 49) */
+    --sunglow: #ffd166;
+    /* rgb(255, 209, 102) */
+    --frenchGray: #bbb5bd;
+    /* rgb(187, 181, 189) */
+
 }
+
+.cap-component-label {
+    /*@apply text-lg font-black text-sunglow select-none;*/
+    color: var(--sunglow) !important;
+    font-weight: 800 !important;
+    font-size: 1.1rem !important;
+    user-select: none !important;
+}
+
+.section-container {
+    @apply space-y-2 mb-5;
+}
+
+.cap-component-container {
+    /*@appy bg-jet rounded-md text-sunglow;*/
+    background-color: var(--jet);
+    border-radius: 8px;
+    color: var(--sunglow);
+}
+
+.cells-container {
+    @apply pl-2 pt-2 pb-0 pr-0;
+}
+
+.cap-cell {
+    @apply inline-block box-border w-5 h-5 mr-1.5 mb-1.5;
+}
+
+.cap-cell.on {
+    @apply bg-sunglow;
+}
+
+.cap-cell.off {
+    @apply bg-french-gray;
+}
+
+
+
+
+
 
 .cap-container-clear-1 {
     background-color: var(--clear1);
@@ -81,47 +132,6 @@
 
 .cap-icon-cell {
     padding: 2px;
-}
-
-.cap-cell {
-    padding: 0;
-    width: 2em;
-    height: 2em;
-    font-size: 0.6em;
-    margin: 1px;
-    border-style: solid;
-    border-width: 3px;
-}
-
-.cap-cell:hover {
-    border-style: solid;
-    border-width: 2px;
-    border-color: var(--dark2);
-}
-
-.cap-cell-off {
-    background-color: var(--dark1);
-    border-color: var(--dark1);
-}
-
-.cap-cell-off-high {
-    background-color: var(--dark1);
-    border-color: var(--dark2);
-}
-
-.cap-cell-on {
-    background-color: var(--clear1);
-    border-color: var(--clear1);
-}
-
-.cap-cell-on-high {
-    background-color: var(--clear1);
-    border-color: var(--dark2);
-}
-
-.cap-cell-high {
-    background-color: var(--clear2);
-    border-color: var(--clear2);
 }
 
 .cap-deactivated-cell {
