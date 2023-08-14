@@ -5,7 +5,7 @@ import "./css/App.css";
 import React from "react";
 
 import Canvas from "./sections/Canvas";
-import Settings2D from "./sections/settings_2d/Settings2D";
+import Settings2D from "./sections/Settings2D";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fa1, fa2, faD } from "@fortawesome/free-solid-svg-icons";

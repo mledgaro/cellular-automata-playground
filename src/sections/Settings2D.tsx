@@ -1,27 +1,23 @@
 //
 import React from "react";
-import SectionSelector from "../../components/deprecated/SectionSelector";
-import Neighborhood2D from "./Neighborhood2D";
-import { Rules2D } from "./Rules2D";
+import Neighborhood2D from "./settings_2d/Neighborhood2D";
+import { Rules2D } from "./settings_2d/Rules2D";
 import { useRangeReducer, useStateObj } from "src/app/hooks";
+import CustomTabs from "src/components/Tabs";
 
 export default function Settings2D() {
     //
-
-    const section = useStateObj("nbhd");
     const nbhdType = useStateObj("moore");
     const nbhdWidth = useRangeReducer(2, 8, 3, false);
     const nbhdHeight = useRangeReducer(2, 8, 3, false);
     const mainCell = useStateObj({ r: 1, c: 1 });
 
     return (
-        <SectionSelector
-            title="Settings"
-            sections={[
+        <CustomTabs
+            tabs={[
                 {
-                    label: "Neighborhood",
-                    value: "nbhd",
-                    component: (
+                    title: "Neighborhood",
+                    content: (
                         <Neighborhood2D
                             type={nbhdType}
                             width={nbhdWidth}
@@ -31,9 +27,8 @@ export default function Settings2D() {
                     ),
                 },
                 {
-                    label: "Rules",
-                    value: "rules",
-                    component: (
+                    title: "Rules",
+                    content: (
                         <Rules2D
                             nbhdType={nbhdType.get}
                             nbhdWidth={nbhdWidth.get}
@@ -43,9 +38,6 @@ export default function Settings2D() {
                     ),
                 },
             ]}
-            selected={section}
-            size="lg"
-            alignment="center"
         />
     );
 }

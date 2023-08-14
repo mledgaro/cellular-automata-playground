@@ -31,7 +31,15 @@ export default function CustomTabs({
     const selected = useStateObj(0);
 
     return (
-        <Box sx={{ width: "80vw" }}>
+        <Box
+            sx={{
+                width: "80vw",
+                // borderColor: "#323031",
+                // borderWidth: "2px",
+                // borderStyle: "solid",
+            }}
+            className="mx-auto"
+        >
             <Box>
                 <StyledTabs
                     value={selected.get}

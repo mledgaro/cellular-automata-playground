@@ -32,7 +32,7 @@ function Rule2D() {
             className=""
             onClick={() => state.set(state.get === 2 ? 0 : state.get + 1)}
         >
-            <FontAwesomeIcon icon={icon} size="xl" />
+            <FontAwesomeIcon icon={icon} size="2x" />
         </span>
     );
 }
@@ -72,23 +72,23 @@ export function Rules2D({
 
     let headers = [];
 
-    headers.push(<td className="cap-icon-cell">Neighbors</td>);
-    rules.push(<td className="cap-icon-cell">State</td>);
+    headers.push(<td className="p-2">Neighbors</td>);
+    rules.push(<td className="p-2">State</td>);
 
     for (let i = 0; i <= numRules; i++) {
         //
 
-        headers.push(<td className="cap-icon-cell">{i}</td>);
+        headers.push(<td className="p-2">{i}</td>);
 
         rules.push(
-            <td>
+            <td className="p-2">
                 <Rule2D />
             </td>
         );
     }
 
     return (
-        <table className="cap-container-dark-1 w-75 mx-auto">
+        <table className="cap-component-container text-xl text-center w-full">
             <tr>{headers}</tr>
             <tr>{rules}</tr>
         </table>

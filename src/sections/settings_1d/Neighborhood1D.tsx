@@ -10,7 +10,7 @@ import { setCellsNbhds } from "src/app/slices/cellsNbhds";
 import { Box } from "@mui/material";
 import CustomSlider from "src/components/Slider";
 import CustomRadioGroup from "src/components/RadioGroup";
-import MainCellSelector from "src/features/MainCellSelector";
+import { MainCellSelector1D } from "src/features/MainCellSelector";
 import NbhdsMap from "src/features/NbhdsMap";
 
 export default function Neighborhood1D() {
@@ -18,7 +18,7 @@ export default function Neighborhood1D() {
         <Box className="section-container">
             <Width />
             <Type />
-            <MainCellSelector />
+            <MainCellSelector1D />
             <UpdateNbhds />
             <NbhdsMap />
         </Box>
