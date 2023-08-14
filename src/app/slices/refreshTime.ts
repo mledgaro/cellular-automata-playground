@@ -1,6 +1,6 @@
 //
 
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export const values = [800, 600, 400, 200, 1];
 
@@ -24,10 +24,13 @@ export const refreshTimeSlice = createSlice({
         decrementRefreshTime: (state) => {
             state.value -= state.value > 0 ? 1 : 0;
         },
+        setRefreshTime: (state, action: PayloadAction<number>) => {
+            state.value = action.payload;
+        },
     },
 });
 
-export const { incrementRefreshTime, decrementRefreshTime } =
+export const { incrementRefreshTime, decrementRefreshTime, setRefreshTime } =
     refreshTimeSlice.actions;
 
 export default refreshTimeSlice.reducer;

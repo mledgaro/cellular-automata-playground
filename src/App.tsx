@@ -2,18 +2,26 @@
 
 import "./css/App.css";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
-import Canvas from "./sections/Canvas";
 import Settings2D from "./sections/Settings2D";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fa1, fa2, faD } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "@mui/material/Button";
-import { StateHookObj, useStateObj } from "./app/hooks";
+import { StateHookObj, useAppSelector, useStateObj } from "./app/hooks";
 import Settings1D from "./sections/Settings1D";
-import { Skeleton } from "@mui/material";
+import { Box, Skeleton } from "@mui/material";
+import CanvasController from "./ts/CanvasController";
+import CellularAutomaton from "./ts/CellularAutomaton";
+import Controls from "./sections/Controls";
+
+const canvasId = "cap-canvas";
+const bufferSize = 64;
+// const automaton = new CellularAutomaton();
+// let canvasCntrl: CanvasController;
+// let timer: NodeJS.Timer;
 
 export default function App() {
     //
@@ -22,11 +30,27 @@ export default function App() {
 
     const settings = dimension.get === 1 ? <Settings1D /> : <Settings2D />;
 
+    const numCells = useAppSelector((state) => state.numCells.value);
+
+    // const automaton = useRef(new CellularAutomaton());
+    // const canvasCntrl = useRef(
+    //     new CanvasController(canvasId, bufferSize, numCells)
+    // );
+    // const timer = useRef(setInterval() as NodeJS.Timer);
+
+    // useEffect(() => {
+    //     canvasCntrl = new CanvasController(canvasId, bufferSize, numCells);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
+
     return (
-        <div>
+        <Box className="space-y-5 my-5">
             <Title dimState={dimension} />
 
             {/* <Canvas /> */}
+            {/* <div id="canvas-container">
+                <canvas id={canvasId} />
+            </div> */}
             <Skeleton
                 variant="rectangular"
                 width="90vw"
@@ -34,16 +58,22 @@ export default function App() {
                 className="mx-auto"
             />
 
+            <Controls
+            // automaton={automaton.current}
+            // canvasCntrl={canvasCntrl.current}
+            // timer={timer.current}
+            />
+
             {settings}
 
             {/* <Footer /> */}
-        </div>
+        </Box>
     );
 }
 
 function Title({ dimState }: { dimState: StateHookObj }) {
     return (
-        <div className="flex justify-center py-4">
+        <div className="flex justify-center">
             <Button
                 className="bg-sunglow text-jet rounded-s-lg rounded-e-none"
                 variant="contained"

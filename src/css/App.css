@@ -26,7 +26,7 @@
 }
 
 .section-container {
-    @apply space-y-2 mb-5;
+    @apply space-y-2;
 }
 
 .cap-component-container {

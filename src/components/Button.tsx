@@ -27,12 +27,14 @@ export default function CustomButtom({
     icon,
     size,
     tooltipLabel = "",
-    onClick,
+    disabled = false,
+    onClick = () => {},
 }: {
     icon: IconDefinition;
     size: SizeProp;
     tooltipLabel?: string;
-    onClick: () => void;
+    disabled?: boolean;
+    onClick?: () => void;
 }) {
     return (
         <StyledTooltip
@@ -46,6 +48,7 @@ export default function CustomButtom({
                 className="bg-sunglow text-jet rounded-md"
                 variant="contained"
                 onClick={onClick}
+                disabled={disabled}
             >
                 <FontAwesomeIcon icon={icon} size={size} />
             </Button>

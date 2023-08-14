@@ -1,6 +1,6 @@
 //
 
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/app/store";
 
 export const values = [4, 6, 8, 12, 16];
@@ -25,11 +25,15 @@ export const cellSizeSlice = createSlice({
         decrementCellSize: (state) => {
             state.value -= state.value > 0 ? 1 : 0;
         },
+        setCellSize: (state, action: PayloadAction<number>) => {
+            state.value = action.payload;
+        },
     },
 });
 
 export const selectCellSizeIndex = (state: RootState) => state.cellSize.value;
 
-export const { incrementCellSize, decrementCellSize } = cellSizeSlice.actions;
+export const { incrementCellSize, decrementCellSize, setCellSize } =
+    cellSizeSlice.actions;
 
 export default cellSizeSlice.reducer;
