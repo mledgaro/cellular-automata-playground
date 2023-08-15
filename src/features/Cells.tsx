@@ -103,15 +103,17 @@ export function Ellipses({
 }
 
 export function DeactivatedCell({
+    size = "lg",
     onClick = () => {},
 }: {
+    size?: SizeProp;
     onClick?: () => void;
 }) {
     //
 
     return (
         <span className="cap-icon-cell cap-deactivated-cell" onClick={onClick}>
-            <FontAwesomeIcon icon={faSquareXmark} size="sm" />
+            <FontAwesomeIcon icon={faSquareXmark} size={size} />
         </span>
     );
 }

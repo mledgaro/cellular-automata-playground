@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { setNbhdWidth } from "src/app/slices/nbhdWidth";
 import { NbhdType, setNbhdType } from "src/app/slices/nbhdType";
 import { setCellsNbhds } from "src/app/slices/cellsNbhds";
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import CustomSlider from "src/components/Slider";
 import CustomRadioGroup from "src/components/RadioGroup";
 import { MainCellSelector1D } from "src/features/MainCellSelector";
@@ -15,13 +15,29 @@ import NbhdsMap from "src/features/NbhdsMap";
 
 export default function Neighborhood1D() {
     return (
-        <Box className="section-container">
-            <Width />
-            <Type />
-            <MainCellSelector1D />
-            <UpdateNbhds />
-            <NbhdsMap />
-        </Box>
+        <Grid container className="section-container">
+            <Grid container item>
+                <Grid item md={3}>
+                    <Width />
+                </Grid>
+                <Grid item md={5}>
+                    <Type />
+                </Grid>
+                <Grid item md={4}>
+                    <Box className="flex justify-center">
+                        <MainCellSelector1D />
+                    </Box>
+                </Grid>
+            </Grid>
+            <Grid container item>
+                <Grid item xs={11}>
+                    <NbhdsMap />
+                </Grid>
+                <Grid item xs={1}>
+                    <UpdateNbhds />
+                </Grid>
+            </Grid>
+        </Grid>
     );
 }
 
@@ -33,6 +49,7 @@ function Width() {
 
     return (
         <CustomSlider
+            className="w-[80%] mx-auto"
             label="Width"
             minVal={2}
             maxVal={8}
@@ -52,17 +69,26 @@ function Type() {
     const dispatch = useAppDispatch();
 
     return (
-        <CustomRadioGroup
-            label="Type"
-            options={[
-                { label: "Adjacent", value: "adjacent" },
-                { label: "Grouped", value: "grouped" },
-                { label: "Scattered", value: "scattered" },
-            ]}
-            defaultVal="adjacent"
-            value={type}
-            onChange={(val: string) => dispatch(setNbhdType(val as NbhdType))}
-        />
+        <Box
+            // className="relative h-full border-2 border-jet border-solid"
+            className="flex justify-center"
+        >
+            <CustomRadioGroup
+                // className="absolute w-fit left-[50%] translate-x-[-50%]"
+                className=""
+                label="Type"
+                options={[
+                    { label: "Adjacent", value: "adjacent" },
+                    { label: "Grouped", value: "grouped" },
+                    { label: "Scattered", value: "scattered" },
+                ]}
+                defaultVal="adjacent"
+                value={type}
+                onChange={(val: string) =>
+                    dispatch(setNbhdType(val as NbhdType))
+                }
+            />
+        </Box>
     );
 }
 
@@ -83,11 +109,14 @@ function UpdateNbhds() {
     }, [params]);
 
     return (
-        <Button
-            icon={faRotate}
-            size="2xl"
-            tooltipLabel="Reload neighborhoods"
-            onClick={() => dispatch(setCellsNbhds(params))}
-        />
+        <Box className="h-full relative">
+            <Button
+                className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
+                icon={faRotate}
+                size="2xl"
+                tooltipLabel="Reload neighborhoods"
+                onClick={() => dispatch(setCellsNbhds(params))}
+            />
+        </Box>
     );
 }

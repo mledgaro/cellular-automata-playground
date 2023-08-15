@@ -3,9 +3,11 @@
 import React, { useEffect } from "react";
 
 import {
+    faEquals,
     faHashtag,
     faPercent,
     faRotate,
+    faShuffle,
 } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../components/Button";
@@ -18,8 +20,14 @@ import { setGroupMaxSize } from "src/app/slices/groupMaxSize";
 import { setGroupMinSize } from "src/app/slices/groupMinSize";
 import { setDistributionType } from "src/app/slices/distributionType";
 import { setInitState } from "src/app/slices/initState";
-import { Box, FormControlLabel, FormLabel, RadioGroup } from "@mui/material";
-import CustomRadioGroup, { StyledRadio } from "src/components/RadioGroup";
+import {
+    Box,
+    FormControlLabel,
+    FormLabel,
+    Grid,
+    RadioGroup,
+} from "@mui/material";
+import { StyledRadio } from "src/components/RadioGroup";
 import CustomSlider from "src/components/Slider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CellsSet } from "src/features/InitialStateCells";
@@ -27,19 +35,29 @@ import { CellsSet } from "src/features/InitialStateCells";
 export default function InitialState() {
     //
     return (
-        <Box className="section-container">
-            <LiveCellsSelector />
-            <GroupSize />
-            <DistributionSelector />
-            <ReloadBtn />
-            <CellsSet />
-        </Box>
+        <Grid container className="section-container space-y-3">
+            <Grid item container columnSpacing={3} rowSpacing={3}>
+                <Grid item md>
+                    <LiveCells />
+                </Grid>
+                <Grid item md>
+                    <Cluster />
+                </Grid>
+            </Grid>
+            <Grid item container>
+                <Grid item xs={11}>
+                    <CellsSet />
+                </Grid>
+                <Grid item xs={1}>
+                    <ReloadBtn />
+                </Grid>
+            </Grid>
+        </Grid>
     );
 }
 
-function LiveCellsSelector() {
+function LiveCells() {
     //
-
     const numCells = useAppSelector((state) => state.numCells.value);
     const type = useAppSelector((state) => state.liveCellsType.value);
     const liveCells = useAppSelector((state) => state.liveCells.value);
@@ -90,12 +108,12 @@ function LiveCellsSelector() {
     );
 }
 
-function GroupSize() {
+function Cluster() {
     //
-
     const numCells = useAppSelector((state) => state.numCells.value);
     const minSize = useAppSelector((state) => state.groupMinSize.value);
     const maxSize = useAppSelector((state) => state.groupMaxSize.value);
+    const distr = useAppSelector((state) => state.distributionType.value);
 
     const dispatch = useAppDispatch();
 
@@ -107,41 +125,49 @@ function GroupSize() {
     }, [maxSize, minSize]);
 
     return (
-        <CustomSlider
-            label="Groups size"
-            minVal={1}
-            maxVal={numCells}
-            defaultVal={1}
-            value={[minSize, maxSize]}
-            onChange={(value: number | number[]) => {
-                let [min, max] = value as number[];
-                dispatch(setGroupMinSize(min));
-                dispatch(setGroupMaxSize(max));
-            }}
-        />
-    );
-}
+        <Box className="cap-component-container p-2">
+            <FormLabel
+                id="cluster-dist-radio-group-label"
+                className="cap-component-label"
+            >
+                Clusters
+            </FormLabel>
+            <RadioGroup
+                aria-labelledby="cluster-dist-radio-group-label"
+                defaultValue="even"
+                name="cluster-dist-radio-group"
+                row
+                value={distr}
+                onChange={(event: React.ChangeEvent, value: string) =>
+                    dispatch(setDistributionType(value as DistributionType))
+                }
+            >
+                <FormControlLabel
+                    key={1}
+                    value="even"
+                    control={<StyledRadio />}
+                    label={<FontAwesomeIcon icon={faEquals} size="xl" />}
+                />
+                <FormControlLabel
+                    key={2}
+                    value="rand"
+                    control={<StyledRadio />}
+                    label={<FontAwesomeIcon icon={faShuffle} size="xl" />}
+                />
+            </RadioGroup>
 
-function DistributionSelector() {
-    //
-
-    const distr = useAppSelector((state) => state.distributionType.value);
-
-    const dispatch = useAppDispatch();
-
-    return (
-        <CustomRadioGroup
-            label="Type"
-            options={[
-                { label: "Even", value: "even" },
-                { label: "Random", value: "rand" },
-            ]}
-            value={distr}
-            defaultVal="even"
-            onChange={(val: string) =>
-                dispatch(setDistributionType(val as DistributionType))
-            }
-        />
+            <CustomSlider
+                minVal={1}
+                maxVal={numCells}
+                defaultVal={1}
+                value={[minSize, maxSize]}
+                onChange={(value: number | number[]) => {
+                    let [min, max] = value as number[];
+                    dispatch(setGroupMinSize(min));
+                    dispatch(setGroupMaxSize(max));
+                }}
+            />
+        </Box>
     );
 }
 
@@ -168,11 +194,14 @@ function ReloadBtn() {
     }, [params]);
 
     return (
-        <Button
-            icon={faRotate}
-            size="2xl"
-            tooltipLabel="Reload init state"
-            onClick={() => dispatch(setInitState(params))}
-        />
+        <Box className="h-full relative">
+            <Button
+                className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
+                icon={faRotate}
+                size="2xl"
+                tooltipLabel="Reload init state"
+                onClick={() => dispatch(setInitState(params))}
+            />
+        </Box>
     );
 }

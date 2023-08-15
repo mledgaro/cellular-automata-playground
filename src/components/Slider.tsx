@@ -1,10 +1,13 @@
 //
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Slider, SliderProps, styled } from "@mui/material";
 import React from "react";
 
 export const StyledSlider = styled(Slider)<SliderProps>(({ theme }) => ({
-    width: "97%",
-    marginLeft: "1.5%",
+    width: "calc(100% - 40px)",
+    marginLeft: "20px",
+    marginRight: "20px",
     color: "#ffd166",
     "& .MuiSlider-rail": {
         backgroundColor: "#bbb5bd",
@@ -31,6 +34,7 @@ export const StyledSlider = styled(Slider)<SliderProps>(({ theme }) => ({
 
 export default function CustomSlider({
     label = "",
+    icon,
     minVal,
     maxVal,
     defaultVal,
@@ -38,8 +42,10 @@ export default function CustomSlider({
     marks = false,
     value,
     onChange,
+    className = "",
 }: {
     label?: string;
+    icon?: IconDefinition;
     minVal: number;
     maxVal: number;
     defaultVal: number;
@@ -47,15 +53,17 @@ export default function CustomSlider({
     marks?: boolean;
     value: number | number[];
     onChange: (val: number) => void;
+    className?: string;
 }) {
     return (
-        <Box className="cap-component-container pt-1">
+        <Box className={`cap-component-container pt-1 ${className}`}>
+            {icon && <FontAwesomeIcon icon={icon} />}
+
             {label !== "" && (
                 <Box className="cap-component-label ml-2">{label}</Box>
             )}
 
             <StyledSlider
-                className=""
                 aria-label={label}
                 defaultValue={defaultVal}
                 valueLabelDisplay="auto"

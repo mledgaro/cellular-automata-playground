@@ -27,7 +27,7 @@ import {
     faPlay,
     faStop,
 } from "@fortawesome/free-solid-svg-icons";
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import Button from "src/components/Button";
 import LevelSelector from "src/components/deprecated/LevelSelector";
 import CustomSlider from "src/components/Slider";
@@ -40,34 +40,6 @@ export default function Controls({}: // automaton,
     // canvasCntrl: CanvasController;
     // timer: NodeJS.Timer;
 }) {
-    return (
-        <Box className="space-y-2 mx-auto">
-            <FlowControls
-            // automaton={automaton}
-            // canvasCntrl={canvasCntrl}
-            // timer={timer}
-            />
-            <SpeedSelector />
-            <ZoomSelector
-            // canvasCntrl={canvasCntrl}
-            />
-            <CanvasCtrls
-            // canvasCntrl={canvasCntrl}
-            />
-        </Box>
-    );
-}
-
-function FlowControls({}: // automaton,
-// canvasCntrl,
-// timer,
-{
-    // automaton: CellularAutomaton;
-    // canvasCntrl: CanvasController;
-    // timer: NodeJS.Timer;
-}) {
-    //
-
     const runningStatus = useAppSelector((state) => state.runningStatus.value);
     const refreshTime = useAppSelector(
         (state) => refreshTimeValues[state.refreshTime.value]
@@ -92,32 +64,6 @@ function FlowControls({}: // automaton,
     //     canvasCntrl?.paintNextRow(automaton.state);
     // };
 
-    // const next = () => {
-    //     if (!init()) {
-    //         nextState();
-    //     }
-    //     if (runningStatus === "stopped") {
-    //         dispatch(setRunningStatus("paused"));
-    //     }
-    // };
-
-    // const run = () => {
-    //     init();
-    //     dispatch(setRunningStatus("running"));
-    //     // timer = setInterval(nextState, refreshTime);
-    // };
-
-    // const pause = () => {
-    //     // clearInterval(timer);
-    //     dispatch(setRunningStatus("paused"));
-    // };
-
-    // const stop = () => {
-    //     // clearInterval(timer);
-    //     canvasCntrl.restart();
-    //     dispatch(setRunningStatus("stopped"));
-    // };
-
     // useEffect(() => {
     //     if (runningStatus === "running") {
     //         // clearInterval(timer);
@@ -127,36 +73,123 @@ function FlowControls({}: // automaton,
     // }, [refreshTime, rules]);
 
     return (
-        <Box>
-            <Button
-                tooltipLabel="Next"
-                icon={faForwardStep}
-                size="xl"
-                // onClick={next}
-                disabled={runningStatus === "running"}
-            />
-            <Button
-                tooltipLabel="Run"
-                icon={faPlay}
-                size="xl"
-                // onClick={run}
-                disabled={runningStatus === "running"}
-            />
-            <Button
-                tooltipLabel="Pause"
-                icon={faPause}
-                size="xl"
-                // onClick={pause}
-                disabled={runningStatus !== "running"}
-            />
-            <Button
-                tooltipLabel="Stop"
-                icon={faStop}
-                size="xl"
-                // onClick={stop}
-                disabled={runningStatus === "stopped"}
-            />
-        </Box>
+        <Grid container className="">
+            <Grid item md={3}>
+                <Box className="w-fit mx-auto space-x-2">
+                    <RunBtn />
+                    <NextBtn />
+                    <PauseBtn />
+                    <StopBtn />
+                </Box>
+            </Grid>
+
+            <Grid item md={3}>
+                <SpeedSelector />
+            </Grid>
+            <Grid item md={3}>
+                <ZoomSelector
+                // canvasCntrl={canvasCntrl}
+                />
+            </Grid>
+            <Grid item md={3}>
+                <Box className="w-fit mx-auto space-x-2">
+                    <ClearBtn />
+                    <ScreenshotBtn />
+                </Box>
+            </Grid>
+        </Grid>
+    );
+}
+
+function RunBtn() {
+    const runningStatus = useAppSelector((state) => state.runningStatus.value);
+    return (
+        <Button
+            tooltipLabel="Run"
+            icon={faPlay}
+            size="xl"
+            // onClick={() => {
+            //     init();
+            //     dispatch(setRunningStatus("running"));
+            //     // timer = setInterval(nextState, refreshTime);
+            // }}
+            disabled={runningStatus === "running"}
+        />
+    );
+}
+
+function NextBtn() {
+    const runningStatus = useAppSelector((state) => state.runningStatus.value);
+    return (
+        <Button
+            tooltipLabel="Next"
+            icon={faForwardStep}
+            size="xl"
+            // onClick={() => {
+            //     if (!init()) {
+            //         nextState();
+            //     }
+            //     if (runningStatus === "stopped") {
+            //         dispatch(setRunningStatus("paused"));
+            //     }
+            // }}
+            disabled={runningStatus === "running"}
+        />
+    );
+}
+
+function PauseBtn() {
+    const runningStatus = useAppSelector((state) => state.runningStatus.value);
+    return (
+        <Button
+            tooltipLabel="Pause"
+            icon={faPause}
+            size="xl"
+            // onClick={() => {
+            //     // clearInterval(timer);
+            //     dispatch(setRunningStatus("paused"));
+            // }}
+            disabled={runningStatus !== "running"}
+        />
+    );
+}
+
+function StopBtn() {
+    const runningStatus = useAppSelector((state) => state.runningStatus.value);
+    return (
+        <Button
+            tooltipLabel="Stop"
+            icon={faStop}
+            size="xl"
+            // onClick={() => {
+            //     // clearInterval(timer);
+            //     canvasCntrl.restart();
+            //     dispatch(setRunningStatus("stopped"));
+            // }}
+            disabled={runningStatus === "stopped"}
+        />
+    );
+}
+
+function ClearBtn() {
+    return (
+        <Button
+            tooltipLabel="Clear"
+            icon={faBroom}
+            size="xl"
+            // onClick={() => canvasCntrl?.restart()}
+        />
+    );
+}
+
+function ScreenshotBtn() {
+    return (
+        <Button
+            tooltipLabel="Screenshot"
+            icon={faCameraRetro}
+            size="xl"
+            // onClick={() => canvasCntrl?.saveScene("cellular_automaton")}
+        />
     );
 }
 
@@ -168,16 +201,10 @@ function SpeedSelector() {
     const dispatch = useAppDispatch();
 
     return (
-        // <LevelSelector
-        //     tooltipLabel="Speed"
-        //     icon={faGaugeHigh}
-        //     index={refreshTimeIndex}
-        //     numLevels={refreshTimeNumValues}
-        //     increment={() => dispatch(incrementRefreshTime())}
-        //     decrement={() => dispatch(decrementRefreshTime())}
-        // />
         <CustomSlider
+            className="w-[80%] mx-auto"
             label="Speed"
+            // icon={faGaugeHigh}
             minVal={0}
             maxVal={refreshTimeNumValues}
             defaultVal={2}
@@ -210,20 +237,11 @@ function ZoomSelector() {
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [cellSize]);
 
-    // return (
-    //     <LevelSelector
-    //         tooltipLabel="Zoom"
-    //         icon={faMagnifyingGlass}
-    //         index={cellSizeIndex}
-    //         numLevels={cellSizeNumValues}
-    //         increment={() => dispatch(incrementCellSize())}
-    //         decrement={() => dispatch(decrementCellSize())}
-    //     />
-    // );
-
     return (
         <CustomSlider
+            className="w-[80%] mx-auto"
             label="Zoom"
+            // icon={faMagnifyingGlass}
             minVal={0}
             maxVal={cellSizeNumValues}
             defaultVal={2}
@@ -232,27 +250,5 @@ function ZoomSelector() {
             marks={true}
             onChange={(val: number) => dispatch(setCellSize(val))}
         />
-    );
-}
-
-function CanvasCtrls() {
-    // { canvasCntrl }: { canvasCntrl: CanvasController }
-    //
-
-    return (
-        <Box>
-            <Button
-                tooltipLabel="Clear"
-                icon={faBroom}
-                size="xl"
-                // onClick={() => canvasCntrl?.restart()}
-            />
-            <Button
-                tooltipLabel="Screenshot"
-                icon={faCameraRetro}
-                size="xl"
-                // onClick={() => canvasCntrl?.saveScene("cellular_automaton")}
-            />
-        </Box>
     );
 }

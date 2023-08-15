@@ -94,13 +94,20 @@ export function MainCellSelector2D({
             cell = isActive(r, c) ? (
                 sel ? (
                     <SelectedCell
+                        size="xl"
                         onClick={() => selected.set({ r: -1, c: -1 })}
                     />
                 ) : (
-                    <IconCell onClick={() => selected.set({ r: r, c: c })} />
+                    <IconCell
+                        size="xl"
+                        onClick={() => selected.set({ r: r, c: c })}
+                    />
                 )
             ) : (
-                <DeactivatedCell onClick={() => selected.set({ r: r, c: c })} />
+                <DeactivatedCell
+                    size="xl"
+                    onClick={() => selected.set({ r: r, c: c })}
+                />
             );
 
             row.push(<td style={{ padding: "5px" }}>{cell}</td>);

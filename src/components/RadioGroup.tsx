@@ -23,17 +23,21 @@ export default function CustomRadioGroup({
     value,
     defaultVal,
     onChange,
+    className = "",
 }: {
     label: string;
     options: { label: string; value: string }[];
     value: string;
     defaultVal: string;
     onChange: (val: string) => void;
+    className?: string;
 }) {
     const id = useId();
 
     return (
-        <FormControl className="cap-component-container pl-3 pt-1">
+        <FormControl
+            className={`cap-component-container pl-3 pt-1 ${className}`}
+        >
             <FormLabel id={id} className="cap-component-label">
                 {label}
             </FormLabel>

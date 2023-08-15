@@ -29,12 +29,14 @@ export default function CustomButtom({
     tooltipLabel = "",
     disabled = false,
     onClick = () => {},
+    className = "",
 }: {
     icon: IconDefinition;
     size: SizeProp;
     tooltipLabel?: string;
     disabled?: boolean;
     onClick?: () => void;
+    className?: string;
 }) {
     return (
         <StyledTooltip
@@ -43,9 +45,10 @@ export default function CustomButtom({
             TransitionProps={{ timeout: 700 }}
             followCursor
             arrow
+            className=""
         >
             <Button
-                className="bg-sunglow text-jet rounded-md"
+                className={`bg-sunglow text-jet rounded-md ${className}`}
                 variant="contained"
                 onClick={onClick}
                 disabled={disabled}
