@@ -1,4 +1,4 @@
-import { Paper } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import React, { useCallback } from "react";
 import { BoolArrHook, useAppSelector, useBoolArrState } from "src/app/hooks";
 import { boolArray } from "src/ts/Utils";
@@ -44,5 +44,6 @@ function HighlightCell({
 
     const classes = `cap-cell ${highlightedCells.get[index] ? "on" : "off"}`;
 
-    return <Paper className={classes} onMouseOver={highlight} />;
+    // return <Paper className={classes} onMouseOver={highlight} />;
+    return <Box className={classes} onMouseOver={highlight} />;
 }

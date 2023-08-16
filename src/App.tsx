@@ -44,7 +44,7 @@ export default function App() {
     // }, []);
 
     return (
-        <Box className="space-y-5 my-5">
+        <Box className="space-y-6 my-5">
             <Title dimState={dimension} />
 
             {/* <Canvas /> */}

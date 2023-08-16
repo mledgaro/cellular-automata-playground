@@ -35,19 +35,25 @@ import { CellsSet } from "src/features/InitialStateCells";
 export default function InitialState() {
     //
     return (
-        <Grid container className="section-container space-y-3">
-            <Grid item container columnSpacing={3} rowSpacing={3}>
+        <Grid container rowSpacing={2}>
+            {/* row 1 */}
+            <Grid item container columnSpacing={3}>
+                {/* live cells */}
                 <Grid item md>
                     <LiveCells />
                 </Grid>
+                {/* clusters */}
                 <Grid item md>
                     <Cluster />
                 </Grid>
             </Grid>
+            {/* row 2 */}
             <Grid item container>
+                {/* initial state cells */}
                 <Grid item xs={11}>
                     <CellsSet />
                 </Grid>
+                {/* reload button */}
                 <Grid item xs={1}>
                     <ReloadBtn />
                 </Grid>

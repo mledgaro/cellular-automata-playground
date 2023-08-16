@@ -16,6 +16,7 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
     fontWeight: "200",
     color: "#bbb5bd",
+    fontSize: "1.2rem",
     "&.Mui-selected": {
         color: "#ffd166",
         fontWeight: "900",
@@ -31,15 +32,7 @@ export default function CustomTabs({
     const selected = useStateObj(0);
 
     return (
-        <Box
-            sx={{
-                width: "80vw",
-                // borderColor: "#323031",
-                // borderWidth: "2px",
-                // borderStyle: "solid",
-            }}
-            className="mx-auto"
-        >
+        <Box className="w-[95%] mx-auto">
             <Box>
                 <StyledTabs
                     value={selected.get}
@@ -61,15 +54,16 @@ export default function CustomTabs({
             </Box>
             {tabs.map((e, i) => {
                 return (
-                    <div
+                    <Box
                         key={i}
+                        className="w-[95%] mx-auto"
                         role="tabpanel"
                         hidden={selected.get !== i}
                         id={`cstm-tabpanel-${i}`}
                         aria-labelledby={`cstm-tab-${i}`}
                     >
                         {selected.get === i && e.content}
-                    </div>
+                    </Box>
                 );
             })}
         </Box>

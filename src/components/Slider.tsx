@@ -57,10 +57,14 @@ export default function CustomSlider({
 }) {
     return (
         <Box className={`cap-component-container pt-1 ${className}`}>
-            {icon && <FontAwesomeIcon icon={icon} />}
+            {icon && (
+                <Box className="cap-component-label ml-2 mt-1">
+                    <FontAwesomeIcon icon={icon} />
+                </Box>
+            )}
 
             {label !== "" && (
-                <Box className="cap-component-label ml-2">{label}</Box>
+                <Box className="cap-component-label ml-2 mt-2">{label}</Box>
             )}
 
             <StyledSlider

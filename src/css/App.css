@@ -15,6 +15,13 @@
     --frenchGray: #bbb5bd;
     /* rgb(187, 181, 189) */
 
+    --ashGray: #ccdad1;
+    --airForceBlue: #4e8098;
+    --tomato: #fb4d3d;
+    --amber: #f5bb00;
+    --richBlack: #0d1321;
+
+
 }
 
 .cap-component-label {
@@ -41,7 +48,7 @@
 }
 
 .cap-cell {
-    @apply inline-block box-border w-5 h-5 mr-1.5 mb-1.5;
+    @apply rounded-sm inline-block box-border w-5 h-5 mr-1.5 mb-1.5;
 }
 
 .cap-cell.on {
@@ -55,6 +62,24 @@
 
 
 
+.test-border {
+    @apply border-jet border-2 border-solid;
+}
+
+
+.cap-hv-center-container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.cap-hv-centered {
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
 
 
 .cap-container-clear-1 {

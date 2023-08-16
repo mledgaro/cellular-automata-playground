@@ -6,7 +6,7 @@ import { setMainCell } from "src/app/slices/mainCell";
 import { Box } from "@mui/material";
 import { NbhdType2D } from "src/sections/settings_2d/Neighborhood2D";
 
-export function MainCellSelector1D() {
+export function MainCellSelector1D({ className = "" }: { className?: string }) {
     //
 
     const width = useAppSelector((state) => state.nbhdWidth.value);
@@ -40,7 +40,9 @@ export function MainCellSelector1D() {
     }, [width]);
 
     return (
-        <Box className="cap-component-container w-max p-2 space-x-1.5">
+        <Box
+            className={`cap-component-container w-max p-2 space-x-1.5 ${className}`}
+        >
             <Ellipses
                 size="xs"
                 cells={cells}

@@ -1,4 +1,4 @@
-import { Paper } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { toggleInitStateCell } from "src/app/slices/initState";
@@ -26,5 +26,5 @@ function Cell({ alive, toggle }: { alive: boolean; toggle: () => void }) {
     //
     const classes = `cap-cell ${alive ? "on" : "off"}`;
 
-    return <Paper className={classes} onClick={toggle} />;
+    return <Box className={classes} onClick={toggle} />;
 }

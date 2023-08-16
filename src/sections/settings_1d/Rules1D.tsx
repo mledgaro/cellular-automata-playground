@@ -32,19 +32,24 @@ export default function Rules1D() {
     const onHoverCell = useStateObj(0);
 
     return (
-        <Grid container className="section-container">
-            <Grid container item>
+        <Grid container rowSpacing={2}>
+            {/* Row 1 */}
+            <Grid container item alignItems="center">
+                {/* Rule number */}
                 <Grid item md>
                     <RuleNumber />
                 </Grid>
+                {/* Rule preview */}
                 <Grid item md>
                     <RulePreview index={onHoverCell.get} />
                 </Grid>
+                {/* Controls */}
                 <Grid item md>
                     <Controls />
                 </Grid>
             </Grid>
-            <Grid container item className="w-[90%] mx-auto">
+            {/* Row 2 */}
+            <Grid container item className="mx-auto w-fit">
                 <RulesSelector setHoverCell={onHoverCell.set} />
             </Grid>
         </Grid>
@@ -58,8 +63,31 @@ function RuleNumber() {
     );
 
     return (
-        <Box className="cap-component-container cap-component-label w-max p-2 mx-auto">
-            Rule number {ruleNum}
+        <Box className="cap-component-container w-max p-2 mx-auto text-center">
+            <Box className="cap-component-label">Rule number</Box>{" "}
+            <Box className="text-2xl font-light">{ruleNum}</Box>
+        </Box>
+    );
+}
+
+function RulePreview({ index }: { index: number }) {
+    //
+    const nbhdType = useAppSelector((state) => state.nbhdType.value);
+    const nbhdWidth = useAppSelector((state) => state.nbhdWidth.value);
+    const mainCell = useAppSelector((state) => state.mainCell.value);
+
+    let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
+        <IconCell key={i} alive={e} size={i === mainCell ? "2xl" : "lg"} />
+    ));
+
+    return (
+        <Box className="cap-component-container w-max p-2 space-x-1.5 mx-auto">
+            <Ellipses
+                size="xs"
+                cells={cells}
+                mainCell={mainCell}
+                nbhdType={nbhdType}
+            />
         </Box>
     );
 }
@@ -93,28 +121,6 @@ function Controls() {
                 icon={faSquareRegular}
                 size="xl"
                 onClick={() => dispatch(allRulesDead())}
-            />
-        </Box>
-    );
-}
-
-function RulePreview({ index }: { index: number }) {
-    //
-    const nbhdType = useAppSelector((state) => state.nbhdType.value);
-    const nbhdWidth = useAppSelector((state) => state.nbhdWidth.value);
-    const mainCell = useAppSelector((state) => state.mainCell.value);
-
-    let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
-        <IconCell key={i} alive={e} size={i === mainCell ? "2xl" : "lg"} />
-    ));
-
-    return (
-        <Box className="cap-component-container w-max p-2 space-x-1.5 mx-auto">
-            <Ellipses
-                size="xs"
-                cells={cells}
-                mainCell={mainCell}
-                nbhdType={nbhdType}
             />
         </Box>
     );

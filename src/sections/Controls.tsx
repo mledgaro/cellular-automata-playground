@@ -73,8 +73,8 @@ export default function Controls({}: // automaton,
     // }, [refreshTime, rules]);
 
     return (
-        <Grid container className="">
-            <Grid item md={3}>
+        <Grid container alignItems="center" className="">
+            <Grid item md>
                 <Box className="w-fit mx-auto space-x-2">
                     <RunBtn />
                     <NextBtn />
@@ -83,15 +83,15 @@ export default function Controls({}: // automaton,
                 </Box>
             </Grid>
 
-            <Grid item md={3}>
+            <Grid item md>
                 <SpeedSelector />
             </Grid>
-            <Grid item md={3}>
+            <Grid item md>
                 <ZoomSelector
                 // canvasCntrl={canvasCntrl}
                 />
             </Grid>
-            <Grid item md={3}>
+            <Grid item md>
                 <Box className="w-fit mx-auto space-x-2">
                     <ClearBtn />
                     <ScreenshotBtn />
