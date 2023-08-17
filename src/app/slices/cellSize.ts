@@ -4,7 +4,6 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/app/store";
 
 export const values = [4, 6, 8, 12, 16];
-
 export const numValues = values.length;
 
 interface CellSizeState {
@@ -32,6 +31,8 @@ export const cellSizeSlice = createSlice({
 });
 
 export const selectCellSizeIndex = (state: RootState) => state.cellSize.value;
+export const selectCellSizeValue = (state: RootState) =>
+    values[state.cellSize.value];
 
 export const { incrementCellSize, decrementCellSize, setCellSize } =
     cellSizeSlice.actions;

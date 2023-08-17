@@ -16,6 +16,7 @@ import { Box, Skeleton } from "@mui/material";
 import CanvasController from "./ts/CanvasController";
 import CellularAutomaton from "./ts/CellularAutomaton";
 import Controls from "./sections/Controls";
+import { selectNumCells } from "./app/slices/numCells";
 
 const canvasId = "cap-canvas";
 const bufferSize = 64;
@@ -26,11 +27,11 @@ const bufferSize = 64;
 export default function App() {
     //
 
-    const dimension = useStateObj(1);
+    const dimension = useStateObj<1 | 2>(1);
 
     const settings = dimension.get === 1 ? <Settings1D /> : <Settings2D />;
 
-    const numCells = useAppSelector((state) => state.numCells.value);
+    const numCells = useAppSelector(selectNumCells);
 
     // const automaton = useRef(new CellularAutomaton());
     // const canvasCntrl = useRef(
@@ -71,7 +72,7 @@ export default function App() {
     );
 }
 
-function Title({ dimState }: { dimState: StateHookObj }) {
+function Title({ dimState }: { dimState: StateHookObj<1 | 2> }) {
     return (
         <div className="flex justify-center">
             <Button

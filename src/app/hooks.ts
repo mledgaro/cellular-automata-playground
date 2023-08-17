@@ -8,14 +8,13 @@ import { useCallback, useReducer, useRef, useState } from "react";
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export type StateHookObj = {
-    get: any;
+export type StateHookObj<T> = {
+    get: T;
     set: (val: any) => void;
 };
 
-export function useStateObj(initValue: any): StateHookObj {
+export function useStateObj<T>(initValue: T): StateHookObj<T> {
     //
-
     const [getState, setState] = useState(initValue);
 
     return { get: getState, set: setState };
@@ -110,7 +109,7 @@ export type BoolState = {
 export function useBoolState(initValue: boolean): BoolState {
     //
 
-    let value = useStateObj(initValue);
+    let value = useStateObj<boolean>(initValue);
 
     return {
         get: value.get,
@@ -128,8 +127,7 @@ export type ArrayStateHook<T> = {
 
 export function useArrayState<T>(initValue: T[]): ArrayStateHook<T> {
     //
-
-    const array = useStateObj(initValue);
+    const array = useStateObj<Array<T>>(initValue);
 
     return {
         get: array.get,

@@ -6,11 +6,6 @@ import numCellsReducer from "src/app/slices/numCells";
 import nbhdWidthReducer from "src/app/slices/nbhdWidth";
 import nbhdTypeReducer from "src/app/slices/nbhdType";
 import mainCellReducer from "src/app/slices/mainCell";
-import liveCellsTypeReducer from "src/app/slices/liveCellsType";
-import distributionTypeReducer from "src/app/slices/distributionType";
-import liveCellsReducer from "src/app/slices/liveCells";
-import groupMinSizeReducer from "src/app/slices/groupMinSize";
-import groupMaxSizeReducer from "src/app/slices/groupMaxSize";
 import runningStatusReducer from "src/app/slices/runningStatus";
 import refreshTimeReducer from "src/app/slices/refreshTime";
 import cellSizeReducer from "src/app/slices/cellSize";
@@ -24,11 +19,6 @@ export const store = configureStore({
         nbhdWidth: nbhdWidthReducer,
         nbhdType: nbhdTypeReducer,
         mainCell: mainCellReducer,
-        liveCellsType: liveCellsTypeReducer,
-        distributionType: distributionTypeReducer,
-        liveCells: liveCellsReducer,
-        groupMinSize: groupMinSizeReducer,
-        groupMaxSize: groupMaxSizeReducer,
         runningStatus: runningStatusReducer,
         refreshTime: refreshTimeReducer,
         cellSize: cellSizeReducer,

@@ -1,13 +1,15 @@
 //
-
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+
+export const defaultVal = 128;
 
 interface NumCellsState {
     value: number;
 }
 
-export const initialState: NumCellsState = {
-    value: 128,
+const initialState: NumCellsState = {
+    value: defaultVal,
 };
 
 export const numCellsSlice = createSlice({
@@ -15,5 +17,7 @@ export const numCellsSlice = createSlice({
     initialState,
     reducers: {},
 });
+
+export const selectNumCells = (state: RootState) => state.numCells.value;
 
 export default numCellsSlice.reducer;

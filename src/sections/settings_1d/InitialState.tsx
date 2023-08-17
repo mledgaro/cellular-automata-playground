@@ -11,15 +11,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../components/Button";
-import { DistributionType } from "src/app/slices/distributionType";
 
-import { useAppDispatch, useAppSelector } from "src/app/hooks";
-import { LiveCellsType, setLiveCellsType } from "src/app/slices/liveCellsType";
-import { setLiveCells } from "src/app/slices/liveCells";
-import { setGroupMaxSize } from "src/app/slices/groupMaxSize";
-import { setGroupMinSize } from "src/app/slices/groupMinSize";
-import { setDistributionType } from "src/app/slices/distributionType";
-import { setInitState } from "src/app/slices/initState";
+import {
+    StateHookObj,
+    useAppDispatch,
+    useAppSelector,
+    useStateObj,
+} from "src/app/hooks";
+import {
+    DistributionType,
+    selectInitState,
+    setInitState,
+    toggleInitStateCell,
+} from "src/app/slices/initState";
 import {
     Box,
     FormControlLabel,
@@ -30,45 +34,68 @@ import {
 import { StyledRadio } from "src/components/RadioGroup";
 import CustomSlider from "src/components/Slider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CellsSet } from "src/features/InitialStateCells";
+import { selectNumCells } from "src/app/slices/numCells";
+
+type LiveCellsType = "num" | "perc";
 
 export default function InitialState() {
     //
+    const liveCellsType = useStateObj<LiveCellsType>("num");
+    const liveCellsNum = useStateObj<number>(1);
+    const clusterMin = useStateObj<number>(1);
+    const clusterMax = useStateObj<number>(1);
+    const clusterDist = useStateObj<DistributionType>("even");
+
     return (
         <Grid container rowSpacing={2}>
             {/* row 1 */}
             <Grid item container columnSpacing={3}>
                 {/* live cells */}
                 <Grid item md>
-                    <LiveCells />
+                    <LiveCells
+                        numberState={liveCellsNum}
+                        typeState={liveCellsType}
+                    />
                 </Grid>
                 {/* clusters */}
                 <Grid item md>
-                    <Cluster />
+                    <Cluster
+                        minState={clusterMin}
+                        maxState={clusterMax}
+                        distState={clusterDist}
+                    />
                 </Grid>
             </Grid>
             {/* row 2 */}
             <Grid item container>
                 {/* initial state cells */}
                 <Grid item xs={11}>
-                    <CellsSet />
+                    <Cells />
                 </Grid>
                 {/* reload button */}
                 <Grid item xs={1}>
-                    <ReloadBtn />
+                    <ReloadBtn
+                        liveCells={liveCellsNum.get}
+                        liveCellsType={liveCellsType.get}
+                        clusterMin={clusterMin.get}
+                        clusterMax={clusterMax.get}
+                        clusterDist={clusterDist.get}
+                    />
                 </Grid>
             </Grid>
         </Grid>
     );
 }
 
-function LiveCells() {
+function LiveCells({
+    numberState,
+    typeState,
+}: {
+    numberState: StateHookObj<number>;
+    typeState: StateHookObj<LiveCellsType>;
+}) {
     //
-    const numCells = useAppSelector((state) => state.numCells.value);
-    const type = useAppSelector((state) => state.liveCellsType.value);
-    const liveCells = useAppSelector((state) => state.liveCells.value);
-
-    const dispatch = useAppDispatch();
+    const numCells = useAppSelector(selectNumCells);
 
     return (
         <Box className="cap-component-container p-2">
@@ -83,9 +110,9 @@ function LiveCells() {
                 defaultValue="num"
                 name="live-cells-type-radio-group"
                 row
-                value={type}
+                value={typeState.get}
                 onChange={(event: React.ChangeEvent, value: string) =>
-                    dispatch(setLiveCellsType(value as LiveCellsType))
+                    typeState.set(value)
                 }
             >
                 <FormControlLabel
@@ -104,31 +131,26 @@ function LiveCells() {
 
             <CustomSlider
                 minVal={1}
-                maxVal={type === "num" ? numCells : 100}
+                maxVal={typeState.get === "num" ? numCells : 100}
                 defaultVal={1}
-                step={1}
-                value={liveCells}
-                onChange={(val: number) => dispatch(setLiveCells(val))}
+                value={numberState.get}
+                onChange={numberState.set}
             />
         </Box>
     );
 }
 
-function Cluster() {
+function Cluster({
+    minState,
+    maxState,
+    distState,
+}: {
+    minState: StateHookObj<number>;
+    maxState: StateHookObj<number>;
+    distState: StateHookObj<DistributionType>;
+}) {
     //
-    const numCells = useAppSelector((state) => state.numCells.value);
-    const minSize = useAppSelector((state) => state.groupMinSize.value);
-    const maxSize = useAppSelector((state) => state.groupMaxSize.value);
-    const distr = useAppSelector((state) => state.distributionType.value);
-
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        if (maxSize < minSize) {
-            dispatch(setGroupMaxSize(minSize));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [maxSize, minSize]);
+    const numCells = useAppSelector(selectNumCells);
 
     return (
         <Box className="cap-component-container p-2">
@@ -143,9 +165,9 @@ function Cluster() {
                 defaultValue="even"
                 name="cluster-dist-radio-group"
                 row
-                value={distr}
+                value={distState.get}
                 onChange={(event: React.ChangeEvent, value: string) =>
-                    dispatch(setDistributionType(value as DistributionType))
+                    distState.set(value as DistributionType)
                 }
             >
                 <FormControlLabel
@@ -164,34 +186,61 @@ function Cluster() {
 
             <CustomSlider
                 minVal={1}
-                maxVal={numCells}
+                maxVal={numCells / 2}
                 defaultVal={1}
-                value={[minSize, maxSize]}
+                value={[minState.get, maxState.get]}
                 onChange={(value: number | number[]) => {
                     let [min, max] = value as number[];
-                    dispatch(setGroupMinSize(min));
-                    dispatch(setGroupMaxSize(max));
+                    minState.set(min);
+                    maxState.set(max);
                 }}
             />
         </Box>
     );
 }
 
-function ReloadBtn() {
+function Cells() {
     //
-
-    const liveCells = useAppSelector((state) => state.liveCells.value);
-    const liveCellsType = useAppSelector((state) => state.liveCellsType.value);
-
-    const params = {
-        numCells: useAppSelector((state) => state.numCells.value),
-        liveCells: liveCellsType === "perc" ? liveCells / 100 : liveCells,
-        groupMinSize: useAppSelector((state) => state.groupMinSize.value),
-        groupMaxSize: useAppSelector((state) => state.groupMaxSize.value),
-        distribution: useAppSelector((state) => state.distributionType.value),
-    };
+    const initState = useAppSelector(selectInitState);
 
     const dispatch = useAppDispatch();
+
+    return (
+        <div className="cap-component-container cells-container">
+            {initState.map((e, i) => (
+                <Box
+                    key={i}
+                    className={`cap-cell ${e ? "on" : "off"}`}
+                    onClick={() => dispatch(toggleInitStateCell(i))}
+                />
+            ))}
+        </div>
+    );
+}
+
+function ReloadBtn({
+    liveCells,
+    liveCellsType,
+    clusterMin,
+    clusterMax,
+    clusterDist,
+}: {
+    liveCells: number;
+    liveCellsType: LiveCellsType;
+    clusterMin: number;
+    clusterMax: number;
+    clusterDist: DistributionType;
+}) {
+    //
+    const dispatch = useAppDispatch();
+
+    const params = {
+        numCells: useAppSelector(selectNumCells),
+        liveCells: liveCellsType === "perc" ? liveCells / 100 : liveCells,
+        groupMinSize: clusterMin,
+        groupMaxSize: clusterMax,
+        distribution: clusterDist,
+    };
 
     useEffect(() => {
         //

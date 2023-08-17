@@ -13,7 +13,7 @@ import { useStateObj } from "src/app/hooks";
 function Rule2D() {
     //
 
-    const state = useStateObj(0);
+    const state = useStateObj<number>(0);
     let icon;
 
     switch (state.get) {

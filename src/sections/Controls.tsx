@@ -29,8 +29,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Box, Grid } from "@mui/material";
 import Button from "src/components/Button";
-import LevelSelector from "src/components/deprecated/LevelSelector";
 import CustomSlider from "src/components/Slider";
+import { selectCellsNbhds } from "src/app/slices/cellsNbhds";
+import { selectRules } from "src/app/slices/rules";
 
 export default function Controls({}: // automaton,
 // canvasCntrl,
@@ -44,9 +45,9 @@ export default function Controls({}: // automaton,
     const refreshTime = useAppSelector(
         (state) => refreshTimeValues[state.refreshTime.value]
     );
-    const cellsNbhds = useAppSelector((state) => state.cellsNbhds.value);
+    const cellsNbhds = useAppSelector(selectCellsNbhds);
     const initState = useAppSelector((state) => state.initState.value);
-    const rules = useAppSelector((state) => state.rules.value);
+    const rules = useAppSelector(selectRules);
 
     const dispatch = useAppDispatch();
 

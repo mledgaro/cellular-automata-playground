@@ -1,13 +1,11 @@
 //
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DistributionType } from "./distributionType";
 
-import { initialState as numCells } from "./numCells";
-import { initialState as liveCells } from "./liveCells";
-import { initialState as groupMinSize } from "./groupMinSize";
-import { initialState as groupMaxSize } from "./groupMaxSize";
-import { initialState as distribution } from "./distributionType";
+import { defaultVal as numCellsDefault } from "./numCells";
+import { RootState } from "../store";
+
+export type DistributionType = "even" | "rand";
 
 interface InitStateState {
     value: boolean[];
@@ -21,14 +19,16 @@ interface SetParams {
     distribution: DistributionType;
 }
 
-export const initialState: InitStateState = {
-    value: buildState({
-        numCells: numCells.value,
-        liveCells: liveCells.value,
-        groupMinSize: groupMinSize.value,
-        groupMaxSize: groupMaxSize.value,
-        distribution: distribution.value,
-    }),
+export const defaultVal = buildState({
+    numCells: numCellsDefault,
+    liveCells: 1,
+    groupMinSize: 1,
+    groupMaxSize: 1,
+    distribution: "even",
+});
+
+const initialState: InitStateState = {
+    value: defaultVal,
 };
 
 function variableDist(
@@ -157,6 +157,8 @@ export const initStateSlice = createSlice({
         },
     },
 });
+
+export const selectInitState = (state: RootState) => state.initState.value;
 
 export const { setInitState, toggleInitStateCell } = initStateSlice.actions;
 

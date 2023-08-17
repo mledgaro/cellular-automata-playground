@@ -12,7 +12,7 @@ import {
 import Button from "../../components/Button";
 import { IconCell, Ellipses } from "src/features/Cells";
 
-import { boolArrayToInt, intToBoolArray } from "../../ts/Utils";
+import { intToBoolArray } from "../../ts/Utils";
 
 import { useAppSelector, useStateObj } from "src/app/hooks";
 
@@ -22,14 +22,18 @@ import {
     allRulesDead,
     inverseRules,
     randomRules,
+    selectRuleNumber,
 } from "src/app/slices/rules";
 import { Box, Grid } from "@mui/material";
 import RulesSelector from "src/features/RuleSelector";
+import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
+import { selectNbhdType } from "src/app/slices/nbhdType";
+import { selectMainCell } from "src/app/slices/mainCell";
 
 export default function Rules1D() {
     //
 
-    const onHoverCell = useStateObj(0);
+    const onHoverCell = useStateObj<number>(0);
 
     return (
         <Grid container rowSpacing={2}>
@@ -58,9 +62,7 @@ export default function Rules1D() {
 
 function RuleNumber() {
     //
-    const ruleNum = useAppSelector((state) =>
-        boolArrayToInt(state.rules.value, true)
-    );
+    const ruleNum = useAppSelector(selectRuleNumber);
 
     return (
         <Box className="cap-component-container w-max p-2 mx-auto text-center">
@@ -72,9 +74,9 @@ function RuleNumber() {
 
 function RulePreview({ index }: { index: number }) {
     //
-    const nbhdType = useAppSelector((state) => state.nbhdType.value);
-    const nbhdWidth = useAppSelector((state) => state.nbhdWidth.value);
-    const mainCell = useAppSelector((state) => state.mainCell.value);
+    const nbhdType = useAppSelector(selectNbhdType);
+    const nbhdWidth = useAppSelector(selectNbhdWidth);
+    const mainCell = useAppSelector(selectMainCell);
 
     let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
         <IconCell key={i} alive={e} size={i === mainCell ? "2xl" : "lg"} />

@@ -1,49 +1,45 @@
-import { Box, Paper } from "@mui/material";
+//
 import React, { useCallback } from "react";
-import { BoolArrHook, useAppSelector, useBoolArrState } from "src/app/hooks";
+
+import { Box } from "@mui/material";
+
+import { useAppSelector, useBoolArrState } from "src/app/hooks";
+
+import { selectCellsNbhds } from "src/app/slices/cellsNbhds";
+
 import { boolArray } from "src/ts/Utils";
+import { selectNumCells } from "src/app/slices/numCells";
 
 export default function NbhdsMap() {
     //
 
-    const numCells = useAppSelector((state) => state.numCells.value);
+    const numCells = useAppSelector(selectNumCells);
+    const cellsNbhds = useAppSelector(selectCellsNbhds);
 
-    const highlightedCells = useBoolArrState(boolArray(numCells, false));
+    const cells = useBoolArrState(boolArray(numCells, false));
+
+    const highlight = useCallback(
+        (idx: number) => {
+            //
+            let highCells = Array(numCells).fill(false);
+            cellsNbhds[idx].forEach(
+                (neighboor) => (highCells[neighboor] = true)
+            );
+            cells.set(highCells);
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [cellsNbhds]
+    );
 
     return (
-        <div className="cap-component-container cells-container">
-            {highlightedCells.get.map((e, i) => (
-                <HighlightCell
+        <Box className="cap-component-container cells-container">
+            {cells.get.map((e, i) => (
+                <Box
                     key={i}
-                    index={i}
-                    highlightedCells={highlightedCells}
+                    className={`cap-cell ${e ? "on" : "off"}`}
+                    onMouseOver={() => highlight(i)}
                 />
             ))}
-        </div>
+        </Box>
     );
-}
-
-function HighlightCell({
-    index,
-    highlightedCells,
-}: {
-    index: number;
-    highlightedCells: BoolArrHook;
-}) {
-    //
-
-    const numCells = useAppSelector((state) => state.numCells.value);
-    const cellsNbhds = useAppSelector((state) => state.cellsNbhds.value);
-
-    const highlight = useCallback(() => {
-        //
-        let nArr = Array(numCells).fill(false);
-        cellsNbhds[index].forEach((e) => (nArr[e] = true));
-        highlightedCells.set(nArr);
-    }, [cellsNbhds, highlightedCells, index, numCells]);
-
-    const classes = `cap-cell ${highlightedCells.get[index] ? "on" : "off"}`;
-
-    // return <Paper className={classes} onMouseOver={highlight} />;
-    return <Box className={classes} onMouseOver={highlight} />;
 }

@@ -2,16 +2,18 @@
 import React, { useEffect } from "react";
 import { StateHookObj, useAppDispatch, useAppSelector } from "src/app/hooks";
 import { DeactivatedCell, Ellipses, IconCell, SelectedCell } from "./Cells";
-import { setMainCell } from "src/app/slices/mainCell";
+import { selectMainCell, setMainCell } from "src/app/slices/mainCell";
 import { Box } from "@mui/material";
 import { NbhdType2D } from "src/sections/settings_2d/Neighborhood2D";
+import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
+import { selectNbhdType } from "src/app/slices/nbhdType";
 
 export function MainCellSelector1D({ className = "" }: { className?: string }) {
     //
 
-    const width = useAppSelector((state) => state.nbhdWidth.value);
-    const type = useAppSelector((state) => state.nbhdType.value);
-    const mainCell = useAppSelector((state) => state.mainCell.value);
+    const width = useAppSelector(selectNbhdWidth);
+    const type = useAppSelector(selectNbhdType);
+    const mainCell = useAppSelector(selectMainCell);
 
     const dispatch = useAppDispatch();
 
@@ -31,10 +33,11 @@ export function MainCellSelector1D({ className = "" }: { className?: string }) {
         );
     }
 
+    // update main cell if width changes
     useEffect(() => {
         //
-        if (mainCell === width) {
-            dispatch(setMainCell(mainCell - 1));
+        if (mainCell >= width) {
+            dispatch(setMainCell(width / 2));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [width]);
@@ -62,7 +65,7 @@ export function MainCellSelector2D({
     type: NbhdType2D;
     width: number;
     height: number;
-    selected: StateHookObj;
+    selected: StateHookObj<any>;
 }) {
     //
 

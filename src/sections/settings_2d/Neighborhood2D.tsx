@@ -15,16 +15,18 @@ export default function Neighborhood2D({
     height,
     mainCell,
 }: {
-    type: StateHookObj;
+    type: StateHookObj<NbhdType2D>;
     width: RangeReducerHook;
     height: RangeReducerHook;
-    mainCell: StateHookObj;
+    mainCell: StateHookObj<any>;
 }) {
     //
 
     return (
         <Grid container className="section-container">
+            {/* row 1 */}
             <Grid item container columnSpacing={3}>
+                {/* width */}
                 <Grid item xs>
                     <CustomSlider
                         label="Width"
@@ -37,6 +39,7 @@ export default function Neighborhood2D({
                         onChange={(val: number) => width.set(val)}
                     />
                 </Grid>
+                {/* height */}
                 <Grid item xs>
                     <CustomSlider
                         label="Height"
@@ -50,8 +53,9 @@ export default function Neighborhood2D({
                     />
                 </Grid>
             </Grid>
-
-            <Grid item container className="">
+            {/* row 2 */}
+            <Grid item container alignItems="center" className="">
+                {/* type */}
                 <Grid item xs className="flex justify-center">
                     <CustomRadioGroup
                         className="h-fit"
@@ -66,6 +70,7 @@ export default function Neighborhood2D({
                         onChange={(val: string) => type.set(val)}
                     />
                 </Grid>
+                {/* main cell selector */}
                 <Grid item xs className="flex justify-center">
                     <MainCellSelector2D
                         type={type.get}

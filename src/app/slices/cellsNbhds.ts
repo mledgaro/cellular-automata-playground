@@ -2,10 +2,11 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { initialState as numCells } from "./numCells";
-import { initialState as nbhdWidth } from "./nbhdWidth";
-import { initialState as nbhdType, NbhdType } from "./nbhdType";
-import { initialState as mainCell } from "./mainCell";
+import { defaultVal as numCellsDefault } from "./numCells";
+import { defaultVal as nbhdWidthDefault } from "./nbhdWidth";
+import { NbhdType, defaultVal as nbhdTypeDefault } from "./nbhdType";
+import { defaultVal as mainCellDefault } from "./mainCell";
+import { RootState } from "../store";
 
 interface CellsNbhdsState {
     value: number[][];
@@ -18,13 +19,15 @@ interface SetParams {
     mainCell: number;
 }
 
-export const initialState: CellsNbhdsState = {
-    value: buildNbhd({
-        numCells: numCells.value,
-        width: nbhdWidth.value,
-        type: nbhdType.value,
-        mainCell: mainCell.value,
-    }),
+export const defaultVal = buildNbhd({
+    numCells: numCellsDefault,
+    width: nbhdWidthDefault,
+    type: nbhdTypeDefault,
+    mainCell: mainCellDefault,
+});
+
+const initialState: CellsNbhdsState = {
+    value: defaultVal,
 };
 
 function adjacentNbhd(
@@ -157,6 +160,8 @@ export const cellsNbhdsSlice = createSlice({
         },
     },
 });
+
+export const selectCellsNbhds = (state: RootState) => state.cellsNbhds.value;
 
 export const { setCellsNbhds } = cellsNbhdsSlice.actions;
 

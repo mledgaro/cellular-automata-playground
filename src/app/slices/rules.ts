@@ -1,16 +1,19 @@
 //
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { intToBoolArray } from "src/ts/Utils";
+import { boolArrayToInt, intToBoolArray } from "src/ts/Utils";
 
-import { initialState as nbhdWidth } from "./nbhdWidth";
+import { defaultVal as nbhdWidthDefault } from "./nbhdWidth";
+import { RootState } from "../store";
 
 interface RulesState {
     value: boolean[];
 }
 
-export const initialState: RulesState = {
-    value: intToBoolArray(90, Math.pow(2, nbhdWidth.value)),
+export const defaultValue = intToBoolArray(90, Math.pow(2, nbhdWidthDefault));
+
+const initialState: RulesState = {
+    value: defaultValue,
 };
 
 export const rulesSlice = createSlice({
@@ -42,6 +45,10 @@ export const rulesSlice = createSlice({
         },
     },
 });
+
+export const selectRules = (state: RootState) => state.rules.value;
+export const selectRuleNumber = (state: RootState) =>
+    boolArrayToInt(state.rules.value, true);
 
 export const {
     resizeRules,

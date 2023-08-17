@@ -1,13 +1,15 @@
 //
-
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+
+export const defaultVal = 1;
 
 interface MainCellState {
     value: number;
 }
 
-export const initialState: MainCellState = {
-    value: 1,
+const initialState: MainCellState = {
+    value: defaultVal,
 };
 
 export const mainCellSlice = createSlice({
@@ -19,6 +21,8 @@ export const mainCellSlice = createSlice({
         },
     },
 });
+
+export const selectMainCell = (state: RootState) => state.mainCell.value;
 
 export const { setMainCell } = mainCellSlice.actions;
 

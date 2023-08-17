@@ -29,7 +29,7 @@ export default function CustomTabs({
     tabs: { title: string; content: JSX.Element }[];
 }) {
     //
-    const selected = useStateObj(0);
+    const selected = useStateObj<number>(0);
 
     return (
         <Box className="w-[95%] mx-auto">
