@@ -42,6 +42,7 @@ export default function CustomSlider({
     marks = false,
     value,
     onChange,
+    valueLabelDisplay = "auto",
     className = "",
 }: {
     label?: string;
@@ -53,6 +54,7 @@ export default function CustomSlider({
     marks?: boolean;
     value: number | number[];
     onChange: (val: number) => void;
+    valueLabelDisplay?: "on" | "auto" | "off";
     className?: string;
 }) {
     return (
@@ -70,7 +72,6 @@ export default function CustomSlider({
             <StyledSlider
                 aria-label={label}
                 defaultValue={defaultVal}
-                valueLabelDisplay="auto"
                 step={step}
                 marks={marks}
                 min={minVal}
@@ -81,6 +82,7 @@ export default function CustomSlider({
                     value: number | number[],
                     activeThumb: number
                 ) => onChange(value as number)}
+                valueLabelDisplay={valueLabelDisplay}
             />
         </Box>
     );

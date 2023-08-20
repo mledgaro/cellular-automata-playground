@@ -19,10 +19,12 @@ export default class CanvasController {
     private deadColor: string;
     private aliveColor: string;
 
-    constructor(canvasId: string, rows: number, columns: number) {
+    constructor(canvas: HTMLCanvasElement, rows: number, columns: number) {
         //
 
-        this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+        // this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+        this.canvas = canvas;
+
         this.graphics = this.canvas.getContext("2d")!;
 
         this._rows = rows;
@@ -35,9 +37,9 @@ export default class CanvasController {
         const r = document.querySelector(":root")!;
         const rs = getComputedStyle(r);
 
-        this.backgroundColor = rs.getPropertyValue("--dark2");
-        this.deadColor = rs.getPropertyValue("--dark1");
-        this.aliveColor = rs.getPropertyValue("--clear1");
+        this.backgroundColor = rs.getPropertyValue("--frenchGray");
+        this.deadColor = rs.getPropertyValue("--jet");
+        this.aliveColor = rs.getPropertyValue("--sunglow");
 
         this.restart();
 

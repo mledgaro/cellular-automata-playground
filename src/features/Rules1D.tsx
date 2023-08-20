@@ -9,10 +9,10 @@ import {
     faSquare as faSquareSolid,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Button from "../../components/Button";
+import Button from "../components/Button";
 import { IconCell, Ellipses } from "src/features/Cells";
 
-import { intToBoolArray } from "../../ts/Utils";
+import { intToBoolArray } from "../ts/Utils";
 
 import { useAppSelector, useStateObj } from "src/app/hooks";
 

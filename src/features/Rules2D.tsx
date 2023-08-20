@@ -6,7 +6,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { faSquare as faSquareSolid } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { diagonalNeighbors } from "../../ts/Utils";
+import { diagonalNeighbors } from "../ts/Utils";
 import { NbhdType2D } from "./Neighborhood2D";
 import { useStateObj } from "src/app/hooks";
 
