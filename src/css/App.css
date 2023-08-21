@@ -226,28 +226,3 @@
     padding-block: 0.2em;
     margin-block: 0.5em;
 }
-
-
-
-#app-title {
-    font-size: 3em;
-    font-weight: 800;
-    width: fit-content;
-}
-
-#canvas-container {
-    margin: auto;
-    width: fit-content;
-    max-width: 95vw;
-    max-height: 70vh;
-    margin-top: 3vh;
-    margin-bottom: 1vh;
-    overflow-x: scroll;
-    overflow-y: scroll;
-}
-
-#footer {
-    font-size: small;
-    font-weight: 500;
-    text-align: center;
-}

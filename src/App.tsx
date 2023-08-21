@@ -16,8 +16,6 @@ import {
 } from "./app/hooks";
 
 import { Box, Skeleton } from "@mui/material";
-import CanvasController from "./ts/CanvasController";
-import CellularAutomaton from "./ts/CellularAutomaton";
 import Controls from "./features/Controls";
 import { selectNumCells } from "./app/slices/numCells";
 import CustomTabs from "./components/Tabs";
@@ -26,6 +24,7 @@ import Rules1D from "./features/Rules1D";
 import InitialState from "./features/InitialState";
 import Neighborhood2D, { NbhdType2D } from "./features/Neighborhood2D";
 import { Rules2D } from "./features/Rules2D";
+import CellularAutomaton1D from "./ts/CellularAutomaton1D";
 
 const canvasId = "cap-canvas";
 const bufferSize = 64;
@@ -36,14 +35,15 @@ export default function App() {
 
     const dimension = useStateObj<1 | 2>(1);
 
-    const automaton = useRef(new CellularAutomaton());
-    const canvasCntrl = useRef<CanvasController>();
+    const automaton = useStateObj<CellularAutomaton1D | undefined>(undefined);
 
     useEffect(() => {
-        canvasCntrl.current = new CanvasController(
-            document.getElementById(canvasId) as HTMLCanvasElement,
-            bufferSize,
-            numCells
+        // canvasCntrl.current = new CanvasController(
+        //     document.getElementById(canvasId) as HTMLCanvasElement,
+        //     bufferSize,
+        //     numCells
+        automaton.set(
+            new CellularAutomaton1D(canvasId, bufferSize, numCells, 8)
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -52,7 +52,7 @@ export default function App() {
         <Box className="space-y-6 my-5">
             <Title dimState={dimension} />
 
-            <div id="canvas-container">
+            <div className="max-w-[95vw] max-h-[65vh] w-fit mx-auto overflow-auto">
                 <canvas id={canvasId} />
             </div>
 
@@ -63,10 +63,7 @@ export default function App() {
                 className="mx-auto"
             /> */}
 
-            <Controls
-                automaton={automaton.current}
-                canvasCntrl={canvasCntrl.current}
-            />
+            <Controls automaton={automaton.get} />
 
             {dimension.get === 1 ? <Settings1D /> : <Settings2D />}
 
@@ -157,7 +154,7 @@ function Settings2D() {
 
 function Footer() {
     return (
-        <div id="footer" className="mt-5 mb-3">
+        <div className="text-sm font-medium text-center">
             Universidad Nacional Autónoma de México - Facultad de Ciencias
             <br />
             Ciencias de la Computación - Vida Artificial 2022-2

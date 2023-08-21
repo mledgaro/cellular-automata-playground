@@ -18,7 +18,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Box, Grid } from "@mui/material";
 
-import { StateHookObj, useAppSelector, useStateObj } from "src/app/hooks";
+import {
+    StateHookObj,
+    StatusHook,
+    useAppSelector,
+    useStateObj,
+    useStatus,
+} from "src/app/hooks";
 
 import Button from "src/components/Button";
 import CustomSlider from "src/components/Slider";
@@ -27,19 +33,13 @@ import { selectCellsNbhds } from "src/app/slices/cellsNbhds";
 import { selectRules } from "src/app/slices/rules";
 import { selectInitState } from "src/app/slices/initState";
 
-import CellularAutomaton from "src/ts/CellularAutomaton";
-import CanvasController from "src/ts/CanvasController";
-
-type RunningStatusType = "stopped" | "paused" | "running";
+import CellularAutomaton1D from "src/ts/CellularAutomaton1D";
 
 const refreshRateVal = { minVal: 200, maxVal: 999, defaultVal: 600 };
 const cellSizeVal = { minVal: 1, maxVal: 20, defaultVal: 8 };
 
-const AutomatonCtx = createContext<CellularAutomaton | undefined>(undefined);
-const CanvasCntrlCtx = createContext<CanvasController | undefined>(undefined);
-const RunningStatusCtx = createContext<
-    StateHookObj<RunningStatusType> | undefined
->(undefined);
+const AutomatonCtx = createContext<CellularAutomaton1D | undefined>(undefined);
+const StatusCtx = createContext<StatusHook | undefined>(undefined);
 const TimerCtx = createContext<
     MutableRefObject<NodeJS.Timer | undefined> | undefined
 >(undefined);
@@ -50,81 +50,71 @@ const CellSizeCtx = createContext<StateHookObj<number> | undefined>(undefined);
 
 export default function Controls({
     automaton,
-    canvasCntrl,
 }: {
-    automaton: CellularAutomaton;
-    canvasCntrl: CanvasController | undefined;
+    automaton: CellularAutomaton1D | undefined;
 }) {
     //
     const cellsNbhds = useAppSelector(selectCellsNbhds);
     const rules = useAppSelector(selectRules);
 
-    const runningStatus = useStateObj<RunningStatusType>("stopped");
+    const status = useStatus();
     const refreshRate = useStateObj<number>(refreshRateVal.defaultVal);
     const cellSize = useStateObj<number>(cellSizeVal.defaultVal);
 
     const timer = useRef<NodeJS.Timer>();
 
     useEffect(() => {
-        if (runningStatus.get === "running") {
+        if (status.running) {
             clearInterval(timer.current);
+            automaton?.repaint();
             timer.current = setInterval(() => {
-                automaton!.nextState(cellsNbhds, rules);
-                canvasCntrl!.paintNextRow(automaton!.state);
+                automaton?.nextState(cellsNbhds, rules);
             }, 1000 - refreshRate.get);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refreshRate, rules]);
 
     useEffect(() => {
-        // canvasCntrl!.cellSize = cellSize.get;
-        // canvasCntrl!.setCellSize(cellSize.get);
-        if (runningStatus!.get !== "running") {
-            canvasCntrl?.restart();
+        if (automaton) {
+            automaton!.cellSize = cellSize.get;
         }
+        automaton?.repaint();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cellSize]);
 
     return (
-        <CanvasCntrlCtx.Provider value={canvasCntrl}>
-            <AutomatonCtx.Provider value={automaton}>
-                <RunningStatusCtx.Provider value={runningStatus}>
-                    <TimerCtx.Provider value={timer}>
-                        <RefreshRateCtx.Provider value={refreshRate}>
-                            <CellSizeCtx.Provider value={cellSize}>
-                                <Grid
-                                    container
-                                    alignItems="center"
-                                    className=""
-                                >
-                                    <Grid item md>
-                                        <Box className="w-fit mx-auto space-x-2">
-                                            <RunBtn />
-                                            <NextBtn />
-                                            <PauseBtn />
-                                            <StopBtn />
-                                        </Box>
-                                    </Grid>
-
-                                    <Grid item md>
-                                        <SpeedSlider />
-                                    </Grid>
-                                    <Grid item md>
-                                        <ZoomSlider />
-                                    </Grid>
-                                    <Grid item md>
-                                        <Box className="w-fit mx-auto space-x-2">
-                                            <ClearBtn />
-                                            <ScreenshotBtn />
-                                        </Box>
-                                    </Grid>
+        <AutomatonCtx.Provider value={automaton}>
+            <StatusCtx.Provider value={status}>
+                <TimerCtx.Provider value={timer}>
+                    <RefreshRateCtx.Provider value={refreshRate}>
+                        <CellSizeCtx.Provider value={cellSize}>
+                            <Grid container alignItems="center" className="">
+                                <Grid item md>
+                                    <Box className="w-fit mx-auto space-x-2">
+                                        <RunBtn />
+                                        <NextBtn />
+                                        <PauseBtn />
+                                        <StopBtn />
+                                    </Box>
                                 </Grid>
-                            </CellSizeCtx.Provider>
-                        </RefreshRateCtx.Provider>
-                    </TimerCtx.Provider>
-                </RunningStatusCtx.Provider>
-            </AutomatonCtx.Provider>
-        </CanvasCntrlCtx.Provider>
+                                <Grid item md>
+                                    <SpeedSlider />
+                                </Grid>
+                                <Grid item md>
+                                    <ZoomSlider />
+                                </Grid>
+                                <Grid item md>
+                                    <Box className="w-fit mx-auto space-x-2">
+                                        <ClearBtn />
+                                        <ScreenshotBtn />
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                        </CellSizeCtx.Provider>
+                    </RefreshRateCtx.Provider>
+                </TimerCtx.Provider>
+            </StatusCtx.Provider>
+        </AutomatonCtx.Provider>
     );
 }
 
@@ -134,9 +124,8 @@ function RunBtn() {
     const rules = useAppSelector(selectRules);
     const initState = useAppSelector(selectInitState);
 
-    const runningStatus = useContext(RunningStatusCtx);
+    const status = useContext(StatusCtx);
     const automaton = useContext(AutomatonCtx);
-    const canvasCntrl = useContext(CanvasCntrlCtx);
     const timer = useContext(TimerCtx);
     const refreshRate = useContext(RefreshRateCtx);
 
@@ -146,17 +135,18 @@ function RunBtn() {
             icon={faPlay}
             size="xl"
             onClick={() => {
-                if (runningStatus!.get === "stopped") {
-                    automaton!.state = initState;
-                    canvasCntrl!.paintNextRow(automaton!.state);
+                if (!status!.running) {
+                    if (status!.stopped) {
+                        automaton!.initState = initState;
+                    }
+                    timer!.current = setInterval(
+                        () => automaton!.nextState(cellsNbhds, rules),
+                        1000 - refreshRate!.get
+                    );
+                    status?.run();
                 }
-                runningStatus!.set("running");
-                timer!.current = setInterval(() => {
-                    automaton!.nextState(cellsNbhds, rules);
-                    canvasCntrl!.paintNextRow(automaton!.state);
-                }, 1000 - refreshRate!.get);
             }}
-            disabled={runningStatus!.get === "running"}
+            disabled={status?.running}
         />
     );
 }
@@ -165,10 +155,10 @@ function NextBtn() {
     //
     const cellsNbhds = useAppSelector(selectCellsNbhds);
     const rules = useAppSelector(selectRules);
+    const initState = useAppSelector(selectInitState);
 
-    const runningStatus = useContext(RunningStatusCtx);
+    const status = useContext(StatusCtx);
     const automaton = useContext(AutomatonCtx);
-    const canvasCntrl = useContext(CanvasCntrlCtx);
 
     return (
         <Button
@@ -176,21 +166,21 @@ function NextBtn() {
             icon={faForwardStep}
             size="xl"
             onClick={() => {
-                if (runningStatus!.get !== "stopped") {
+                if (status!.stopped) {
+                    automaton!.initState = initState;
+                    status!.pause();
+                } else if (status!.paused) {
                     automaton!.nextState(cellsNbhds, rules);
-                    canvasCntrl!.paintNextRow(automaton!.state);
-                } else {
-                    runningStatus!.set("paused");
                 }
             }}
-            disabled={runningStatus!.get === "running"}
+            disabled={status!.running}
         />
     );
 }
 
 function PauseBtn() {
     //
-    const runningStatus = useContext(RunningStatusCtx);
+    const status = useContext(StatusCtx);
     const timer = useContext(TimerCtx);
 
     return (
@@ -200,17 +190,17 @@ function PauseBtn() {
             size="xl"
             onClick={() => {
                 clearInterval(timer!.current);
-                runningStatus!.set("paused");
+                status!.pause();
             }}
-            disabled={runningStatus!.get !== "running"}
+            disabled={!status!.running}
         />
     );
 }
 
 function StopBtn() {
     //
-    const runningStatus = useContext(RunningStatusCtx);
-    const canvasCntrl = useContext(CanvasCntrlCtx);
+    const status = useContext(StatusCtx);
+    const automaton = useContext(AutomatonCtx);
     const timer = useContext(TimerCtx);
 
     return (
@@ -220,38 +210,38 @@ function StopBtn() {
             size="xl"
             onClick={() => {
                 clearInterval(timer!.current);
-                canvasCntrl!.restart();
-                runningStatus!.set("stopped");
+                automaton?.clear();
+                status!.stop();
             }}
-            disabled={runningStatus!.get === "stopped"}
+            disabled={status!.stopped}
         />
     );
 }
 
 function ClearBtn() {
     //
-    const canvasCntrl = useContext(CanvasCntrlCtx);
+    const automaton = useContext(AutomatonCtx);
 
     return (
         <Button
             tooltipLabel="Clear"
             icon={faBroom}
             size="xl"
-            onClick={() => canvasCntrl!.restart()}
+            onClick={() => automaton?.clear()}
         />
     );
 }
 
 function ScreenshotBtn() {
     //
-    const canvasCntrl = useContext(CanvasCntrlCtx);
+    const automaton = useContext(AutomatonCtx);
 
     return (
         <Button
             tooltipLabel="Screenshot"
             icon={faCameraRetro}
             size="xl"
-            onClick={() => canvasCntrl!.saveScene("cellular_automaton")}
+            onClick={() => automaton?.saveScene("cellular_automaton")}
         />
     );
 }

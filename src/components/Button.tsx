@@ -3,6 +3,7 @@ import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     Button,
+    ButtonProps,
     Fade,
     Tooltip,
     TooltipProps,
@@ -20,6 +21,22 @@ export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     [`& .${tooltipClasses.tooltip}`]: {
         backgroundColor: "#323031",
         color: "#ffd166",
+    },
+}));
+
+const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
+    backgroundColor: "var(--sunglow)",
+    color: "var(--jet)",
+    "&:hover": {
+        backgroundColor: "var(--jet)",
+        color: "var(--sunglow)",
+    },
+    "&:disabled": {
+        backgroundColor: "var(--frenchGray)",
+        color: "var(--jet)",
+        borderColor: "var(--jet)",
+        borderStyle: "solid",
+        borderWidth: "2px",
     },
 }));
 
@@ -47,14 +64,14 @@ export default function CustomButtom({
             arrow
             className=""
         >
-            <Button
-                className={`bg-sunglow text-jet rounded-md ${className}`}
+            <StyledButton
+                className={`rounded-md ${className}`}
                 variant="contained"
                 onClick={onClick}
                 disabled={disabled}
             >
                 <FontAwesomeIcon icon={icon} size={size} />
-            </Button>
+            </StyledButton>
         </StyledTooltip>
     );
 }
