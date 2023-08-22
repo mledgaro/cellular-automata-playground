@@ -4,8 +4,6 @@ import React, { useEffect } from "react";
 
 import {
     faEquals,
-    faHashtag,
-    faPercent,
     faRotate,
     faShuffle,
 } from "@fortawesome/free-solid-svg-icons";
@@ -24,24 +22,15 @@ import {
     setInitState,
     toggleInitStateCell,
 } from "src/app/slices/initState";
-import {
-    Box,
-    FormControlLabel,
-    FormLabel,
-    Grid,
-    RadioGroup,
-} from "@mui/material";
+import { Box, FormControlLabel, Grid, RadioGroup } from "@mui/material";
 import { StyledRadio } from "src/components/RadioGroup";
-import CustomSlider from "src/components/Slider";
+import { StyledInput, StyledSlider } from "src/components/Slider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { selectNumCells } from "src/app/slices/numCells";
 
-type LiveCellsType = "num" | "perc";
-
 export default function InitialState() {
     //
-    const liveCellsType = useStateObj<LiveCellsType>("num");
-    const liveCellsNum = useStateObj<number>(1);
+    const liveCells = useStateObj<number>(1);
     const clusterMin = useStateObj<number>(1);
     const clusterMax = useStateObj<number>(1);
     const clusterDist = useStateObj<DistributionType>("even");
@@ -52,10 +41,7 @@ export default function InitialState() {
             <Grid item container columnSpacing={3}>
                 {/* live cells */}
                 <Grid item md>
-                    <LiveCells
-                        numberState={liveCellsNum}
-                        typeState={liveCellsType}
-                    />
+                    <LiveCells state={liveCells} />
                 </Grid>
                 {/* clusters */}
                 <Grid item md>
@@ -75,8 +61,7 @@ export default function InitialState() {
                 {/* reload button */}
                 <Grid item xs={1}>
                     <ReloadBtn
-                        liveCells={liveCellsNum.get}
-                        liveCellsType={liveCellsType.get}
+                        liveCells={liveCells.get}
                         clusterMin={clusterMin.get}
                         clusterMax={clusterMax.get}
                         clusterDist={clusterDist.get}
@@ -87,56 +72,81 @@ export default function InitialState() {
     );
 }
 
-function LiveCells({
-    numberState,
-    typeState,
-}: {
-    numberState: StateHookObj<number>;
-    typeState: StateHookObj<LiveCellsType>;
-}) {
+function LiveCells({ state }: { state: StateHookObj<number> }) {
     //
     const numCells = useAppSelector(selectNumCells);
 
     return (
-        <Box className="cap-component-container p-2">
-            <FormLabel
-                id="live-cells-type-radio-group-label"
-                className="cap-component-label"
-            >
-                Live cells
-            </FormLabel>
-            <RadioGroup
-                aria-labelledby="live-cells-type-radio-group-label"
-                defaultValue="num"
-                name="live-cells-type-radio-group"
-                row
-                value={typeState.get}
-                onChange={(event: React.ChangeEvent, value: string) =>
-                    typeState.set(value)
-                }
-            >
-                <FormControlLabel
-                    key={1}
-                    value="num"
-                    control={<StyledRadio />}
-                    label={<FontAwesomeIcon icon={faHashtag} size="xl" />}
-                />
-                <FormControlLabel
-                    key={2}
-                    value="perc"
-                    control={<StyledRadio />}
-                    label={<FontAwesomeIcon icon={faPercent} size="xl" />}
-                />
-            </RadioGroup>
+        <Grid container className="cap-component-container">
+            <Grid container>
+                <Box className="cap-component-label ms-2 my-2">Live cells</Box>
+            </Grid>
 
-            <CustomSlider
-                minVal={1}
-                maxVal={typeState.get === "num" ? numCells : 100}
-                defaultVal={1}
-                value={numberState.get}
-                onChange={numberState.set}
-            />
-        </Box>
+            <Grid item md={9}>
+                <StyledSlider
+                    defaultValue={1}
+                    min={1}
+                    max={numCells}
+                    value={state.get}
+                    onChange={(
+                        event: Event,
+                        value: number | number[],
+                        activeThumb: number
+                    ) => state.set(value as number)}
+                    marks={[
+                        {
+                            value: 1,
+                            label: 1,
+                        },
+                        {
+                            value: numCells * (1 / 4),
+                            label: "25%",
+                        },
+                        {
+                            value: numCells * (1 / 2),
+                            label: "50%",
+                        },
+                        {
+                            value: numCells * (3 / 4),
+                            label: "75%",
+                        },
+                        {
+                            value: numCells,
+                            label: numCells,
+                        },
+                    ]}
+                />
+            </Grid>
+
+            <Grid item md={3} className="flex justify-center">
+                <StyledInput
+                    className="h-fit"
+                    value={state.get}
+                    size="small"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        state.set(
+                            event.target.value === ""
+                                ? 0
+                                : Number(event.target.value)
+                        )
+                    }
+                    onBlur={() => {
+                        if (state.get < 0) {
+                            state.set(0);
+                        } else if (state.get > numCells) {
+                            state.set(numCells);
+                        }
+                    }}
+                    inputProps={{
+                        step: 5,
+                        min: 1,
+                        max: numCells,
+                        type: "number",
+                    }}
+                    disableUnderline
+                />
+            </Grid>
+        </Grid>
     );
 }
 
@@ -150,52 +160,65 @@ function Cluster({
     distState: StateHookObj<DistributionType>;
 }) {
     //
-    const numCells = useAppSelector(selectNumCells);
-
     return (
-        <Box className="cap-component-container p-2">
-            <FormLabel
-                id="cluster-dist-radio-group-label"
-                className="cap-component-label"
-            >
-                Clusters
-            </FormLabel>
-            <RadioGroup
-                aria-labelledby="cluster-dist-radio-group-label"
-                defaultValue="even"
-                name="cluster-dist-radio-group"
-                row
-                value={distState.get}
-                onChange={(event: React.ChangeEvent, value: string) =>
-                    distState.set(value as DistributionType)
-                }
-            >
-                <FormControlLabel
-                    key={1}
-                    value="even"
-                    control={<StyledRadio />}
-                    label={<FontAwesomeIcon icon={faEquals} size="xl" />}
-                />
-                <FormControlLabel
-                    key={2}
-                    value="rand"
-                    control={<StyledRadio />}
-                    label={<FontAwesomeIcon icon={faShuffle} size="xl" />}
-                />
-            </RadioGroup>
+        <Grid container className="cap-component-container">
+            <Grid container>
+                <Box className="cap-component-label ms-2 my-2">Clusters</Box>
+            </Grid>
 
-            <CustomSlider
-                minVal={1}
-                maxVal={numCells / 2}
-                defaultVal={1}
-                value={[minState.get, maxState.get]}
-                onChange={(value: number | number[]) => {
-                    let [min, max] = value as number[];
-                    minState.set(min);
-                    maxState.set(max);
-                }}
-            />
-        </Box>
+            <Grid item md={9}>
+                <StyledSlider
+                    defaultValue={1}
+                    min={1}
+                    max={30}
+                    value={[minState.get, maxState.get]}
+                    onChange={(
+                        event: Event,
+                        value: number | number[],
+                        activeThumb: number
+                    ) => {
+                        let [min, max] = value as number[];
+                        minState.set(min);
+                        maxState.set(max);
+                    }}
+                    marks={[
+                        { value: 1, label: 1 },
+                        { value: 5, label: 5 },
+                        { value: 10, label: 10 },
+                        { value: 15, label: 15 },
+                        { value: 20, label: 20 },
+                        { value: 25, label: 25 },
+                        { value: 30, label: 30 },
+                    ]}
+                />
+            </Grid>
+
+            <Grid item md={3} className="flex justify-center">
+                <RadioGroup
+                    aria-labelledby="cluster-dist-radio-group-label"
+                    defaultValue="even"
+                    name="cluster-dist-radio-group"
+                    row
+                    value={distState.get}
+                    onChange={(event: React.ChangeEvent, value: string) =>
+                        distState.set(value as DistributionType)
+                    }
+                >
+                    <FormControlLabel
+                        key={1}
+                        value="even"
+                        control={<StyledRadio />}
+                        label={<FontAwesomeIcon icon={faEquals} size="lg" />}
+                    />
+                    <FormControlLabel
+                        key={2}
+                        value="rand"
+                        control={<StyledRadio />}
+                        label={<FontAwesomeIcon icon={faShuffle} size="lg" />}
+                    />
+                </RadioGroup>
+            </Grid>
+        </Grid>
     );
 }
 
@@ -220,13 +243,11 @@ function Cells() {
 
 function ReloadBtn({
     liveCells,
-    liveCellsType,
     clusterMin,
     clusterMax,
     clusterDist,
 }: {
     liveCells: number;
-    liveCellsType: LiveCellsType;
     clusterMin: number;
     clusterMax: number;
     clusterDist: DistributionType;
@@ -236,14 +257,13 @@ function ReloadBtn({
 
     const params = {
         numCells: useAppSelector(selectNumCells),
-        liveCells: liveCellsType === "perc" ? liveCells / 100 : liveCells,
+        liveCells: liveCells,
         groupMinSize: clusterMin,
         groupMaxSize: clusterMax,
         distribution: clusterDist,
     };
 
     useEffect(() => {
-        //
         dispatch(setInitState(params));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params]);

@@ -1,34 +1,59 @@
 //
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, Slider, SliderProps, styled } from "@mui/material";
+import {
+    Box,
+    Input,
+    InputProps,
+    Slider,
+    SliderProps,
+    styled,
+} from "@mui/material";
 import React from "react";
 
 export const StyledSlider = styled(Slider)<SliderProps>(({ theme }) => ({
     width: "calc(100% - 40px)",
     marginLeft: "20px",
     marginRight: "20px",
-    color: "#ffd166",
+    color: "var(--sunglow)",
     "& .MuiSlider-rail": {
-        backgroundColor: "#bbb5bd",
+        backgroundColor: "var(--frenchGray)",
     },
     "& .MuiSlider-track": {
-        backgroundColor: "#ffd166",
-        borderColor: "#ffd166",
+        backgroundColor: "var(--sunglow)",
+        borderColor: "var(--sunglow)",
     },
     "& .MuiSlider-mark": {
-        backgroundColor: "#ffd166",
+        backgroundColor: "var(--sunglow)",
         width: "5px",
         height: "5px",
     },
+    "& .MuiSlider-markLabel": {
+        color: "var(--frenchGray)",
+        fontWeight: "500",
+    },
     "& .MuiSlider-thumb": {
-        backgroundColor: "#ffd166",
+        backgroundColor: "var(--sunglow)",
         "&:hover, &.Mui-focusVisible": {
             boxShadow: "0px 0px 0px 8px rgba(255, 209, 102, 0.2)",
         },
         "&.Mui-active": {
             boxShadow: "0px 0px 0px 14px rgba(255, 209, 102, 0.2)",
         },
+    },
+}));
+
+export const StyledInput = styled(Input)<InputProps>(({ theme }) => ({
+    color: "var(--sunglow)",
+    borderBottom: "1px solid var(--frenchGray)",
+    "&:hover": {
+        borderBottom: "1px solid var(--sunglow)",
+    },
+    "&.Mui-focused": {
+        borderBottom: "3px solid var(--sunglow)",
+    },
+    "&.Mui-focused:hover": {
+        borderBottom: "3px solid var(--sunglow)",
     },
 }));
 
