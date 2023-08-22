@@ -72,17 +72,30 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - [ ] Appearance settings
   - [ ] Color themes
 - [ ] Space topology (finite space, toroid)
-- [ ] Adjust canvas size when resizing window
+- [x] Adjust canvas size when resizing window
 - [ ] Show generation counter
 - [ ] Help menu
 - [ ] Common rules set options (classic game of life, etc)
 - [ ] Save rules and configurations
 - [ ] Run different configurations and rules on the same canvas (show as color layers)
   - [ ] Two cells alive in the same cell on different layers produce another cell in another layer.
-- [ ] show the rules as image
+- [x] show the rules as image
 - [ ] show and change on every iteration the current state as image
 - [ ] show how the current state (as integer) change over iterations
-- [ ] Use a text field in input numbers
+- [x] Use a text field in input numbers
+- [x] Justify neighborhood and rules components
+- [x] put control buttons together
+  - [x] remove clear button
+- [x] replace speed and zoom labels by icons
+- [ ] replace title with dropdown selector
+- [ ] implement routes /1d /2d
+- [ ] improve 2d rules horizontal scrolling
+- [ ] add initial state config on 2d
+- [ ] import random color pallete from some api
+- [ ] fullscreen mode with floating controls (or absolute positioned)
+- [ ] put settings on side menu
+- [ ] edit cells number
+- [ ] stop autimatically when current state is all zeroes
 
 
 ## Notes

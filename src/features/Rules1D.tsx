@@ -38,17 +38,23 @@ export default function Rules1D() {
     return (
         <Grid container rowSpacing={2}>
             {/* Row 1 */}
-            <Grid container item alignItems="center">
+            <Grid
+                container
+                item
+                alignItems="center"
+                justifyContent="space-evenly"
+                columnSpacing={3}
+            >
                 {/* Rule number */}
-                <Grid item md>
+                <Grid item md="auto">
                     <RuleNumber />
                 </Grid>
                 {/* Rule preview */}
-                <Grid item md>
+                <Grid item md="auto">
                     <RulePreview index={onHoverCell.get} />
                 </Grid>
                 {/* Controls */}
-                <Grid item md>
+                <Grid item md="auto">
                     <Controls />
                 </Grid>
             </Grid>
@@ -83,7 +89,7 @@ function RulePreview({ index }: { index: number }) {
     ));
 
     return (
-        <Box className="cap-component-container w-max p-2 space-x-1.5 mx-auto">
+        <Box className="cap-component-container w-fit p-2 space-x-1.5">
             <Ellipses
                 size="xs"
                 cells={cells}

@@ -34,17 +34,23 @@ export default function Neighborhood1D() {
     return (
         <Grid container rowSpacing={2}>
             {/* Row 1 */}
-            <Grid container item alignItems="center">
+            <Grid
+                container
+                item
+                alignItems="center"
+                columnSpacing={2}
+                justifyContent="space-evenly"
+            >
                 {/* Width */}
                 <Grid item md={3}>
                     <Width />
                 </Grid>
                 {/* Type */}
-                <Grid item md={5} className="flex justify-center">
+                <Grid item md="auto">
                     <Type />
                 </Grid>
                 {/* Main cell selector */}
-                <Grid item md={4} className="flex justify-center">
+                <Grid item md="auto" className="">
                     <MainCellSelector1D />
                 </Grid>
             </Grid>

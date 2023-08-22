@@ -16,7 +16,7 @@ import {
     faPlay,
     faStop,
 } from "@fortawesome/free-solid-svg-icons";
-import { Box, Grid } from "@mui/material";
+import { Box, Fade, Grid } from "@mui/material";
 
 import {
     StateHookObj,
@@ -26,14 +26,15 @@ import {
     useStatus,
 } from "src/app/hooks";
 
-import Button from "src/components/Button";
-import CustomSlider from "src/components/Slider";
+import Button, { StyledTooltip } from "src/components/Button";
+import { StyledSlider } from "src/components/Slider";
 
 import { selectCellsNbhds } from "src/app/slices/cellsNbhds";
 import { selectRules } from "src/app/slices/rules";
 import { selectInitState } from "src/app/slices/initState";
 
 import CellularAutomaton1D from "src/ts/CellularAutomaton1D";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const refreshRateVal = { minVal: 200, maxVal: 999, defaultVal: 600 };
 const cellSizeVal = { minVal: 1, maxVal: 20, defaultVal: 8 };
@@ -88,26 +89,26 @@ export default function Controls({
                 <TimerCtx.Provider value={timer}>
                     <RefreshRateCtx.Provider value={refreshRate}>
                         <CellSizeCtx.Provider value={cellSize}>
-                            <Grid container alignItems="center" className="">
-                                <Grid item md>
+                            <Grid
+                                container
+                                alignItems="center"
+                                justifyContent="space-evenly"
+                                className=""
+                            >
+                                <Grid item md="auto">
                                     <Box className="w-fit mx-auto space-x-2">
                                         <RunBtn />
                                         <NextBtn />
                                         <PauseBtn />
                                         <StopBtn />
-                                    </Box>
-                                </Grid>
-                                <Grid item md>
-                                    <SpeedSlider />
-                                </Grid>
-                                <Grid item md>
-                                    <ZoomSlider />
-                                </Grid>
-                                <Grid item md>
-                                    <Box className="w-fit mx-auto space-x-2">
-                                        <ClearBtn />
                                         <ScreenshotBtn />
                                     </Box>
+                                </Grid>
+                                <Grid item md={3}>
+                                    <SpeedSlider />
+                                </Grid>
+                                <Grid item md={3}>
+                                    <ZoomSlider />
                                 </Grid>
                             </Grid>
                         </CellSizeCtx.Provider>
@@ -218,22 +219,9 @@ function StopBtn() {
     );
 }
 
-function ClearBtn() {
-    //
-    const automaton = useContext(AutomatonCtx);
-
-    return (
-        <Button
-            tooltipLabel="Clear"
-            icon={faBroom}
-            size="xl"
-            onClick={() => automaton?.clear()}
-        />
-    );
-}
-
 function ScreenshotBtn() {
     //
+    const status = useContext(StatusCtx);
     const automaton = useContext(AutomatonCtx);
 
     return (
@@ -242,6 +230,7 @@ function ScreenshotBtn() {
             icon={faCameraRetro}
             size="xl"
             onClick={() => automaton?.saveScene("cellular_automaton")}
+            disabled={status!.stopped}
         />
     );
 }
@@ -251,17 +240,43 @@ function SpeedSlider() {
     const state = useContext(RefreshRateCtx);
 
     return (
-        <CustomSlider
-            className="w-[80%] mx-auto"
-            label="Speed"
-            // icon={faGaugeHigh}
-            minVal={refreshRateVal.minVal}
-            maxVal={refreshRateVal.maxVal}
-            defaultVal={refreshRateVal.defaultVal}
-            valueLabelDisplay="off"
-            value={state!.get}
-            onChange={state!.set}
-        />
+        <Grid
+            container
+            className="cap-component-container"
+            alignItems="center"
+            justifyContent="center"
+        >
+            <Grid item xs="auto">
+                <StyledTooltip
+                    title="Speed"
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 700 }}
+                    followCursor
+                    arrow
+                >
+                    <FontAwesomeIcon
+                        icon={faGaugeHigh}
+                        size="2x"
+                        className="ms-2 my-2"
+                    />
+                </StyledTooltip>
+            </Grid>
+
+            <Grid item xs>
+                <StyledSlider
+                    defaultValue={refreshRateVal.defaultVal}
+                    min={refreshRateVal.minVal}
+                    max={refreshRateVal.maxVal}
+                    value={state!.get}
+                    onChange={(
+                        event: Event,
+                        value: number | number[],
+                        activeThumb: number
+                    ) => state!.set(value as number)}
+                    valueLabelDisplay="off"
+                />
+            </Grid>
+        </Grid>
     );
 }
 
@@ -270,16 +285,42 @@ function ZoomSlider() {
     const state = useContext(CellSizeCtx);
 
     return (
-        <CustomSlider
-            className="w-[80%] mx-auto"
-            label="Zoom"
-            // icon={faMagnifyingGlass}
-            minVal={cellSizeVal.minVal}
-            maxVal={cellSizeVal.maxVal}
-            defaultVal={cellSizeVal.defaultVal}
-            valueLabelDisplay="off"
-            value={state!.get}
-            onChange={state!.set}
-        />
+        <Grid
+            container
+            className="cap-component-container"
+            alignItems="center"
+            justifyContent="center"
+        >
+            <Grid item xs="auto">
+                <StyledTooltip
+                    title="Zoom"
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 700 }}
+                    followCursor
+                    arrow
+                >
+                    <FontAwesomeIcon
+                        icon={faMagnifyingGlass}
+                        size="2x"
+                        className="ms-2 my-2"
+                    />
+                </StyledTooltip>
+            </Grid>
+
+            <Grid item xs>
+                <StyledSlider
+                    defaultValue={cellSizeVal.defaultVal}
+                    min={cellSizeVal.minVal}
+                    max={cellSizeVal.maxVal}
+                    value={state!.get}
+                    onChange={(
+                        event: Event,
+                        value: number | number[],
+                        activeThumb: number
+                    ) => state!.set(value as number)}
+                    valueLabelDisplay="off"
+                />
+            </Grid>
+        </Grid>
     );
 }

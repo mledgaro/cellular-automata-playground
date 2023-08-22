@@ -44,7 +44,7 @@ export function MainCellSelector1D({ className = "" }: { className?: string }) {
 
     return (
         <Box
-            className={`cap-component-container w-max p-2 space-x-1.5 ${className}`}
+            className={`cap-component-container w-fit p-2 space-x-1.5 ${className}`}
         >
             <Ellipses
                 size="xs"
