@@ -1,6 +1,7 @@
 //
 
 export type Position = "none" | "top" | "right" | "bottom" | "left";
+export type NbhdType2D = "moore" | "vonneumann" | "diagonal";
 
 /**
  * Converts an integer number to an array of booleans that represents
@@ -123,4 +124,20 @@ export function boolArrayNot(boolArr: boolean[]): boolean[] {
     //
 
     return boolArr.map((e) => !e);
+}
+
+export function neighborhood2dSize(
+    width: number,
+    height: number,
+    mainCell: { r: number; c: number },
+    nbhdType: NbhdType2D
+) {
+    switch (nbhdType) {
+        case "moore":
+            return width * height - 1;
+        case "vonneumann":
+            return width + height - 2;
+        case "diagonal":
+            return diagonalNeighbors(width, height, mainCell.r, mainCell.c);
+    }
 }

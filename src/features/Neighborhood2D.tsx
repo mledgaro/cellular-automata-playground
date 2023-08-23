@@ -6,8 +6,7 @@ import CustomRadioGroup from "src/components/RadioGroup";
 import { Grid } from "@mui/material";
 import CustomSlider from "src/components/Slider";
 import { MainCellSelector2D } from "src/features/MainCellSelector";
-
-export type NbhdType2D = "moore" | "vonneumann" | "diagonal";
+import { NbhdType2D } from "src/ts/Utils";
 
 export default function Neighborhood2D({
     type,

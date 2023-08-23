@@ -22,9 +22,10 @@ import CustomTabs from "./components/Tabs";
 import Neighborhood1D from "./features/Neighborhood1D";
 import Rules1D from "./features/Rules1D";
 import InitialState from "./features/InitialState";
-import Neighborhood2D, { NbhdType2D } from "./features/Neighborhood2D";
+import Neighborhood2D from "./features/Neighborhood2D";
 import { Rules2D } from "./features/Rules2D";
 import CellularAutomaton1D from "./ts/CellularAutomaton1D";
+import { NbhdType2D } from "./ts/Utils";
 
 const canvasId = "cap-canvas";
 const bufferSize = 64;
@@ -145,6 +146,14 @@ function Settings2D() {
                             nbhdHeight={nbhdHeight.get}
                             mainCell={mainCell.get}
                         />
+                    ),
+                },
+                {
+                    title: "Init state",
+                    content: (
+                        <Box className="cap-component-container">
+                            Iinit state
+                        </Box>
                     ),
                 },
             ]}

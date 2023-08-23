@@ -4,9 +4,9 @@ import { StateHookObj, useAppDispatch, useAppSelector } from "src/app/hooks";
 import { DeactivatedCell, Ellipses, IconCell, SelectedCell } from "./Cells";
 import { selectMainCell, setMainCell } from "src/app/slices/mainCell";
 import { Box } from "@mui/material";
-import { NbhdType2D } from "src/features/Neighborhood2D";
 import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
 import { selectNbhdType } from "src/app/slices/nbhdType";
+import { NbhdType2D } from "src/ts/Utils";
 
 export function MainCellSelector1D({ className = "" }: { className?: string }) {
     //
