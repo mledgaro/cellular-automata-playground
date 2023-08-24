@@ -1,31 +1,25 @@
 //
-
 import "./css/App.css";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fa1, fa2, faD } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "@mui/material/Button";
-import {
-    StateHookObj,
-    useAppSelector,
-    useRangeReducer,
-    useStateObj,
-} from "./app/hooks";
+import { StateHookObj, useAppSelector, useStateObj } from "./app/hooks";
 
-import { Box, Skeleton } from "@mui/material";
+import { Box } from "@mui/material";
 import Controls from "./features/Controls";
 import { selectNumCells } from "./app/slices/numCells";
 import CustomTabs from "./components/Tabs";
 import Neighborhood1D from "./features/Neighborhood1D";
 import Rules1D from "./features/Rules1D";
 import InitialState from "./features/InitialState";
-import Neighborhood2D from "./features/Neighborhood2D";
-import { Rules2D } from "./features/Rules2D";
+import Neighborhood2D from "./features/ca2d/Neighborhood2D";
+import { Rules2D } from "./features/ca2d/Rules2D";
 import CellularAutomaton1D from "./ts/CellularAutomaton1D";
-import { NbhdType2D } from "./ts/Utils";
+import useNbhd2dState from "./app/hooks/nbhd2d";
 
 const canvasId = "cap-canvas";
 const bufferSize = 64;
@@ -118,35 +112,18 @@ function Settings1D() {
 
 function Settings2D() {
     //
-    const nbhdType = useStateObj<NbhdType2D>("moore");
-    const nbhdWidth = useRangeReducer(2, 8, 3, false);
-    const nbhdHeight = useRangeReducer(2, 8, 3, false);
-    const mainCell = useStateObj<any>({ r: 1, c: 1 });
+    const nbhd = useNbhd2dState();
 
     return (
         <CustomTabs
             tabs={[
                 {
                     title: "Neighborhood",
-                    content: (
-                        <Neighborhood2D
-                            type={nbhdType}
-                            width={nbhdWidth}
-                            height={nbhdHeight}
-                            mainCell={mainCell}
-                        />
-                    ),
+                    content: <Neighborhood2D state={nbhd} />,
                 },
                 {
                     title: "Rules",
-                    content: (
-                        <Rules2D
-                            nbhdType={nbhdType.get}
-                            nbhdWidth={nbhdWidth.get}
-                            nbhdHeight={nbhdHeight.get}
-                            mainCell={mainCell.get}
-                        />
-                    ),
+                    content: <Rules2D number={nbhd.size()} />,
                 },
                 {
                     title: "Init state",

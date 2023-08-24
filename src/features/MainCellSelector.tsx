@@ -1,12 +1,11 @@
 //
 import React, { useEffect } from "react";
-import { StateHookObj, useAppDispatch, useAppSelector } from "src/app/hooks";
-import { DeactivatedCell, Ellipses, IconCell, SelectedCell } from "./Cells";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import { Ellipses, IconCell, SelectedCell } from "./Cells";
 import { selectMainCell, setMainCell } from "src/app/slices/mainCell";
 import { Box } from "@mui/material";
 import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
 import { selectNbhdType } from "src/app/slices/nbhdType";
-import { NbhdType2D } from "src/ts/Utils";
 
 export function MainCellSelector1D({ className = "" }: { className?: string }) {
     //
@@ -54,71 +53,4 @@ export function MainCellSelector1D({ className = "" }: { className?: string }) {
             />
         </Box>
     );
-}
-
-export function MainCellSelector2D({
-    type,
-    width,
-    height,
-    selected,
-}: {
-    type: NbhdType2D;
-    width: number;
-    height: number;
-    selected: StateHookObj<any>;
-}) {
-    //
-
-    let isActive;
-
-    switch (type) {
-        case "moore":
-            isActive = (r: number, c: number) => true;
-            break;
-
-        case "vonneumann":
-            isActive = (r: number, c: number) =>
-                selected.get.r === r || selected.get.c === c;
-            break;
-
-        case "diagonal":
-            isActive = (r: number, c: number) =>
-                Math.abs(selected.get.r - r) === Math.abs(selected.get.c - c);
-            break;
-    }
-
-    let cells = [];
-
-    for (let r = 0, row, sel; r < height; r++) {
-        row = [];
-        for (let c = 0, cell; c < width; c++) {
-            //
-
-            sel = r === selected.get.r && c === selected.get.c;
-
-            cell = isActive(r, c) ? (
-                sel ? (
-                    <SelectedCell
-                        size="xl"
-                        onClick={() => selected.set({ r: -1, c: -1 })}
-                    />
-                ) : (
-                    <IconCell
-                        size="xl"
-                        onClick={() => selected.set({ r: r, c: c })}
-                    />
-                )
-            ) : (
-                <DeactivatedCell
-                    size="xl"
-                    onClick={() => selected.set({ r: r, c: c })}
-                />
-            );
-
-            row.push(<td style={{ padding: "5px" }}>{cell}</td>);
-        }
-        cells.push(<tr>{row}</tr>);
-    }
-
-    return <table className={"cap-component-container"}>{cells}</table>;
 }

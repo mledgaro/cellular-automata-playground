@@ -1,8 +1,4 @@
 //
-
-export type Position = "none" | "top" | "right" | "bottom" | "left";
-export type NbhdType2D = "moore" | "vonneumann" | "diagonal";
-
 /**
  * Converts an integer number to an array of booleans that represents
  * the digits of its binary representation.
@@ -39,7 +35,6 @@ export function boolArrayToInt(
     reverse: boolean = false
 ): number {
     //
-
     let int;
 
     int = [...arr];
@@ -51,60 +46,8 @@ export function boolArrayToInt(
     return int;
 }
 
-/**
- * Returns the number of elements in the diagonal given of an entry in a matrix.
- * @param {Int} width
- * @param {Int} height
- * @param {Int} row
- * @param {Int} col
- * @returns number of elements in the diagonal
- */
-export function diagonalSize(
-    width: number,
-    height: number,
-    row: number,
-    col: number
-): number {
-    //
-
-    let diff = col - row;
-
-    if (0 > diff) {
-        return Math.min(width, height) - Math.abs(diff);
-    } else if (diff > Math.abs(width - height)) {
-        return Math.max(width, height) - Math.abs(diff);
-    } else {
-        // 0 <= d <= Math.abs(width - height)
-        return Math.min(width, height);
-    }
-}
-
-/**
- * Returns the number of neighbors in the diagonals given of an entry in a matrix.
- * @param {Int} width
- * @param {Int} height
- * @param {Int} row
- * @param {Int} col
- * @returns number of elements in the diagonal
- */
-export function diagonalNeighbors(
-    width: number,
-    height: number,
-    row: number,
-    col: number
-): number {
-    //
-
-    return (
-        diagonalSize(width, height, row, col) +
-        diagonalSize(width, height, row, width - col) -
-        1
-    );
-}
-
 export function randomBoolArray(size: number): boolean[] {
     //
-
     let boolArr = [];
 
     for (let i = 0; i < size; i++) {
@@ -116,28 +59,78 @@ export function randomBoolArray(size: number): boolean[] {
 
 export function boolArray(length: number, fillValue: boolean) {
     //
-
     return Array(length).fill(fillValue);
 }
 
 export function boolArrayNot(boolArr: boolean[]): boolean[] {
     //
-
     return boolArr.map((e) => !e);
 }
 
-export function neighborhood2dSize(
-    width: number,
-    height: number,
-    mainCell: { r: number; c: number },
-    nbhdType: NbhdType2D
-) {
-    switch (nbhdType) {
-        case "moore":
-            return width * height - 1;
-        case "vonneumann":
-            return width + height - 2;
-        case "diagonal":
-            return diagonalNeighbors(width, height, mainCell.r, mainCell.c);
+export function copyMatrix(matrix: any[][]): any[][] {
+    //
+    return matrix.map((row) => row.map((cell) => cell));
+}
+
+export function setMatrixItem(
+    r: number,
+    c: number,
+    matrix: any[][],
+    value: any
+): any[][] {
+    //
+    let nMatrix = copyMatrix(matrix);
+    nMatrix[r][c] = value;
+    return nMatrix;
+}
+
+export function addRow(
+    matrix: any[][],
+    atStart: boolean,
+    remove: boolean
+): any[][] {
+    //
+    let nMatrix = copyMatrix(matrix);
+
+    if (remove) {
+        if (atStart) {
+            nMatrix.shift();
+        } else {
+            nMatrix.pop();
+        }
+    } else {
+        const newRow = Array(matrix[0].length).fill(false);
+        if (atStart) {
+            nMatrix.unshift(newRow);
+        } else {
+            nMatrix.push(newRow);
+        }
     }
+
+    return nMatrix;
+}
+
+export function addColumn(
+    matrix: any[][],
+    atStart: boolean,
+    remove: boolean
+): any[][] {
+    //
+    let nMatrix = copyMatrix(matrix);
+
+    if (remove) {
+        if (atStart) {
+            nMatrix.forEach((row) => row.shift());
+        } else {
+            nMatrix.forEach((row) => row.pop());
+        }
+    } else {
+        if (atStart) {
+            nMatrix.forEach((row) => row.unshift(false));
+        } else {
+            nMatrix.forEach((row) => row.push(false));
+        }
+    }
+
+    return nMatrix;
 }

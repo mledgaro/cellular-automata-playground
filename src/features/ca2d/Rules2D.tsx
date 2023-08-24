@@ -6,32 +6,15 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { faSquare as faSquareSolid } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NbhdType2D, neighborhood2dSize } from "../ts/Utils";
 import { useStateObj } from "src/app/hooks";
 import { Box, Stack } from "@mui/material";
 
-export function Rules2D({
-    nbhdType,
-    nbhdWidth,
-    nbhdHeight,
-    mainCell,
-}: {
-    nbhdType: NbhdType2D;
-    nbhdWidth: number;
-    nbhdHeight: number;
-    mainCell: { r: number; c: number };
-}) {
+export function Rules2D({ number }: { number: number }) {
     //
     let rules = [];
-    let nbhdSize = neighborhood2dSize(
-        nbhdWidth,
-        nbhdHeight,
-        mainCell,
-        nbhdType
-    );
     const cellClasses = "text-center text-xl select-none";
 
-    for (let i = 0; i <= nbhdSize; i++) {
+    for (let i = 0; i <= number; i++) {
         rules.push(
             <Stack className="inline-block">
                 <Box className={cellClasses}>{i}</Box>
