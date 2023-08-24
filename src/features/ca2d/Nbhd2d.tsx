@@ -6,7 +6,7 @@ import Nbhd2dEditor from "./Nbhd2dEditor";
 import { Nbhd2dHook } from "src/app/hooks/nbhd2d";
 import { NbhdType2D } from "src/app/types";
 
-export default function Neighborhood2D({ state }: { state: Nbhd2dHook }) {
+export default function Nbhd2d({ state }: { state: Nbhd2dHook }) {
     //
     return (
         <Grid container className="section-container">

@@ -7,22 +7,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fa1, fa2, faD } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "@mui/material/Button";
-import { StateHookObj, useAppSelector, useStateObj } from "./app/hooks";
+import { StateObjHook, useAppSelector, useStateObj } from "./app/hooks";
 
 import { Box } from "@mui/material";
 import Controls from "./features/Controls";
 import { selectNumCells } from "./app/slices/numCells";
 import CustomTabs from "./components/Tabs";
-import Neighborhood1D from "./features/Neighborhood1D";
-import Rules1D from "./features/Rules1D";
-import InitialState from "./features/InitialState";
-import Neighborhood2D from "./features/ca2d/Nbhd2d";
-import Rules2D from "./features/ca2d/Rules2d";
+import Nbhd1d from "./features/ca1d/Nbhd1d";
+import Rules1d from "./features/ca1d/Rules1d";
+import InitState1d from "./features/ca1d/InitState1d";
+import Nbhd2d from "./features/ca2d/Nbhd2d";
+import Rules2d from "./features/ca2d/Rules2d";
 import CellularAutomaton1D from "./ts/CellularAutomaton1D";
-import useNbhd2dState from "./app/hooks/nbhd2d";
-import { useRules2dState } from "./app/hooks/rules2d";
-import useInitState2dState from "./app/hooks/initState2d";
-import InitiState2d from "./features/ca2d/InitState2d";
+import useNbhd2d from "./app/hooks/nbhd2d";
+import { useRules2d } from "./app/hooks/rules2d";
+import useInitState2d from "./app/hooks/initState2d";
+import InitState2d from "./features/ca2d/InitState2d";
 
 const canvasId = "cap-canvas";
 const bufferSize = 64;
@@ -36,10 +36,6 @@ export default function App() {
     const automaton = useStateObj<CellularAutomaton1D | undefined>(undefined);
 
     useEffect(() => {
-        // canvasCntrl.current = new CanvasController(
-        //     document.getElementById(canvasId) as HTMLCanvasElement,
-        //     bufferSize,
-        //     numCells
         automaton.set(
             new CellularAutomaton1D(canvasId, bufferSize, numCells, 8)
         );
@@ -70,7 +66,7 @@ export default function App() {
     );
 }
 
-function Title({ dimState }: { dimState: StateHookObj<1 | 2> }) {
+function Title({ dimState }: { dimState: StateObjHook<1 | 2> }) {
     return (
         <div className="flex justify-center">
             <Button
@@ -98,15 +94,15 @@ function Settings1D() {
             tabs={[
                 {
                     title: "Neighborhood",
-                    content: <Neighborhood1D />,
+                    content: <Nbhd1d />,
                 },
                 {
                     title: "Rules",
-                    content: <Rules1D />,
+                    content: <Rules1d />,
                 },
                 {
                     title: "Initial state",
-                    content: <InitialState />,
+                    content: <InitState1d />,
                 },
             ]}
         />
@@ -117,9 +113,9 @@ function Settings2D() {
     //
     const numCells = useAppSelector(selectNumCells);
 
-    const nbhd = useNbhd2dState();
-    const rules = useRules2dState();
-    const initState = useInitState2dState(bufferSize, numCells);
+    const nbhd = useNbhd2d();
+    const rules = useRules2d();
+    const initState = useInitState2d(bufferSize, numCells);
 
     useEffect(() => {
         rules.resize(nbhd.size);
@@ -131,15 +127,15 @@ function Settings2D() {
             tabs={[
                 {
                     title: "Neighborhood",
-                    content: <Neighborhood2D state={nbhd} />,
+                    content: <Nbhd2d state={nbhd} />,
                 },
                 {
                     title: "Rules",
-                    content: <Rules2D state={rules} />,
+                    content: <Rules2d state={rules} />,
                 },
                 {
                     title: "Init state",
-                    content: <InitiState2d state={initState} />,
+                    content: <InitState2d state={initState} />,
                 },
             ]}
         />

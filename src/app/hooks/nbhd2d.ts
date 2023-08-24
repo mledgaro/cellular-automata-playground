@@ -32,7 +32,7 @@ const customNbhd = [
     [false, false, false],
 ];
 
-export default function useNbhd2dState(): Nbhd2dHook {
+export default function useNbhd2d(): Nbhd2dHook {
     //
     const nbhd = useStateObj<boolean[][]>(mooreNbhd);
     const mainCell = useStateObj<Position>({ r: 1, c: 1 });

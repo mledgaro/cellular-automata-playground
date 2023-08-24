@@ -9,10 +9,8 @@ import {
     faSquare as faSquareSolid,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Button from "../components/Button";
-import { IconCell, Ellipses } from "src/features/Cells";
-
-import { intToBoolArray } from "../ts/Utils";
+import Button from "../../components/Button";
+import { RulePreview } from "src/features/ca1d/CellsGroups";
 
 import { useAppSelector, useStateObj } from "src/app/hooks";
 
@@ -25,12 +23,9 @@ import {
     selectRuleNumber,
 } from "src/app/slices/rules";
 import { Box, Grid } from "@mui/material";
-import RulesSelector from "src/features/RuleSelector";
-import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
-import { selectNbhdType } from "src/app/slices/nbhdType";
-import { selectMainCell } from "src/app/slices/mainCell";
+import RulesSelector from "src/features/ca1d/RuleSelector";
 
-export default function Rules1D() {
+export default function Rules1d() {
     //
 
     const onHoverCell = useStateObj<number>(0);
@@ -74,28 +69,6 @@ function RuleNumber() {
         <Box className="cap-component-container w-max p-2 mx-auto text-center">
             <Box className="cap-component-label">Rule number</Box>{" "}
             <Box className="text-2xl font-light">{ruleNum}</Box>
-        </Box>
-    );
-}
-
-function RulePreview({ index }: { index: number }) {
-    //
-    const nbhdType = useAppSelector(selectNbhdType);
-    const nbhdWidth = useAppSelector(selectNbhdWidth);
-    const mainCell = useAppSelector(selectMainCell);
-
-    let cells = intToBoolArray(index, nbhdWidth).map((e, i) => (
-        <IconCell key={i} alive={e} size={i === mainCell ? "2xl" : "lg"} />
-    ));
-
-    return (
-        <Box className="cap-component-container w-fit p-2 space-x-1.5">
-            <Ellipses
-                size="xs"
-                cells={cells}
-                mainCell={mainCell}
-                nbhdType={nbhdType}
-            />
         </Box>
     );
 }

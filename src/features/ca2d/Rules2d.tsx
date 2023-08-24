@@ -7,11 +7,11 @@ import {
 import { faSquare as faSquareSolid } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Stack } from "@mui/material";
-import { Rule2dState, Rules2dState } from "src/app/hooks/rules2d";
+import { Rule2dState, Rules2dHook } from "src/app/hooks/rules2d";
 
 const cellClasses = "text-center text-xl select-none";
 
-export default function Rules2D({ state }: { state: Rules2dState }) {
+export default function Rules2d({ state }: { state: Rules2dHook }) {
     //
     return (
         <Box className="cap-component-container flex max-w-[90%] w-fit mx-auto px-2 space-x-3">

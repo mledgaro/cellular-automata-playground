@@ -8,10 +8,10 @@ import {
     faShuffle,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Button from "../components/Button";
+import Button from "../../components/Button";
 
 import {
-    StateHookObj,
+    StateObjHook,
     useAppDispatch,
     useAppSelector,
     useStateObj,
@@ -28,7 +28,7 @@ import { StyledInput, StyledSlider } from "src/components/Slider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { selectNumCells } from "src/app/slices/numCells";
 
-export default function InitialState() {
+export default function InitState1d() {
     //
     const liveCells = useStateObj<number>(1);
     const clusterMin = useStateObj<number>(1);
@@ -72,7 +72,7 @@ export default function InitialState() {
     );
 }
 
-function LiveCells({ state }: { state: StateHookObj<number> }) {
+function LiveCells({ state }: { state: StateObjHook<number> }) {
     //
     const numCells = useAppSelector(selectNumCells);
 
@@ -155,9 +155,9 @@ function Cluster({
     maxState,
     distState,
 }: {
-    minState: StateHookObj<number>;
-    maxState: StateHookObj<number>;
-    distState: StateHookObj<DistributionType>;
+    minState: StateObjHook<number>;
+    maxState: StateObjHook<number>;
+    distState: StateObjHook<DistributionType>;
 }) {
     //
     return (

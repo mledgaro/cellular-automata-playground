@@ -17,7 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Box, Fade, Grid } from "@mui/material";
 
-import { StateHookObj, useAppSelector, useStateObj } from "src/app/hooks";
+import { StateObjHook, useAppSelector, useStateObj } from "src/app/hooks";
 
 import Button, { StyledTooltip } from "src/components/Button";
 import { StyledSlider } from "src/components/Slider";
@@ -38,10 +38,10 @@ const StatusCtx = createContext<StatusHook | undefined>(undefined);
 const TimerCtx = createContext<
     MutableRefObject<NodeJS.Timer | undefined> | undefined
 >(undefined);
-const RefreshRateCtx = createContext<StateHookObj<number> | undefined>(
+const RefreshRateCtx = createContext<StateObjHook<number> | undefined>(
     undefined
 );
-const CellSizeCtx = createContext<StateHookObj<number> | undefined>(undefined);
+const CellSizeCtx = createContext<StateObjHook<number> | undefined>(undefined);
 
 export default function Controls({
     automaton,

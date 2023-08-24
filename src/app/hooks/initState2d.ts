@@ -1,20 +1,20 @@
 import { setMatrixItem } from "src/ts/Utils";
-import { StateHookObj, useStateObj } from "../hooks";
+import { StateObjHook, useStateObj } from "../hooks";
 
-export type InitState2dState = {
+export type InitState2dHook = {
     get: boolean[][];
     set: (val: boolean[][]) => void;
     setRandom: () => void;
     toggle: (row: number, col: number) => void;
     resize: (rows: number, cols: number) => void;
     cellsNumber: number;
-    liveCells: StateHookObj<number>;
+    liveCells: StateObjHook<number>;
 };
 
-export default function useInitState2dState(
+export default function useInitState2d(
     rows: number,
     cols: number
-): InitState2dState {
+): InitState2dHook {
     //
     const initState = useStateObj<boolean[][]>(
         Array(rows).fill(Array(cols).fill(false))

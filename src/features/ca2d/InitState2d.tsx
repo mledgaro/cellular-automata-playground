@@ -1,16 +1,16 @@
 //
 import React from "react";
 
+import { Box, Grid } from "@mui/material";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
+import { StyledInput, StyledSlider } from "src/components/Slider";
 import Button from "src/components/Button";
 
-import { StateHookObj, useStateObj } from "src/app/hooks";
-import { Box, Grid } from "@mui/material";
-import { StyledInput, StyledSlider } from "src/components/Slider";
-import { InitState2dState } from "src/app/hooks/initState2d";
+import { StateObjHook } from "src/app/hooks";
+import { InitState2dHook } from "src/app/hooks/initState2d";
 
-export default function InitiState2d({ state }: { state: InitState2dState }) {
+export default function InitState2d({ state }: { state: InitState2dHook }) {
     //
     return (
         <Grid container justifyContent="space-evenly">
@@ -39,7 +39,7 @@ function LiveCells({
     state,
     maxValue,
 }: {
-    state: StateHookObj<number>;
+    state: StateObjHook<number>;
     maxValue: number;
 }) {
     //

@@ -1,9 +1,9 @@
 //
-import { useArrayState } from "../hooks";
+import { useArray } from "../hooks";
 
 export type Rule2dState = true | false | undefined;
 
-export type Rules2dState = {
+export type Rules2dHook = {
     get: Rule2dState[];
     toggle: (i: number) => void;
     resize: (num: number) => void;
@@ -22,9 +22,9 @@ const defaultVal = [
     false,
 ];
 
-export function useRules2dState(): Rules2dState {
+export function useRules2d(): Rules2dHook {
     //
-    let rules = useArrayState<Rule2dState>(defaultVal);
+    let rules = useArray<Rule2dState>(defaultVal);
 
     return {
         get: rules.get,

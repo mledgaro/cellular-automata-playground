@@ -3,7 +3,7 @@ import React, { useCallback } from "react";
 
 import { Box } from "@mui/material";
 
-import { useAppSelector, useBoolArrState } from "src/app/hooks";
+import { useAppSelector, useBoolArr } from "src/app/hooks";
 
 import { selectCellsNbhds } from "src/app/slices/cellsNbhds";
 
@@ -16,7 +16,7 @@ export default function NbhdsMap() {
     const numCells = useAppSelector(selectNumCells);
     const cellsNbhds = useAppSelector(selectCellsNbhds);
 
-    const cells = useBoolArrState(boolArray(numCells, false));
+    const cells = useBoolArr(boolArray(numCells, false));
 
     const highlight = useCallback(
         (idx: number) => {

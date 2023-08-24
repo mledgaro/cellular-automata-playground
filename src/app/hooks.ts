@@ -8,24 +8,24 @@ import { setArrayItem } from "src/ts/Utils";
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export type StateHookObj<T> = {
+export type StateObjHook<T> = {
     get: T;
     set: (val: T) => void;
 };
 
-export function useStateObj<T>(initValue: T): StateHookObj<T> {
+export function useStateObj<T>(initValue: T): StateObjHook<T> {
     const [getState, setState] = useState(initValue);
     return { get: getState, set: setState };
 }
 
-export type BoolState = {
+export type BoolHook = {
     get: boolean;
     toggle: () => void;
     setTrue: () => void;
     setFalse: () => void;
 };
 
-export function useBoolState(initValue: boolean): BoolState {
+export function useBool(initValue: boolean): BoolHook {
     //
     let value = useStateObj<boolean>(initValue);
 
@@ -37,13 +37,13 @@ export function useBoolState(initValue: boolean): BoolState {
     };
 }
 
-export type ArrayState<T> = {
+export type ArrayHook<T> = {
     get: T[];
     set: (arr: T[]) => void;
     setAt: (val: T, i: number) => void;
 };
 
-export function useArrayState<T>(initValue: T[]): ArrayState<T> {
+export function useArray<T>(initValue: T[]): ArrayHook<T> {
     //
     const array = useStateObj<Array<T>>(initValue);
 
@@ -55,7 +55,7 @@ export function useArrayState<T>(initValue: T[]): ArrayState<T> {
     };
 }
 
-export type BoolArrState = {
+export type BoolArrHook = {
     get: boolean[];
     set: (arr: boolean[]) => void;
     toggle: (i: number) => void;
@@ -63,9 +63,9 @@ export type BoolArrState = {
     off: (i: number) => void;
 };
 
-export function useBoolArrState(initValue: boolean[]): BoolArrState {
+export function useBoolArr(initValue: boolean[]): BoolArrHook {
     //
-    const arr = useArrayState<boolean>(initValue);
+    const arr = useArray<boolean>(initValue);
 
     return {
         get: arr.get,

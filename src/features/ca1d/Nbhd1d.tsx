@@ -25,11 +25,11 @@ import {
 import { selectMainCell } from "src/app/slices/mainCell";
 import { setCellsNbhds } from "src/app/slices/cellsNbhds";
 
-import { MainCellSelector1D } from "src/features/MainCellSelector";
-import NbhdsMap from "src/features/NbhdsMap";
+import NbhdsMap from "src/features/ca1d/NbhdsMap";
 import { selectNumCells } from "src/app/slices/numCells";
+import { MainCellSelector } from "./CellsGroups";
 
-export default function Neighborhood1D() {
+export default function Nbhd1d() {
     //
     return (
         <Grid container rowSpacing={2}>
@@ -51,7 +51,7 @@ export default function Neighborhood1D() {
                 </Grid>
                 {/* Main cell selector */}
                 <Grid item md="auto" className="">
-                    <MainCellSelector1D />
+                    <MainCellSelector />
                 </Grid>
             </Grid>
             {/* Row 2 */}
