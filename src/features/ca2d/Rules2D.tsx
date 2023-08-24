@@ -6,25 +6,13 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { faSquare as faSquareSolid } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useStateObj } from "src/app/hooks";
 import { Box, Stack } from "@mui/material";
+import { Rule2dState, Rules2dState } from "src/app/hooks/rules2d";
 
-export function Rules2D({ number }: { number: number }) {
+const cellClasses = "text-center text-xl select-none";
+
+export default function Rules2D({ state }: { state: Rules2dState }) {
     //
-    let rules = [];
-    const cellClasses = "text-center text-xl select-none";
-
-    for (let i = 0; i <= number; i++) {
-        rules.push(
-            <Stack className="inline-block">
-                <Box className={cellClasses}>{i}</Box>
-                <Box className={cellClasses}>
-                    <Rule2D />
-                </Box>
-            </Stack>
-        );
-    }
-
     return (
         <Box className="cap-component-container flex max-w-[90%] w-fit mx-auto px-2 space-x-3">
             <Stack className="inline-block w-fit min-w-fit test-border-">
@@ -32,33 +20,41 @@ export function Rules2D({ number }: { number: number }) {
                 <Box className={cellClasses}>Next state</Box>
             </Stack>
             <Box className="inline-block flex flex-nowrap w-auto overflow-x-auto space-x-3">
-                {rules}
+                {state.get.map((st, idx) => (
+                    <Rule
+                        idx={idx}
+                        value={st}
+                        toggle={() => state.toggle(idx)}
+                    />
+                ))}
             </Box>
         </Box>
     );
 }
 
-function Rule2D() {
+function Rule({
+    idx,
+    value,
+    toggle,
+}: {
+    idx: number;
+    value: Rule2dState;
+    toggle: () => void;
+}) {
     //
-    const state = useStateObj<number>(0);
-    let icon;
-
-    switch (state.get) {
-        case 1:
-            icon = faSquareRegular;
-            break;
-        case 2:
-            icon = faSquareSolid;
-            break;
-        default:
-            icon = faSquareMinus;
-    }
+    let icon =
+        value === undefined
+            ? faSquareMinus
+            : value
+            ? faSquareSolid
+            : faSquareRegular;
 
     return (
-        <FontAwesomeIcon
-            icon={icon}
-            size="xl"
-            onClick={() => state.set(state.get === 2 ? 0 : state.get + 1)}
-        />
+        <Stack className="inline-block" onClick={toggle}>
+            <Box className={cellClasses}>{idx}</Box>
+            <Box className={cellClasses}>
+                <FontAwesomeIcon icon={icon} size="xl" />
+            </Box>
+        </Stack>
     );
 }

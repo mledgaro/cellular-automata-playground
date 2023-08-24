@@ -7,7 +7,6 @@ import React, {
 } from "react";
 
 import {
-    faBroom,
     faCameraRetro,
     faForwardStep,
     faGaugeHigh,
@@ -18,13 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Box, Fade, Grid } from "@mui/material";
 
-import {
-    StateHookObj,
-    StatusHook,
-    useAppSelector,
-    useStateObj,
-    useStatus,
-} from "src/app/hooks";
+import { StateHookObj, useAppSelector, useStateObj } from "src/app/hooks";
 
 import Button, { StyledTooltip } from "src/components/Button";
 import { StyledSlider } from "src/components/Slider";
@@ -35,6 +28,7 @@ import { selectInitState } from "src/app/slices/initState";
 
 import CellularAutomaton1D from "src/ts/CellularAutomaton1D";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { StatusHook, useStatus } from "src/app/hooks/status";
 
 const refreshRateVal = { minVal: 200, maxVal: 999, defaultVal: 600 };
 const cellSizeVal = { minVal: 1, maxVal: 20, defaultVal: 8 };

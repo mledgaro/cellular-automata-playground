@@ -67,6 +67,17 @@ export function boolArrayNot(boolArr: boolean[]): boolean[] {
     return boolArr.map((e) => !e);
 }
 
+export function copyArray(array: any[]): any[] {
+    //
+    return array.map((e) => e);
+}
+
+export function setArrayItem(array: any[], index: number, value: any) {
+    let nArray = copyArray(array);
+    nArray[index] = value;
+    return nArray;
+}
+
 export function copyMatrix(matrix: any[][]): any[][] {
     //
     return matrix.map((row) => row.map((cell) => cell));

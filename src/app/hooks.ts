@@ -1,8 +1,8 @@
 //
-
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "./store";
-import { useCallback, useReducer, useRef, useState } from "react";
+import { useState } from "react";
+import { setArrayItem } from "src/ts/Utils";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch: () => AppDispatch = useDispatch;
@@ -10,93 +10,12 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export type StateHookObj<T> = {
     get: T;
-    set: (val: any) => void;
+    set: (val: T) => void;
 };
 
 export function useStateObj<T>(initValue: T): StateHookObj<T> {
-    //
     const [getState, setState] = useState(initValue);
-
     return { get: getState, set: setState };
-}
-
-export type RangeReducerHook = {
-    get: number;
-    prev: () => void;
-    next: () => void;
-    set: (val: number) => void;
-};
-
-export function useRangeReducer(
-    min: number,
-    max: number,
-    init: number,
-    cycle: boolean
-): RangeReducerHook {
-    //
-
-    const reducer = useCallback(
-        (
-            state: number,
-            action: { type: "next" | "prev" | "set"; index?: number }
-        ) => {
-            switch (action.type) {
-                case "next":
-                    return state === max ? (cycle ? min : state) : state + 1;
-                case "prev":
-                    return state === min ? (cycle ? max : state) : state - 1;
-                case "set":
-                    return Math.max(min, Math.min(action.index ?? 0, max));
-            }
-        },
-        [min, max, cycle]
-    );
-
-    const [value, dispatch] = useReducer(
-        reducer,
-        Math.max(min, Math.min(init, max))
-    );
-
-    return {
-        get: value,
-        prev: () => dispatch({ type: "prev" }),
-        next: () => dispatch({ type: "next" }),
-        set: (i) => dispatch({ type: "set", index: i }),
-    };
-}
-
-export type EnumReducerType = {
-    get: any;
-    index: number;
-    length: number;
-    prev: () => void;
-    next: () => void;
-    set: (index: number) => void;
-};
-
-export function useEnumReducer(
-    enumValues: any[],
-    initIndex: number
-): EnumReducerType {
-    //
-
-    const enums = useRef(enumValues);
-
-    const index = useRangeReducer(
-        0,
-        enums.current.length - 1,
-        initIndex,
-        false
-    );
-
-    return {
-        get: enums.current[index.get],
-        index: index.get,
-        length: enums.current.length,
-        prev: index.prev,
-        next: index.next,
-        set: index.set,
-    };
 }
 
 export type BoolState = {
@@ -108,7 +27,6 @@ export type BoolState = {
 
 export function useBoolState(initValue: boolean): BoolState {
     //
-
     let value = useStateObj<boolean>(initValue);
 
     return {
@@ -119,27 +37,25 @@ export function useBoolState(initValue: boolean): BoolState {
     };
 }
 
-export type ArrayStateHook<T> = {
+export type ArrayState<T> = {
     get: T[];
     set: (arr: T[]) => void;
     setAt: (val: T, i: number) => void;
 };
 
-export function useArrayState<T>(initValue: T[]): ArrayStateHook<T> {
+export function useArrayState<T>(initValue: T[]): ArrayState<T> {
     //
     const array = useStateObj<Array<T>>(initValue);
 
     return {
         get: array.get,
         set: array.set,
-        setAt: (val: any, i: number) =>
-            array.set(
-                array.get.map((e: any, j: number) => (j === i ? val : e))
-            ),
+        setAt: (val: T, i: number) =>
+            array.set(setArrayItem(array.get, i, val)),
     };
 }
 
-export type BoolArrHook = {
+export type BoolArrState = {
     get: boolean[];
     set: (arr: boolean[]) => void;
     toggle: (i: number) => void;
@@ -147,10 +63,9 @@ export type BoolArrHook = {
     off: (i: number) => void;
 };
 
-export function useBoolArrState(initValue: boolean[]): BoolArrHook {
+export function useBoolArrState(initValue: boolean[]): BoolArrState {
     //
-
-    const arr = useArrayState(initValue);
+    const arr = useArrayState<boolean>(initValue);
 
     return {
         get: arr.get,
@@ -158,30 +73,5 @@ export function useBoolArrState(initValue: boolean[]): BoolArrHook {
         toggle: (i) => arr.setAt(!arr.get[i], i),
         on: (i) => arr.setAt(true, i),
         off: (i) => arr.setAt(false, i),
-    };
-}
-
-export type StatusType = "stopped" | "paused" | "running";
-
-export type StatusHook = {
-    get: StatusType;
-    stop: () => void;
-    pause: () => void;
-    run: () => void;
-    stopped: boolean;
-    paused: boolean;
-    running: boolean;
-};
-
-export function useStatus(): StatusHook {
-    const state = useStateObj<StatusType>("stopped");
-    return {
-        get: state.get,
-        stop: () => state.set("stopped"),
-        pause: () => state.set("paused"),
-        run: () => state.set("running"),
-        stopped: state.get === "stopped",
-        paused: state.get === "paused",
-        running: state.get === "running",
     };
 }
