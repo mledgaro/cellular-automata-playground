@@ -90,14 +90,14 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - [ ] replace title with dropdown selector
 - [ ] implement routes /1d /2d
 - [x] improve 2d rules horizontal scrolling
-- [ ] add initial state config on 2d
+- [x] add initial state config on 2d
 - [ ] import random color pallete from some api
 - [ ] fullscreen mode with floating controls (or absolute positioned)
 - [ ] put settings on side menu
 - [ ] edit cells number
 - [ ] stop autimatically when current state is all zeroes
-- [ ] replace neighborhood 2d type diagonal by custom
-  - [ ] update main cell selector 2d for custom neighborhood
+- [x] replace neighborhood 2d type diagonal by custom
+  - [x] update main cell selector 2d for custom neighborhood
 
 
 ## Notes

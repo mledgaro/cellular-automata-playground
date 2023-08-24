@@ -16,11 +16,13 @@ import CustomTabs from "./components/Tabs";
 import Neighborhood1D from "./features/Neighborhood1D";
 import Rules1D from "./features/Rules1D";
 import InitialState from "./features/InitialState";
-import Neighborhood2D from "./features/ca2d/Neighborhood2D";
-import Rules2D from "./features/ca2d/Rules2D";
+import Neighborhood2D from "./features/ca2d/Nbhd2d";
+import Rules2D from "./features/ca2d/Rules2d";
 import CellularAutomaton1D from "./ts/CellularAutomaton1D";
 import useNbhd2dState from "./app/hooks/nbhd2d";
 import { useRules2dState } from "./app/hooks/rules2d";
+import useInitState2dState from "./app/hooks/initState2d";
+import InitiState2d from "./features/ca2d/InitState2d";
 
 const canvasId = "cap-canvas";
 const bufferSize = 64;
@@ -113,13 +115,16 @@ function Settings1D() {
 
 function Settings2D() {
     //
+    const numCells = useAppSelector(selectNumCells);
+
     const nbhd = useNbhd2dState();
     const rules = useRules2dState();
+    const initState = useInitState2dState(bufferSize, numCells);
 
     useEffect(() => {
-        rules.resize(nbhd.size());
+        rules.resize(nbhd.size);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nbhd]);
+    }, [nbhd.size]);
 
     return (
         <CustomTabs
@@ -134,11 +139,7 @@ function Settings2D() {
                 },
                 {
                     title: "Init state",
-                    content: (
-                        <Box className="cap-component-container">
-                            Iinit state
-                        </Box>
-                    ),
+                    content: <InitiState2d state={initState} />,
                 },
             ]}
         />

@@ -11,7 +11,7 @@ export type Nbhd2dHook = {
     toggle: (pos: Position) => void;
     addRow: (atStart: boolean, remove: boolean) => void;
     addColumn: (atStart: boolean, remove: boolean) => void;
-    size: () => number;
+    size: number;
 };
 
 const mooreNbhd = [
@@ -37,6 +37,11 @@ export default function useNbhd2dState(): Nbhd2dHook {
     const nbhd = useStateObj<boolean[][]>(mooreNbhd);
     const mainCell = useStateObj<Position>({ r: 1, c: 1 });
     const type = useStateObj<NbhdType2D>("moore");
+
+    let size = 0;
+    nbhd.get.forEach((row, r) =>
+        row.forEach((cell, c) => (size += cell ? 1 : 0))
+    );
 
     return {
         nbhd: nbhd.get,
@@ -99,12 +104,6 @@ export default function useNbhd2dState(): Nbhd2dHook {
             }
             nbhd.set(addColumn(nbhd.get, atStart, remove));
         },
-        size: () => {
-            let size = 0;
-            nbhd.get.forEach((row, r) =>
-                row.forEach((cell, c) => (size += cell ? 1 : 0))
-            );
-            return size;
-        },
+        size: size,
     };
 }
