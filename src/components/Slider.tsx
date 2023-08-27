@@ -3,6 +3,8 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     Box,
+    Fade,
+    Grid,
     Input,
     InputProps,
     Slider,
@@ -10,6 +12,8 @@ import {
     styled,
 } from "@mui/material";
 import React from "react";
+import { StateObjHook } from "src/app/hooks";
+import { StyledTooltip } from "./Button";
 
 export const StyledSlider = styled(Slider)<SliderProps>(({ theme }) => ({
     width: "calc(100% - 40px)",
@@ -110,5 +114,61 @@ export default function CustomSlider({
                 valueLabelDisplay={valueLabelDisplay}
             />
         </Box>
+    );
+}
+
+export function IconSlider({
+    icon,
+    tooltipLabel,
+    state,
+    defaultVal,
+    minVal,
+    maxVal,
+}: {
+    icon: IconDefinition;
+    tooltipLabel: string;
+    state: StateObjHook<number> | undefined;
+    defaultVal: number;
+    minVal: number;
+    maxVal: number;
+}) {
+    return (
+        <Grid
+            container
+            className="cap-component-container"
+            alignItems="center"
+            justifyContent="center"
+        >
+            <Grid item xs="auto">
+                <StyledTooltip
+                    title={tooltipLabel}
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 700 }}
+                    followCursor
+                    arrow
+                >
+                    <FontAwesomeIcon
+                        icon={icon}
+                        size="2x"
+                        className="ms-2 my-2"
+                    />
+                </StyledTooltip>
+            </Grid>
+
+            <Grid item xs>
+                <StyledSlider
+                    defaultValue={defaultVal}
+                    min={minVal}
+                    max={maxVal}
+                    value={state!.get}
+                    onChange={(
+                        event: Event,
+                        value: number | number[],
+                        activeThumb: number
+                    ) => state!.set(value as number)}
+                    valueLabelDisplay="off"
+                />
+            </Grid>
+        </Grid>
     );
 }

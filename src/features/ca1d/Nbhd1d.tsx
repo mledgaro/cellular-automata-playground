@@ -1,5 +1,5 @@
 //
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Grid } from "@mui/material";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
@@ -119,11 +119,6 @@ function Reload() {
     };
 
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch(setCellsNbhds(params));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [params]);
 
     return (
         <Button

@@ -263,10 +263,10 @@ function ReloadBtn({
         distribution: clusterDist,
     };
 
-    useEffect(() => {
-        dispatch(setInitState(params));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [params]);
+    // useEffect(() => {
+    //     dispatch(setInitState(params));
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [params]);
 
     return (
         <Box className="h-full relative">

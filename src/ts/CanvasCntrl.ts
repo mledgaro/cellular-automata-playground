@@ -1,7 +1,7 @@
 //
 export default class CanvasCntrl {
     //
-    private canvas: HTMLCanvasElement;
+    private canvas: HTMLCanvasElement | null;
     private graphics: CanvasRenderingContext2D;
 
     protected _rows: number;
@@ -17,15 +17,14 @@ export default class CanvasCntrl {
     private aliveColor: string;
 
     constructor(
-        canvasId: string,
+        canvasElement: HTMLCanvasElement | null,
         rows: number,
         columns: number,
         cellSize: number
     ) {
         //
-        this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
-
-        this.graphics = this.canvas.getContext("2d")!;
+        this.canvas = canvasElement;
+        this.graphics = canvasElement!.getContext("2d")!;
 
         this._rows = rows;
         this._columns = columns;
@@ -72,7 +71,7 @@ export default class CanvasCntrl {
         }
     }
 
-    protected paintCellAtCoords(x: number, y: number, state: boolean) {
+    private paintCellAtCoords(x: number, y: number, state: boolean) {
         //
         this.graphics.fillStyle = state ? this.aliveColor : this.deadColor;
         this.graphics.fillRect(x, y, this._cellSize, this._cellSize);
@@ -95,11 +94,17 @@ export default class CanvasCntrl {
 
     public clear() {
         //
-        this.buffer = Array(this._rows).fill(Array(this._columns).fill(false));
+        this.buffer = Array(this._rows)
+            .fill(null)
+            .map(() =>
+                Array(this._columns)
+                    .fill(null)
+                    .map(() => false)
+            );
 
         this.graphics.fillStyle = this.deadColor;
         this.graphics.fillRect(0, 0, this.width, this.height);
-        // this.drawGrid();
+        this.drawGrid();
     }
 
     public paintCell(row: number, col: number, state: boolean) {
@@ -113,10 +118,27 @@ export default class CanvasCntrl {
         );
     }
 
+    public paintRow(row: number, rowState: boolean[]) {
+        //
+        if (row < this._rows) {
+            rowState.forEach((cell, col) => {
+                this.paintCell(row, col, cell);
+            });
+        } else {
+            this.buffer.shift();
+            this.buffer.push(rowState);
+            this.repaint();
+        }
+    }
+
+    public paintScene(state: boolean[][]) {
+        this.buffer = state;
+        this.repaint();
+    }
+
     public saveScene(fileName: string) {
         //
-
-        let imgData = this.canvas.toDataURL();
+        let imgData = this.canvas!.toDataURL();
         let tmpLink = document.createElement("a");
         tmpLink.download = fileName + ".png";
         tmpLink.href = imgData ?? "";
@@ -132,8 +154,8 @@ export default class CanvasCntrl {
         this.width = this._columns * this._cellSize;
         this.height = this._rows * this._cellSize;
 
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
+        this.canvas!.width = this.width;
+        this.canvas!.height = this.height;
     }
 
     get rows(): number {
