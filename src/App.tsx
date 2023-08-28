@@ -26,37 +26,39 @@ import useInitState2d from "./app/hooks/initState2d";
 import InitState2d from "./features/ca2d/InitState2d";
 import Scene from "./features/Scene";
 import CanvasCntrl from "./ts/CanvasCntrl";
-import { selectInitState } from "./app/slices/initState";
+import { resizeInitState, selectInitState } from "./app/slices/initState";
 import { resizeRules, selectRules } from "./app/slices/rules";
-import { selectCellsNbhds } from "./app/slices/cellsNbhds";
+import { selectCellsNbhds, setCellsNbhds } from "./app/slices/cellsNbhds";
 import { selectNbhdWidth } from "./app/slices/nbhdWidth";
+import { selectNbhdType } from "./app/slices/nbhdType";
+import { selectMainCell } from "./app/slices/mainCell";
 
 export default function App() {
     //
     return (
-        // <BrowserRouter>
-        <Box>
-            <CellularAutomata1d />
-
-            {/* <Routes>
+        <BrowserRouter>
+            <Box>
+                <Routes>
                     <Route index element={<CellularAutomata1d />} />
                     <Route path="ca1d" element={<CellularAutomata1d />} />
-                    <Route path="ca2d" element={<Settings2D />} />
-                </Routes> */}
-        </Box>
-        // </BrowserRouter>
+                    <Route path="ca2d" element={<CellularAutomata2d />} />
+                </Routes>
+            </Box>
+        </BrowserRouter>
     );
 }
 
 function CellularAutomata1d() {
     //
+    const numCells = useAppSelector(selectNumCells);
     const nbhdWidth = useAppSelector(selectNbhdWidth);
-
-    const dispatch = useAppDispatch();
-
+    const nbhdType = useAppSelector(selectNbhdType);
+    const mainCell = useAppSelector(selectMainCell);
     const cellsNbhds = useAppSelector(selectCellsNbhds);
     const rules = useAppSelector(selectRules);
     const initState = useAppSelector(selectInitState);
+
+    const dispatch = useAppDispatch();
 
     const automaton = useRef(new CellularAutomaton1d());
 
@@ -71,9 +73,24 @@ function CellularAutomata1d() {
     };
 
     useEffect(() => {
+        dispatch(
+            setCellsNbhds({
+                numCells: numCells,
+                width: nbhdWidth,
+                type: nbhdType,
+                mainCell: mainCell,
+            })
+        );
+    }, [numCells, nbhdWidth, nbhdType, mainCell]);
+
+    useEffect(() => {
         dispatch(resizeRules(Math.pow(2, nbhdWidth)));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nbhdWidth]);
+
+    useEffect(() => {
+        dispatch(resizeInitState(numCells));
+    }, [numCells]);
 
     return (
         <Box className="space-y-6 my-5">

@@ -1,5 +1,4 @@
 //
-
 import React from "react";
 
 import { faSquare as faSquareRegular } from "@fortawesome/free-regular-svg-icons";

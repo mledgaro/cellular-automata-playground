@@ -9,26 +9,16 @@ export type DistributionType = "even" | "rand";
 
 interface InitStateState {
     value: boolean[];
-}
-
-interface SetParams {
-    numCells: number;
     liveCells: number;
-    groupMinSize: number;
-    groupMaxSize: number;
+    clusterSize: number[];
     distribution: DistributionType;
 }
 
-export const defaultVal = buildState({
-    numCells: numCellsDefault,
+export const initialState: InitStateState = {
+    value: buildState(numCellsDefault, 1, [1, 1], "even"),
     liveCells: 1,
-    groupMinSize: 1,
-    groupMaxSize: 1,
+    clusterSize: [1, 1],
     distribution: "even",
-});
-
-const initialState: InitStateState = {
-    value: defaultVal,
 };
 
 function variableDist(
@@ -87,37 +77,36 @@ function randomDist(nums: number, totalSum: number): number[] {
     return arr;
 }
 
-function buildState(params: SetParams) {
+function buildState(
+    numCells: number,
+    liveCells: number,
+    clusterSize: number[],
+    distribution: DistributionType
+) {
     //
+    const [clusterSizeMin, clusterSizeMax] = clusterSize;
 
-    if (params.liveCells >= 0 && params.liveCells < 1) {
-        params.liveCells = Math.round(params.liveCells * params.numCells);
+    if (liveCells >= 0 && liveCells < 1) {
+        liveCells = Math.round(liveCells * numCells);
     } else {
-        params.liveCells = Math.max(
-            1,
-            Math.min(params.liveCells, params.numCells)
-        );
+        liveCells = Math.max(1, Math.min(liveCells, numCells));
     }
 
-    let deadCells = params.numCells - params.liveCells;
+    let deadCells = numCells - liveCells;
 
-    let groupSizeDiff = Math.abs(params.groupMaxSize - params.groupMinSize);
+    let groupSizeDiff = Math.abs(clusterSizeMax - clusterSizeMin);
 
     let trueArr, falseArr;
 
     if (groupSizeDiff > 0) {
-        trueArr = variableDist(
-            params.groupMinSize,
-            params.groupMaxSize,
-            params.liveCells
-        );
+        trueArr = variableDist(clusterSizeMin, clusterSizeMax, liveCells);
     } else {
-        trueArr = Array(
-            Math.round(params.liveCells / params.groupMinSize)
-        ).fill(params.groupMinSize);
+        trueArr = Array(Math.round(liveCells / clusterSizeMin)).fill(
+            clusterSizeMin
+        );
     }
 
-    if (params.distribution === "rand") {
+    if (distribution === "rand") {
         falseArr = randomDist(trueArr.length + 1, deadCells);
     } else {
         falseArr = Array(trueArr.length + 1).fill(
@@ -133,9 +122,9 @@ function buildState(params: SetParams) {
         );
     }
 
-    let diff = params.numCells - arr.length;
+    let diff = numCells - arr.length;
     if (diff <= 0) {
-        arr = arr.slice(0, params.numCells);
+        arr = arr.slice(0, numCells);
     } else {
         arr = arr.concat(Array(diff).fill(false));
     }
@@ -147,19 +136,71 @@ export const initStateSlice = createSlice({
     name: "initState",
     initialState,
     reducers: {
-        setInitState: (state, action: PayloadAction<SetParams>) => {
-            state.value = buildState(action.payload);
+        setLiveCells: (state, action: PayloadAction<number>) => {
+            state.liveCells = action.payload;
+            state.value = buildState(
+                state.value.length,
+                action.payload,
+                state.clusterSize,
+                state.distribution
+            );
+        },
+        setClusterSize: (state, action: PayloadAction<number[]>) => {
+            state.clusterSize = action.payload;
+            state.value = buildState(
+                state.value.length,
+                state.liveCells,
+                action.payload,
+                state.distribution
+            );
+        },
+        setDistribution: (state, action: PayloadAction<DistributionType>) => {
+            state.distribution = action.payload;
+            state.value = buildState(
+                state.value.length,
+                state.liveCells,
+                state.clusterSize,
+                action.payload
+            );
+        },
+        reloadInitState: (state) => {
+            state.value = buildState(
+                state.value.length,
+                state.liveCells,
+                state.clusterSize,
+                state.distribution
+            );
         },
         toggleInitStateCell: (state, action: PayloadAction<number>) => {
             state.value = state.value.map((e, i) =>
                 i === action.payload ? !e : e
             );
         },
+        resizeInitState: (state, action: PayloadAction<number>) => {
+            state.value = state.value = buildState(
+                action.payload,
+                state.liveCells,
+                state.clusterSize,
+                state.distribution
+            );
+        },
     },
 });
 
 export const selectInitState = (state: RootState) => state.initState.value;
+export const selectLiveCells = (state: RootState) => state.initState.liveCells;
+export const selectClusterSize = (state: RootState) =>
+    state.initState.clusterSize;
+export const selectDistribution = (state: RootState) =>
+    state.initState.distribution;
 
-export const { setInitState, toggleInitStateCell } = initStateSlice.actions;
+export const {
+    setLiveCells,
+    setClusterSize,
+    setDistribution,
+    reloadInitState,
+    resizeInitState,
+    toggleInitStateCell,
+} = initStateSlice.actions;
 
 export default initStateSlice.reducer;

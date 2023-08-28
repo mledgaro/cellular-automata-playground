@@ -1,14 +1,14 @@
 //
-import React from "react";
+import React, { useCallback } from "react";
 
-import { Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "src/components/Button";
 import CustomSlider from "src/components/Slider";
 import CustomRadioGroup from "src/components/RadioGroup";
 
-import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import { useAppDispatch, useAppSelector, useBoolArr } from "src/app/hooks";
 import {
     minVal as nbhdWidthMin,
     maxVal as nbhdWidthMax,
@@ -23,11 +23,11 @@ import {
     setNbhdType,
 } from "src/app/slices/nbhdType";
 import { selectMainCell } from "src/app/slices/mainCell";
-import { setCellsNbhds } from "src/app/slices/cellsNbhds";
+import { selectCellsNbhds, setCellsNbhds } from "src/app/slices/cellsNbhds";
 
-import NbhdsMap from "src/features/ca1d/NbhdsMap";
 import { selectNumCells } from "src/app/slices/numCells";
 import { MainCellSelector } from "./CellsGroups";
+import { boolArray } from "src/ts/Utils";
 
 export default function Nbhd1d() {
     //
@@ -72,9 +72,7 @@ export default function Nbhd1d() {
 function Width() {
     //
     const width = useAppSelector(selectNbhdWidth);
-
     const dispatch = useAppDispatch();
-
     return (
         <CustomSlider
             label="Width"
@@ -91,9 +89,7 @@ function Width() {
 function Type() {
     //
     const type = useAppSelector(selectNbhdType);
-
     const dispatch = useAppDispatch();
-
     return (
         <CustomRadioGroup
             label="Type"
@@ -106,6 +102,39 @@ function Type() {
             value={type}
             onChange={(val: string) => dispatch(setNbhdType(val as NbhdType))}
         />
+    );
+}
+
+function NbhdsMap() {
+    //
+    const numCells = useAppSelector(selectNumCells);
+    const cellsNbhds = useAppSelector(selectCellsNbhds);
+
+    const cells = useBoolArr(boolArray(numCells, false));
+
+    const highlight = useCallback(
+        (idx: number) => {
+            //
+            let highCells = Array(numCells).fill(false);
+            cellsNbhds[idx].forEach(
+                (neighboor) => (highCells[neighboor] = true)
+            );
+            cells.set(highCells);
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [cellsNbhds]
+    );
+
+    return (
+        <Box className="cap-component-container cells-container">
+            {cells.get.map((e, i) => (
+                <Box
+                    key={i}
+                    className={`cap-cell ${e ? "on" : "off"}`}
+                    onMouseOver={() => highlight(i)}
+                />
+            ))}
+        </Box>
     );
 }
 

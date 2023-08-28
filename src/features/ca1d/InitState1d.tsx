@@ -1,6 +1,6 @@
 //
 
-import React, { useEffect } from "react";
+import React from "react";
 
 import {
     faEquals,
@@ -10,16 +10,17 @@ import {
 
 import Button from "../../components/Button";
 
-import {
-    StateObjHook,
-    useAppDispatch,
-    useAppSelector,
-    useStateObj,
-} from "src/app/hooks";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import {
     DistributionType,
+    reloadInitState,
+    selectClusterSize,
+    selectDistribution,
     selectInitState,
-    setInitState,
+    selectLiveCells,
+    setClusterSize,
+    setDistribution,
+    setLiveCells,
     toggleInitStateCell,
 } from "src/app/slices/initState";
 import { Box, FormControlLabel, Grid, RadioGroup } from "@mui/material";
@@ -30,26 +31,17 @@ import { selectNumCells } from "src/app/slices/numCells";
 
 export default function InitState1d() {
     //
-    const liveCells = useStateObj<number>(1);
-    const clusterMin = useStateObj<number>(1);
-    const clusterMax = useStateObj<number>(1);
-    const clusterDist = useStateObj<DistributionType>("even");
-
     return (
         <Grid container rowSpacing={2}>
             {/* row 1 */}
             <Grid item container columnSpacing={3}>
                 {/* live cells */}
                 <Grid item md>
-                    <LiveCells state={liveCells} />
+                    <LiveCells />
                 </Grid>
                 {/* clusters */}
                 <Grid item md>
-                    <Cluster
-                        minState={clusterMin}
-                        maxState={clusterMax}
-                        distState={clusterDist}
-                    />
+                    <Cluster />
                 </Grid>
             </Grid>
             {/* row 2 */}
@@ -60,21 +52,19 @@ export default function InitState1d() {
                 </Grid>
                 {/* reload button */}
                 <Grid item xs={1}>
-                    <ReloadBtn
-                        liveCells={liveCells.get}
-                        clusterMin={clusterMin.get}
-                        clusterMax={clusterMax.get}
-                        clusterDist={clusterDist.get}
-                    />
+                    <ReloadBtn />
                 </Grid>
             </Grid>
         </Grid>
     );
 }
 
-function LiveCells({ state }: { state: StateObjHook<number> }) {
+function LiveCells() {
     //
     const numCells = useAppSelector(selectNumCells);
+    const liveCells = useAppSelector(selectLiveCells);
+
+    const dispatch = useAppDispatch();
 
     return (
         <Grid container className="cap-component-container">
@@ -87,12 +77,12 @@ function LiveCells({ state }: { state: StateObjHook<number> }) {
                     defaultValue={1}
                     min={1}
                     max={numCells}
-                    value={state.get}
+                    value={liveCells}
                     onChange={(
                         event: Event,
                         value: number | number[],
                         activeThumb: number
-                    ) => state.set(value as number)}
+                    ) => dispatch(setLiveCells(value as number))}
                     marks={[
                         {
                             value: 1,
@@ -121,20 +111,22 @@ function LiveCells({ state }: { state: StateObjHook<number> }) {
             <Grid item md={3} className="flex justify-center">
                 <StyledInput
                     className="h-fit"
-                    value={state.get}
+                    value={liveCells}
                     size="small"
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        state.set(
-                            event.target.value === ""
-                                ? 0
-                                : Number(event.target.value)
+                        dispatch(
+                            setLiveCells(
+                                event.target.value === ""
+                                    ? 0
+                                    : Number(event.target.value)
+                            )
                         )
                     }
                     onBlur={() => {
-                        if (state.get < 0) {
-                            state.set(0);
-                        } else if (state.get > numCells) {
-                            state.set(numCells);
+                        if (liveCells < 0) {
+                            dispatch(setLiveCells(0));
+                        } else if (liveCells > numCells) {
+                            dispatch(setLiveCells(numCells));
                         }
                     }}
                     inputProps={{
@@ -150,16 +142,12 @@ function LiveCells({ state }: { state: StateObjHook<number> }) {
     );
 }
 
-function Cluster({
-    minState,
-    maxState,
-    distState,
-}: {
-    minState: StateObjHook<number>;
-    maxState: StateObjHook<number>;
-    distState: StateObjHook<DistributionType>;
-}) {
+function Cluster() {
     //
+    const clusterSize = useAppSelector(selectClusterSize);
+    const distribution = useAppSelector(selectDistribution);
+    const dispatch = useAppDispatch();
+
     return (
         <Grid container className="cap-component-container">
             <Grid container>
@@ -171,16 +159,12 @@ function Cluster({
                     defaultValue={1}
                     min={1}
                     max={30}
-                    value={[minState.get, maxState.get]}
+                    value={clusterSize}
                     onChange={(
                         event: Event,
                         value: number | number[],
                         activeThumb: number
-                    ) => {
-                        let [min, max] = value as number[];
-                        minState.set(min);
-                        maxState.set(max);
-                    }}
+                    ) => dispatch(setClusterSize(value as number[]))}
                     marks={[
                         { value: 1, label: 1 },
                         { value: 5, label: 5 },
@@ -199,9 +183,9 @@ function Cluster({
                     defaultValue="even"
                     name="cluster-dist-radio-group"
                     row
-                    value={distState.get}
+                    value={distribution}
                     onChange={(event: React.ChangeEvent, value: string) =>
-                        distState.set(value as DistributionType)
+                        dispatch(setDistribution(value as DistributionType))
                     }
                 >
                     <FormControlLabel
@@ -241,32 +225,9 @@ function Cells() {
     );
 }
 
-function ReloadBtn({
-    liveCells,
-    clusterMin,
-    clusterMax,
-    clusterDist,
-}: {
-    liveCells: number;
-    clusterMin: number;
-    clusterMax: number;
-    clusterDist: DistributionType;
-}) {
+function ReloadBtn() {
     //
     const dispatch = useAppDispatch();
-
-    const params = {
-        numCells: useAppSelector(selectNumCells),
-        liveCells: liveCells,
-        groupMinSize: clusterMin,
-        groupMaxSize: clusterMax,
-        distribution: clusterDist,
-    };
-
-    // useEffect(() => {
-    //     dispatch(setInitState(params));
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [params]);
 
     return (
         <Box className="h-full relative">
@@ -275,7 +236,7 @@ function ReloadBtn({
                 icon={faRotate}
                 size="2xl"
                 tooltipLabel="Reload init state"
-                onClick={() => dispatch(setInitState(params))}
+                onClick={() => dispatch(reloadInitState())}
             />
         </Box>
     );
