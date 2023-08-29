@@ -40,6 +40,22 @@ const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
     },
 }));
 
+export const ResizeBtn = styled(Button)<ButtonProps>(({ theme }) => ({
+    backgroundColor: "var(--sunglow)",
+    color: "var(--jet)",
+    minWidth: "fit-content",
+    width: "fit-content",
+    padding: "3px",
+    "&:hover": {
+        backgroundColor: "var(--jet)",
+        color: "var(--sunglow)",
+    },
+    "&:disabled": {
+        backgroundColor: "var(--frenchGray)",
+        color: "var(--jet)",
+    },
+}));
+
 export default function CustomButtom({
     icon,
     size,

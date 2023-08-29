@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Nbhd2dHook } from "src/app/hooks/nbhd2d";
 import { Box, Button, ButtonProps, styled } from "@mui/material";
+import { ResizeBtn } from "src/components/Button";
 
 export default function Nbhd2dEditor({
     state,
@@ -72,22 +73,6 @@ export default function Nbhd2dEditor({
         </Box>
     );
 }
-
-const ResizeBtn = styled(Button)<ButtonProps>(({ theme }) => ({
-    backgroundColor: "var(--sunglow)",
-    color: "var(--jet)",
-    minWidth: "fit-content",
-    width: "fit-content",
-    padding: "3px",
-    "&:hover": {
-        backgroundColor: "var(--jet)",
-        color: "var(--sunglow)",
-    },
-    "&:disabled": {
-        backgroundColor: "var(--frenchGray)",
-        color: "var(--jet)",
-    },
-}));
 
 function ResizeButtons({
     nbhd,

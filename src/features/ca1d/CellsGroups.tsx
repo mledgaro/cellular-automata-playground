@@ -8,6 +8,8 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import {
     faEllipsis,
+    faSquareMinus,
+    faSquarePlus,
     faSquare as faSquareSolid,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -15,11 +17,17 @@ import { NbhdType, selectNbhdType } from "src/app/slices/nbhdType";
 import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 import { Box } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
-import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
+import {
+    minVal as nbhdWidthMin,
+    maxVal as nbhdWidthMax,
+    selectNbhdWidth,
+    setNbhdWidth,
+} from "src/app/slices/nbhdWidth";
 import { intToBoolArray } from "src/ts/Utils";
 import { selectMainCell, setMainCell } from "src/app/slices/mainCell";
+import { ResizeBtn } from "src/components/Button";
 
-export function MainCellSelector({ className = "" }: { className?: string }) {
+export function Nbhd1dEditor({ className = "" }: { className?: string }) {
     //
 
     const width = useAppSelector(selectNbhdWidth);
@@ -63,16 +71,33 @@ export function MainCellSelector({ className = "" }: { className?: string }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [width]);
 
+    cells = addEllipses(cells, mainCell, type, "xs");
+
     return (
         <Box
-            className={`cap-component-container w-fit p-2 space-x-1.5 ${className}`}
+            className={`cap-component-container w-fit p-2 space-x-4 flex flex-row ${className}`}
         >
-            <Ellipses
-                size="xs"
-                cells={cells}
-                mainCell={mainCell}
-                nbhdType={type}
-            />
+            <Box className="space-x-1">{cells}</Box>
+            <Box className="flex flex-col justify-center">
+                <Box className="space-x-1">
+                    <ResizeBtn
+                        variant="contained"
+                        className=""
+                        onClick={() => dispatch(setNbhdWidth(width - 1))}
+                        disabled={width <= nbhdWidthMin}
+                    >
+                        <FontAwesomeIcon icon={faSquareMinus} />
+                    </ResizeBtn>
+                    <ResizeBtn
+                        variant="contained"
+                        className=""
+                        onClick={() => dispatch(setNbhdWidth(width + 1))}
+                        disabled={width >= nbhdWidthMax}
+                    >
+                        <FontAwesomeIcon icon={faSquarePlus} />
+                    </ResizeBtn>
+                </Box>
+            </Box>
         </Box>
     );
 }
@@ -91,29 +116,21 @@ export function RulePreview({ index }: { index: number }) {
         />
     ));
 
+    cells = addEllipses(cells, mainCell, nbhdType, "xs");
+
     return (
         <Box className="cap-component-container w-fit p-2 space-x-1.5">
-            <Ellipses
-                size="xs"
-                cells={cells}
-                mainCell={mainCell}
-                nbhdType={nbhdType}
-            />
+            {cells}
         </Box>
     );
 }
 
-function Ellipses({
-    size = "sm",
-    cells,
-    mainCell,
-    nbhdType,
-}: {
-    size?: SizeProp;
-    cells: JSX.Element[];
-    mainCell: number;
-    nbhdType: NbhdType;
-}) {
+function addEllipses(
+    cells: JSX.Element[],
+    mainCell: number,
+    nbhdType: NbhdType,
+    size: SizeProp
+) {
     //
     let cells_ = [...cells];
     const lastIdx = cells_.length - 1;
@@ -167,5 +184,5 @@ function Ellipses({
             break;
     }
 
-    return <>{cells_}</>;
+    return cells_;
 }

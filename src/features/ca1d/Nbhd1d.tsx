@@ -26,7 +26,7 @@ import { selectMainCell } from "src/app/slices/mainCell";
 import { selectCellsNbhds, setCellsNbhds } from "src/app/slices/cellsNbhds";
 
 import { selectNumCells } from "src/app/slices/numCells";
-import { MainCellSelector } from "./CellsGroups";
+import { Nbhd1dEditor } from "./CellsGroups";
 import { boolArray } from "src/ts/Utils";
 
 export default function Nbhd1d() {
@@ -42,16 +42,16 @@ export default function Nbhd1d() {
                 justifyContent="space-evenly"
             >
                 {/* Width */}
-                <Grid item md={3}>
+                {/* <Grid item md={2}>
                     <Width />
-                </Grid>
+                </Grid> */}
                 {/* Type */}
                 <Grid item md="auto">
                     <Type />
                 </Grid>
                 {/* Main cell selector */}
-                <Grid item md="auto" className="">
-                    <MainCellSelector />
+                <Grid item md="auto">
+                    <Nbhd1dEditor />
                 </Grid>
             </Grid>
             {/* Row 2 */}
