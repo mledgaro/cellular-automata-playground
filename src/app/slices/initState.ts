@@ -9,16 +9,19 @@ export type DistributionType = "even" | "rand";
 
 interface InitStateState {
     value: boolean[];
-    liveCells: number;
-    clusterSize: number[];
-    distribution: DistributionType;
+    density: number;
+    // liveCells: number;
+    // clusterSize: number[];
+    // distribution: DistributionType;
 }
 
 export const initialState: InitStateState = {
-    value: buildState(numCellsDefault, 1, [1, 1], "even"),
-    liveCells: 1,
-    clusterSize: [1, 1],
-    distribution: "even",
+    // value: buildState(numCellsDefault, 1, [1, 1], "even"),
+    value: randState(numCellsDefault, 0.1),
+    density: 0.1,
+    // liveCells: 1,
+    // clusterSize: [1, 1],
+    // distribution: "even",
 };
 
 function variableDist(
@@ -132,44 +135,54 @@ function buildState(
     return arr;
 }
 
+function randState(numCells: number, density: number) {
+    return Array(numCells)
+        .fill(null)
+        .map(() => Math.random() <= density);
+}
+
 export const initStateSlice = createSlice({
     name: "initState",
     initialState,
     reducers: {
-        setLiveCells: (state, action: PayloadAction<number>) => {
-            state.liveCells = action.payload;
-            state.value = buildState(
-                state.value.length,
-                action.payload,
-                state.clusterSize,
-                state.distribution
-            );
+        setDensity: (state, action: PayloadAction<number>) => {
+            state.density = action.payload;
         },
-        setClusterSize: (state, action: PayloadAction<number[]>) => {
-            state.clusterSize = action.payload;
-            state.value = buildState(
-                state.value.length,
-                state.liveCells,
-                action.payload,
-                state.distribution
-            );
-        },
-        setDistribution: (state, action: PayloadAction<DistributionType>) => {
-            state.distribution = action.payload;
-            state.value = buildState(
-                state.value.length,
-                state.liveCells,
-                state.clusterSize,
-                action.payload
-            );
-        },
+        // setLiveCells: (state, action: PayloadAction<number>) => {
+        //     state.liveCells = action.payload;
+        //     state.value = buildState(
+        //         state.value.length,
+        //         action.payload,
+        //         state.clusterSize,
+        //         state.distribution
+        //     );
+        // },
+        // setClusterSize: (state, action: PayloadAction<number[]>) => {
+        // state.clusterSize = action.payload;
+        // state.value = buildState(
+        //     state.value.length,
+        //     state.liveCells,
+        //     action.payload,
+        //     state.distribution
+        // );
+        // },
+        // setDistribution: (state, action: PayloadAction<DistributionType>) => {
+        // state.distribution = action.payload;
+        // state.value = buildState(
+        //     state.value.length,
+        //     state.liveCells,
+        //     state.clusterSize,
+        //     action.payload
+        // );
+        // },
         reloadInitState: (state) => {
-            state.value = buildState(
-                state.value.length,
-                state.liveCells,
-                state.clusterSize,
-                state.distribution
-            );
+            // state.value = buildState(
+            //     state.value.length,
+            //     state.liveCells,
+            //     state.clusterSize,
+            //     state.distribution
+            // );
+            state.value = randState(state.value.length, state.density);
         },
         toggleInitStateCell: (state, action: PayloadAction<number>) => {
             state.value = state.value.map((e, i) =>
@@ -177,27 +190,30 @@ export const initStateSlice = createSlice({
             );
         },
         resizeInitState: (state, action: PayloadAction<number>) => {
-            state.value = state.value = buildState(
-                action.payload,
-                state.liveCells,
-                state.clusterSize,
-                state.distribution
-            );
+            // state.value = state.value = buildState(
+            //     action.payload,
+            //     state.liveCells,
+            //     state.clusterSize,
+            //     state.distribution
+            // );
+            state.value = randState(action.payload, state.density);
         },
     },
 });
 
 export const selectInitState = (state: RootState) => state.initState.value;
-export const selectLiveCells = (state: RootState) => state.initState.liveCells;
-export const selectClusterSize = (state: RootState) =>
-    state.initState.clusterSize;
-export const selectDistribution = (state: RootState) =>
-    state.initState.distribution;
+export const selectDensity = (state: RootState) => state.initState.density;
+// export const selectLiveCells = (state: RootState) => state.initState.liveCells;
+// export const selectClusterSize = (state: RootState) =>
+//     state.initState.clusterSize;
+// export const selectDistribution = (state: RootState) =>
+//     state.initState.distribution;
 
 export const {
-    setLiveCells,
-    setClusterSize,
-    setDistribution,
+    // setLiveCells,
+    // setClusterSize,
+    // setDistribution,
+    setDensity,
     reloadInitState,
     resizeInitState,
     toggleInitStateCell,

@@ -2,107 +2,104 @@
 
 import React from "react";
 
-import {
-    faEquals,
-    faRotate,
-    faShuffle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "../../components/Button";
 
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import {
-    DistributionType,
     reloadInitState,
-    selectClusterSize,
-    selectDistribution,
+    selectDensity,
     selectInitState,
-    selectLiveCells,
-    setClusterSize,
-    setDistribution,
-    setLiveCells,
+    setDensity,
     toggleInitStateCell,
 } from "src/app/slices/initState";
-import { Box, FormControlLabel, Grid, RadioGroup } from "@mui/material";
-import { StyledRadio } from "src/components/RadioGroup";
+import { Box, Grid } from "@mui/material";
 import { StyledInput, StyledSlider } from "src/components/Slider";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { selectNumCells } from "src/app/slices/numCells";
 
 export default function InitState1d() {
     //
     return (
         <Grid container rowSpacing={2}>
             {/* row 1 */}
-            <Grid item container columnSpacing={3}>
+            <Grid
+                item
+                container
+                columnSpacing={3}
+                alignItems="center"
+                justifyContent="space-evenly"
+            >
                 {/* live cells */}
-                <Grid item md>
-                    <LiveCells />
+                <Grid item md={8}>
+                    <Density />
                 </Grid>
                 {/* clusters */}
-                <Grid item md>
+                {/* <Grid item md>
                     <Cluster />
-                </Grid>
-            </Grid>
-            {/* row 2 */}
-            <Grid item container>
-                {/* initial state cells */}
-                <Grid item xs={11}>
-                    <Cells />
-                </Grid>
-                {/* reload button */}
-                <Grid item xs={1}>
+                </Grid> */}
+                <Grid item md="auto">
                     <ReloadBtn />
                 </Grid>
             </Grid>
+            <Grid item xs={12}>
+                <Cells />
+            </Grid>
+            {/* row 2 */}
+            {/* <Grid item container>
+                <Grid item xs={12}>
+                    <Cells />
+                </Grid>
+                <Grid item xs={1}>
+                    <ReloadBtn />
+                </Grid>
+            </Grid> */}
         </Grid>
     );
 }
 
-function LiveCells() {
+function Density() {
     //
-    const numCells = useAppSelector(selectNumCells);
-    const liveCells = useAppSelector(selectLiveCells);
-
+    const density = useAppSelector(selectDensity);
     const dispatch = useAppDispatch();
 
     return (
         <Grid container className="cap-component-container">
             <Grid container>
-                <Box className="cap-component-label ms-2 my-2">Live cells</Box>
+                <Box className="cap-component-label ms-2 my-2">Density</Box>
             </Grid>
 
             <Grid item md={9}>
                 <StyledSlider
                     defaultValue={1}
-                    min={1}
-                    max={numCells}
-                    value={liveCells}
+                    min={0.01}
+                    max={1}
+                    step={0.01}
+                    value={density}
                     onChange={(
                         event: Event,
                         value: number | number[],
                         activeThumb: number
-                    ) => dispatch(setLiveCells(value as number))}
+                    ) => dispatch(setDensity(value as number))}
                     marks={[
                         {
-                            value: 1,
-                            label: 1,
+                            value: 0.01,
+                            label: "1%",
                         },
                         {
-                            value: numCells * (1 / 4),
+                            value: 0.25,
                             label: "25%",
                         },
                         {
-                            value: numCells * (1 / 2),
+                            value: 0.5,
                             label: "50%",
                         },
                         {
-                            value: numCells * (3 / 4),
+                            value: 0.75,
                             label: "75%",
                         },
                         {
-                            value: numCells,
-                            label: numCells,
+                            value: 1,
+                            label: "100%",
                         },
                     ]}
                 />
@@ -111,11 +108,11 @@ function LiveCells() {
             <Grid item md={3} className="flex justify-center">
                 <StyledInput
                     className="h-fit"
-                    value={liveCells}
+                    value={density}
                     size="small"
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                         dispatch(
-                            setLiveCells(
+                            setDensity(
                                 event.target.value === ""
                                     ? 0
                                     : Number(event.target.value)
@@ -123,16 +120,16 @@ function LiveCells() {
                         )
                     }
                     onBlur={() => {
-                        if (liveCells < 0) {
-                            dispatch(setLiveCells(0));
-                        } else if (liveCells > numCells) {
-                            dispatch(setLiveCells(numCells));
+                        if (density < 0.01) {
+                            dispatch(setDensity(0.01));
+                        } else if (density > 1) {
+                            dispatch(setDensity(1));
                         }
                     }}
                     inputProps={{
-                        step: 5,
-                        min: 1,
-                        max: numCells,
+                        step: 0.05,
+                        min: 0.01,
+                        max: 1,
                         type: "number",
                     }}
                     disableUnderline
@@ -142,69 +139,152 @@ function LiveCells() {
     );
 }
 
-function Cluster() {
-    //
-    const clusterSize = useAppSelector(selectClusterSize);
-    const distribution = useAppSelector(selectDistribution);
-    const dispatch = useAppDispatch();
+// function LiveCells() {
+//     //
+//     const numCells = useAppSelector(selectNumCells);
+//     const liveCells = useAppSelector(selectLiveCells);
 
-    return (
-        <Grid container className="cap-component-container">
-            <Grid container>
-                <Box className="cap-component-label ms-2 my-2">Clusters</Box>
-            </Grid>
+//     const dispatch = useAppDispatch();
 
-            <Grid item md={9}>
-                <StyledSlider
-                    defaultValue={1}
-                    min={1}
-                    max={30}
-                    value={clusterSize}
-                    onChange={(
-                        event: Event,
-                        value: number | number[],
-                        activeThumb: number
-                    ) => dispatch(setClusterSize(value as number[]))}
-                    marks={[
-                        { value: 1, label: 1 },
-                        { value: 5, label: 5 },
-                        { value: 10, label: 10 },
-                        { value: 15, label: 15 },
-                        { value: 20, label: 20 },
-                        { value: 25, label: 25 },
-                        { value: 30, label: 30 },
-                    ]}
-                />
-            </Grid>
+//     return (
+//         <Grid container className="cap-component-container">
+//             <Grid container>
+//                 <Box className="cap-component-label ms-2 my-2">Live cells</Box>
+//             </Grid>
 
-            <Grid item md={3} className="flex justify-center">
-                <RadioGroup
-                    aria-labelledby="cluster-dist-radio-group-label"
-                    defaultValue="even"
-                    name="cluster-dist-radio-group"
-                    row
-                    value={distribution}
-                    onChange={(event: React.ChangeEvent, value: string) =>
-                        dispatch(setDistribution(value as DistributionType))
-                    }
-                >
-                    <FormControlLabel
-                        key={1}
-                        value="even"
-                        control={<StyledRadio />}
-                        label={<FontAwesomeIcon icon={faEquals} size="lg" />}
-                    />
-                    <FormControlLabel
-                        key={2}
-                        value="rand"
-                        control={<StyledRadio />}
-                        label={<FontAwesomeIcon icon={faShuffle} size="lg" />}
-                    />
-                </RadioGroup>
-            </Grid>
-        </Grid>
-    );
-}
+//             <Grid item md={9}>
+//                 <StyledSlider
+//                     defaultValue={1}
+//                     min={1}
+//                     max={numCells}
+//                     value={liveCells}
+//                     onChange={(
+//                         event: Event,
+//                         value: number | number[],
+//                         activeThumb: number
+//                     ) => dispatch(setLiveCells(value as number))}
+//                     marks={[
+//                         {
+//                             value: 1,
+//                             label: 1,
+//                         },
+//                         {
+//                             value: numCells * (1 / 4),
+//                             label: "25%",
+//                         },
+//                         {
+//                             value: numCells * (1 / 2),
+//                             label: "50%",
+//                         },
+//                         {
+//                             value: numCells * (3 / 4),
+//                             label: "75%",
+//                         },
+//                         {
+//                             value: numCells,
+//                             label: numCells,
+//                         },
+//                     ]}
+//                 />
+//             </Grid>
+
+//             <Grid item md={3} className="flex justify-center">
+//                 <StyledInput
+//                     className="h-fit"
+//                     value={liveCells}
+//                     size="small"
+//                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+//                         dispatch(
+//                             setLiveCells(
+//                                 event.target.value === ""
+//                                     ? 0
+//                                     : Number(event.target.value)
+//                             )
+//                         )
+//                     }
+//                     onBlur={() => {
+//                         if (liveCells < 0) {
+//                             dispatch(setLiveCells(0));
+//                         } else if (liveCells > numCells) {
+//                             dispatch(setLiveCells(numCells));
+//                         }
+//                     }}
+//                     inputProps={{
+//                         step: 5,
+//                         min: 1,
+//                         max: numCells,
+//                         type: "number",
+//                     }}
+//                     disableUnderline
+//                 />
+//             </Grid>
+//         </Grid>
+//     );
+// }
+
+// function Cluster() {
+//     //
+//     const clusterSize = useAppSelector(selectClusterSize);
+//     const distribution = useAppSelector(selectDistribution);
+//     const dispatch = useAppDispatch();
+
+//     return (
+//         <Grid container className="cap-component-container">
+//             <Grid container>
+//                 <Box className="cap-component-label ms-2 my-2">Clusters</Box>
+//             </Grid>
+
+//             <Grid item md={9}>
+//                 <StyledSlider
+//                     defaultValue={1}
+//                     min={1}
+//                     max={30}
+//                     value={clusterSize}
+//                     onChange={(
+//                         event: Event,
+//                         value: number | number[],
+//                         activeThumb: number
+//                     ) => dispatch(setClusterSize(value as number[]))}
+//                     marks={[
+//                         { value: 1, label: 1 },
+//                         { value: 5, label: 5 },
+//                         { value: 10, label: 10 },
+//                         { value: 15, label: 15 },
+//                         { value: 20, label: 20 },
+//                         { value: 25, label: 25 },
+//                         { value: 30, label: 30 },
+//                     ]}
+//                 />
+//             </Grid>
+
+//             <Grid item md={3} className="flex justify-center">
+//                 <RadioGroup
+//                     aria-labelledby="cluster-dist-radio-group-label"
+//                     defaultValue="even"
+//                     name="cluster-dist-radio-group"
+//                     row
+//                     value={distribution}
+//                     onChange={(event: React.ChangeEvent, value: string) =>
+//                         dispatch(setDistribution(value as DistributionType))
+//                     }
+//                 >
+//                     <FormControlLabel
+//                         key={1}
+//                         value="even"
+//                         control={<StyledRadio />}
+//                         label={<FontAwesomeIcon icon={faEquals} size="lg" />}
+//                     />
+//                     <FormControlLabel
+//                         key={2}
+//                         value="rand"
+//                         control={<StyledRadio />}
+//                         label={<FontAwesomeIcon icon={faShuffle} size="lg" />}
+//                     />
+//                 </RadioGroup>
+//             </Grid>
+//         </Grid>
+//     );
+// }
 
 function Cells() {
     //
@@ -230,9 +310,9 @@ function ReloadBtn() {
     const dispatch = useAppDispatch();
 
     return (
-        <Box className="h-full relative">
+        <Box className="">
             <Button
-                className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
+                className=""
                 icon={faRotate}
                 size="2xl"
                 tooltipLabel="Reload init state"
