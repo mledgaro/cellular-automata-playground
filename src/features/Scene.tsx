@@ -281,7 +281,7 @@ function ScreenshotBtn() {
             onClick={() =>
                 canvasCntrl?.current?.saveScene("cellular_automaton")
             }
-            disabled={status!.stopped}
+            disabled={!status!.paused}
         />
     );
 }

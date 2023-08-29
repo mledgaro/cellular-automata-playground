@@ -38,7 +38,6 @@ export default function Nbhd1d() {
                 container
                 item
                 alignItems="center"
-                columnSpacing={2}
                 justifyContent="space-evenly"
             >
                 {/* Width */}
@@ -53,38 +52,42 @@ export default function Nbhd1d() {
                 <Grid item md="auto">
                     <Nbhd1dEditor />
                 </Grid>
-            </Grid>
-            {/* Row 2 */}
-            <Grid container item alignItems="center">
-                {/* Neighborhoods map */}
-                <Grid item xs={11}>
-                    <NbhdsMap />
-                </Grid>
-                {/* Reload button */}
-                <Grid item xs={1} className="flex justify-center">
+
+                <Grid item md="auto" className="flex justify-center">
                     <Reload />
                 </Grid>
             </Grid>
+            {/* Row 2 */}
+            {/* <Grid container item alignItems="center"> */}
+            {/* Neighborhoods map */}
+            <Grid item xs={12}>
+                <NbhdsMap />
+            </Grid>
+            {/* Reload button */}
+            {/* <Grid item xs={1} className="flex justify-center">
+                    <Reload />
+                </Grid> */}
+            {/* </Grid> */}
         </Grid>
     );
 }
 
-function Width() {
-    //
-    const width = useAppSelector(selectNbhdWidth);
-    const dispatch = useAppDispatch();
-    return (
-        <CustomSlider
-            label="Width"
-            minVal={nbhdWidthMin}
-            maxVal={nbhdWidthMax}
-            defaultVal={nbhdWidthDefault}
-            value={width}
-            marks={true}
-            onChange={(val: number) => dispatch(setNbhdWidth(val))}
-        />
-    );
-}
+// function Width() {
+//     //
+//     const width = useAppSelector(selectNbhdWidth);
+//     const dispatch = useAppDispatch();
+//     return (
+//         <CustomSlider
+//             label="Width"
+//             minVal={nbhdWidthMin}
+//             maxVal={nbhdWidthMax}
+//             defaultVal={nbhdWidthDefault}
+//             value={width}
+//             marks={true}
+//             onChange={(val: number) => dispatch(setNbhdWidth(val))}
+//         />
+//     );
+// }
 
 function Type() {
     //
@@ -152,7 +155,7 @@ function Reload() {
     return (
         <Button
             icon={faRotate}
-            size="2xl"
+            size="3x"
             tooltipLabel="Reload neighborhoods"
             onClick={() => dispatch(setCellsNbhds(params))}
         />

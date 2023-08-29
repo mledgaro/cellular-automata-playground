@@ -27,7 +27,6 @@ import { Box, Grid } from "@mui/material";
 
 export default function Rules1d() {
     //
-
     const onHoverCell = useStateObj<number>(0);
 
     return (
@@ -38,7 +37,6 @@ export default function Rules1d() {
                 item
                 alignItems="center"
                 justifyContent="space-evenly"
-                columnSpacing={3}
             >
                 {/* Rule number */}
                 <Grid item md="auto">

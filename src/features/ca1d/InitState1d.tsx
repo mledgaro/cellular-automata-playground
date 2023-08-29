@@ -314,7 +314,7 @@ function ReloadBtn() {
             <Button
                 className=""
                 icon={faRotate}
-                size="2xl"
+                size="3x"
                 tooltipLabel="Reload init state"
                 onClick={() => dispatch(reloadInitState())}
             />
