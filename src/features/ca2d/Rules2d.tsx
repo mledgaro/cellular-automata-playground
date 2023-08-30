@@ -43,7 +43,7 @@ function Rule({
 }) {
     //
     let icon =
-        value === undefined
+        value === null
             ? faSquareMinus
             : value
             ? faSquareSolid

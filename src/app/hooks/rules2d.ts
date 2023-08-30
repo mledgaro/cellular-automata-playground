@@ -1,7 +1,7 @@
 //
 import { useArray } from "../hooks";
 
-export type Rule2dState = true | false | undefined;
+export type Rule2dState = boolean | null;
 
 export type Rules2dHook = {
     get: Rule2dState[];
@@ -13,7 +13,7 @@ export type Rules2dHook = {
 const defaultVal = [
     false,
     false,
-    undefined,
+    null,
     true,
     false,
     false,
@@ -30,13 +30,9 @@ export function useRules2d(): Rules2dHook {
         get: rules.get,
         toggle: (i: number) =>
             rules.setAt(
-                rules.get[i] === undefined
-                    ? true
-                    : rules.get[i]
-                    ? false
-                    : undefined,
+                rules.get[i] === null ? true : rules.get[i] ? false : null,
                 i
             ),
-        resize: (num: number) => rules.set(Array(num + 1).fill(undefined)),
+        resize: (num: number) => rules.set(Array(num + 1).fill(null)),
     };
 }

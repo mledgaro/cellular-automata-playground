@@ -32,6 +32,7 @@ import { selectCellsNbhds, setCellsNbhds } from "./app/slices/cellsNbhds";
 import { selectNbhdWidth } from "./app/slices/nbhdWidth";
 import { selectNbhdType } from "./app/slices/nbhdType";
 import { selectMainCell } from "./app/slices/mainCell";
+import { CellularAutomaton2d } from "./ts/CellularAutomaton2d";
 
 export default function App() {
     //
@@ -39,7 +40,7 @@ export default function App() {
         <BrowserRouter>
             <Box>
                 <Routes>
-                    <Route index element={<CellularAutomata1d />} />
+                    <Route index element={<CellularAutomata2d />} />
                     <Route path="ca1d" element={<CellularAutomata1d />} />
                     <Route path="ca2d" element={<CellularAutomata2d />} />
                 </Routes>
@@ -124,27 +125,45 @@ function CellularAutomata2d() {
     const rules = useRules2d();
     const initState = useInitState2d(64, numCells);
 
+    const automaton = useRef(new CellularAutomaton2d());
+
     useEffect(() => {
         rules.resize(nbhd.size);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nbhd.size]);
 
+    const init = (canvas: CanvasCntrl | undefined) => {
+        automaton.current.setNbhd(nbhd.nbhd, nbhd.mainCell);
+        automaton.current.rules = rules.get;
+        automaton.current.state = initState.get;
+        canvas?.paintScene(automaton.current.state);
+    };
+
+    const next = (canvas: CanvasCntrl | undefined) => {
+        automaton.current.nextState();
+        canvas?.paintScene(automaton.current.state);
+    };
+
     return (
-        <CustomTabs
-            tabs={[
-                {
-                    title: "Neighborhood",
-                    content: <Nbhd2d state={nbhd} />,
-                },
-                {
-                    title: "Rules",
-                    content: <Rules2d state={rules} />,
-                },
-                {
-                    title: "Init state",
-                    content: <InitState2d state={initState} />,
-                },
-            ]}
-        />
+        <Box className="space-y-6 my-5">
+            <Box className="cap-title">2D Cellular Automata</Box>
+            <Scene init={init} next={next} />
+            <CustomTabs
+                tabs={[
+                    {
+                        title: "Neighborhood",
+                        content: <Nbhd2d state={nbhd} />,
+                    },
+                    {
+                        title: "Rules",
+                        content: <Rules2d state={rules} />,
+                    },
+                    {
+                        title: "Init state",
+                        content: <InitState2d state={initState} />,
+                    },
+                ]}
+            />
+        </Box>
     );
 }
