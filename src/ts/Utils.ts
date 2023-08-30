@@ -97,25 +97,25 @@ export function setMatrixItem(
 
 export function addRow(
     matrix: any[][],
-    atStart: boolean,
+    // atStart: boolean,
     remove: boolean
 ): any[][] {
     //
     let nMatrix = copyMatrix(matrix);
 
     if (remove) {
-        if (atStart) {
-            nMatrix.shift();
-        } else {
-            nMatrix.pop();
-        }
+        // if (atStart) {
+        //     nMatrix.shift();
+        // } else {
+        nMatrix.pop();
+        // }
     } else {
         const newRow = Array(matrix[0].length).fill(false);
-        if (atStart) {
-            nMatrix.unshift(newRow);
-        } else {
-            nMatrix.push(newRow);
-        }
+        // if (atStart) {
+        // nMatrix.unshift(newRow);
+        // } else {
+        nMatrix.push(newRow);
+        // }
     }
 
     return nMatrix;
@@ -123,24 +123,24 @@ export function addRow(
 
 export function addColumn(
     matrix: any[][],
-    atStart: boolean,
+    // atStart: boolean,
     remove: boolean
 ): any[][] {
     //
     let nMatrix = copyMatrix(matrix);
 
     if (remove) {
-        if (atStart) {
-            nMatrix.forEach((row) => row.shift());
-        } else {
-            nMatrix.forEach((row) => row.pop());
-        }
+        // if (atStart) {
+        //     nMatrix.forEach((row) => row.shift());
+        // } else {
+        nMatrix.forEach((row) => row.pop());
+        // }
     } else {
-        if (atStart) {
-            nMatrix.forEach((row) => row.unshift(false));
-        } else {
-            nMatrix.forEach((row) => row.push(false));
-        }
+        // if (atStart) {
+        //     nMatrix.forEach((row) => row.unshift(false));
+        // } else {
+        nMatrix.forEach((row) => row.push(false));
+        // }
     }
 
     return nMatrix;

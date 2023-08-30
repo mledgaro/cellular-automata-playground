@@ -23,34 +23,36 @@ export default function Nbhd2dEditor({
     const toggle = editable
         ? (r: number, c: number) => state.toggle({ r: r, c: c })
         : (r: number, c: number) => {};
+    const setMain = editable
+        ? (r: number, c: number) => state.setMainCell(r, c)
+        : (r: number, c: number) => {};
 
     let onClick: () => void;
+    let onDblClick: () => void;
 
     return (
         <Box className="cap-component-container p-2 flex flex-row space-x-3">
-            {/* start col */}
-            {editable && <ResizeButtons nbhd={state} atStart col />}
             {/* nbhd */}
             <Box className="space-y-3">
-                {/* start row */}
-                {editable && <ResizeButtons nbhd={state} atStart />}
                 <Box className="space-y-1-">
                     {state.nbhd.map((row, r) => {
                         return (
                             <Box className="space-x-1">
-                                {row.map((cell, c) => {
+                                {row.map((nbr, c) => {
                                     onClick = () => toggle(r, c);
+                                    onDblClick = () => setMain(r, c);
                                     return state.mainCell.r === r &&
                                         state.mainCell.c === c ? (
                                         <FontAwesomeIcon
                                             icon={faSquareCheck}
                                             size="xl"
                                         />
-                                    ) : state.nbhd[r][c] ? (
+                                    ) : nbr ? (
                                         <FontAwesomeIcon
                                             icon={faSquareRegular}
                                             size="xl"
                                             onClick={onClick}
+                                            onDoubleClick={onDblClick}
                                         />
                                     ) : (
                                         <FontAwesomeIcon
@@ -58,6 +60,7 @@ export default function Nbhd2dEditor({
                                             size="xl"
                                             className="text-french-gray"
                                             onClick={onClick}
+                                            onDoubleClick={onDblClick}
                                         />
                                     );
                                 })}
@@ -65,10 +68,8 @@ export default function Nbhd2dEditor({
                         );
                     })}
                 </Box>
-                {/* end row */}
                 {editable && <ResizeButtons nbhd={state} />}
             </Box>
-            {/* end col */}
             {editable && <ResizeButtons nbhd={state} col />}
         </Box>
     );
@@ -77,22 +78,17 @@ export default function Nbhd2dEditor({
 function ResizeButtons({
     nbhd,
     col = false,
-    atStart = false,
 }: {
     nbhd: Nbhd2dHook;
     col?: boolean;
-    atStart?: boolean;
 }) {
     const classes = col ? "flex-col space-y-1" : "space-x-1";
     const onclick = col
-        ? (remove: boolean) => nbhd.addColumn(atStart, remove)
-        : (remove: boolean) => nbhd.addRow(atStart, remove);
-    const limit = atStart
-        ? 0
-        : (col ? nbhd.nbhd[0].length : nbhd.nbhd.length) - 1;
+        ? (remove: boolean) => nbhd.addColumn(remove)
+        : (remove: boolean) => nbhd.addRow(remove);
     const disableRemove = col
-        ? nbhd.mainCell.c === limit || nbhd.nbhd[0].length === 2
-        : nbhd.mainCell.r === limit || nbhd.nbhd.length === 2;
+        ? nbhd.nbhd[0].length === 2
+        : nbhd.nbhd.length === 2;
     const disableAdd = col
         ? nbhd.nbhd[0].length === 10
         : nbhd.nbhd.length === 10;

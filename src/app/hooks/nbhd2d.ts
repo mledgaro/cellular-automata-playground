@@ -8,9 +8,10 @@ export type Nbhd2dHook = {
     type: NbhdType2D;
     setNbhd: (val: boolean[][]) => void;
     setType: (type: NbhdType2D) => void;
+    setMainCell: (r: number, c: number) => void;
     toggle: (pos: Position) => void;
-    addRow: (atStart: boolean, remove: boolean) => void;
-    addColumn: (atStart: boolean, remove: boolean) => void;
+    addRow: (remove: boolean) => void;
+    addColumn: (remove: boolean) => void;
     size: number;
 };
 
@@ -47,9 +48,14 @@ export default function useNbhd2d(): Nbhd2dHook {
         nbhd: nbhd.get,
         mainCell: mainCell.get,
         type: type.get,
+        size: size,
         setNbhd: (value: boolean[][]) => {
             nbhd.set(value);
             mainCell.set({ r: 1, c: 1 });
+        },
+        setMainCell: (r: number, c: number) => {
+            mainCell.set({ r: r, c: c });
+            nbhd.set(setMatrixItem(r, c, nbhd.get, false));
         },
         setType: (newType: NbhdType2D) => {
             type.set(newType);
@@ -70,40 +76,11 @@ export default function useNbhd2d(): Nbhd2dHook {
             nbhd.set(
                 setMatrixItem(pos.r, pos.c, nbhd.get, !nbhd.get[pos.r][pos.c])
             ),
-        addRow: (atStart: boolean, remove: boolean) => {
-            if (atStart) {
-                mainCell.set({
-                    r: mainCell.get.r + (remove ? -1 : 1),
-                    c: mainCell.get.c,
-                });
-                nbhd.set(
-                    setMatrixItem(
-                        mainCell.get.r,
-                        mainCell.get.c,
-                        nbhd.get,
-                        false
-                    )
-                );
-            }
-            nbhd.set(addRow(nbhd.get, atStart, remove));
+        addRow: (remove: boolean) => {
+            nbhd.set(addRow(nbhd.get, remove));
         },
-        addColumn: (atStart: boolean, remove: boolean) => {
-            if (atStart) {
-                mainCell.set({
-                    r: mainCell.get.r,
-                    c: mainCell.get.c + (remove ? -1 : 1),
-                });
-                nbhd.set(
-                    setMatrixItem(
-                        mainCell.get.r,
-                        mainCell.get.c,
-                        nbhd.get,
-                        false
-                    )
-                );
-            }
-            nbhd.set(addColumn(nbhd.get, atStart, remove));
+        addColumn: (remove: boolean) => {
+            nbhd.set(addColumn(nbhd.get, remove));
         },
-        size: size,
     };
 }
