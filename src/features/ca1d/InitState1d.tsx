@@ -1,5 +1,4 @@
 //
-
 import React from "react";
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
@@ -15,10 +14,12 @@ import {
     toggleInitStateCell,
 } from "src/app/slices/initState";
 import { Box, Grid } from "@mui/material";
-import { StyledInput, StyledSlider } from "src/components/Slider";
+import { DensitySlider } from "src/components/Slider";
 
 export default function InitState1d() {
     //
+    const density = useAppSelector(selectDensity);
+    const dispatch = useAppDispatch();
     return (
         <Grid container rowSpacing={2}>
             {/* row 1 */}
@@ -31,7 +32,10 @@ export default function InitState1d() {
             >
                 {/* live cells */}
                 <Grid item md={8}>
-                    <Density />
+                    <DensitySlider
+                        get={density}
+                        set={(val: number) => dispatch(setDensity(val))}
+                    />
                 </Grid>
                 {/* clusters */}
                 {/* <Grid item md>
@@ -53,88 +57,6 @@ export default function InitState1d() {
                     <ReloadBtn />
                 </Grid>
             </Grid> */}
-        </Grid>
-    );
-}
-
-function Density() {
-    //
-    const density = useAppSelector(selectDensity);
-    const dispatch = useAppDispatch();
-
-    return (
-        <Grid container className="cap-component-container">
-            <Grid container>
-                <Box className="cap-component-label ms-2 my-2">Density</Box>
-            </Grid>
-
-            <Grid item md={9}>
-                <StyledSlider
-                    defaultValue={1}
-                    min={0.01}
-                    max={1}
-                    step={0.01}
-                    value={density}
-                    onChange={(
-                        event: Event,
-                        value: number | number[],
-                        activeThumb: number
-                    ) => dispatch(setDensity(value as number))}
-                    marks={[
-                        {
-                            value: 0.01,
-                            label: "1%",
-                        },
-                        {
-                            value: 0.25,
-                            label: "25%",
-                        },
-                        {
-                            value: 0.5,
-                            label: "50%",
-                        },
-                        {
-                            value: 0.75,
-                            label: "75%",
-                        },
-                        {
-                            value: 1,
-                            label: "100%",
-                        },
-                    ]}
-                />
-            </Grid>
-
-            <Grid item md={3} className="flex justify-center">
-                <StyledInput
-                    className="h-fit"
-                    value={density}
-                    size="small"
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        dispatch(
-                            setDensity(
-                                event.target.value === ""
-                                    ? 0
-                                    : Number(event.target.value)
-                            )
-                        )
-                    }
-                    onBlur={() => {
-                        if (density < 0.01) {
-                            dispatch(setDensity(0.01));
-                        } else if (density > 1) {
-                            dispatch(setDensity(1));
-                        }
-                    }}
-                    inputProps={{
-                        step: 0.05,
-                        min: 0.01,
-                        max: 1,
-                        type: "number",
-                    }}
-                    disableUnderline
-                />
-            </Grid>
         </Grid>
     );
 }

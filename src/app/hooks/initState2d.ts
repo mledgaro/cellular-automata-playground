@@ -8,7 +8,8 @@ export type InitState2dHook = {
     toggle: (row: number, col: number) => void;
     resize: (rows: number, cols: number) => void;
     cellsNumber: number;
-    liveCells: StateObjHook<number>;
+    density: number;
+    setDensity: (val: number) => void;
 };
 
 export default function useInitState2d(
@@ -19,19 +20,17 @@ export default function useInitState2d(
     const initState = useStateObj<boolean[][]>(
         Array(rows).fill(Array(cols).fill(false))
     );
-    const liveCells = useStateObj<number>(1);
+    const density = useStateObj<number>(1);
 
     return {
         get: initState.get,
         set: initState.set,
         setRandom: () => {
-            let nState = Array(rows).fill(Array(cols).fill(false));
-            for (let i = 0, r, c; i < liveCells.get; i++) {
-                r = Math.floor(Math.random() * rows);
-                c = Math.floor(Math.random() * cols);
-                nState[r][c] = true;
-            }
-            initState.set(nState);
+            initState.set(
+                initState.get.map((row) =>
+                    row.map(() => Math.random() < density.get)
+                )
+            );
         },
         toggle: (row: number, col: number) =>
             initState.set(
@@ -41,6 +40,12 @@ export default function useInitState2d(
             initState.set(Array(rows).fill(Array(cols).fill(false)));
         },
         cellsNumber: initState.get.length * initState.get[0].length,
-        liveCells: liveCells,
+        density: density.get,
+        setDensity: (val: number) => {
+            density.set(val);
+            initState.set(
+                initState.get.map((row) => row.map(() => Math.random() < val))
+            );
+        },
     };
 }

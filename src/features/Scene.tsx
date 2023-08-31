@@ -1,4 +1,6 @@
 import React, {
+    UIEvent,
+    MouseEvent,
     MutableRefObject,
     createContext,
     useContext,
@@ -45,9 +47,11 @@ const bufferSize = 64;
 export default function Scene({
     init,
     next,
+    state,
 }: {
     init: (canvasCntrl: CanvasCntrl | undefined) => void;
     next: (canvasCntrl: CanvasCntrl | undefined) => void;
+    state?: boolean[][];
 }) {
     //
     const numCells = useAppSelector(selectNumCells);
@@ -58,13 +62,20 @@ export default function Scene({
 
     const timer = useRef<number>(0);
     const canvas = useRef<HTMLCanvasElement>(null);
+    const scroll = useRef<HTMLDivElement>(null);
     const canvasCntrl = useRef<CanvasCntrl>();
+
+    const onclick = (evt: MouseEvent) => {
+        canvasCntrl.current?.toggleCellAtCoords(evt.clientX, evt.clientY);
+    };
 
     useEffect(() => {
         canvasCntrl.current = new CanvasCntrl(
             canvas.current,
             bufferSize,
             numCells,
+            // 512,
+            // 512,
             cellSize.get
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,9 +101,22 @@ export default function Scene({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cellSize]);
 
+    useEffect(() => {
+        canvasCntrl.current?.paintScene(state ?? []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state]);
+
     return (
         <Box className="space-y-2">
-            <Box className="max-w-[95vw] max-h-[65vh] w-fit mx-auto overflow-auto">
+            <Box
+                ref={scroll}
+                className="max-w-[95vw] max-h-[65vh] w-fit mx-auto overflow-auto"
+                onClick={onclick}
+                onScroll={() => {
+                    canvasCntrl.current!.scrollX = scroll.current!.scrollLeft;
+                    canvasCntrl.current!.scrollY = scroll.current!.scrollTop;
+                }}
+            >
                 <canvas ref={canvas} />
             </Box>
             <CanvasCntrlCtx.Provider value={canvasCntrl}>

@@ -135,7 +135,8 @@ function CellularAutomata2d() {
     const init = (canvas: CanvasCntrl | undefined) => {
         automaton.current.setNbhd(nbhd.nbhd, nbhd.mainCell);
         automaton.current.rules = rules.get;
-        automaton.current.state = initState.get;
+        // automaton.current.state = initState.get;
+        automaton.current.state = canvas?.buffer ?? [];
         canvas?.paintScene(automaton.current.state);
     };
 
@@ -147,7 +148,7 @@ function CellularAutomata2d() {
     return (
         <Box className="space-y-6 my-5">
             <Box className="cap-title">2D Cellular Automata</Box>
-            <Scene init={init} next={next} />
+            <Scene init={init} next={next} state={initState.get} />
             <CustomTabs
                 tabs={[
                     {

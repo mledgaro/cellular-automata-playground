@@ -85,11 +85,8 @@ export class CellularAutomaton2d {
         });
         this._nbhd[mainCell.r][mainCell.c] = null;
 
-        for (
-            let ci = 0, pc = ci - mainCell.c, ri;
-            ci < this._nbhd[0].length;
-            ci++
-        ) {
+        for (let ci = 0, pc, ri; ci < this._nbhd[0].length; ci++) {
+            pc = ci - mainCell.c;
             for (ri = 0; ri < this._nbhd.length; ri++) {
                 if (this._nbhd[ri][ci] !== null) {
                     nbhdSize++;

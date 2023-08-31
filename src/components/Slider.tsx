@@ -172,3 +172,88 @@ export function IconSlider({
         </Grid>
     );
 }
+
+export function DensitySlider({
+    get,
+    set,
+}: {
+    get: number;
+    set: (val: number) => void;
+}) {
+    //
+    return (
+        <Grid container className="cap-component-container">
+            <Grid container>
+                <Box className="cap-component-label ms-2 my-2">Density</Box>
+            </Grid>
+
+            <Grid item xs={12}>
+                <StyledSlider
+                    defaultValue={1}
+                    min={0.01}
+                    max={1}
+                    step={0.01}
+                    value={get}
+                    onChange={(
+                        event: Event,
+                        value: number | number[],
+                        activeThumb: number
+                    ) => set(value as number)}
+                    marks={[
+                        {
+                            value: 0.01,
+                            label: "1%",
+                        },
+                        {
+                            value: 0.25,
+                            label: "25%",
+                        },
+                        {
+                            value: 0.5,
+                            label: "50%",
+                        },
+                        {
+                            value: 0.75,
+                            label: "75%",
+                        },
+                        {
+                            value: 1,
+                            label: "100%",
+                        },
+                    ]}
+                />
+            </Grid>
+
+            {/* <Grid item md={3} className="flex justify-center">
+                <StyledInput
+                    className="h-fit"
+                    value={density}
+                    size="small"
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        dispatch(
+                            setDensity(
+                                event.target.value === ""
+                                    ? 0
+                                    : Number(event.target.value)
+                            )
+                        )
+                    }
+                    onBlur={() => {
+                        if (density < 0.01) {
+                            dispatch(setDensity(0.01));
+                        } else if (density > 1) {
+                            dispatch(setDensity(1));
+                        }
+                    }}
+                    inputProps={{
+                        step: 0.05,
+                        min: 0.01,
+                        max: 1,
+                        type: "number",
+                    }}
+                    disableUnderline
+                />
+            </Grid> */}
+        </Grid>
+    );
+}
