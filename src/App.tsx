@@ -91,8 +91,9 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 function CustomizedMenus() {
+    //
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const title = useStateObj<string>("1D Cellular Automata");
+    const title = useStateObj<string>("2D Cellular Automata");
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);

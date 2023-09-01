@@ -52,7 +52,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - [x] put control buttons together
   - [x] remove clear button
 - [x] replace speed and zoom labels by icons
-- [ ] replace title with dropdown selector
+- [x] replace title with dropdown selector
 - [x] implement routes /1d /2d
 - [x] improve 2d rules horizontal scrolling
 - [x] add initial state config on 2d
@@ -70,7 +70,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
   - [ ] Save init state and load again when stop.
   - [ ] Show grid on stopped and paused states
   - [ ] disable cell toggle when running
-- [ ] Allow to choose different models
+- [x] Allow to choose different models
 
 
 ## Notes

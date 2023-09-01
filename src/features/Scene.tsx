@@ -78,16 +78,18 @@ export default function Scene({
             // 512,
             cellSize.get
         );
+        canvasCntrl.current.clear();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         if (status.running) {
             clearInterval(timer?.current);
-            canvasCntrl.current?.repaint();
+            // canvasCntrl.current?.repaint();
             timer.current = window.setInterval(
-                () => next(canvasCntrl.current),
-                1000 - refreshRate.get
+                next,
+                1000 - refreshRate.get,
+                canvasCntrl.current
             );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -154,7 +156,6 @@ function Controls({
                 <Box className="w-fit mx-auto space-x-2">
                     <RunBtn init={init} next={next} />
                     <NextBtn init={init} next={next} />
-                    <PauseBtn />
                     <StopBtn />
                     <ScreenshotBtn />
                 </Box>
@@ -198,27 +199,25 @@ function RunBtn({
 
     return (
         <Button
-            tooltipLabel="Run"
-            icon={faPlay}
+            tooltipLabel={status?.running ? "Pause" : "Run"}
+            icon={status?.running ? faPause : faPlay}
             size="xl"
             onClick={() => {
                 if (!status!.running) {
                     if (status!.stopped) {
                         init(canvasCntrl?.current);
                     }
-                    // timer!.current = window.setInterval(
-                    //     next,
-                    //     1000 - refreshRate!.get,
-                    //     canvasCntrl?.current
-                    // );
                     timer!.current = window.setInterval(
-                        () => next(canvasCntrl?.current),
-                        1000 - refreshRate!.get
+                        next,
+                        1000 - refreshRate!.get,
+                        canvasCntrl?.current
                     );
                     status?.run();
+                } else {
+                    window.clearInterval(timer!.current);
+                    status?.pause();
                 }
             }}
-            disabled={status?.running}
         />
     );
 }
@@ -248,25 +247,6 @@ function NextBtn({
                 }
             }}
             disabled={status!.running}
-        />
-    );
-}
-
-function PauseBtn() {
-    //
-    const status = useContext(StatusCtx);
-    const timer = useContext(TimerCtx);
-
-    return (
-        <Button
-            tooltipLabel="Pause"
-            icon={faPause}
-            size="xl"
-            onClick={() => {
-                window.clearInterval(timer!.current);
-                status!.pause();
-            }}
-            disabled={!status!.running}
         />
     );
 }

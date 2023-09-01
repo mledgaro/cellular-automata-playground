@@ -56,7 +56,7 @@ export default class CanvasCntrl {
         this.clear();
     }
 
-    private drawGrid() {
+    public drawGrid() {
         //
         this.graphics.lineWidth = 1;
         this.graphics.strokeStyle = this.backgroundColor;
@@ -88,8 +88,12 @@ export default class CanvasCntrl {
 
     public toggleCellAtCoords(x: number, y: number) {
         let r, c;
-        r = Math.floor((y - this.offsetY + this.scrollY) / this._cellSize);
-        c = Math.floor((x - this.offsetX + this.scrollX) / this._cellSize);
+        r = Math.floor(
+            (y - this.offsetY + this.scrollY + window.scrollY) / this._cellSize
+        );
+        c = Math.floor(
+            (x - this.offsetX + this.scrollX + window.scrollX) / this._cellSize
+        );
         this.paintCell(r, c, !this._buffer[r][c]);
     }
 
@@ -120,7 +124,7 @@ export default class CanvasCntrl {
 
         this.graphics.fillStyle = this.deadColor;
         this.graphics.fillRect(0, 0, this.width, this.height);
-        this.drawGrid();
+        // this.drawGrid();
     }
 
     public paintCell(row: number, col: number, state: boolean) {

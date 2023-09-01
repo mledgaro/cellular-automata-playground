@@ -20,7 +20,7 @@ export default function useInitState2d(
     const initState = useStateObj<boolean[][]>(
         Array(rows).fill(Array(cols).fill(false))
     );
-    const density = useStateObj<number>(1);
+    const density = useStateObj<number>(0.5);
 
     return {
         get: initState.get,
