@@ -77,26 +77,8 @@ export default function Scene({
 
     const next_ = () => {
         next(canvasCntrl?.current);
-        // iterCount!.current++;
         iterCount?.set(iterCount.get + 1);
     };
-
-    useEffect(() => {
-        if (status.running) {
-            window.setTimeout(next_, 1000 - refreshRate.get);
-        }
-    });
-
-    useEffect(() => {
-        if (status.prev.stopped) {
-            init(canvasCntrl?.current);
-            // iterCount?.set(0);
-        } else if (status.stopped) {
-            canvasCntrl?.current?.clear();
-            iterCount?.set(0);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [status.get]);
 
     useEffect(() => {
         canvasCntrl.current = new CanvasCntrl(
@@ -112,17 +94,33 @@ export default function Scene({
     }, []);
 
     useEffect(() => {
+        if (status.running) {
+            window.setTimeout(next_, 1000 - refreshRate.get);
+        }
+    });
+
+    useEffect(() => {
+        canvasCntrl.current?.paintScene(state ?? []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state]);
+    useEffect(() => {
+        if (status.prev.stopped) {
+            init(canvasCntrl?.current);
+            // iterCount?.set(0);
+        } else if (status.stopped) {
+            canvasCntrl?.current?.clear();
+            iterCount?.set(0);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [status.get]);
+
+    useEffect(() => {
         if (canvasCntrl.current) {
             canvasCntrl.current!.cellSize = cellSize.get;
         }
         canvasCntrl.current?.repaint();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cellSize]);
-
-    useEffect(() => {
-        canvasCntrl.current?.paintScene(state ?? []);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state]);
 
     return (
         <Box className="space-y-2">
@@ -150,36 +148,47 @@ export default function Scene({
 }
 
 function Controls({ next }: { next: () => void }) {
+    //
+    const iterCount = useContext(IterCountCtx);
     const speed = useContext(RefreshRateCtx);
     const zoom = useContext(CellSizeCtx);
 
     return (
-        <Grid
-            container
-            alignItems="center"
-            justifyContent="space-evenly"
-            className=""
-            rowSpacing={2}
-            columnSpacing={2}
-        >
-            <Grid item md={6}>
-                <Box className="w-fit mx-auto space-x-2">
-                    <RunBtn />
-                    <NextBtn next={next} />
-                    <StopBtn />
-                    <ScreenshotBtn />
-                </Box>
-            </Grid>
-            <Grid item md={6} alignItems="center">
-                <Box className="flex flex-row space-x-2 cap-component-container text-2xl w-fit py-2 px-3 mx-auto">
-                    <Box>
-                        <FontAwesomeIcon icon={faStopwatch} />
+        <Grid container rowSpacing={2}>
+            <Grid
+                item
+                container
+                alignItems="center"
+                justifyContent="center"
+                columnSpacing={2}
+            >
+                <Grid item md="auto">
+                    <Box className="space-x-2">
+                        <RunBtn />
+                        <NextBtn next={next} />
+                        <StopBtn />
+                        <ScreenshotBtn />
                     </Box>
-                    <IterCount />
-                </Box>
+                </Grid>
+                <Grid item md={2}>
+                    <Box className="flex flex-row space-x-2 cap-component-container text-2xl w-fit py-2 px-3 mx-auto">
+                        <Box>
+                            <FontAwesomeIcon icon={faStopwatch} />
+                        </Box>
+                        <Box>{iterCount?.get ?? 0}</Box>
+                        {/* <Box>{"999,999,999"}</Box> */}
+                    </Box>
+                </Grid>
             </Grid>
-            <Grid item md={6}>
-                <Box className="w-[70%] mx-auto">
+
+            <Grid
+                item
+                container
+                alignItems="center"
+                justifyContent="space-evenly"
+                columnSpacing={2}
+            >
+                <Grid item md={3}>
                     <IconSlider
                         icon={faGaugeHigh}
                         tooltipLabel="Speed"
@@ -188,10 +197,8 @@ function Controls({ next }: { next: () => void }) {
                         minVal={refreshRateVal.minVal}
                         maxVal={refreshRateVal.maxVal}
                     />
-                </Box>
-            </Grid>
-            <Grid item md={6}>
-                <Box className="w-[70%] mx-auto">
+                </Grid>
+                <Grid item md={3}>
                     <IconSlider
                         icon={faMagnifyingGlass}
                         tooltipLabel="Zoom"
@@ -200,15 +207,10 @@ function Controls({ next }: { next: () => void }) {
                         minVal={cellSizeVal.minVal}
                         maxVal={cellSizeVal.maxVal}
                     />
-                </Box>
+                </Grid>
             </Grid>
         </Grid>
     );
-}
-
-function IterCount() {
-    const iterCount = useContext(IterCountCtx);
-    return <Box>{iterCount?.get ?? 0}</Box>;
 }
 
 function RunBtn() {
