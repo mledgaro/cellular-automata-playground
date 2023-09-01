@@ -2,7 +2,7 @@
 import React from "react";
 
 import { Grid } from "@mui/material";
-import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRotateRight } from "@fortawesome/free-solid-svg-icons";
 
 import { DensitySlider } from "src/components/Slider";
 import Button from "src/components/Button";
@@ -21,7 +21,7 @@ export default function InitState2d({ state }: { state: InitState2dHook }) {
             <Grid item md="auto" className="flex flex-col justify-center">
                 <Button
                     className=""
-                    icon={faRotate}
+                    icon={faArrowRotateRight}
                     size="3x"
                     tooltipLabel="Reload init state"
                     onClick={() => state.setRandom()}
