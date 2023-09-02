@@ -1,8 +1,8 @@
 //
 import React from "react";
 
-import { Grid } from "@mui/material";
-import { faArrowRotateRight } from "@fortawesome/free-solid-svg-icons";
+import { Box, Grid } from "@mui/material";
+import { faArrowRotateRight, faBroom } from "@fortawesome/free-solid-svg-icons";
 
 import { DensitySlider } from "src/components/Slider";
 import Button from "src/components/Button";
@@ -19,13 +19,20 @@ export default function InitState2d({ state }: { state: InitState2dHook }) {
             </Grid>
             {/* reload btn */}
             <Grid item md="auto" className="flex flex-col justify-center">
-                <Button
-                    className=""
-                    icon={faArrowRotateRight}
-                    size="3x"
-                    tooltipLabel="Reload init state"
-                    onClick={() => state.setRandom()}
-                />
+                <Box className="space-x-2">
+                    <Button
+                        icon={faArrowRotateRight}
+                        size="2x"
+                        tooltipLabel="Reload"
+                        onClick={() => state.setRandom()}
+                    />
+                    <Button
+                        icon={faBroom}
+                        size="2x"
+                        tooltipLabel="Clear"
+                        onClick={() => state.clear()}
+                    />
+                </Box>
             </Grid>
         </Grid>
     );

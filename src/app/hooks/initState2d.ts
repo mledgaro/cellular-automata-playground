@@ -10,6 +10,7 @@ export type InitState2dHook = {
     cellsNumber: number;
     density: number;
     setDensity: (val: number) => void;
+    clear: () => void;
 };
 
 export default function useInitState2d(
@@ -18,7 +19,13 @@ export default function useInitState2d(
 ): InitState2dHook {
     //
     const initState = useStateObj<boolean[][]>(
-        Array(rows).fill(Array(cols).fill(false))
+        Array(rows)
+            .fill(null)
+            .map(() =>
+                Array(cols)
+                    .fill(null)
+                    .map(() => false)
+            )
     );
     const density = useStateObj<number>(0.5);
 
@@ -47,5 +54,15 @@ export default function useInitState2d(
                 initState.get.map((row) => row.map(() => Math.random() < val))
             );
         },
+        clear: () =>
+            initState.set(
+                Array(rows)
+                    .fill(null)
+                    .map(() =>
+                        Array(cols)
+                            .fill(null)
+                            .map(() => false)
+                    )
+            ),
     };
 }
