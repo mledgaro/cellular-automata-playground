@@ -7,6 +7,9 @@ export type Rules2dHook = {
     get: Rule2dState[];
     toggle: (i: number) => void;
     resize: (num: number) => void;
+    allKeep: () => void;
+    allDead: () => void;
+    allAlive: () => void;
 };
 
 // classic game of life rules
@@ -34,5 +37,8 @@ export function useRules2d(): Rules2dHook {
                 i
             ),
         resize: (num: number) => rules.set(Array(num + 1).fill(null)),
+        allKeep: () => rules.set(rules.get.map(() => null)),
+        allAlive: () => rules.set(rules.get.map(() => true)),
+        allDead: () => rules.set(rules.get.map(() => false)),
     };
 }
