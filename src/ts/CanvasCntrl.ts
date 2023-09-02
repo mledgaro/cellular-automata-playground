@@ -49,9 +49,9 @@ export default class CanvasCntrl {
         const r = document.querySelector(":root")!;
         const rs = getComputedStyle(r);
 
-        this.backgroundColor = rs.getPropertyValue("--frenchGray");
-        this.deadColor = rs.getPropertyValue("--jet");
-        this.aliveColor = rs.getPropertyValue("--sunglow");
+        this.backgroundColor = rs.getPropertyValue("--tertiary");
+        this.deadColor = rs.getPropertyValue("--secondary");
+        this.aliveColor = rs.getPropertyValue("--primary");
 
         this.clear();
     }

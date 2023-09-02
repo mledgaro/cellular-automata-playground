@@ -16,43 +16,43 @@ export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
 ))(({ theme }) => ({
     [`& .${tooltipClasses.arrow}`]: {
-        color: "#323031",
+        color: "var(--secondary)",
     },
     [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: "#323031",
-        color: "#ffd166",
+        backgroundColor: "var(--secondary)",
+        color: "var(--primary)",
     },
 }));
 
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
-    backgroundColor: "var(--sunglow)",
-    color: "var(--jet)",
+    backgroundColor: "var(--primary)",
+    color: "var(--secondary)",
     "&:hover": {
-        backgroundColor: "var(--jet)",
-        color: "var(--sunglow)",
+        backgroundColor: "var(--secondary)",
+        color: "var(--primary)",
     },
     "&:disabled": {
-        backgroundColor: "var(--frenchGray)",
-        color: "var(--jet)",
-        borderColor: "var(--jet)",
+        backgroundColor: "var(--tertiary)",
+        color: "var(--secondary)",
+        borderColor: "var(--secondary)",
         borderStyle: "solid",
         borderWidth: "2px",
     },
 }));
 
 export const ResizeBtn = styled(Button)<ButtonProps>(({ theme }) => ({
-    backgroundColor: "var(--sunglow)",
-    color: "var(--jet)",
+    backgroundColor: "var(--primary)",
+    color: "var(--secondary)",
     minWidth: "fit-content",
     width: "fit-content",
     padding: "3px",
     "&:hover": {
-        backgroundColor: "var(--jet)",
-        color: "var(--sunglow)",
+        backgroundColor: "var(--secondary)",
+        color: "var(--primary)",
     },
     "&:disabled": {
-        backgroundColor: "var(--frenchGray)",
-        color: "var(--jet)",
+        backgroundColor: "var(--tertiary)",
+        color: "var(--secondary)",
     },
 }));
 

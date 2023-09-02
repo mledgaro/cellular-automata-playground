@@ -62,7 +62,9 @@ export default function Scene({
     const canvasCntrl = useRef<CanvasCntrl>();
 
     const toggleHandler = (evt: MouseEvent) => {
-        canvasCntrl.current?.toggleCellAtCoords(evt.clientX, evt.clientY);
+        if (status.stopped) {
+            canvasCntrl.current?.toggleCellAtCoords(evt.clientX, evt.clientY);
+        }
     };
 
     const scrollHandler = () => {
@@ -83,6 +85,7 @@ export default function Scene({
         );
     };
 
+    // initialize
     useEffect(() => {
         canvasCntrl.current = new CanvasCntrl(
             canvas.current,
@@ -96,17 +99,20 @@ export default function Scene({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // every render
     useEffect(() => {
         if (status.running) {
             window.setTimeout(next_, 1000 - refreshRate.get);
         }
     });
 
+    // state change
     useEffect(() => {
         canvasCntrl.current?.paintScene(state ?? []);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state]);
 
+    // status change
     useEffect(() => {
         if (status.prev.stopped) {
             init(canvasCntrl?.current);
@@ -119,6 +125,7 @@ export default function Scene({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status.get]);
 
+    // zoom change
     useEffect(() => {
         if (canvasCntrl.current) {
             canvasCntrl.current!.cellSize = cellSize.get;

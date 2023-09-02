@@ -19,45 +19,47 @@ export const StyledSlider = styled(Slider)<SliderProps>(({ theme }) => ({
     width: "calc(100% - 40px)",
     marginLeft: "20px",
     marginRight: "20px",
-    color: "var(--sunglow)",
+    color: "var(--primary)",
     "& .MuiSlider-rail": {
-        backgroundColor: "var(--frenchGray)",
+        backgroundColor: "var(--tertiary)",
     },
     "& .MuiSlider-track": {
-        backgroundColor: "var(--sunglow)",
-        borderColor: "var(--sunglow)",
+        backgroundColor: "var(--primary)",
+        borderColor: "var(--primary)",
     },
     "& .MuiSlider-mark": {
-        backgroundColor: "var(--sunglow)",
+        backgroundColor: "var(--primary)",
         width: "5px",
         height: "5px",
     },
     "& .MuiSlider-markLabel": {
-        color: "var(--frenchGray)",
+        color: "var(--tertiary)",
         fontWeight: "500",
     },
     "& .MuiSlider-thumb": {
-        backgroundColor: "var(--sunglow)",
+        backgroundColor: "var(--primary)",
         "&:hover, &.Mui-focusVisible": {
-            boxShadow: "0px 0px 0px 8px rgba(255, 209, 102, 0.2)",
+            boxShadow:
+                "0px 0px 0px 8px color-mix(in srgb, var(--primary) 20%, transparent)",
         },
         "&.Mui-active": {
-            boxShadow: "0px 0px 0px 14px rgba(255, 209, 102, 0.2)",
+            boxShadow:
+                "0px 0px 0px 8px color-mix(in srgb, var(--primary) 20%, transparent)",
         },
     },
 }));
 
 export const StyledInput = styled(Input)<InputProps>(({ theme }) => ({
-    color: "var(--sunglow)",
-    borderBottom: "1px solid var(--frenchGray)",
+    color: "var(--primary)",
+    borderBottom: "1px solid var(--tertiary)",
     "&:hover": {
-        borderBottom: "1px solid var(--sunglow)",
+        borderBottom: "1px solid var(--primary)",
     },
     "&.Mui-focused": {
-        borderBottom: "3px solid var(--sunglow)",
+        borderBottom: "3px solid var(--primary)",
     },
     "&.Mui-focused:hover": {
-        borderBottom: "3px solid var(--sunglow)",
+        borderBottom: "3px solid var(--primary)",
     },
 }));
 

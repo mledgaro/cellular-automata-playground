@@ -58,7 +58,7 @@ export default function Nbhd2dEditor({
                                         <FontAwesomeIcon
                                             icon={faSquareXmark}
                                             size="xl"
-                                            className="text-french-gray"
+                                            className="text-tertiary"
                                             onClick={onClick}
                                             onDoubleClick={onDblClick}
                                         />

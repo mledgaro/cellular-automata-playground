@@ -4,21 +4,21 @@ import { useStateObj } from "src/app/hooks";
 
 const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
     "&.MuiTabs-root": {
-        backgroundColor: "#323031",
+        backgroundColor: "var(--secondary)",
         marginBottom: "2vh",
     },
     "& .MuiTabs-indicator": {
-        backgroundColor: "#ffd166",
+        backgroundColor: "var(--primary)",
         height: "5px",
     },
 }));
 
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
     fontWeight: "200",
-    color: "#bbb5bd",
+    color: "var(--tertiary)",
     fontSize: "1.2rem",
     "&.Mui-selected": {
-        color: "#ffd166",
+        color: "var(--primary)",
         fontWeight: "900",
     },
 }));

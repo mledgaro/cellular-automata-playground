@@ -116,7 +116,7 @@ function RulesSelector({
     const dispatch = useAppDispatch();
 
     const cellClasses =
-        "inline-block box-border w-8 rounded-sm text-sm text-jet text-center py-1.5 mr-2 mb-2";
+        "inline-block box-border w-8 rounded-sm text-sm text-secondary text-center py-1.5 mr-2 mb-2 select-none";
     let rulesArr = [];
 
     for (let i = rules.length - 1; i >= 0; i--) {
@@ -124,7 +124,7 @@ function RulesSelector({
             <Box
                 key={i}
                 className={
-                    cellClasses + (rules[i] ? " bg-sunglow" : " bg-french-gray")
+                    cellClasses + (rules[i] ? " bg-primary" : " bg-tertiary")
                 }
                 onClick={() => dispatch(toggleRule(i))}
                 onMouseOver={() => setHoverCell(i)}

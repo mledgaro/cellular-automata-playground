@@ -5,9 +5,9 @@ module.exports = {
     theme: {
         extend: {},
         colors: {
-            jet: "#323031" /* rgb(50, 48, 49) */,
-            sunglow: "#ffd166" /* rgb(255, 209, 102) */,
-            "french-gray": "#bbb5bd" /* rgb(187, 181, 189) */,
+            primary: "#ffd166",
+            secondary: "#323031",
+            tertiary: "#bbb5bd",
         },
     },
     plugins: [],

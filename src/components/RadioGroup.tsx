@@ -11,9 +11,9 @@ import {
 import React, { useId } from "react";
 
 export const StyledRadio = styled(Radio)<RadioProps>(({ theme }) => ({
-    color: "#bbb5bd",
+    color: "var(--tertiary)",
     "&.Mui-checked": {
-        color: "#ffd166",
+        color: "var(--primary)",
     },
 }));
 

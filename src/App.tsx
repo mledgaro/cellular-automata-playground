@@ -83,10 +83,10 @@ const StyledMenu = styled((props: MenuProps) => (
         "& .MuiMenu-list": {
             padding: "8px",
             a: {
-                color: "var(--sunglow)",
+                color: "var(--primary)",
             },
         },
-        backgroundColor: "var(--jet)",
+        backgroundColor: "var(--secondary)",
     },
 }));
 
@@ -108,7 +108,7 @@ function CustomizedMenus() {
                 aria-expanded={open ? "true" : undefined}
                 variant="contained"
                 onClick={handleClick}
-                className="bg-jet text-sunglow text-4xl font-bold"
+                className="bg-secondary text-primary text-4xl font-bold"
             >
                 {title.get}
                 <FontAwesomeIcon className="ml-2" icon={faChevronDown} />
