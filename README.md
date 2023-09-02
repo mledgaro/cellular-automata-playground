@@ -65,12 +65,12 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
   - [x] update main cell selector 2d for custom neighborhood
 - [ ] 2d Cellular automata
   - [ ] Buttons to mark all rules
-  - [ ] Fix scroll coords gap
+  - [x] Fix scroll coords gap
   - [ ] Clean scene
   - [ ] Save init state and load again when stop.
   - [ ] Show grid on stopped and paused states
   - [ ] disable cell toggle when running
 - [x] Allow to choose different models
-
+- [ ] Show current state alive cells
 
 ## Notes
