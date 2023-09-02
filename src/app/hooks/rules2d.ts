@@ -5,6 +5,7 @@ export type Rule2dState = boolean | null;
 
 export type Rules2dHook = {
     get: Rule2dState[];
+    set: (newRules: Rule2dState[]) => void;
     toggle: (i: number) => void;
     resize: (num: number) => void;
     allKeep: () => void;
@@ -12,25 +13,13 @@ export type Rules2dHook = {
     allAlive: () => void;
 };
 
-// classic game of life rules
-const defaultVal = [
-    false,
-    false,
-    null,
-    true,
-    false,
-    false,
-    false,
-    false,
-    false,
-];
-
 export function useRules2d(): Rules2dHook {
     //
-    let rules = useArray<Rule2dState>(defaultVal);
+    let rules = useArray<Rule2dState>([]);
 
     return {
         get: rules.get,
+        set: rules.set,
         toggle: (i: number) =>
             rules.setAt(
                 rules.get[i] === null ? true : rules.get[i] ? false : null,

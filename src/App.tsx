@@ -221,11 +221,6 @@ function CellularAutomata2d() {
 
     const automaton = useRef(new CellularAutomaton2d());
 
-    useEffect(() => {
-        rules.resize(nbhd.size);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nbhd.size]);
-
     const init = (canvas: CanvasCntrl | undefined) => {
         automaton.current.setNbhd(nbhd.nbhd, nbhd.mainCell);
         automaton.current.rules = rules.get;
@@ -238,6 +233,28 @@ function CellularAutomata2d() {
         automaton.current.nextState();
         canvas?.paintScene(automaton.current.state);
     };
+
+    useEffect(() => {
+        rules.resize(nbhd.size);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nbhd.size]);
+
+    useEffect(() => {
+        if (nbhd.type === "moore") {
+            rules.set([
+                false,
+                false,
+                null,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ]);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nbhd.type]);
 
     return (
         <Box className="space-y-6 my-5">
