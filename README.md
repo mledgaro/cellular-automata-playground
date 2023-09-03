@@ -52,5 +52,6 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - [ ] 2d Cellular automata
   - [ ] Save init state and load again when stop.
   - [ ] Show grid on stopped and paused states
+- [ ] put counters above controls
 
 ## Notes

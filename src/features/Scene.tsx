@@ -9,6 +9,7 @@ import React, {
 import { Box, Fade, Grid } from "@mui/material";
 import {
     faCameraRetro,
+    faCubes,
     faForwardStep,
     faGaugeHigh,
     faHeart,
@@ -38,13 +39,19 @@ const StatusCtx = createContext<StatusHook | undefined>(undefined);
 const bufferSize = 64;
 
 export default function Scene({
+    cells,
     init,
     next,
-    state,
+    toggle,
 }: {
+    cells: boolean[] | boolean[][];
+    toggle: (
+        canvasCntrl: CanvasCntrl | undefined,
+        r: number,
+        c: number
+    ) => void;
     init: (canvasCntrl: CanvasCntrl | undefined) => void;
-    next: (canvasCntrl: CanvasCntrl | undefined) => void;
-    state?: boolean[][];
+    next: (canvasCntrl: CanvasCntrl | undefined) => boolean[][];
 }) {
     //
     const numCells = useAppSelector(selectNumCells);
@@ -63,20 +70,31 @@ export default function Scene({
 
     const toggleHandler = (evt: MouseEvent) => {
         if (status.stopped) {
-            canvasCntrl.current?.toggleCellAtCoords(evt.clientX, evt.clientY);
+            let r, c;
+            r = Math.floor(
+                (evt.clientY -
+                    (canvas.current?.offsetTop ?? 0) +
+                    scroll.current!.scrollTop +
+                    window.scrollY) /
+                    cellSize.get
+            );
+            c = Math.floor(
+                (evt.clientX -
+                    (canvas.current?.offsetLeft ?? 0) +
+                    scroll.current!.scrollLeft +
+                    window.scrollX) /
+                    cellSize.get
+            );
+            toggle(canvasCntrl?.current, r, c);
+            console.log("toggle at ", r, c);
         }
     };
 
-    const scrollHandler = () => {
-        canvasCntrl.current!.scrollX = scroll.current!.scrollLeft;
-        canvasCntrl.current!.scrollY = scroll.current!.scrollTop;
-    };
-
     const next_ = () => {
-        next(canvasCntrl?.current);
+        const st = next(canvasCntrl.current);
         iterCount.set(iterCount.get + 1);
         liveCellsCount.set(
-            canvasCntrl?.current?.buffer.reduce(
+            st.reduce(
                 (acc, curr) =>
                     acc +
                     curr.reduce((acc_, curr_) => acc_ + (curr_ ? 1 : 0), 0),
@@ -108,17 +126,22 @@ export default function Scene({
 
     // state change
     useEffect(() => {
-        canvasCntrl.current?.paintScene(state ?? []);
+        // if (typeof cells[0] === "boolean") {
+        //     canvasCntrl.current?.paintRow(0, cells as boolean[]);
+        // } else {
+        // canvasCntrl.current?.paintScene(cells as boolean[][]);
+        // }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state]);
+        console.log("cells changed");
+    }, [cells]);
 
     // status change
     useEffect(() => {
         if (status.prev.stopped) {
-            init(canvasCntrl?.current);
-            // iterCount?.set(0);
+            init(canvasCntrl.current);
+            iterCount.set(0);
         } else if (status.stopped) {
-            canvasCntrl?.current?.clear();
+            canvasCntrl.current!.clear();
             iterCount.set(0);
             liveCellsCount.set(0);
         }
@@ -130,7 +153,6 @@ export default function Scene({
         if (canvasCntrl.current) {
             canvasCntrl.current!.cellSize = cellSize.get;
         }
-        canvasCntrl.current?.repaint();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cellSize]);
 
@@ -141,22 +163,34 @@ export default function Scene({
                     ref={scroll}
                     className="max-w-[95vw] max-h-[65vh] w-fit mx-auto overflow-auto"
                     onClick={toggleHandler}
-                    onScroll={scrollHandler}
                 >
                     <canvas ref={canvas} />
                 </Box>
-
+                <Box className="flex justify-center">
+                    <Button
+                        tooltipLabel=""
+                        icon={faCubes}
+                        size="2x"
+                        onClick={() => {
+                            canvasCntrl.current!.clear();
+                            canvasCntrl.current!.paintScene(
+                                cells as boolean[][]
+                            );
+                            console.log("test");
+                        }}
+                    />
+                </Box>
+                <Info
+                    iterCount={iterCount.get}
+                    liveCellsCount={liveCellsCount.get}
+                />
                 <Controls
                     speedState={refreshRate}
                     zoomState={cellSize}
                     next={next_}
                     screenshot={() =>
-                        canvasCntrl?.current?.saveScene("cellular_automaton")
+                        canvasCntrl.current?.saveScene("cellular_automaton")
                     }
-                />
-                <Info
-                    iterCount={iterCount.get}
-                    liveCellsCount={liveCellsCount.get}
                 />
             </Box>
         </StatusCtx.Provider>

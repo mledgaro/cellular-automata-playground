@@ -4,23 +4,15 @@ export default class CanvasCntrl {
     private canvas: HTMLCanvasElement | null;
     private graphics: CanvasRenderingContext2D;
 
-    private offsetX: number;
-    private offsetY: number;
-
-    protected _rows: number;
-    protected _columns: number;
-    protected _cellSize: number;
-    protected width: number;
-    protected height: number;
-
-    private _buffer: boolean[][];
+    private _rows: number;
+    private _columns: number;
+    private _cellSize: number;
+    private width: number;
+    private height: number;
 
     private backgroundColor: string;
     private deadColor: string;
     private aliveColor: string;
-
-    public scrollX = 0;
-    public scrollY = 0;
 
     constructor(
         canvasElement: HTMLCanvasElement | null,
@@ -32,17 +24,14 @@ export default class CanvasCntrl {
         this.canvas = canvasElement;
         this.graphics = canvasElement!.getContext("2d")!;
 
-        this._buffer = [];
         this._rows = rows;
         this._columns = columns;
+
         this.width = 0;
         this.height = 0;
-        this.offsetX = 0;
-        this.offsetY = 0;
         this._cellSize = 0;
-        this.cellSize = cellSize;
 
-        this._buffer = [];
+        this.cellSize = cellSize;
 
         // get colors from css file
 
@@ -80,80 +69,39 @@ export default class CanvasCntrl {
         }
     }
 
+    public clear() {
+        this.graphics.fillStyle = this.deadColor;
+        this.graphics.fillRect(0, 0, this.width, this.height);
+        // this.drawGrid();
+    }
+
     private paintCellAtCoords(x: number, y: number, state: boolean) {
         //
         this.graphics.fillStyle = state ? this.aliveColor : this.deadColor;
         this.graphics.fillRect(x, y, this._cellSize, this._cellSize);
     }
 
-    public toggleCellAtCoords(x: number, y: number) {
-        let r, c;
-        r = Math.floor(
-            (y - this.offsetY + this.scrollY + window.scrollY) / this._cellSize
-        );
-        c = Math.floor(
-            (x - this.offsetX + this.scrollX + window.scrollX) / this._cellSize
-        );
-        this.paintCell(r, c, !this._buffer[r][c]);
-    }
-
-    public repaint() {
-        //
-        this.graphics.fillStyle = this.deadColor;
-        this.graphics.fillRect(0, 0, this.width, this.height);
-        this._buffer.forEach((row, r) => {
-            row.forEach((cell, c) => {
-                this.paintCellAtCoords(
-                    c * this._cellSize,
-                    r * this._cellSize,
-                    cell
-                );
-            });
-        });
-    }
-
-    public clear() {
-        //
-        this._buffer = Array(this._rows)
-            .fill(null)
-            .map(() =>
-                Array(this._columns)
-                    .fill(null)
-                    .map(() => false)
-            );
-
-        this.graphics.fillStyle = this.deadColor;
-        this.graphics.fillRect(0, 0, this.width, this.height);
-        // this.drawGrid();
-    }
-
     public paintCell(row: number, col: number, state: boolean) {
-        //
-        this._buffer[row][col] = state;
-
         this.paintCellAtCoords(
             col * this._cellSize,
             row * this._cellSize,
             state
         );
+        // console.log("paint cell at ", row, col, state);
     }
 
     public paintRow(row: number, rowState: boolean[]) {
         //
-        if (row < this._rows) {
-            rowState.forEach((cell, col) => {
-                this.paintCell(row, col, cell);
-            });
-        } else {
-            this._buffer.shift();
-            this._buffer.push(rowState);
-            this.repaint();
-        }
+        rowState.forEach((cell, col) => {
+            this.paintCell(row, col, cell);
+        });
     }
 
     public paintScene(state: boolean[][]) {
-        this._buffer = state;
-        this.repaint();
+        state.forEach((row, r) =>
+            row.forEach((cell, c) => this.paintCell(r, c, cell))
+        );
+        console.log("CanvasCntrl - paintScene");
     }
 
     public saveScene(fileName: string) {
@@ -176,9 +124,6 @@ export default class CanvasCntrl {
 
         this.canvas!.width = this.width;
         this.canvas!.height = this.height;
-
-        this.offsetX = this.canvas?.offsetLeft ?? 0;
-        this.offsetY = this.canvas?.offsetTop ?? 0;
     }
 
     get rows(): number {
@@ -187,9 +132,5 @@ export default class CanvasCntrl {
 
     get columns(): number {
         return this._columns;
-    }
-
-    get buffer(): boolean[][] {
-        return this._buffer;
     }
 }

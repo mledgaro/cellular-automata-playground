@@ -1,11 +1,11 @@
-import { setMatrixItem } from "src/ts/Utils";
-import { StateObjHook, useStateObj } from "../hooks";
+import { createArray2d, setMatrixItem } from "src/ts/Utils";
+import { useStateObj } from "../hooks";
 
 export type InitState2dHook = {
     get: boolean[][];
     set: (val: boolean[][]) => void;
     setRandom: () => void;
-    toggle: (row: number, col: number) => void;
+    toggle: (row: number, col: number) => boolean;
     resize: (rows: number, cols: number) => void;
     cellsNumber: number;
     density: number;
@@ -19,13 +19,7 @@ export default function useInitState2d(
 ): InitState2dHook {
     //
     const initState = useStateObj<boolean[][]>(
-        Array(rows)
-            .fill(null)
-            .map(() =>
-                Array(cols)
-                    .fill(null)
-                    .map(() => false)
-            )
+        createArray2d(rows, cols, false)
     );
     const density = useStateObj<number>(0.5);
 
@@ -39,12 +33,13 @@ export default function useInitState2d(
                 )
             );
         },
-        toggle: (row: number, col: number) =>
-            initState.set(
-                setMatrixItem(row, col, initState.get, !initState.get[row][col])
-            ),
+        toggle: (row: number, col: number) => {
+            const newVal = !initState.get[row][col];
+            initState.set(setMatrixItem(row, col, initState.get, newVal));
+            return newVal;
+        },
         resize: (rows: number, cols: number) => {
-            initState.set(Array(rows).fill(Array(cols).fill(false)));
+            initState.set(createArray2d(rows, cols, false));
         },
         cellsNumber: initState.get.length * initState.get[0].length,
         density: density.get,
@@ -54,15 +49,6 @@ export default function useInitState2d(
                 initState.get.map((row) => row.map(() => Math.random() < val))
             );
         },
-        clear: () =>
-            initState.set(
-                Array(rows)
-                    .fill(null)
-                    .map(() =>
-                        Array(cols)
-                            .fill(null)
-                            .map(() => false)
-                    )
-            ),
+        clear: () => initState.set(createArray2d(rows, cols, false)),
     };
 }

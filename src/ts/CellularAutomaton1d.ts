@@ -33,7 +33,7 @@ export default class CellularAutomaton1d {
         this._state = state;
     }
 
-    get ticks() {
+    get iterations() {
         return this._ticks;
     }
 

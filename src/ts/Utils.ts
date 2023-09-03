@@ -78,6 +78,16 @@ export function setArrayItem(array: any[], index: number, value: any) {
     return nArray;
 }
 
+export function createArray2d(rows: number, cols: number, fill: any): any[][] {
+    return Array(rows)
+        .fill(null)
+        .map(() =>
+            Array(cols)
+                .fill(null)
+                .map(() => fill)
+        );
+}
+
 export function copyMatrix(matrix: any[][]): any[][] {
     //
     return matrix.map((row) => row.map((cell) => cell));
