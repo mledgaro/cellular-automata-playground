@@ -17,7 +17,7 @@ export default function Rules2d({ state }: { state: Rules2dHook }) {
     return (
         <Box className="space-y-1.5">
             <Box className="cap-component-container flex max-w-[90%] w-fit mx-auto px-2 space-x-3">
-                <Stack className="inline-block w-fit min-w-fit test-border-">
+                <Stack className="inline-block w-fit min-w-fit text-tertiary font-bold">
                     <Box className={cellClasses}>Neighbors</Box>
                     <Box className={cellClasses}>Next state</Box>
                 </Stack>

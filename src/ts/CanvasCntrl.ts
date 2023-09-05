@@ -7,8 +7,8 @@ export default class CanvasCntrl {
     private _rows: number;
     private _columns: number;
     private _cellSize: number;
-    private width: number;
-    private height: number;
+    private _width: number;
+    private _height: number;
 
     private backgroundColor: string;
     private deadColor: string;
@@ -27,8 +27,8 @@ export default class CanvasCntrl {
         this._rows = rows;
         this._columns = columns;
 
-        this.width = 0;
-        this.height = 0;
+        this._width = 0;
+        this._height = 0;
         this._cellSize = 0;
 
         this.cellSize = cellSize;
@@ -56,7 +56,7 @@ export default class CanvasCntrl {
         for (let i = 1, pos; i < this._rows; i++) {
             pos = i * this._cellSize;
             this.graphics.moveTo(0, pos);
-            this.graphics.lineTo(this.width, pos);
+            this.graphics.lineTo(this._width, pos);
             this.graphics.stroke();
         }
 
@@ -64,14 +64,14 @@ export default class CanvasCntrl {
         for (let i = 1, pos; i < this._columns; i++) {
             pos = i * this._cellSize;
             this.graphics.moveTo(pos, 0);
-            this.graphics.lineTo(pos, this.height);
+            this.graphics.lineTo(pos, this._height);
             this.graphics.stroke();
         }
     }
 
     public clear() {
         this.graphics.fillStyle = this.deadColor;
-        this.graphics.fillRect(0, 0, this.width, this.height);
+        this.graphics.fillRect(0, 0, this._width, this._height);
         // this.drawGrid();
     }
 
@@ -118,11 +118,11 @@ export default class CanvasCntrl {
         //
         this._cellSize = size;
 
-        this.width = this._columns * this._cellSize;
-        this.height = this._rows * this._cellSize;
+        this._width = this._columns * this._cellSize;
+        this._height = this._rows * this._cellSize;
 
-        this.canvas!.width = this.width;
-        this.canvas!.height = this.height;
+        this.canvas!.width = this._width;
+        this.canvas!.height = this._height;
     }
 
     get rows(): number {
@@ -131,5 +131,13 @@ export default class CanvasCntrl {
 
     get columns(): number {
         return this._columns;
+    }
+
+    get width(): number {
+        return this._width;
+    }
+
+    get height(): number {
+        return this._height;
     }
 }

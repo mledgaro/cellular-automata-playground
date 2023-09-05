@@ -20,25 +20,25 @@ export default function Canvas({
     const sceneSize = useAppSelector(selectSceneSize);
 
     const canvas = useRef<HTMLCanvasElement>(null);
+    const cont = useRef<HTMLDivElement>(null);
     const scroll = useRef<HTMLDivElement>(null);
     const canvasCntrl = useRef<CanvasCntrl>();
 
     const clickHandler_ = (evt: MouseEvent) => {
         let r, c;
-        r = Math.floor(
-            (evt.clientY -
-                (canvas.current?.offsetTop ?? 0) +
-                scroll.current!.scrollTop +
-                window.scrollY) /
-                cellSize
-        );
-        c = Math.floor(
-            (evt.clientX -
-                (canvas.current?.offsetLeft ?? 0) +
-                scroll.current!.scrollLeft +
-                window.scrollX) /
-                cellSize
-        );
+
+        r = evt.clientY;
+        r -= cont.current!.offsetTop;
+        r += scroll.current!.scrollTop;
+        r += window.scrollY;
+        r = Math.floor(r / cellSize);
+
+        c = evt.clientX;
+        c -= cont.current!.offsetLeft;
+        c += scroll.current!.scrollLeft;
+        c += window.scrollX;
+        c = Math.floor(c / cellSize);
+
         clickHandler(r, c);
     };
 
@@ -68,21 +68,24 @@ export default function Canvas({
     }, [cellSize]);
 
     return (
-        <Box
-            ref={scroll}
-            className="max-w-[95vw] max-h-[65vh] w-fit mx-auto overflow-auto relative-"
-            onClick={clickHandler_}
-        >
-            <canvas ref={canvas} />
-            {/* <Button
-                className="absolute top-2 right-2 min-w-fit w-fit opacity-25 hover:opacity-75 bg-tertiary hover:bg-primary hover:text-secondary"
+        <Box className="relative w-fit mx-auto" ref={cont}>
+            <Box
+                ref={scroll}
+                className="max-w-[95vw] max-h-[65vh] w-fit mx-auto overflow-auto static"
+                onClick={clickHandler_}
+            >
+                <canvas ref={canvas} />
+            </Box>
+
+            <Button
+                className="min-w-fit w-fit opacity-25 hover:opacity-75 bg-tertiary hover:bg-primary hover:text-secondary absolute top-2 left-3"
                 tooltipLabel="Screenshot"
                 icon={faCameraRetro}
                 size="lg"
                 onClick={() =>
                     canvasCntrl.current?.saveScene("cellular_automaton")
                 }
-            /> */}
+            />
         </Box>
     );
 }
