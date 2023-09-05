@@ -1,7 +1,7 @@
 //
 import React, { useEffect, useRef } from "react";
 
-import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import { useAppDispatch, useAppSelector, useStateObj } from "src/app/hooks";
 
 import { Box } from "@mui/material";
 import { selectNumCells } from "src/app/slices/numCells";
@@ -10,19 +10,16 @@ import Nbhd1d from "src/features/ca1d/Nbhd1d";
 import Rules1d from "src/features/ca1d/Rules1d";
 import InitState1d from "src/features/ca1d/InitState1d";
 import CellularAutomaton1d from "src/ts/CellularAutomaton1d";
-import Scene from "src/features/Scene";
-import CanvasCntrl from "src/ts/CanvasCntrl";
-import {
-    resizeInitState,
-    selectInitState,
-    toggleInitStateCell,
-} from "src/app/slices/initState";
 import { resizeRules, selectRules } from "src/app/slices/rules";
 import { selectCellsNbhds, setCellsNbhds } from "src/app/slices/cellsNbhds";
 import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
 import { selectNbhdType } from "src/app/slices/nbhdType";
 import { selectMainCell } from "src/app/slices/mainCell";
-import { createArray2d } from "src/ts/Utils";
+import useCellsState from "src/app/hooks/cellsState";
+import Canvas from "../Canvas";
+import Info from "../Info";
+import Controllers from "../Controllers";
+import InitState2d from "../ca2d/InitState2d";
 
 export default function CellularAutomata1d() {
     //
@@ -32,42 +29,43 @@ export default function CellularAutomata1d() {
     const mainCell = useAppSelector(selectMainCell);
     const cellsNbhds = useAppSelector(selectCellsNbhds);
     const rules = useAppSelector(selectRules);
-    const initState = useAppSelector(selectInitState);
 
     const dispatch = useAppDispatch();
 
+    const cellSize = useStateObj(8);
+    const iterations = useStateObj(0);
+
+    const cellsState = useCellsState(1, numCells);
     const automaton = useRef(new CellularAutomaton1d());
-    const buffer = useRef(createArray2d(64, numCells, false));
+    const initState = useRef(cellsState.get[0]);
+    const buffer = useRef([[false]]);
 
-    const init = (canvas: CanvasCntrl | undefined) => {
-        automaton.current.initState = initState;
-        initState.forEach((cell, i) => (buffer.current[0][i] = cell));
-        canvas!.paintRow(automaton.current.iterations, automaton.current.state);
+    const canvasOnClick = (r: number, c: number) => {
+        cellsState.toggle(0, c);
     };
 
-    const next = (canvas: CanvasCntrl | undefined) => {
-        automaton.current.nextState(cellsNbhds, rules);
-        if (automaton.current.iterations < (canvas?.rows ?? 0)) {
-            automaton.current.state.forEach(
-                (cell, i) =>
-                    (buffer.current[automaton.current.iterations][i] = cell)
-            );
-            canvas!.paintRow(
-                automaton.current.iterations,
-                automaton.current.state
-            );
+    const init = () => {
+        automaton.current.initState = cellsState.get[0];
+        initState.current = cellsState.get[0];
+        buffer.current = [cellsState.get[0]];
+        iterations.set(0);
+    };
+
+    const next = () => {
+        const nstate = automaton.current.nextState(cellsNbhds, rules);
+        if (iterations.get >= 64) {
+            buffer.current = buffer.current.slice(1).concat([nstate]);
         } else {
-            buffer.current.shift();
-            buffer.current.push(automaton.current.state);
-            canvas?.paintScene(buffer.current);
+            buffer.current = buffer.current.concat([nstate]);
         }
-        return [automaton.current.state];
+        cellsState.set(buffer.current);
+        iterations.set(iterations.get + 1);
     };
 
-    const toggle = (canvas: CanvasCntrl | undefined, r: number, c: number) => {
-        const newVal = !initState[c];
-        dispatch(toggleInitStateCell(c));
-        canvas?.paintCell(0, c, newVal);
+    const stop = () => {
+        cellsState.set([initState.current]);
+        buffer.current = [];
+        iterations.set(0);
     };
 
     useEffect(() => {
@@ -79,6 +77,7 @@ export default function CellularAutomata1d() {
                 mainCell: mainCell,
             })
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [numCells, nbhdWidth, nbhdType, mainCell]);
 
     useEffect(() => {
@@ -86,13 +85,20 @@ export default function CellularAutomata1d() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nbhdWidth]);
 
-    useEffect(() => {
-        dispatch(resizeInitState(numCells));
-    }, [numCells]);
-
     return (
         <Box className="space-y-6 my-5">
-            <Scene cells={initState} toggle={toggle} init={init} next={next} />
+            <Canvas
+                cellsState={cellsState.get}
+                cellSize={cellSize.get}
+                clickHandler={canvasOnClick}
+            />
+
+            <Info
+                iterations={iterations.get}
+                liveCells={cellsState.liveCellsLastRow}
+            />
+
+            <Controllers init={init} next={next} stop={stop} zoom={cellSize} />
             <CustomTabs
                 tabs={[
                     {
@@ -105,7 +111,8 @@ export default function CellularAutomata1d() {
                     },
                     {
                         title: "Initial state",
-                        content: <InitState1d />,
+                        // content: <InitState1d />,
+                        content: <InitState2d state={cellsState} />,
                     },
                 ]}
             />

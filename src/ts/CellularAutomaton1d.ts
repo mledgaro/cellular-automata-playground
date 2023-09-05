@@ -2,11 +2,11 @@ import { boolArrayToInt } from "./Utils";
 
 export default class CellularAutomaton1d {
     //
-    private _ticks: number;
+    private _iterations: number;
     private _state: boolean[];
 
     constructor() {
-        this._ticks = 0;
+        this._iterations = 0;
         this._state = Array(false);
     }
 
@@ -22,19 +22,19 @@ export default class CellularAutomaton1d {
                 ]
         );
 
-        this._ticks++;
+        this._iterations++;
 
         return this._state;
     }
 
     set initState(state: boolean[]) {
         //
-        this._ticks = 0;
+        this._iterations = 0;
         this._state = state;
     }
 
     get iterations() {
-        return this._ticks;
+        return this._iterations;
     }
 
     get state() {

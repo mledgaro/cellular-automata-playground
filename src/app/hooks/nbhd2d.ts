@@ -1,4 +1,4 @@
-import { addColumn, addRow, setMatrixItem } from "src/ts/Utils";
+import { addColumn, addRow, setArray2dItem } from "src/ts/Utils";
 import { useStateObj } from "../hooks";
 import { NbhdType2D, Position } from "../types";
 
@@ -55,7 +55,7 @@ export default function useNbhd2d(): Nbhd2dHook {
         },
         setMainCell: (r: number, c: number) => {
             mainCell.set({ r: r, c: c });
-            nbhd.set(setMatrixItem(r, c, nbhd.get, false));
+            nbhd.set(setArray2dItem(r, c, nbhd.get, false));
         },
         setType: (newType: NbhdType2D) => {
             type.set(newType);
@@ -74,7 +74,7 @@ export default function useNbhd2d(): Nbhd2dHook {
         },
         toggle: (pos: Position) =>
             nbhd.set(
-                setMatrixItem(pos.r, pos.c, nbhd.get, !nbhd.get[pos.r][pos.c])
+                setArray2dItem(pos.r, pos.c, nbhd.get, !nbhd.get[pos.r][pos.c])
             ),
         addRow: (remove: boolean) => {
             nbhd.set(addRow(nbhd.get, remove));

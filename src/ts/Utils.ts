@@ -93,7 +93,7 @@ export function copyMatrix(matrix: any[][]): any[][] {
     return matrix.map((row) => row.map((cell) => cell));
 }
 
-export function setMatrixItem(
+export function setArray2dItem(
     r: number,
     c: number,
     matrix: any[][],

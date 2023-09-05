@@ -7,9 +7,9 @@ import { faArrowRotateRight, faBroom } from "@fortawesome/free-solid-svg-icons";
 import { DensitySlider } from "src/components/Slider";
 import Button from "src/components/Button";
 
-import { InitState2dHook } from "src/app/hooks/initState2d";
+import { CellsStateHook } from "src/app/hooks/cellsState";
 
-export default function InitState2d({ state }: { state: InitState2dHook }) {
+export default function InitState2d({ state }: { state: CellsStateHook }) {
     //
     return (
         <Grid container justifyContent="space-evenly">

@@ -87,7 +87,6 @@ export default class CanvasCntrl {
             row * this._cellSize,
             state
         );
-        // console.log("paint cell at ", row, col, state);
     }
 
     public paintRow(row: number, rowState: boolean[]) {
@@ -98,10 +97,10 @@ export default class CanvasCntrl {
     }
 
     public paintScene(state: boolean[][]) {
+        this.clear();
         state.forEach((row, r) =>
             row.forEach((cell, c) => this.paintCell(r, c, cell))
         );
-        console.log("CanvasCntrl - paintScene");
     }
 
     public saveScene(fileName: string) {
