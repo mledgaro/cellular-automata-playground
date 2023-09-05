@@ -259,3 +259,52 @@ export function DensitySlider({
         </Grid>
     );
 }
+
+export function VerticalSlider({
+    icon,
+    tooltipLabel,
+    min,
+    max,
+    defaultVal,
+    state,
+}: {
+    icon: IconDefinition;
+    tooltipLabel: string;
+    min: number;
+    max: number;
+    defaultVal: number;
+    state: StateObjHook<number>;
+}) {
+    return (
+        <Box className="flex flex-col w-fit items-center justify-center cap-component-container py-3">
+            <Box className="">
+                <StyledSlider
+                    className="h-[20vh] w-[8px] my-[15px]"
+                    defaultValue={defaultVal}
+                    min={min}
+                    max={max}
+                    value={state.get}
+                    onChange={(
+                        event: Event,
+                        value: number | number[],
+                        activeThumb: number
+                    ) => state.set(value as number)}
+                    valueLabelDisplay="off"
+                    orientation="vertical"
+                />
+            </Box>
+
+            <Box>
+                <StyledTooltip
+                    title={tooltipLabel}
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 700 }}
+                    followCursor
+                    arrow
+                >
+                    <FontAwesomeIcon icon={icon} size="xl" />
+                </StyledTooltip>
+            </Box>
+        </Box>
+    );
+}

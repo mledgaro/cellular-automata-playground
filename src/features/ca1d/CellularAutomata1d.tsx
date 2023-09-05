@@ -32,7 +32,6 @@ export default function CellularAutomata1d() {
 
     const dispatch = useAppDispatch();
 
-    const cellSize = useStateObj(8);
     const iterations = useStateObj(0);
 
     const cellsState = useCellsState(1, sceneSize.cols);
@@ -87,18 +86,14 @@ export default function CellularAutomata1d() {
 
     return (
         <Box className="space-y-6 my-5">
-            <Canvas
-                cellsState={cellsState.get}
-                cellSize={cellSize.get}
-                clickHandler={canvasOnClick}
-            />
+            <Canvas cellsState={cellsState.get} clickHandler={canvasOnClick} />
 
             <Info
                 iterations={iterations.get}
                 liveCells={cellsState.liveCellsLastRow}
             />
 
-            <Controllers init={init} next={next} stop={stop} zoom={cellSize} />
+            <Controllers init={init} next={next} stop={stop} />
             <CustomTabs
                 tabs={[
                     {

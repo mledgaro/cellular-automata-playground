@@ -4,20 +4,18 @@ import { Box, Grid } from "@mui/material";
 import {
     faForwardStep,
     faGaugeHigh,
-    faMagnifyingGlass,
     faPause,
     faPlay,
     faStop,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { StateObjHook, useStateObj } from "src/app/hooks";
+import { useStateObj } from "src/app/hooks";
 import { StatusHook, useStatus } from "src/app/hooks/status";
 
 import Button from "src/components/Button";
 import { IconSlider } from "src/components/Slider";
 
 const refreshRateVal = { minVal: 200, maxVal: 999, defaultVal: 600 };
-const cellSizeVal = { minVal: 1, maxVal: 20, defaultVal: 8 };
 
 const StatusCtx = createContext<StatusHook | undefined>(undefined);
 
@@ -25,12 +23,10 @@ export default function Controllers({
     init,
     next,
     stop,
-    zoom,
 }: {
     init: () => void;
     next: () => void;
     stop: () => void;
-    zoom: StateObjHook<number>;
 }) {
     //
     const status = useStatus();
@@ -78,16 +74,6 @@ export default function Controllers({
                     defaultVal={refreshRateVal.defaultVal}
                     minVal={refreshRateVal.minVal}
                     maxVal={refreshRateVal.maxVal}
-                />
-            </Grid>
-            <Grid item md={3}>
-                <IconSlider
-                    icon={faMagnifyingGlass}
-                    tooltipLabel="Zoom"
-                    state={zoom}
-                    defaultVal={cellSizeVal.defaultVal}
-                    minVal={cellSizeVal.minVal}
-                    maxVal={cellSizeVal.maxVal}
                 />
             </Grid>
         </Grid>
