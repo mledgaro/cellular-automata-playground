@@ -1,21 +1,16 @@
 import React, { createContext, useContext, useEffect } from "react";
 
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import {
     faForwardStep,
-    faGaugeHigh,
     faPause,
     faPlay,
     faStop,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { useStateObj } from "src/app/hooks";
 import { StatusHook, useStatus } from "src/app/hooks/status";
 
 import Button from "src/components/Button";
-import { IconSlider } from "src/components/Slider";
-
-const refreshRateVal = { minVal: 200, maxVal: 999, defaultVal: 600 };
 
 const StatusCtx = createContext<StatusHook | undefined>(undefined);
 
@@ -23,19 +18,20 @@ export default function Controllers({
     init,
     next,
     stop,
+    refreshRate,
 }: {
     init: () => void;
     next: () => void;
     stop: () => void;
+    refreshRate: number;
 }) {
     //
     const status = useStatus();
-    const refreshRate = useStateObj(refreshRateVal.defaultVal);
 
     // every render
     useEffect(() => {
         if (status.running) {
-            window.setTimeout(next, 1000 - refreshRate.get);
+            window.setTimeout(next, 1000 - refreshRate);
         }
     });
 
@@ -50,27 +46,13 @@ export default function Controllers({
     }, [status.get]);
 
     return (
-        <Grid item container alignItems="center" justifyContent="center" md>
-            <Grid item md>
-                <Box className="flex justify-center space-x-2">
-                    <StatusCtx.Provider value={status}>
-                        <RunBtn />
-                        <NextBtn clickHandler={next} />
-                        <StopBtn />
-                    </StatusCtx.Provider>
-                </Box>
-            </Grid>
-            <Grid item md>
-                <IconSlider
-                    icon={faGaugeHigh}
-                    tooltipLabel="Speed"
-                    state={refreshRate}
-                    defaultVal={refreshRateVal.defaultVal}
-                    minVal={refreshRateVal.minVal}
-                    maxVal={refreshRateVal.maxVal}
-                />
-            </Grid>
-        </Grid>
+        <Box className="flex justify-center space-x-2">
+            <StatusCtx.Provider value={status}>
+                <RunBtn />
+                <NextBtn clickHandler={next} />
+                <StopBtn />
+            </StatusCtx.Provider>
+        </Box>
     );
 }
 

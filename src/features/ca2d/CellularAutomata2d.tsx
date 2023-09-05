@@ -1,11 +1,9 @@
 //
 import React, { useEffect, useRef } from "react";
 
-import { useAppSelector, useStateObj } from "src/app/hooks";
+import { useAppSelector } from "src/app/hooks";
 
-import { Box, Grid } from "@mui/material";
 import { selectSceneSize } from "src/app/slices/sceneSize";
-import CustomTabs from "src/components/Tabs";
 import Nbhd2d from "src/features/ca2d/Nbhd2d";
 import Rules2d from "src/features/ca2d/Rules2d";
 import useNbhd2d from "src/app/hooks/nbhd2d";
@@ -13,15 +11,11 @@ import { useRules2d } from "src/app/hooks/rules2d";
 import useCellsState from "src/app/hooks/cellsState";
 import InitState2d from "src/features/ca2d/InitState2d";
 import { CellularAutomaton2d } from "src/ts/CellularAutomaton2d";
-import Canvas from "../Canvas";
-import Info from "../Info";
-import Controllers from "../Controllers";
+import CAComponents from "../CAComponents";
 
 export default function CellularAutomata2d() {
     //
     const sceneSize = useAppSelector(selectSceneSize);
-
-    const iterations = useStateObj(0);
 
     const nbhd = useNbhd2d();
     const rules = useRules2d();
@@ -39,17 +33,14 @@ export default function CellularAutomata2d() {
         automaton.current.rules = rules.get;
         automaton.current.state = cellsState.get;
         initState.current = cellsState.get;
-        iterations.set(0);
     };
 
     const next = () => {
         cellsState.set(automaton.current.nextState());
-        iterations.set(iterations.get + 1);
     };
 
     const stop = () => {
         cellsState.set(initState.current);
-        iterations.set(0);
     };
 
     useEffect(() => {
@@ -73,35 +64,28 @@ export default function CellularAutomata2d() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nbhd.type]);
-
     return (
-        <Box className="space-y-6 my-5">
-            <Canvas cellsState={cellsState.get} clickHandler={canvasOnClick} />
-
-            <Grid container>
-                <Controllers init={init} next={next} stop={stop} />
-                <Info
-                    iterations={iterations.get}
-                    liveCells={cellsState.liveCells}
-                />
-            </Grid>
-
-            <CustomTabs
-                tabs={[
-                    {
-                        title: "Neighborhood",
-                        content: <Nbhd2d state={nbhd} />,
-                    },
-                    {
-                        title: "Rules",
-                        content: <Rules2d state={rules} />,
-                    },
-                    {
-                        title: "Init state",
-                        content: <InitState2d state={cellsState} />,
-                    },
-                ]}
-            />
-        </Box>
+        <CAComponents
+            init={init}
+            next={next}
+            stop={stop}
+            cellsState={cellsState}
+            canvasOnClick={canvasOnClick}
+            tabs={[
+                {
+                    title: "Neighborhood",
+                    content: <Nbhd2d state={nbhd} />,
+                },
+                {
+                    title: "Rules",
+                    content: <Rules2d state={rules} />,
+                },
+                {
+                    title: "Init state",
+                    content: <InitState2d state={cellsState} />,
+                },
+            ]}
+            liveCells={cellsState.liveCells}
+        />
     );
 }

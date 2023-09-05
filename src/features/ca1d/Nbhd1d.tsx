@@ -2,12 +2,17 @@
 import React, { useCallback } from "react";
 
 import { Box, Grid } from "@mui/material";
-import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRotateRight, faMap } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "src/components/Button";
 import CustomRadioGroup from "src/components/RadioGroup";
 
-import { useAppDispatch, useAppSelector, useBoolArr } from "src/app/hooks";
+import {
+    useAppDispatch,
+    useAppSelector,
+    useBoolArr,
+    useStateObj,
+} from "src/app/hooks";
 import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
 import {
     NbhdType,
@@ -24,6 +29,7 @@ import { boolArray } from "src/ts/Utils";
 
 export default function Nbhd1d() {
     //
+    const nbhdsMap = useStateObj(false);
     return (
         <Grid container rowSpacing={2}>
             {/* Row 1 */}
@@ -33,10 +39,6 @@ export default function Nbhd1d() {
                 alignItems="center"
                 justifyContent="space-evenly"
             >
-                {/* Width */}
-                {/* <Grid item md={2}>
-                    <Width />
-                </Grid> */}
                 {/* Type */}
                 <Grid item md="auto">
                     <Type />
@@ -46,41 +48,25 @@ export default function Nbhd1d() {
                     <Nbhd1dEditor />
                 </Grid>
 
-                <Grid item md="auto" className="flex justify-center">
+                <Grid item md="auto" className="flex justify-center space-x-2">
                     <Reload />
+                    <Button
+                        icon={faMap}
+                        size="2x"
+                        tooltipLabel="Show neighborhoods map"
+                        onClick={() => nbhdsMap.set(!nbhdsMap.get)}
+                    />
                 </Grid>
             </Grid>
-            {/* Row 2 */}
-            {/* <Grid container item alignItems="center"> */}
-            {/* Neighborhoods map */}
-            <Grid item xs={12}>
-                <NbhdsMap />
-            </Grid>
-            {/* Reload button */}
-            {/* <Grid item xs={1} className="flex justify-center">
-                    <Reload />
-                </Grid> */}
-            {/* </Grid> */}
+
+            {nbhdsMap.get && (
+                <Grid item xs={12}>
+                    <NbhdsMap />
+                </Grid>
+            )}
         </Grid>
     );
 }
-
-// function Width() {
-//     //
-//     const width = useAppSelector(selectNbhdWidth);
-//     const dispatch = useAppDispatch();
-//     return (
-//         <CustomSlider
-//             label="Width"
-//             minVal={nbhdWidthMin}
-//             maxVal={nbhdWidthMax}
-//             defaultVal={nbhdWidthDefault}
-//             value={width}
-//             marks={true}
-//             onChange={(val: number) => dispatch(setNbhdWidth(val))}
-//         />
-//     );
-// }
 
 function Type() {
     //
@@ -147,8 +133,8 @@ function Reload() {
 
     return (
         <Button
-            icon={faRotate}
-            size="3x"
+            icon={faArrowRotateRight}
+            size="2x"
             tooltipLabel="Reload neighborhoods"
             onClick={() => dispatch(setCellsNbhds(params))}
         />
