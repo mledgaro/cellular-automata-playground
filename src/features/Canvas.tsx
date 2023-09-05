@@ -3,7 +3,7 @@ import { faCameraRetro } from "@fortawesome/free-solid-svg-icons";
 import { Box } from "@mui/material";
 import React, { MouseEvent, useEffect, useRef } from "react";
 import { useAppSelector } from "src/app/hooks";
-import { selectNumCells } from "src/app/slices/numCells";
+import { selectSceneSize } from "src/app/slices/sceneSize";
 import CanvasCntrl from "src/ts/CanvasCntrl";
 import Button from "src/components/Button";
 
@@ -17,7 +17,7 @@ export default function Canvas({
     clickHandler: (row: number, col: number) => void;
 }) {
     //
-    const numCells = useAppSelector(selectNumCells);
+    const sceneSize = useAppSelector(selectSceneSize);
 
     const canvas = useRef<HTMLCanvasElement>(null);
     const scroll = useRef<HTMLDivElement>(null);
@@ -46,10 +46,8 @@ export default function Canvas({
     useEffect(() => {
         canvasCntrl.current = new CanvasCntrl(
             canvas.current,
-            64,
-            numCells,
-            // 512,
-            // 512,
+            sceneSize.rows,
+            sceneSize.cols,
             cellSize
         );
         canvasCntrl.current.clear();

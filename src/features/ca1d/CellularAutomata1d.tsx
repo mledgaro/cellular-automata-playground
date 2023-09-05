@@ -4,11 +4,10 @@ import React, { useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector, useStateObj } from "src/app/hooks";
 
 import { Box } from "@mui/material";
-import { selectNumCells } from "src/app/slices/numCells";
+import { selectSceneSize } from "src/app/slices/sceneSize";
 import CustomTabs from "src/components/Tabs";
 import Nbhd1d from "src/features/ca1d/Nbhd1d";
 import Rules1d from "src/features/ca1d/Rules1d";
-import InitState1d from "src/features/ca1d/InitState1d";
 import CellularAutomaton1d from "src/ts/CellularAutomaton1d";
 import { resizeRules, selectRules } from "src/app/slices/rules";
 import { selectCellsNbhds, setCellsNbhds } from "src/app/slices/cellsNbhds";
@@ -23,7 +22,8 @@ import InitState2d from "../ca2d/InitState2d";
 
 export default function CellularAutomata1d() {
     //
-    const numCells = useAppSelector(selectNumCells);
+    const sceneSize = useAppSelector(selectSceneSize);
+
     const nbhdWidth = useAppSelector(selectNbhdWidth);
     const nbhdType = useAppSelector(selectNbhdType);
     const mainCell = useAppSelector(selectMainCell);
@@ -35,7 +35,7 @@ export default function CellularAutomata1d() {
     const cellSize = useStateObj(8);
     const iterations = useStateObj(0);
 
-    const cellsState = useCellsState(1, numCells);
+    const cellsState = useCellsState(1, sceneSize.cols);
     const automaton = useRef(new CellularAutomaton1d());
     const initState = useRef(cellsState.get[0]);
     const buffer = useRef([[false]]);
@@ -53,7 +53,7 @@ export default function CellularAutomata1d() {
 
     const next = () => {
         const nstate = automaton.current.nextState(cellsNbhds, rules);
-        if (iterations.get >= 64) {
+        if (iterations.get >= sceneSize.rows) {
             buffer.current = buffer.current.slice(1).concat([nstate]);
         } else {
             buffer.current = buffer.current.concat([nstate]);
@@ -71,14 +71,14 @@ export default function CellularAutomata1d() {
     useEffect(() => {
         dispatch(
             setCellsNbhds({
-                numCells: numCells,
+                numCells: sceneSize.cols,
                 width: nbhdWidth,
                 type: nbhdType,
                 mainCell: mainCell,
             })
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [numCells, nbhdWidth, nbhdType, mainCell]);
+    }, [sceneSize.cols, nbhdWidth, nbhdType, mainCell]);
 
     useEffect(() => {
         dispatch(resizeRules(Math.pow(2, nbhdWidth)));

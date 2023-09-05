@@ -5,17 +5,10 @@ import { Box, Grid } from "@mui/material";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 import Button from "src/components/Button";
-import CustomSlider from "src/components/Slider";
 import CustomRadioGroup from "src/components/RadioGroup";
 
 import { useAppDispatch, useAppSelector, useBoolArr } from "src/app/hooks";
-import {
-    minVal as nbhdWidthMin,
-    maxVal as nbhdWidthMax,
-    defaultVal as nbhdWidthDefault,
-    selectNbhdWidth,
-    setNbhdWidth,
-} from "src/app/slices/nbhdWidth";
+import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
 import {
     NbhdType,
     defaultVal as nbhdTypeDefault,
@@ -25,7 +18,7 @@ import {
 import { selectMainCell } from "src/app/slices/mainCell";
 import { selectCellsNbhds, setCellsNbhds } from "src/app/slices/cellsNbhds";
 
-import { selectNumCells } from "src/app/slices/numCells";
+import { selectSceneCols } from "src/app/slices/sceneSize";
 import { Nbhd1dEditor } from "./CellsGroups";
 import { boolArray } from "src/ts/Utils";
 
@@ -110,15 +103,15 @@ function Type() {
 
 function NbhdsMap() {
     //
-    const numCells = useAppSelector(selectNumCells);
+    const sceneCols = useAppSelector(selectSceneCols);
     const cellsNbhds = useAppSelector(selectCellsNbhds);
 
-    const cells = useBoolArr(boolArray(numCells, false));
+    const cells = useBoolArr(boolArray(sceneCols, false));
 
     const highlight = useCallback(
         (idx: number) => {
             //
-            let highCells = Array(numCells).fill(false);
+            let highCells = Array(sceneCols).fill(false);
             cellsNbhds[idx].forEach(
                 (neighboor) => (highCells[neighboor] = true)
             );
@@ -144,7 +137,7 @@ function NbhdsMap() {
 function Reload() {
     //
     const params = {
-        numCells: useAppSelector(selectNumCells),
+        numCells: useAppSelector(selectSceneCols),
         width: useAppSelector(selectNbhdWidth),
         type: useAppSelector(selectNbhdType),
         mainCell: useAppSelector(selectMainCell),

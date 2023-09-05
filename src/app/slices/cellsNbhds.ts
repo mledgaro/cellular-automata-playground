@@ -2,7 +2,7 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { defaultVal as numCellsDefault } from "./numCells";
+import { defaultVal as sceneSizeDefault } from "./sceneSize";
 import { defaultVal as nbhdWidthDefault } from "./nbhdWidth";
 import { NbhdType, defaultVal as nbhdTypeDefault } from "./nbhdType";
 import { defaultVal as mainCellDefault } from "./mainCell";
@@ -20,7 +20,7 @@ interface SetParams {
 }
 
 export const defaultVal = buildNbhd({
-    numCells: numCellsDefault,
+    numCells: sceneSizeDefault.cols,
     width: nbhdWidthDefault,
     type: nbhdTypeDefault,
     mainCell: mainCellDefault,

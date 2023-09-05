@@ -2,7 +2,7 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { defaultVal as numCellsDefault } from "./numCells";
+import { defaultVal as sceneSizeDefault } from "./sceneSize";
 import { RootState } from "../store";
 
 export type DistributionType = "even" | "rand";
@@ -17,7 +17,7 @@ interface InitStateState {
 
 export const initialState: InitStateState = {
     // value: buildState(numCellsDefault, 1, [1, 1], "even"),
-    value: randState(numCellsDefault, 0.1),
+    value: randState(sceneSizeDefault.cols, 0.1),
     density: 0.1,
     // liveCells: 1,
     // clusterSize: [1, 1],

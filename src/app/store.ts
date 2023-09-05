@@ -2,7 +2,7 @@
 //
 
 import { configureStore } from "@reduxjs/toolkit";
-import numCellsReducer from "src/app/slices/numCells";
+import sceneSizeReducer from "src/app/slices/sceneSize";
 import nbhdWidthReducer from "src/app/slices/nbhdWidth";
 import nbhdTypeReducer from "src/app/slices/nbhdType";
 import mainCellReducer from "src/app/slices/mainCell";
@@ -12,7 +12,7 @@ import cellsNbhdsReducer from "src/app/slices/cellsNbhds";
 
 export const store = configureStore({
     reducer: {
-        numCells: numCellsReducer,
+        sceneSize: sceneSizeReducer,
         nbhdWidth: nbhdWidthReducer,
         nbhdType: nbhdTypeReducer,
         mainCell: mainCellReducer,

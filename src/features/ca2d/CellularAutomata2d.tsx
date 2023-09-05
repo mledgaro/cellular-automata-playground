@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 import { useAppSelector, useStateObj } from "src/app/hooks";
 
 import { Box } from "@mui/material";
-import { selectNumCells } from "src/app/slices/numCells";
+import { selectSceneSize } from "src/app/slices/sceneSize";
 import CustomTabs from "src/components/Tabs";
 import Nbhd2d from "src/features/ca2d/Nbhd2d";
 import Rules2d from "src/features/ca2d/Rules2d";
@@ -19,14 +19,14 @@ import Controllers from "../Controllers";
 
 export default function CellularAutomata2d() {
     //
-    const numCells = useAppSelector(selectNumCells);
+    const sceneSize = useAppSelector(selectSceneSize);
 
     const cellSize = useStateObj(8);
     const iterations = useStateObj(0);
 
     const nbhd = useNbhd2d();
     const rules = useRules2d();
-    const cellsState = useCellsState(64, numCells);
+    const cellsState = useCellsState(sceneSize.rows, sceneSize.cols);
 
     const initState = useRef(cellsState.get);
     const automaton = useRef(new CellularAutomaton2d());
