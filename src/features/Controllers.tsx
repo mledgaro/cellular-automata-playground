@@ -50,15 +50,9 @@ export default function Controllers({
     }, [status.get]);
 
     return (
-        <Grid
-            item
-            container
-            alignItems="center"
-            justifyContent="center"
-            columnSpacing={5}
-        >
-            <Grid item md="auto">
-                <Box className="space-x-2">
+        <Grid item container alignItems="center" justifyContent="center" md>
+            <Grid item md>
+                <Box className="flex justify-center space-x-2">
                     <StatusCtx.Provider value={status}>
                         <RunBtn />
                         <NextBtn clickHandler={next} />
@@ -66,7 +60,7 @@ export default function Controllers({
                     </StatusCtx.Provider>
                 </Box>
             </Grid>
-            <Grid item md={3}>
+            <Grid item md>
                 <IconSlider
                     icon={faGaugeHigh}
                     tooltipLabel="Speed"

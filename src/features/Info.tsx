@@ -20,13 +20,7 @@ export default function Info({
 }) {
     //
     return (
-        <Grid
-            item
-            container
-            alignItems="center"
-            justifyContent="center"
-            columnSpacing={3}
-        >
+        <Grid item container alignItems="center" justifyContent="center" md>
             <Card
                 icon={faStopwatch}
                 tooltipLabel="Iterations"
@@ -47,7 +41,7 @@ function Card({
     value: number;
 }) {
     return (
-        <Grid item md={2}>
+        <Grid item md>
             <StyledTooltip
                 title={tooltipLabel}
                 TransitionComponent={Fade}

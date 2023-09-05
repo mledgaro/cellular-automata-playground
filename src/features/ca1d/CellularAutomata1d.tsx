@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 
 import { useAppDispatch, useAppSelector, useStateObj } from "src/app/hooks";
 
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { selectSceneSize } from "src/app/slices/sceneSize";
 import CustomTabs from "src/components/Tabs";
 import Nbhd1d from "src/features/ca1d/Nbhd1d";
@@ -88,12 +88,14 @@ export default function CellularAutomata1d() {
         <Box className="space-y-6 my-5">
             <Canvas cellsState={cellsState.get} clickHandler={canvasOnClick} />
 
-            <Info
-                iterations={iterations.get}
-                liveCells={cellsState.liveCellsLastRow}
-            />
+            <Grid container>
+                <Controllers init={init} next={next} stop={stop} />
+                <Info
+                    iterations={iterations.get}
+                    liveCells={cellsState.liveCellsLastRow}
+                />
+            </Grid>
 
-            <Controllers init={init} next={next} stop={stop} />
             <CustomTabs
                 tabs={[
                     {

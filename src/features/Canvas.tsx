@@ -26,28 +26,26 @@ export default function Canvas({
     const sceneSize = useAppSelector(selectSceneSize);
 
     const cellSize = useStateObj(cellSizeVal.defaultVal);
+    const cursorPos = useStateObj({ r: 0, c: 0 });
 
     const canvas = useRef<HTMLCanvasElement>(null);
-    const cont = useRef<HTMLDivElement>(null);
     const scroll = useRef<HTMLDivElement>(null);
     const canvasCntrl = useRef<CanvasCntrl>();
 
-    const clickHandler_ = (evt: MouseEvent) => {
+    const cursor = (evt: MouseEvent) => {
         let r, c;
 
-        r = evt.clientY;
-        r -= cont.current!.offsetTop;
+        r = evt.pageY;
+        r -= scroll.current!.offsetTop;
         r += scroll.current!.scrollTop;
-        r += window.scrollY;
         r = Math.floor(r / cellSize.get);
 
-        c = evt.clientX;
-        c -= cont.current!.offsetLeft;
+        c = evt.pageX;
+        c -= scroll.current!.offsetLeft;
         c += scroll.current!.scrollLeft;
-        c += window.scrollX;
         c = Math.floor(c / cellSize.get);
 
-        clickHandler(r, c);
+        cursorPos.set({ r: r, c: c });
     };
 
     // initialize
@@ -76,26 +74,32 @@ export default function Canvas({
     }, [cellSize.get]);
 
     return (
-        <Box
-            className="flex flex-row justify-evenly w-full h-[60vh] "
-            ref={cont}
-        >
+        <Box className="flex flex-row justify-evenly w-full h-[60vh] ">
             <Box className="flex items-center justify-center w-[88%]">
                 <Box
                     ref={scroll}
                     className="max-w-full max-h-full w-fit overflow-auto"
-                    onClick={clickHandler_}
+                    onMouseMove={cursor}
+                    onClick={() =>
+                        clickHandler(cursorPos.get.r, cursorPos.get.c)
+                    }
                 >
                     <canvas ref={canvas} />
                 </Box>
             </Box>
 
-            <Controllers cellSize={cellSize} />
+            <Controllers cellSize={cellSize} pos={cursorPos.get} />
         </Box>
     );
 }
 
-function Controllers({ cellSize }: { cellSize: StateObjHook<number> }) {
+function Controllers({
+    cellSize,
+    pos,
+}: {
+    cellSize: StateObjHook<number>;
+    pos: { r: number; c: number };
+}) {
     return (
         <Box className="flex flex-col w-fit items-center justify-center space-y-3">
             <VerticalSlider
@@ -112,8 +116,8 @@ function Controllers({ cellSize }: { cellSize: StateObjHook<number> }) {
                     <FontAwesomeIcon icon={faLocationDot} size="xl" />
                 </Box>
                 <Box className="flex flex-col">
-                    <Box>{`r ${9999}`}</Box>
-                    <Box>{`c ${9999}`}</Box>
+                    <Box>{`r: ${pos.r + 1}`}</Box>
+                    <Box>{`c: ${pos.c + 1}`}</Box>
                 </Box>
             </Box>
             <Button
