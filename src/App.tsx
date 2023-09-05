@@ -1,7 +1,7 @@
 //
 import "./css/App.css";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -21,7 +21,13 @@ export default function App() {
         <BrowserRouter>
             <Box>
                 <Box className="mx-auto mt-4 w-fit">
-                    <TitleMenu />
+                    <TitleMenu
+                        items={[
+                            { title: "Cellular Automata 1D", link: "ca1d" },
+                            { title: "Cellular Automata 2D", link: "ca2d" },
+                        ]}
+                        selected={1}
+                    />
                 </Box>
                 <Routes>
                     <Route index element={<CellularAutomata2d />} />
@@ -61,14 +67,18 @@ const StyledMenu = styled((props: MenuProps) => (
     },
 }));
 
-function TitleMenu() {
+function TitleMenu({
+    items,
+    selected,
+}: {
+    items: { title: string; link: string }[];
+    selected: number;
+}) {
     //
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const title = useStateObj<string>("2D Cellular Automata");
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+
+    const title = useStateObj(items[selected].title ?? "");
 
     return (
         <div>
@@ -78,8 +88,10 @@ function TitleMenu() {
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
                 variant="contained"
-                onClick={handleClick}
-                className="bg-secondary text-primary text-4xl font-bold"
+                onClick={(event: React.MouseEvent<HTMLElement>) => {
+                    setAnchorEl(event.currentTarget);
+                }}
+                className="bg-secondary text-primary text-4xl font-bold rounded-[8px]"
             >
                 {title.get}
                 <FontAwesomeIcon className="ml-2" icon={faChevronDown} />
@@ -93,22 +105,18 @@ function TitleMenu() {
                 open={open}
                 onClose={() => setAnchorEl(null)}
             >
-                <MenuItem
-                    onClick={() => {
-                        title.set("1D Cellular Automata");
-                        setAnchorEl(null);
-                    }}
-                >
-                    <Link to="ca1d">1D Cellular Automata</Link>
-                </MenuItem>
-                <MenuItem
-                    onClick={() => {
-                        title.set("2D Cellular Automata");
-                        setAnchorEl(null);
-                    }}
-                >
-                    <Link to="ca2d">2D Cellular Automata</Link>
-                </MenuItem>
+                {items.map((item) => {
+                    return (
+                        <MenuItem
+                            onClick={() => {
+                                title.set(item.title);
+                                setAnchorEl(null);
+                            }}
+                        >
+                            <Link to={item.link}>{item.title}</Link>
+                        </MenuItem>
+                    );
+                })}
                 {/* <Divider sx={{ my: 0.5 }} /> */}
             </StyledMenu>
         </div>
