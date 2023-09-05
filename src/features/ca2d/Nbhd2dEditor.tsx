@@ -1,8 +1,8 @@
 //
 import {
     faSquareCheck,
-    faSquareMinus,
-    faSquarePlus,
+    faMinus,
+    faPlus,
     faSquareXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { faSquare as faSquareRegular } from "@fortawesome/free-regular-svg-icons";
@@ -100,14 +100,14 @@ function ResizeButtons({
                 onClick={() => onclick(true)}
                 disabled={disableRemove}
             >
-                <FontAwesomeIcon icon={faSquareMinus} />
+                <FontAwesomeIcon icon={faMinus} />
             </ResizeBtn>
             <ResizeBtn
                 variant="contained"
                 onClick={() => onclick(false)}
                 disabled={disableAdd}
             >
-                <FontAwesomeIcon icon={faSquarePlus} />
+                <FontAwesomeIcon icon={faPlus} />
             </ResizeBtn>
         </Box>
     );

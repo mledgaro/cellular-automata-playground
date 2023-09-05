@@ -8,8 +8,8 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import {
     faEllipsis,
-    faSquareMinus,
-    faSquarePlus,
+    faMinus,
+    faPlus,
     faSquare as faSquareSolid,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -86,7 +86,7 @@ export function Nbhd1dEditor({ className = "" }: { className?: string }) {
                         onClick={() => dispatch(setNbhdWidth(width - 1))}
                         disabled={width <= nbhdWidthMin}
                     >
-                        <FontAwesomeIcon icon={faSquareMinus} />
+                        <FontAwesomeIcon icon={faMinus} />
                     </ResizeBtn>
                     <ResizeBtn
                         variant="contained"
@@ -94,7 +94,7 @@ export function Nbhd1dEditor({ className = "" }: { className?: string }) {
                         onClick={() => dispatch(setNbhdWidth(width + 1))}
                         disabled={width >= nbhdWidthMax}
                     >
-                        <FontAwesomeIcon icon={faSquarePlus} />
+                        <FontAwesomeIcon icon={faPlus} />
                     </ResizeBtn>
                 </Box>
             </Box>

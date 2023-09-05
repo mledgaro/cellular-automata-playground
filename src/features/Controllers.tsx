@@ -59,7 +59,7 @@ export default function Controllers({
             container
             alignItems="center"
             justifyContent="center"
-            columnSpacing={2}
+            columnSpacing={5}
         >
             <Grid item md="auto">
                 <Box className="space-x-2">

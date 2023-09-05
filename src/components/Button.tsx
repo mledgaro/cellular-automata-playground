@@ -46,6 +46,7 @@ export const ResizeBtn = styled(Button)<ButtonProps>(({ theme }) => ({
     minWidth: "fit-content",
     width: "fit-content",
     padding: "3px",
+    borderRadius: "10px",
     "&:hover": {
         backgroundColor: "var(--secondary)",
         color: "var(--primary)",
