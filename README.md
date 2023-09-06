@@ -62,8 +62,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - [ ] set 1d rule on input number
 - [ ] autoload rule 90 on 1d
 - [ ] disable components when running
-- [ ] unify label component
 - [ ] put current coords label under canvas
-- [ ] 
+- [ ] 1d default random rules
 
 ## Notes
