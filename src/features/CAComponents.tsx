@@ -7,7 +7,6 @@ import { Box, Grid } from "@mui/material";
 import CustomTabs from "src/components/Tabs";
 import { CellsStateHook } from "src/app/hooks/cellsState";
 import Canvas from "src/features/Canvas";
-import Card from "src/features/Card";
 import Controllers from "src/features/Controllers";
 import {
     faGaugeHigh,
@@ -17,6 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Button from "src/components/Button";
 import { IconSlider } from "src/components/Slider";
+import Label from "src/components/Label";
 const refreshRateVal = { minVal: 200, maxVal: 999, defaultVal: 600 };
 export default function CAComponents({
     init,
@@ -80,19 +80,19 @@ export default function CAComponents({
                     />
                 </Grid>
 
-                <Grid item md={2}>
-                    <Card
+                <Grid item md={2} className="flex justify-center">
+                    <Label
                         icon={faStopwatch}
                         tooltipLabel="Iterations"
-                        value={iterations.get}
+                        info={iterations.get.toString()}
                     />
                 </Grid>
 
-                <Grid item md={2}>
-                    <Card
+                <Grid item md={2} className="flex justify-center">
+                    <Label
                         icon={faHeart}
                         tooltipLabel="Live cells"
-                        value={liveCells}
+                        info={liveCells.toString()}
                     />
                 </Grid>
 

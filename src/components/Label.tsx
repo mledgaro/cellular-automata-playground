@@ -1,20 +1,21 @@
-import React from "react";
-
-import { Box, Fade } from "@mui/material";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-
-import { StyledTooltip } from "src/components/Button";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Box, Fade } from "@mui/material";
+import React from "react";
+import { StyledTooltip } from "./Button";
 
-export default function Card({
+export default function Label({
     icon,
     tooltipLabel,
-    value,
+    info,
+    size = "2xl",
+    vertical = false,
 }: {
     icon: IconDefinition;
     tooltipLabel: string;
-    value: number;
+    info: string;
+    size?: string;
+    vertical?: boolean;
 }) {
     return (
         <StyledTooltip
@@ -24,11 +25,15 @@ export default function Card({
             followCursor
             arrow
         >
-            <Box className="flex flex-row space-x-2 cap-component-container text-2xl w-fit py-2 px-3 mx-auto">
+            <Box
+                className={`flex items-center cap-component-container py-2 px-3 w-fit ${
+                    vertical ? "flex-col space-y-1" : "flex-row space-x-2"
+                } text-${size}`}
+            >
                 <Box>
                     <FontAwesomeIcon icon={icon} />
                 </Box>
-                <Box>{value}</Box>
+                <Box className="text-tertiary">{info}</Box>
             </Box>
         </StyledTooltip>
     );

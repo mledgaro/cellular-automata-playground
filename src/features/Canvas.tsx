@@ -11,8 +11,8 @@ import { StateObjHook, useAppSelector, useStateObj } from "src/app/hooks";
 import { selectSceneSize } from "src/app/slices/sceneSize";
 import CanvasCntrl from "src/ts/CanvasCntrl";
 import Button from "src/components/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { VerticalSlider } from "src/components/Slider";
+import Label from "src/components/Label";
 
 const cellSizeVal = { minVal: 1, maxVal: 20, defaultVal: 8 };
 export default function Canvas({
@@ -75,7 +75,7 @@ export default function Canvas({
 
     return (
         <Box className="flex flex-row justify-evenly w-full h-[60vh] ">
-            <Box className="flex items-center justify-center w-[88%]">
+            <Box className="flex items-center justify-center w-[80%]">
                 <Box
                     ref={scroll}
                     className="max-w-full max-h-full w-fit overflow-auto"
@@ -101,7 +101,7 @@ function Controllers({
     pos: { r: number; c: number };
 }) {
     return (
-        <Box className="flex flex-col w-fit items-center justify-center space-y-3">
+        <Box className="flex flex-col w-[15%] items-center justify-center space-y-3">
             <VerticalSlider
                 icon={faMagnifyingGlass}
                 tooltipLabel="Zoom"
@@ -110,15 +110,13 @@ function Controllers({
                 defaultVal={cellSizeVal.defaultVal}
                 state={cellSize}
             />
-
-            <Box className="flex flex-row space-x-2 cap-component-container text-lg w-fit py-2 px-3 items-center">
-                <Box>
-                    <FontAwesomeIcon icon={faLocationDot} size="xl" />
-                </Box>
-                <Box className="flex flex-col">
-                    <Box>{`r: ${pos.r + 1}`}</Box>
-                    <Box>{`c: ${pos.c + 1}`}</Box>
-                </Box>
+            <Box className="flex justify-center">
+                <Label
+                    icon={faLocationDot}
+                    tooltipLabel="Current coordinates"
+                    info={`(${pos.r}, ${pos.c})`}
+                    size="[0.5rem]"
+                />
             </Box>
             <Button
                 tooltipLabel="Screenshot"

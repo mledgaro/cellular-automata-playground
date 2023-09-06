@@ -3,6 +3,7 @@ import React from "react";
 
 import { faSquare as faSquareRegular } from "@fortawesome/free-regular-svg-icons";
 import {
+    faHashtag,
     faRightLeft,
     faShuffle,
     faSquare as faSquareSolid,
@@ -24,16 +25,22 @@ import {
     toggleRule,
 } from "src/app/slices/rules";
 import { Box, Grid } from "@mui/material";
+import Label from "src/components/Label";
 
 export default function Rules1d() {
     //
     const onHoverCell = useStateObj<number>(0);
+    const ruleNum = useAppSelector(selectRuleNumber);
 
     return (
         <Box className="space-y-2">
             <Grid container alignItems="center" justifyContent="space-evenly">
-                <Grid item md={4}>
-                    <RuleNumber />
+                <Grid item md={4} className="flex justify-center">
+                    <Label
+                        icon={faHashtag}
+                        tooltipLabel="Rule number"
+                        info={ruleNum.toString()}
+                    />
                 </Grid>
 
                 <Grid item md={4}>
@@ -48,18 +55,6 @@ export default function Rules1d() {
             <Box className="flex justify-center">
                 <RulesSelector setHoverCell={onHoverCell.set} />
             </Box>
-        </Box>
-    );
-}
-
-function RuleNumber() {
-    //
-    const ruleNum = useAppSelector(selectRuleNumber);
-
-    return (
-        <Box className="cap-component-container w-max p-2 mx-auto text-center">
-            <Box className="cap-component-label">Rule number</Box>{" "}
-            <Box className="text-2xl font-light">{ruleNum}</Box>
         </Box>
     );
 }
