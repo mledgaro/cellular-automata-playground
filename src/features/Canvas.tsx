@@ -121,7 +121,6 @@ function Controllers({
                 </Box>
             </Box>
             <Button
-                className="min-w-fit w-fit"
                 tooltipLabel="Screenshot"
                 icon={faCameraRetro}
                 size="xl"
@@ -130,7 +129,6 @@ function Controllers({
                 // }
             />
             <Button
-                className="min-w-fit w-fit"
                 tooltipLabel="Settings"
                 icon={faGear}
                 size="xl"

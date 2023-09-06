@@ -27,6 +27,9 @@ export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
 const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
     backgroundColor: "var(--primary)",
     color: "var(--secondary)",
+    minWidth: "fit-content",
+    width: "fit-content",
+    borderRadius: "6px",
     "&:hover": {
         backgroundColor: "var(--secondary)",
         color: "var(--primary)",
@@ -37,23 +40,6 @@ const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
         borderColor: "var(--secondary)",
         borderStyle: "solid",
         borderWidth: "2px",
-    },
-}));
-
-export const ResizeBtn = styled(Button)<ButtonProps>(({ theme }) => ({
-    backgroundColor: "var(--primary)",
-    color: "var(--secondary)",
-    minWidth: "fit-content",
-    width: "fit-content",
-    padding: "3px",
-    borderRadius: "10px",
-    "&:hover": {
-        backgroundColor: "var(--secondary)",
-        color: "var(--primary)",
-    },
-    "&:disabled": {
-        backgroundColor: "var(--tertiary)",
-        color: "var(--secondary)",
     },
 }));
 
@@ -79,16 +65,37 @@ export default function CustomButtom({
             TransitionProps={{ timeout: 700 }}
             followCursor
             arrow
-            className=""
         >
             <StyledButton
-                className={`rounded-md ${className}`}
                 variant="contained"
                 onClick={onClick}
                 disabled={disabled}
+                className={className}
             >
                 <FontAwesomeIcon icon={icon} size={size} />
             </StyledButton>
         </StyledTooltip>
+    );
+}
+
+export function MiniButton({
+    icon,
+    disabled = false,
+    onClick = () => {},
+}: {
+    icon: IconDefinition;
+    disabled?: boolean;
+    onClick?: () => void;
+}) {
+    return (
+        <StyledButton
+            variant="contained"
+            onClick={onClick}
+            disabled={disabled}
+            className="p-[4px]"
+            // style={{ padding: "4px" }}
+        >
+            <FontAwesomeIcon icon={icon} size="xs" />
+        </StyledButton>
     );
 }

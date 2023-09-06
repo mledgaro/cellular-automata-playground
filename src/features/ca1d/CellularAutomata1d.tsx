@@ -13,7 +13,7 @@ import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
 import { selectNbhdType } from "src/app/slices/nbhdType";
 import { selectMainCell } from "src/app/slices/mainCell";
 import useCellsState from "src/app/hooks/cellsState";
-import InitState2d from "../ca2d/InitState2d";
+import InitStateEditor from "src/features/InitStateEditor";
 import CAComponents from "../CAComponents";
 
 export default function CellularAutomata1d() {
@@ -94,7 +94,7 @@ export default function CellularAutomata1d() {
                 {
                     title: "Initial state",
                     // content: <InitState1d />,
-                    content: <InitState2d state={cellsState} />,
+                    content: <InitStateEditor state={cellsState} />,
                 },
             ]}
             liveCells={cellsState.liveCellsLastRow}

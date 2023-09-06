@@ -30,32 +30,25 @@ export default function Rules1d() {
     const onHoverCell = useStateObj<number>(0);
 
     return (
-        <Grid container rowSpacing={2}>
-            {/* Row 1 */}
-            <Grid
-                container
-                item
-                alignItems="center"
-                justifyContent="space-evenly"
-            >
-                {/* Rule number */}
-                <Grid item md="auto">
+        <Box className="space-y-2">
+            <Grid container alignItems="center" justifyContent="space-evenly">
+                <Grid item md={4}>
                     <RuleNumber />
                 </Grid>
-                {/* Rule preview */}
-                <Grid item md="auto">
+
+                <Grid item md={4}>
                     <RulePreview index={onHoverCell.get} />
                 </Grid>
-                {/* Controls */}
+
                 <Grid item md="auto">
                     <Controls />
                 </Grid>
             </Grid>
-            {/* Row 2 */}
-            <Grid container item className="mx-auto w-fit">
+
+            <Box className="flex justify-center">
                 <RulesSelector setHoverCell={onHoverCell.set} />
-            </Grid>
-        </Grid>
+            </Box>
+        </Box>
     );
 }
 
@@ -76,7 +69,7 @@ function Controls() {
     const dispatch = useAppDispatch();
 
     return (
-        <Box className="space-x-2 flex justify-center">
+        <Box className="space-x-2">
             <Button
                 tooltipLabel="Random"
                 icon={faShuffle}
@@ -115,17 +108,13 @@ function RulesSelector({
 
     const dispatch = useAppDispatch();
 
-    const cellClasses =
-        "inline-block box-border w-8 rounded-sm text-sm text-secondary text-center py-1.5 mr-2 mb-2 select-none";
     let rulesArr = [];
 
     for (let i = rules.length - 1; i >= 0; i--) {
         rulesArr.push(
             <Box
                 key={i}
-                className={
-                    cellClasses + (rules[i] ? " bg-primary" : " bg-tertiary")
-                }
+                className={`rule-1d-cell ${rules[i] ? "on" : "off"}`}
                 onClick={() => dispatch(toggleRule(i))}
                 onMouseOver={() => setHoverCell(i)}
                 onMouseOut={() => setHoverCell(0)}

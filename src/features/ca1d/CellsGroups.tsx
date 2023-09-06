@@ -25,7 +25,7 @@ import {
 } from "src/app/slices/nbhdWidth";
 import { intToBoolArray } from "src/ts/Utils";
 import { selectMainCell, setMainCell } from "src/app/slices/mainCell";
-import { ResizeBtn } from "src/components/Button";
+import { MiniButton } from "src/components/Button";
 
 export function Nbhd1dEditor({ className = "" }: { className?: string }) {
     //
@@ -80,22 +80,16 @@ export function Nbhd1dEditor({ className = "" }: { className?: string }) {
             <Box className="space-x-1">{cells}</Box>
             <Box className="flex flex-col justify-center">
                 <Box className="space-x-1">
-                    <ResizeBtn
-                        variant="contained"
-                        className=""
+                    <MiniButton
+                        icon={faMinus}
                         onClick={() => dispatch(setNbhdWidth(width - 1))}
                         disabled={width <= nbhdWidthMin}
-                    >
-                        <FontAwesomeIcon icon={faMinus} />
-                    </ResizeBtn>
-                    <ResizeBtn
-                        variant="contained"
-                        className=""
+                    />
+                    <MiniButton
+                        icon={faPlus}
                         onClick={() => dispatch(setNbhdWidth(width + 1))}
                         disabled={width >= nbhdWidthMax}
-                    >
-                        <FontAwesomeIcon icon={faPlus} />
-                    </ResizeBtn>
+                    />
                 </Box>
             </Box>
         </Box>

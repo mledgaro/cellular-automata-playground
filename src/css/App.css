@@ -55,3 +55,15 @@
 .test-border {
     @apply border-[#ff0000] border-2 border-solid;
 }
+
+.rule-1d-cell {
+    @apply inline-block box-border w-8 rounded-sm text-sm text-secondary text-center py-1.5 mr-2 mb-2 select-none;
+}
+
+.rule-1d-cell.on {
+    background-color: var(--primary);
+}
+
+.rule-1d-cell.off {
+    background-color: var(--tertiary);
+}

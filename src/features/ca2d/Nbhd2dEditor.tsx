@@ -9,8 +9,8 @@ import { faSquare as faSquareRegular } from "@fortawesome/free-regular-svg-icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Nbhd2dHook } from "src/app/hooks/nbhd2d";
-import { Box, Button, ButtonProps, styled } from "@mui/material";
-import { ResizeBtn } from "src/components/Button";
+import { Box } from "@mui/material";
+import { MiniButton } from "src/components/Button";
 
 export default function Nbhd2dEditor({
     state,
@@ -95,20 +95,16 @@ function ResizeButtons({
 
     return (
         <Box className={"flex justify-center " + classes}>
-            <ResizeBtn
-                variant="contained"
+            <MiniButton
+                icon={faMinus}
                 onClick={() => onclick(true)}
                 disabled={disableRemove}
-            >
-                <FontAwesomeIcon icon={faMinus} />
-            </ResizeBtn>
-            <ResizeBtn
-                variant="contained"
+            />
+            <MiniButton
+                icon={faPlus}
                 onClick={() => onclick(false)}
                 disabled={disableAdd}
-            >
-                <FontAwesomeIcon icon={faPlus} />
-            </ResizeBtn>
+            />
         </Box>
     );
 }

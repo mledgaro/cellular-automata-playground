@@ -30,25 +30,19 @@ import { boolArray } from "src/ts/Utils";
 export default function Nbhd1d() {
     //
     const nbhdsMap = useStateObj(false);
+
     return (
-        <Grid container rowSpacing={2}>
-            {/* Row 1 */}
-            <Grid
-                container
-                item
-                alignItems="center"
-                justifyContent="space-evenly"
-            >
-                {/* Type */}
+        <Box className="space-y-2">
+            <Grid container alignItems="center" justifyContent="space-evenly">
                 <Grid item md="auto">
                     <Type />
                 </Grid>
-                {/* Main cell selector */}
-                <Grid item md="auto">
+
+                <Grid item md={5} className="flex justify-center">
                     <Nbhd1dEditor />
                 </Grid>
 
-                <Grid item md="auto" className="flex justify-center space-x-2">
+                <Grid item md="auto" className="space-x-2">
                     <Reload />
                     <Button
                         icon={faMap}
@@ -59,12 +53,8 @@ export default function Nbhd1d() {
                 </Grid>
             </Grid>
 
-            {nbhdsMap.get && (
-                <Grid item xs={12}>
-                    <NbhdsMap />
-                </Grid>
-            )}
-        </Grid>
+            {nbhdsMap.get && <NbhdsMap />}
+        </Box>
     );
 }
 

@@ -9,7 +9,7 @@ import Rules2d from "src/features/ca2d/Rules2d";
 import useNbhd2d from "src/app/hooks/nbhd2d";
 import { useRules2d } from "src/app/hooks/rules2d";
 import useCellsState from "src/app/hooks/cellsState";
-import InitState2d from "src/features/ca2d/InitState2d";
+import InitStateEditor from "src/features/ca2d/InitState2d";
 import { CellularAutomaton2d } from "src/ts/CellularAutomaton2d";
 import CAComponents from "../CAComponents";
 
@@ -82,7 +82,7 @@ export default function CellularAutomata2d() {
                 },
                 {
                     title: "Init state",
-                    content: <InitState2d state={cellsState} />,
+                    content: <InitStateEditor state={cellsState} />,
                 },
             ]}
             liveCells={cellsState.liveCells}
