@@ -1,5 +1,7 @@
 //
 import {
+    faBorderAll,
+    faBorderNone,
     faCameraRetro,
     faGear,
     faLocationDot,
@@ -28,6 +30,7 @@ export default function Canvas({
 
     const cellSize = useStateObj(cellSizeVal.defaultVal);
     const cursorPos = useStateObj({ r: 0, c: 0 });
+    const showGrid = useStateObj(false);
 
     const canvas = useRef<HTMLCanvasElement>(null);
     const scroll = useRef<HTMLDivElement>(null);
@@ -64,6 +67,9 @@ export default function Canvas({
     // state change
     useEffect(() => {
         canvasCntrl.current?.paintScene(cellsState);
+        if (showGrid.get) {
+            canvasCntrl.current?.drawGrid();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cellsState]);
 
@@ -71,8 +77,20 @@ export default function Canvas({
     useEffect(() => {
         canvasCntrl.current!.cellSize = cellSize.get;
         canvasCntrl.current?.paintScene(cellsState);
+        if (showGrid.get) {
+            canvasCntrl.current?.drawGrid();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cellSize.get]);
+
+    useEffect(() => {
+        if (showGrid.get) {
+            canvasCntrl.current?.drawGrid();
+        } else {
+            canvasCntrl.current?.paintScene(cellsState);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showGrid.get]);
 
     return (
         <Box className="flex flex-row justify-evenly w-full h-[60vh] ">
@@ -89,7 +107,11 @@ export default function Canvas({
                 </Box>
             </Box>
 
-            <Controllers cellSize={cellSize} pos={cursorPos.get} />
+            <Controllers
+                cellSize={cellSize}
+                pos={cursorPos.get}
+                showGrid={showGrid}
+            />
         </Box>
     );
 }
@@ -97,13 +119,15 @@ export default function Canvas({
 function Controllers({
     cellSize,
     pos,
+    showGrid,
 }: {
     cellSize: StateObjHook<number>;
     pos: { r: number; c: number };
+    showGrid: StateObjHook<boolean>;
 }) {
     const sceneSize = useAppSelector(selectSceneSize);
     return (
-        <Box className="flex flex-col w-[15%] items-center justify-center space-y-3">
+        <Box className="flex flex-col w-[15%] items-center justify-center space-y-2">
             <VerticalSlider
                 icon={faMagnifyingGlass}
                 tooltipLabel="Zoom"
@@ -128,6 +152,12 @@ function Controllers({
                     size="[0.5rem]"
                 />
             </Box>
+            <Button
+                tooltipLabel={`${showGrid.get ? "Hide" : "Show"} grid`}
+                icon={showGrid.get ? faBorderNone : faBorderAll}
+                size="xl"
+                onClick={() => showGrid.set(!showGrid.get)}
+            />
             <Button
                 tooltipLabel="Screenshot"
                 icon={faCameraRetro}
