@@ -61,6 +61,11 @@ export default function CellularAutomata2d() {
         liveCells.current = 0;
     };
 
+    const setDensity = (nval: number) => {
+        density.set(nval);
+        rand();
+    };
+
     // useEffect(() => {
     //     liveCells.current = countTrueArray2d(cellsState.get);
     // }, [cellsState.get]);
@@ -107,7 +112,7 @@ export default function CellularAutomata2d() {
                     content: (
                         <InitStateEditor
                             density={density.get}
-                            setDensity={density.set}
+                            setDensity={setDensity}
                             setRandom={rand}
                             setClear={clear}
                         />

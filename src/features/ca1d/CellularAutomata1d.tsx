@@ -82,6 +82,11 @@ export default function CellularAutomata1d() {
         liveCells.current = 0;
     };
 
+    const setDensity = (nval: number) => {
+        density.set(nval);
+        rand();
+    };
+
     useEffect(() => {
         dispatch(
             setCellsNbhds({
@@ -124,7 +129,7 @@ export default function CellularAutomata1d() {
                     content: (
                         <InitStateEditor
                             density={density.get}
-                            setDensity={density.set}
+                            setDensity={setDensity}
                             setRandom={rand}
                             setClear={clear}
                         />
