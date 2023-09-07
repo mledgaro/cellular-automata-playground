@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector, useStateObj } from "src/app/hooks";
 import { selectSceneSize } from "src/app/slices/sceneSize";
 import Nbhd1d from "src/features/ca1d/Nbhd1d";
 import Rules1d from "src/features/ca1d/Rules1d";
-import { resizeRules, selectRules } from "src/app/slices/rules";
+import { randomRules, resizeRules, selectRules } from "src/app/slices/rules";
 import { selectCellsNbhds, setCellsNbhds } from "src/app/slices/cellsNbhds";
 import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
 import { selectNbhdType } from "src/app/slices/nbhdType";
@@ -101,6 +101,7 @@ export default function CellularAutomata1d() {
 
     useEffect(() => {
         dispatch(resizeRules(Math.pow(2, nbhdWidth)));
+        dispatch(randomRules());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nbhdWidth]);
 

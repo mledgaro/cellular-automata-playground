@@ -11,6 +11,7 @@ export type Rules2dHook = {
     allKeep: () => void;
     allDead: () => void;
     allAlive: () => void;
+    random: () => void;
 };
 
 export function useRules2d(): Rules2dHook {
@@ -25,9 +26,19 @@ export function useRules2d(): Rules2dHook {
                 rules.get[i] === null ? true : rules.get[i] ? false : null,
                 i
             ),
-        resize: (num: number) => rules.set(Array(num + 1).fill(null)),
+        resize: (num: number) =>
+            rules.set(
+                Array(num + 1)
+                    .fill(null)
+                    .map(() => randomRule())
+            ),
         allKeep: () => rules.set(rules.get.map(() => null)),
         allAlive: () => rules.set(rules.get.map(() => true)),
         allDead: () => rules.set(rules.get.map(() => false)),
+        random: () => rules.set(rules.get.map(() => randomRule())),
     };
+}
+
+function randomRule() {
+    return Math.random() <= 0.33 ? true : Math.random() <= 0.33 ? false : null;
 }

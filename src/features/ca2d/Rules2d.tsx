@@ -4,7 +4,10 @@ import {
     faSquare as faSquareRegular,
     faSquareMinus,
 } from "@fortawesome/free-regular-svg-icons";
-import { faSquare as faSquareSolid } from "@fortawesome/free-solid-svg-icons";
+import {
+    faShuffle,
+    faSquare as faSquareSolid,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Stack } from "@mui/material";
 import { Rule2dState, Rules2dHook } from "src/app/hooks/rules2d";
@@ -83,6 +86,12 @@ function Controls({ rules }: { rules: Rules2dHook }) {
                 icon={faSquareSolid}
                 size="xl"
                 onClick={rules.allAlive}
+            />
+            <Button
+                tooltipLabel="Random"
+                icon={faShuffle}
+                size="xl"
+                onClick={rules.random}
             />
         </Box>
     );
