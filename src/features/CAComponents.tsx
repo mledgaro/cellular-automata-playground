@@ -5,7 +5,6 @@ import { useStateObj } from "src/app/hooks";
 
 import { Box, Grid } from "@mui/material";
 import CustomTabs from "src/components/Tabs";
-import { CellsStateHook } from "src/app/hooks/cellsState";
 import Canvas from "src/features/Canvas";
 import Controllers from "src/features/Controllers";
 import {
@@ -30,7 +29,7 @@ export default function CAComponents({
     init: () => void;
     next: (iteration: number) => void;
     stop: () => void;
-    cellsState: CellsStateHook;
+    cellsState: boolean[][];
     canvasOnClick: (r: number, c: number) => void;
     tabs: { title: string; content: JSX.Element }[];
     liveCells: number;
@@ -57,7 +56,7 @@ export default function CAComponents({
 
     return (
         <Box className="space-y-6 my-5">
-            <Canvas cellsState={cellsState.get} clickHandler={canvasOnClick} />
+            <Canvas cellsState={cellsState} clickHandler={canvasOnClick} />
 
             <Grid container justifyContent="space-evenly">
                 <Grid item md="auto">

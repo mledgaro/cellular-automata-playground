@@ -46,15 +46,38 @@ export function boolArrayToInt(
     return int;
 }
 
-export function randomBoolArray(size: number): boolean[] {
+export function randomBoolArray(size: number, trueDensity: number): boolean[] {
     //
     let boolArr = [];
 
     for (let i = 0; i < size; i++) {
-        boolArr.push(Math.random() <= 0.5);
+        boolArr.push(Math.random() <= trueDensity);
     }
 
     return boolArr;
+}
+
+export function randomBoolArray2d(
+    rows: number,
+    cols: number,
+    trueDensity: number
+): boolean[][] {
+    //
+    let boolArr = [];
+
+    for (let i = 0; i < rows; i++) {
+        boolArr.push(randomBoolArray(cols, trueDensity));
+    }
+
+    return boolArr;
+}
+
+export function countTrueArray(array: boolean[]): number {
+    return array.reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
+}
+
+export function countTrueArray2d(array: boolean[][]): number {
+    return array.reduce((acc, curr) => acc + countTrueArray(curr), 0);
 }
 
 export function boolArray(length: number, fillValue: boolean) {

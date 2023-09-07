@@ -7,14 +7,22 @@ import { faArrowRotateRight, faBroom } from "@fortawesome/free-solid-svg-icons";
 import { DensitySlider } from "src/components/Slider";
 import Button from "src/components/Button";
 
-import { CellsStateHook } from "src/app/hooks/cellsState";
-
-export default function InitStateEditor({ state }: { state: CellsStateHook }) {
+export default function InitStateEditor({
+    density,
+    setDensity,
+    setRandom,
+    setClear,
+}: {
+    density: number;
+    setDensity: (nval: number) => void;
+    setRandom: () => void;
+    setClear: () => void;
+}) {
     //
     return (
         <Grid container justifyContent="space-evenly">
             <Grid item md={7}>
-                <DensitySlider get={state.density} set={state.setDensity} />
+                <DensitySlider get={density} set={setDensity} />
             </Grid>
             <Grid
                 item
@@ -25,13 +33,13 @@ export default function InitStateEditor({ state }: { state: CellsStateHook }) {
                     icon={faArrowRotateRight}
                     size="2x"
                     tooltipLabel="Reload"
-                    onClick={() => state.setRandom()}
+                    onClick={setRandom}
                 />
                 <Button
                     icon={faBroom}
                     size="2x"
                     tooltipLabel="Clear"
-                    onClick={() => state.clear()}
+                    onClick={setClear}
                 />
             </Grid>
         </Grid>

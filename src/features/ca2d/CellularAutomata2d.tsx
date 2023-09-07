@@ -1,7 +1,7 @@
 //
 import React, { useEffect, useRef } from "react";
 
-import { useAppSelector } from "src/app/hooks";
+import { useAppSelector, useStateObj } from "src/app/hooks";
 
 import { selectSceneSize } from "src/app/slices/sceneSize";
 import Nbhd2d from "src/features/ca2d/Nbhd2d";
@@ -9,9 +9,10 @@ import Rules2d from "src/features/ca2d/Rules2d";
 import useNbhd2d from "src/app/hooks/nbhd2d";
 import { useRules2d } from "src/app/hooks/rules2d";
 import useCellsState from "src/app/hooks/cellsState";
-import InitStateEditor from "src/features/ca2d/InitState2d";
+import InitStateEditor from "src/features/InitStateEditor";
 import { CellularAutomaton2d } from "src/ts/CellularAutomaton2d";
 import CAComponents from "../CAComponents";
+import { countTrueArray2d, randomBoolArray2d } from "src/ts/Utils";
 
 export default function CellularAutomata2d() {
     //
@@ -24,8 +25,12 @@ export default function CellularAutomata2d() {
     const initState = useRef(cellsState.get);
     const automaton = useRef(new CellularAutomaton2d());
 
+    const density = useStateObj(0.1);
+    const liveCells = useRef(0);
+
     const canvasOnClick = (r: number, c: number) => {
-        cellsState.toggle(r, c);
+        let nval = cellsState.toggle(r, c);
+        liveCells.current += nval ? 1 : -1;
     };
 
     const init = () => {
@@ -37,11 +42,28 @@ export default function CellularAutomata2d() {
 
     const next = () => {
         cellsState.set(automaton.current.nextState());
+        liveCells.current = countTrueArray2d(cellsState.get);
     };
 
     const stop = () => {
         cellsState.set(initState.current);
+        liveCells.current = countTrueArray2d(initState.current);
     };
+
+    const rand = () => {
+        let st = randomBoolArray2d(sceneSize.rows, sceneSize.cols, density.get);
+        cellsState.set(st);
+        liveCells.current = countTrueArray2d(st);
+    };
+
+    const clear = () => {
+        cellsState.clear();
+        liveCells.current = 0;
+    };
+
+    // useEffect(() => {
+    //     liveCells.current = countTrueArray2d(cellsState.get);
+    // }, [cellsState.get]);
 
     useEffect(() => {
         rules.resize(nbhd.size);
@@ -69,7 +91,7 @@ export default function CellularAutomata2d() {
             init={init}
             next={next}
             stop={stop}
-            cellsState={cellsState}
+            cellsState={cellsState.get}
             canvasOnClick={canvasOnClick}
             tabs={[
                 {
@@ -82,10 +104,17 @@ export default function CellularAutomata2d() {
                 },
                 {
                     title: "Init state",
-                    content: <InitStateEditor state={cellsState} />,
+                    content: (
+                        <InitStateEditor
+                            density={density.get}
+                            setDensity={density.set}
+                            setRandom={rand}
+                            setClear={clear}
+                        />
+                    ),
                 },
             ]}
-            liveCells={cellsState.liveCells}
+            liveCells={liveCells.current}
         />
     );
 }

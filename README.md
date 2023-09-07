@@ -53,16 +53,14 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - [ ] set iterations limit
 - [ ] show live cells percentage graphic
 - [ ] add scene config modal, allow change size and topology
-- [ ] adjust zoom to fit button
+- [ ] adjust zoom to fit slider mark
 - [ ] floating window zoom area (show by area or by neighborhood)
 - [ ] show scene size
 - [ ] control flow with key strokes
 - [ ] add 2d rules random button
-- [ ] reduce density slider width
 - [ ] set 1d rule on input number
 - [ ] autoload rule 90 on 1d
 - [ ] disable components when running
-- [ ] put current coords label under canvas
 - [ ] 1d default random rules
 
 ## Notes

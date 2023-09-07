@@ -4,6 +4,7 @@ import {
     faGear,
     faLocationDot,
     faMagnifyingGlass,
+    faRulerCombined,
 } from "@fortawesome/free-solid-svg-icons";
 import { Box } from "@mui/material";
 import React, { MouseEvent, useEffect, useRef } from "react";
@@ -100,6 +101,7 @@ function Controllers({
     cellSize: StateObjHook<number>;
     pos: { r: number; c: number };
 }) {
+    const sceneSize = useAppSelector(selectSceneSize);
     return (
         <Box className="flex flex-col w-[15%] items-center justify-center space-y-3">
             <VerticalSlider
@@ -118,6 +120,14 @@ function Controllers({
                     size="[0.5rem]"
                 />
             </Box>
+            <Box className="flex justify-center">
+                <Label
+                    icon={faRulerCombined}
+                    tooltipLabel="Scene size"
+                    info={`${sceneSize.rows}x${sceneSize.cols}`}
+                    size="[0.5rem]"
+                />
+            </Box>
             <Button
                 tooltipLabel="Screenshot"
                 icon={faCameraRetro}
@@ -126,12 +136,12 @@ function Controllers({
                 //     canvasCntrl.current?.saveScene("cellular_automaton")
                 // }
             />
-            <Button
+            {/* <Button
                 tooltipLabel="Settings"
                 icon={faGear}
                 size="xl"
                 // onClick={() => }
-            />
+            /> */}
         </Box>
     );
 }
