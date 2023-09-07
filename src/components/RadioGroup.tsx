@@ -1,20 +1,48 @@
 //
 import {
+    Box,
     FormControl,
     FormControlLabel,
+    FormControlProps,
     FormLabel,
     Radio,
     RadioGroup,
+    RadioGroupProps,
     RadioProps,
     styled,
 } from "@mui/material";
 import React, { useId } from "react";
 
+export const StyledFormControl = styled(FormControl)<FormControlProps>(
+    ({ theme }) => ({
+        "& label": {
+            color: "var(--primary)",
+            fontWeight: "600",
+            "&.Mui-focused": {
+                color: "var(--primary)",
+                fontWeight: "600",
+            },
+        },
+    })
+);
+
+export const StyledRadioGroup = styled(RadioGroup)<RadioGroupProps>(
+    ({ theme }) => ({
+        color: "var(--tertiary)",
+        "& label": {
+            "& .Mui-checked": {
+                color: "var(--primary)",
+            },
+            "& .Mui-checked + span": {
+                color: "var(--primary)",
+                fontWeight: "600",
+            },
+        },
+    })
+);
+
 export const StyledRadio = styled(Radio)<RadioProps>(({ theme }) => ({
     color: "var(--tertiary)",
-    "&.Mui-checked": {
-        color: "var(--primary)",
-    },
 }));
 
 export default function CustomRadioGroup({
@@ -26,7 +54,7 @@ export default function CustomRadioGroup({
     className = "",
 }: {
     label: string;
-    options: { label: string; value: string }[];
+    options: { label: JSX.Element | string; value: string }[];
     value: string;
     defaultVal: string;
     onChange: (val: string) => void;
@@ -35,16 +63,13 @@ export default function CustomRadioGroup({
     const id = useId();
 
     return (
-        <FormControl
+        <StyledFormControl
             className={`cap-component-container pl-3 pt-1 ${className}`}
         >
-            <FormLabel id={id} className="cap-component-label">
-                {label}
-            </FormLabel>
-            <RadioGroup
+            <FormLabel id={id}>{label}</FormLabel>
+            <StyledRadioGroup
                 aria-labelledby={id}
                 defaultValue={defaultVal}
-                name="radio-buttons-group"
                 row
                 value={value}
                 onChange={(event: React.ChangeEvent, value: string) =>
@@ -57,11 +82,11 @@ export default function CustomRadioGroup({
                             key={i}
                             value={e.value}
                             control={<StyledRadio />}
-                            label={e.label}
+                            label={<Box>{e.label}</Box>}
                         />
                     );
                 })}
-            </RadioGroup>
-        </FormControl>
+            </StyledRadioGroup>
+        </StyledFormControl>
     );
 }

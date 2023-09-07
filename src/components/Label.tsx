@@ -7,15 +7,17 @@ import { StyledTooltip } from "./Button";
 export default function Label({
     icon,
     tooltipLabel,
-    info,
+    content,
     size = "2xl",
     vertical = false,
+    onClick = () => {},
 }: {
     icon: IconDefinition;
     tooltipLabel: string;
-    info: string;
+    content: JSX.Element | string;
     size?: string;
     vertical?: boolean;
+    onClick?: () => void;
 }) {
     return (
         <StyledTooltip
@@ -26,14 +28,15 @@ export default function Label({
             arrow
         >
             <Box
-                className={`flex items-center cap-component-container py-2 px-3 w-fit ${
+                className={`flex items-center cap-component-container py-2 px-3 w-fit select-none ${
                     vertical ? "flex-col space-y-1" : "flex-row space-x-2"
                 } text-${size}`}
+                onClick={onClick}
             >
                 <Box>
                     <FontAwesomeIcon icon={icon} />
                 </Box>
-                <Box className="text-tertiary">{info}</Box>
+                <Box className="text-tertiary">{content}</Box>
             </Box>
         </StyledTooltip>
     );

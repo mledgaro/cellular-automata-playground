@@ -11,11 +11,13 @@ import {
     faGaugeHigh,
     faGears,
     faHeart,
+    faInfinity,
     faStopwatch,
 } from "@fortawesome/free-solid-svg-icons";
 import Button from "src/components/Button";
 import { IconSlider } from "src/components/Slider";
 import Label from "src/components/Label";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const refreshRateVal = { minVal: 200, maxVal: 999, defaultVal: 600 };
 export default function CAComponents({
     init,
@@ -83,7 +85,7 @@ export default function CAComponents({
                     <Label
                         icon={faStopwatch}
                         tooltipLabel="Iterations"
-                        info={iterations.get.toString()}
+                        content={iterations.get.toString() + "/?"}
                     />
                 </Grid>
 
@@ -91,7 +93,7 @@ export default function CAComponents({
                     <Label
                         icon={faHeart}
                         tooltipLabel="Live cells"
-                        info={liveCells.toString()}
+                        content={liveCells.toString()}
                     />
                 </Grid>
 

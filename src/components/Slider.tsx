@@ -1,16 +1,7 @@
 //
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    Box,
-    Fade,
-    Grid,
-    Input,
-    InputProps,
-    Slider,
-    SliderProps,
-    styled,
-} from "@mui/material";
+import { Box, Fade, Grid, Slider, SliderProps, styled } from "@mui/material";
 import React from "react";
 import { StateObjHook } from "src/app/hooks";
 import { StyledTooltip } from "./Button";
@@ -46,20 +37,6 @@ export const StyledSlider = styled(Slider)<SliderProps>(({ theme }) => ({
             boxShadow:
                 "0px 0px 0px 8px color-mix(in srgb, var(--primary) 20%, transparent)",
         },
-    },
-}));
-
-export const StyledInput = styled(Input)<InputProps>(({ theme }) => ({
-    color: "var(--primary)",
-    borderBottom: "1px solid var(--tertiary)",
-    "&:hover": {
-        borderBottom: "1px solid var(--primary)",
-    },
-    "&.Mui-focused": {
-        borderBottom: "3px solid var(--primary)",
-    },
-    "&.Mui-focused:hover": {
-        borderBottom: "3px solid var(--primary)",
     },
 }));
 
@@ -225,37 +202,6 @@ export function DensitySlider({
                     ]}
                 />
             </Grid>
-
-            {/* <Grid item md={3} className="flex justify-center">
-                <StyledInput
-                    className="h-fit"
-                    value={density}
-                    size="small"
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        dispatch(
-                            setDensity(
-                                event.target.value === ""
-                                    ? 0
-                                    : Number(event.target.value)
-                            )
-                        )
-                    }
-                    onBlur={() => {
-                        if (density < 0.01) {
-                            dispatch(setDensity(0.01));
-                        } else if (density > 1) {
-                            dispatch(setDensity(1));
-                        }
-                    }}
-                    inputProps={{
-                        step: 0.05,
-                        min: 0.01,
-                        max: 1,
-                        type: "number",
-                    }}
-                    disableUnderline
-                />
-            </Grid> */}
         </Grid>
     );
 }

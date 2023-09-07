@@ -39,7 +39,7 @@ export default function Rules1d() {
                     <Label
                         icon={faHashtag}
                         tooltipLabel="Rule number"
-                        info={ruleNum.toString()}
+                        content={ruleNum.toString()}
                     />
                 </Grid>
 
