@@ -3,7 +3,6 @@ import {
     faBorderAll,
     faBorderNone,
     faCameraRetro,
-    faGear,
     faLocationDot,
     faMagnifyingGlass,
     faRulerCombined,
@@ -16,6 +15,7 @@ import CanvasCntrl from "src/ts/CanvasCntrl";
 import Button from "src/components/Button";
 import { VerticalSlider } from "src/components/Slider";
 import Label from "src/components/Label";
+import SceneSettingsModal from "./SceneSettingsModal";
 
 const cellSizeVal = { minVal: 1, maxVal: 20, defaultVal: 8 };
 export default function Canvas({
@@ -106,12 +106,13 @@ export default function Canvas({
                     <canvas ref={canvas} />
                 </Box>
             </Box>
-
-            <Controllers
-                cellSize={cellSize}
-                pos={cursorPos.get}
-                showGrid={showGrid}
-            />
+            <Box className="w-[15%]">
+                <Controllers
+                    cellSize={cellSize}
+                    pos={cursorPos.get}
+                    showGrid={showGrid}
+                />
+            </Box>
         </Box>
     );
 }
@@ -126,8 +127,11 @@ function Controllers({
     showGrid: StateObjHook<boolean>;
 }) {
     const sceneSize = useAppSelector(selectSceneSize);
+
+    const editSceneModal = useStateObj(false);
+
     return (
-        <Box className="flex flex-col w-[15%] items-center justify-center space-y-2">
+        <Box className="flex flex-col w-fit items-center justify-center space-y-2">
             <VerticalSlider
                 icon={faMagnifyingGlass}
                 tooltipLabel="Zoom"
@@ -140,7 +144,7 @@ function Controllers({
                 <Label
                     icon={faLocationDot}
                     tooltipLabel="Current coordinates"
-                    info={`(${pos.r}, ${pos.c})`}
+                    content={`(${pos.r}, ${pos.c})`}
                     size="[0.5rem]"
                 />
             </Box>
@@ -148,8 +152,9 @@ function Controllers({
                 <Label
                     icon={faRulerCombined}
                     tooltipLabel="Scene size"
-                    info={`${sceneSize.rows}x${sceneSize.cols}`}
+                    content={`${sceneSize.rows}x${sceneSize.cols}`}
                     size="[0.5rem]"
+                    onClick={() => editSceneModal.set(true)}
                 />
             </Box>
             <Button
@@ -166,12 +171,10 @@ function Controllers({
                 //     canvasCntrl.current?.saveScene("cellular_automaton")
                 // }
             />
-            {/* <Button
-                tooltipLabel="Settings"
-                icon={faGear}
-                size="xl"
-                // onClick={() => }
-            /> */}
+            <SceneSettingsModal
+                show={editSceneModal.get}
+                hide={() => editSceneModal.set(false)}
+            />
         </Box>
     );
 }

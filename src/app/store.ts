@@ -9,6 +9,7 @@ import mainCellReducer from "src/app/slices/mainCell";
 import rulesReducer from "src/app/slices/rules";
 import initStateReducer from "src/app/slices/initState";
 import cellsNbhdsReducer from "src/app/slices/cellsNbhds";
+import sceneBoundariesReducer from "src/app/slices/sceneBoundaries";
 
 export const store = configureStore({
     reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
         cellsNbhds: cellsNbhdsReducer,
         rules: rulesReducer,
         initState: initStateReducer,
+        sceneBoundaries: sceneBoundariesReducer,
     },
 });
 

@@ -67,3 +67,15 @@
 .rule-1d-cell.off {
     background-color: var(--tertiary);
 }
+
+.cap-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
+    background-color: var(--tertiary);
+    border-radius: 8px;
+    border-color: var(--secondary);
+    padding: 12px;
+}

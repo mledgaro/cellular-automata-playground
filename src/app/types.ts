@@ -6,3 +6,5 @@ export type Position = {
 };
 
 export type NbhdType2D = "moore" | "vonneumann" | "custom";
+
+export type BoundaryType = "continuous" | "bounded";
