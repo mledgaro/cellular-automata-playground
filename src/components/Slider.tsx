@@ -209,26 +209,19 @@ export function DensitySlider({
 export function VerticalSlider({
     icon,
     tooltipLabel,
-    min,
-    max,
-    defaultVal,
     state,
-}: {
+    ...props
+}: SliderProps & {
     icon: IconDefinition;
     tooltipLabel: string;
-    min: number;
-    max: number;
-    defaultVal: number;
     state: StateObjHook<number>;
 }) {
     return (
         <Box className="flex flex-col w-fit items-center justify-center cap-component-container py-3">
             <Box className="">
                 <StyledSlider
-                    className="h-[20vh] w-[8px] my-[15px]"
-                    defaultValue={defaultVal}
-                    min={min}
-                    max={max}
+                    {...props}
+                    className={`${props.className} h-[20vh] w-[8px] my-[15px]`}
                     value={state.get}
                     onChange={(
                         event: Event,
