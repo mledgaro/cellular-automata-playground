@@ -1,24 +1,30 @@
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, Fade } from "@mui/material";
+import { Box, BoxProps, Fade } from "@mui/material";
 import React from "react";
-import { StyledTooltip } from "./Button";
+import { MiniButton, StyledTooltip } from "./Button";
 
 export default function Label({
     icon,
     tooltipLabel,
     content,
-    size = "2xl",
+    size = "lg",
     vertical = false,
-    onClick = () => {},
-}: {
+    ...props
+}: BoxProps & {
     icon: IconDefinition;
     tooltipLabel: string;
     content: JSX.Element | string;
     size?: string;
     vertical?: boolean;
-    onClick?: () => void;
 }) {
+    //
+    const className_ = `${
+        props.className
+    } flex items-center cap-component-container py-2 px-3 select-none ${
+        vertical ? "flex-col space-y-1" : "flex-row space-x-2"
+    } text-${size}`;
+
     return (
         <StyledTooltip
             title={tooltipLabel}
@@ -27,14 +33,50 @@ export default function Label({
             followCursor
             arrow
         >
-            <Box
-                className={`flex items-center cap-component-container py-2 px-3 w-fit select-none ${
-                    vertical ? "flex-col space-y-1" : "flex-row space-x-2"
-                } text-${size}`}
-                onClick={onClick}
-            >
+            <Box {...{ ...props, className: className_ }}>
                 <Box>
                     <FontAwesomeIcon icon={icon} />
+                </Box>
+                <Box className="text-tertiary w-full">{content}</Box>
+            </Box>
+        </StyledTooltip>
+    );
+}
+
+export function LabelButton({
+    icon,
+    tooltipLabel,
+    content,
+    size = "lg",
+    vertical = false,
+    onClick,
+    ...props
+}: BoxProps & {
+    icon: IconDefinition;
+    tooltipLabel: string;
+    content: JSX.Element | string;
+    size?: string;
+    vertical?: boolean;
+    onClick: () => void;
+}) {
+    //
+    const className_ = `${
+        props.className
+    } flex items-center cap-component-container py-2 px-3 select-none ${
+        vertical ? "flex-col space-y-1" : "flex-row space-x-2"
+    } text-${size}`;
+
+    return (
+        <StyledTooltip
+            title={tooltipLabel}
+            TransitionComponent={Fade}
+            TransitionProps={{ timeout: 500 }}
+            followCursor
+            arrow
+        >
+            <Box {...{ ...props, className: className_ }}>
+                <Box>
+                    <MiniButton icon={icon} iconSize="lg" onClick={onClick} />
                 </Box>
                 <Box className="text-tertiary">{content}</Box>
             </Box>

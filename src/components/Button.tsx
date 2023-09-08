@@ -87,9 +87,11 @@ export function IconButton({
 
 export function MiniButton({
     icon,
+    iconSize = "xs",
     ...props
 }: ButtonProps & {
     icon: IconDefinition;
+    iconSize?: SizeProp;
 }) {
     return (
         <StyledButton
@@ -97,7 +99,7 @@ export function MiniButton({
             variant="contained"
             className={`${props.className} p-[4px]`}
         >
-            <FontAwesomeIcon icon={icon} size="xs" />
+            <FontAwesomeIcon icon={icon} size={iconSize} />
         </StyledButton>
     );
 }

@@ -14,7 +14,7 @@ import {
     faInfinity,
     faStopwatch,
 } from "@fortawesome/free-solid-svg-icons";
-import Button from "src/components/Button";
+import { IconButton } from "src/components/Button";
 import { IconSlider } from "src/components/Slider";
 import Label from "src/components/Label";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -98,10 +98,10 @@ export default function CAComponents({
                 </Grid>
 
                 <Grid item md="auto">
-                    <Button
+                    <IconButton
                         tooltipLabel={"Configuration"}
                         icon={faGears}
-                        size="2x"
+                        iconSize="2x"
                         onClick={() => config.set(!config.get)}
                     />
                 </Grid>

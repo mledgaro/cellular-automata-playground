@@ -36,7 +36,6 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 ## TODO
 - [ ] Appearance settings
   - [ ] Color themes
-- [ ] Space topology (finite space, toroid)
 - [ ] Help menu
 - [ ] Common rules set options (classic game of life, etc)
 - [ ] Sav/load rules and configurations
@@ -46,18 +45,14 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - [ ] show how the current state (as integer) change over iterations
 - [ ] import random color pallete from some api
 - [ ] fullscreen mode with floating controls (or absolute positioned)
-- [ ] edit cells number
 - [ ] stop automatically when current state is all zeroes
 - [ ] 2d Cellular automata
   - [ ] Show grid on stopped and paused states
 - [ ] set iterations limit
 - [ ] show live cells percentage graphic
-- [ ] add scene config modal, allow change size and topology
 - [ ] adjust zoom to fit slider mark
 - [ ] floating window zoom area (show by area or by neighborhood)
-- [ ] show scene size
 - [ ] control flow with key strokes
-- [ ] add 2d rules random button
 - [ ] set 1d rule on input number
 - [ ] autoload rule 90 on 1d
 - [ ] disable components when running
