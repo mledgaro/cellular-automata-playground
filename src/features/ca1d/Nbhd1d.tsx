@@ -4,7 +4,7 @@ import React, { useCallback } from "react";
 import { Box, Grid } from "@mui/material";
 import { faArrowRotateRight, faMap } from "@fortawesome/free-solid-svg-icons";
 
-import Button from "src/components/Button";
+import { IconButton } from "src/components/Button";
 import CustomRadioGroup from "src/components/RadioGroup";
 
 import {
@@ -44,9 +44,9 @@ export default function Nbhd1d() {
 
                 <Grid item md="auto" className="space-x-2">
                     <Reload />
-                    <Button
+                    <IconButton
                         icon={faMap}
-                        size="2x"
+                        iconSize="2x"
                         tooltipLabel="Show neighborhoods map"
                         onClick={() => nbhdsMap.set(!nbhdsMap.get)}
                     />
@@ -122,9 +122,9 @@ function Reload() {
     const dispatch = useAppDispatch();
 
     return (
-        <Button
+        <IconButton
             icon={faArrowRotateRight}
-            size="2x"
+            iconSize="2x"
             tooltipLabel="Reload neighborhoods"
             onClick={() => dispatch(setCellsNbhds(params))}
         />

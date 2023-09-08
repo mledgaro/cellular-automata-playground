@@ -85,6 +85,7 @@ export function Nbhd1dEditor({ className = "" }: { className?: string }) {
                         onClick={() => dispatch(setNbhdWidth(width - 1))}
                         disabled={width <= nbhdWidthMin}
                     />
+
                     <MiniButton
                         icon={faPlus}
                         onClick={() => dispatch(setNbhdWidth(width + 1))}

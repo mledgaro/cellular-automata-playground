@@ -11,7 +11,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Stack } from "@mui/material";
 import { Rule2dState, Rules2dHook } from "src/app/hooks/rules2d";
-import Button from "src/components/Button";
+import { IconButton } from "src/components/Button";
 
 const cellClasses = "text-center text-xl select-none";
 
@@ -69,28 +69,28 @@ function Rule({
 function Controls({ rules }: { rules: Rules2dHook }) {
     return (
         <Box className="w-fit mx-auto space-x-1">
-            <Button
+            <IconButton
                 tooltipLabel="All keep"
                 icon={faSquareMinus}
-                size="xl"
+                iconSize="xl"
                 onClick={rules.allKeep}
             />
-            <Button
+            <IconButton
                 tooltipLabel="All dead"
                 icon={faSquareRegular}
-                size="xl"
+                iconSize="xl"
                 onClick={rules.allDead}
             />
-            <Button
+            <IconButton
                 tooltipLabel="All alive"
                 icon={faSquareSolid}
-                size="xl"
+                iconSize="xl"
                 onClick={rules.allAlive}
             />
-            <Button
+            <IconButton
                 tooltipLabel="Random"
                 icon={faShuffle}
-                size="xl"
+                iconSize="xl"
                 onClick={rules.random}
             />
         </Box>

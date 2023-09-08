@@ -24,7 +24,7 @@ export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     },
 }));
 
-const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
+export const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
     backgroundColor: "var(--primary)",
     color: "var(--secondary)",
     minWidth: "fit-content",
@@ -43,20 +43,13 @@ const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
     },
 }));
 
-export default function CustomButtom({
-    icon,
-    size,
-    tooltipLabel = "",
-    disabled = false,
-    onClick = () => {},
-    className = "",
-}: {
-    icon: IconDefinition;
-    size: SizeProp;
-    tooltipLabel?: string;
-    disabled?: boolean;
-    onClick?: () => void;
-    className?: string;
+export function TooltipButton({
+    tooltipLabel,
+    content,
+    ...props
+}: ButtonProps & {
+    tooltipLabel: string;
+    content: JSX.Element;
 }) {
     return (
         <StyledTooltip
@@ -66,34 +59,43 @@ export default function CustomButtom({
             followCursor
             arrow
         >
-            <StyledButton
-                variant="contained"
-                onClick={onClick}
-                disabled={disabled}
-                className={className}
-            >
-                <FontAwesomeIcon icon={icon} size={size} />
+            <StyledButton variant="contained" {...props}>
+                {content}
             </StyledButton>
         </StyledTooltip>
     );
 }
 
+export function IconButton({
+    icon,
+    iconSize,
+    tooltipLabel,
+    ...props
+}: ButtonProps & {
+    icon: IconDefinition;
+    iconSize: SizeProp;
+    tooltipLabel: string;
+}) {
+    return (
+        <TooltipButton
+            tooltipLabel={tooltipLabel}
+            content={<FontAwesomeIcon icon={icon} size={iconSize} />}
+            {...props}
+        />
+    );
+}
+
 export function MiniButton({
     icon,
-    disabled = false,
-    onClick = () => {},
-}: {
+    ...props
+}: ButtonProps & {
     icon: IconDefinition;
-    disabled?: boolean;
-    onClick?: () => void;
 }) {
     return (
         <StyledButton
+            {...props}
             variant="contained"
-            onClick={onClick}
-            disabled={disabled}
-            className="p-[4px]"
-            // style={{ padding: "4px" }}
+            className={`${props.className} p-[4px]`}
         >
             <FontAwesomeIcon icon={icon} size="xs" />
         </StyledButton>

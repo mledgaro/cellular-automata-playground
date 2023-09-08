@@ -9,7 +9,7 @@ import {
     faSquare as faSquareSolid,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Button from "../../components/Button";
+import { IconButton } from "../../components/Button";
 import { RulePreview } from "src/features/ca1d/CellsGroups";
 
 import { useAppSelector, useStateObj } from "src/app/hooks";
@@ -65,28 +65,28 @@ function Controls() {
 
     return (
         <Box className="space-x-2">
-            <Button
+            <IconButton
                 tooltipLabel="Random"
                 icon={faShuffle}
-                size="xl"
+                iconSize="xl"
                 onClick={() => dispatch(randomRules())}
             />
-            <Button
+            <IconButton
                 tooltipLabel="Invert"
                 icon={faRightLeft}
-                size="xl"
+                iconSize="xl"
                 onClick={() => dispatch(inverseRules())}
             />
-            <Button
+            <IconButton
                 tooltipLabel="All alive"
                 icon={faSquareSolid}
-                size="xl"
+                iconSize="xl"
                 onClick={() => dispatch(allRulesAlive())}
             />
-            <Button
+            <IconButton
                 tooltipLabel="All dead"
                 icon={faSquareRegular}
-                size="xl"
+                iconSize="xl"
                 onClick={() => dispatch(allRulesDead())}
             />
         </Box>

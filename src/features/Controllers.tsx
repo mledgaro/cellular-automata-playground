@@ -10,7 +10,7 @@ import {
 
 import { StatusHook, useStatus } from "src/app/hooks/status";
 
-import Button from "src/components/Button";
+import { IconButton } from "src/components/Button";
 
 const StatusCtx = createContext<StatusHook | undefined>(undefined);
 
@@ -61,10 +61,10 @@ function RunBtn() {
     const status = useContext(StatusCtx);
 
     return (
-        <Button
+        <IconButton
             tooltipLabel={status?.running ? "Pause" : "Run"}
             icon={status?.running ? faPause : faPlay}
-            size="xl"
+            iconSize="xl"
             onClick={() => {
                 if (!status!.running) {
                     status?.run();
@@ -81,10 +81,10 @@ function NextBtn({ clickHandler }: { clickHandler: () => void }) {
     const status = useContext(StatusCtx);
 
     return (
-        <Button
+        <IconButton
             tooltipLabel="Next"
             icon={faForwardStep}
-            size="xl"
+            iconSize="xl"
             onClick={() => {
                 if (status!.stopped) {
                     status!.pause();
@@ -102,10 +102,10 @@ function StopBtn() {
     const status = useContext(StatusCtx);
 
     return (
-        <Button
+        <IconButton
             tooltipLabel="Stop"
             icon={faStop}
-            size="xl"
+            iconSize="xl"
             onClick={() => {
                 status!.stop();
             }}

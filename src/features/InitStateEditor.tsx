@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 import { faArrowRotateRight, faBroom } from "@fortawesome/free-solid-svg-icons";
 
 import { DensitySlider } from "src/components/Slider";
-import Button from "src/components/Button";
+import { IconButton } from "src/components/Button";
 
 export default function InitStateEditor({
     density,
@@ -29,15 +29,15 @@ export default function InitStateEditor({
                 md="auto"
                 className="flex items-center justify-center space-x-2"
             >
-                <Button
+                <IconButton
                     icon={faArrowRotateRight}
-                    size="2x"
+                    iconSize="2x"
                     tooltipLabel="Reload"
                     onClick={setRandom}
                 />
-                <Button
+                <IconButton
                     icon={faBroom}
-                    size="2x"
+                    iconSize="2x"
                     tooltipLabel="Clear"
                     onClick={setClear}
                 />
