@@ -3,19 +3,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, BoxProps, Fade } from "@mui/material";
 import React from "react";
 import { MiniButton, StyledTooltip } from "./Button";
+import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 
 export default function Label({
     icon,
     tooltipLabel,
     content,
-    size = "lg",
+    textSize = "lg",
+    iconSize = "sm",
     vertical = false,
     ...props
 }: BoxProps & {
     icon: IconDefinition;
     tooltipLabel: string;
     content: JSX.Element | string;
-    size?: string;
+    textSize?: string;
+    iconSize?: SizeProp;
     vertical?: boolean;
 }) {
     //
@@ -23,7 +26,7 @@ export default function Label({
         props.className
     } flex items-center cap-component-container py-2 px-3 select-none ${
         vertical ? "flex-col space-y-1" : "flex-row space-x-2"
-    } text-${size}`;
+    }`;
 
     return (
         <StyledTooltip
@@ -35,9 +38,11 @@ export default function Label({
         >
             <Box {...{ ...props, className: className_ }}>
                 <Box>
-                    <FontAwesomeIcon icon={icon} />
+                    <FontAwesomeIcon icon={icon} size={iconSize} />
                 </Box>
-                <Box className="text-tertiary w-full">{content}</Box>
+                <Box className={`text-tertiary w-full text-${textSize}`}>
+                    {content}
+                </Box>
             </Box>
         </StyledTooltip>
     );
@@ -48,6 +53,7 @@ export function LabelButton({
     tooltipLabel,
     content,
     size = "lg",
+    iconSize = "lg",
     vertical = false,
     onClick,
     ...props
@@ -56,8 +62,9 @@ export function LabelButton({
     tooltipLabel: string;
     content: JSX.Element | string;
     size?: string;
+    iconSize?: SizeProp;
     vertical?: boolean;
-    onClick: () => void;
+    onClick: (event: React.MouseEvent<HTMLElement>) => void;
 }) {
     //
     const className_ = `${
@@ -74,9 +81,13 @@ export function LabelButton({
             followCursor
             arrow
         >
-            <Box {...{ ...props, className: className_ }}>
+            <Box {...{ ...props, className: className_, onClick: () => {} }}>
                 <Box>
-                    <MiniButton icon={icon} iconSize="lg" onClick={onClick} />
+                    <MiniButton
+                        icon={icon}
+                        iconSize={iconSize}
+                        onClick={onClick}
+                    />
                 </Box>
                 <Box className="text-tertiary">{content}</Box>
             </Box>

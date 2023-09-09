@@ -79,3 +79,11 @@
     border-color: var(--secondary);
     padding: 12px;
 }
+
+.cap-float-menu {
+    @apply cap-component-container p-1;
+    position: absolute;
+    border-color: var(--tertiary);
+    border-width: 2px;
+    border-style: solid;
+}

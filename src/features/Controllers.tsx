@@ -8,7 +8,7 @@ import {
     faStop,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { StatusHook, useStatus } from "src/app/hooks/status";
+import { StatusHook } from "src/app/hooks/status";
 
 import { IconButton } from "src/components/Button";
 
@@ -19,14 +19,15 @@ export default function Controllers({
     next,
     stop,
     refreshRate,
+    status,
 }: {
     init: () => void;
     next: () => void;
     stop: () => void;
     refreshRate: number;
+    status: StatusHook;
 }) {
     //
-    const status = useStatus();
 
     // every render
     useEffect(() => {
@@ -37,7 +38,7 @@ export default function Controllers({
 
     // status change
     useEffect(() => {
-        if (status.prev.stopped) {
+        if (status.prev.stopped && !status.stopped) {
             init();
         } else if (status.stopped) {
             stop();

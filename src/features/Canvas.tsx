@@ -178,7 +178,6 @@ function Controllers({
 
     return (
         <Box className="flex flex-col h-full items-center justify-center space-y-2">
-            {/* <StyledButton variant="contained" className="p-1"> */}
             <LabelButton
                 icon={faGlobe}
                 tooltipLabel="World settings"
@@ -186,7 +185,6 @@ function Controllers({
                 size="sm"
                 onClick={() => editSceneModal.set(true)}
             />
-            {/* </StyledButton> */}
 
             <Label
                 icon={faLocationDot}
@@ -196,8 +194,9 @@ function Controllers({
                         pos.c + 1
                     })`}</Box>
                 }
-                size="sm"
-                className="w-[6rem]"
+                textSize="lg"
+                iconSize="xl"
+                className="w-[7rem]"
             />
 
             <VerticalSlider
