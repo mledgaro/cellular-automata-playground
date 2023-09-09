@@ -46,16 +46,11 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - [ ] import random color pallete from some api
 - [ ] fullscreen mode with floating controls (or absolute positioned)
 - [ ] stop automatically when current state is all zeroes
-- [ ] 2d Cellular automata
-  - [ ] Show grid on stopped and paused states
-- [ ] set iterations limit
 - [ ] show live cells percentage graphic
-- [ ] adjust zoom to fit slider mark
 - [ ] floating window zoom area (show by area or by neighborhood)
 - [ ] control flow with key strokes
 - [ ] set 1d rule on input number
 - [ ] autoload rule 90 on 1d
 - [ ] disable components when running
-- [x] 1d default random rules
 
 ## Notes

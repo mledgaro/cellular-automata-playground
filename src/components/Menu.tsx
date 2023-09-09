@@ -10,12 +10,14 @@ import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 
 export function FloatMenu({
     icon,
+    iconOnShow,
     iconSize = "lg",
     tooltipLabel = "",
     boxProps = "",
     content,
 }: {
     icon: IconDefinition;
+    iconOnShow?: IconDefinition;
     iconSize?: SizeProp;
     tooltipLabel?: string;
     boxProps?: string;
@@ -25,7 +27,7 @@ export function FloatMenu({
     return (
         <Box className="relative">
             <IconButton
-                icon={icon}
+                icon={show.get ? iconOnShow ?? icon : icon}
                 iconSize={iconSize}
                 tooltipLabel=""
                 onClick={() => show.set(!show.get)}

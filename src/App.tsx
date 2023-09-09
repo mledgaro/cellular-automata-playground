@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useStateObj } from "src/app/hooks";
 
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
 import { Box } from "@mui/material";
 import CellularAutomata2d from "./features/ca2d/CellularAutomata2d";
@@ -27,7 +27,7 @@ export default function App() {
             <Box>
                 <Title items={items} selected={0} />
                 <Routes>
-                    <Route index element={<CellularAutomata2d />} />
+                    <Route index element={<CellularAutomata1d />} />
                     <Route path="ca1d" element={<CellularAutomata1d />} />
                     <Route path="ca2d" element={<CellularAutomata2d />} />
                 </Routes>
@@ -51,6 +51,7 @@ function Title({
             <Box className="text-3xl">{title.get}</Box>
             <FloatMenu
                 icon={faChevronDown}
+                iconOnShow={faChevronUp}
                 content={
                     <Box className="flex flex-col space-y-1 text-xl">
                         {items.map((item) => (

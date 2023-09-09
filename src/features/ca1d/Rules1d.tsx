@@ -1,9 +1,8 @@
 //
-import React from "react";
+import React, { useEffect } from "react";
 
 import { faSquare as faSquareRegular } from "@fortawesome/free-regular-svg-icons";
 import {
-    faHashtag,
     faRightLeft,
     faShuffle,
     faSquare as faSquareSolid,
@@ -22,24 +21,34 @@ import {
     randomRules,
     selectRuleNumber,
     selectRules,
+    setRulesByNumber,
     toggleRule,
 } from "src/app/slices/rules";
 import { Box, Grid } from "@mui/material";
-import Label from "src/components/Label";
+import InputNumber from "src/components/InputNumber";
 
 export default function Rules1d() {
     //
     const onHoverCell = useStateObj<number>(0);
     const ruleNum = useAppSelector(selectRuleNumber);
+    const ruleNum_ = useStateObj(ruleNum);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        ruleNum_.set(ruleNum);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ruleNum]);
 
     return (
         <Box className="space-y-2">
             <Grid container alignItems="center" justifyContent="space-evenly">
                 <Grid item md={4} className="flex justify-center">
-                    <Label
-                        icon={faHashtag}
-                        tooltipLabel="Rule number"
-                        content={ruleNum.toString()}
+                    <InputNumber
+                        state={ruleNum_}
+                        min={0}
+                        max={100_000_000}
+                        label="Rule number"
+                        onBlur={() => dispatch(setRulesByNumber(ruleNum_.get))}
                     />
                 </Grid>
 
