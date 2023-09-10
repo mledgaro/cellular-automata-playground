@@ -6,14 +6,21 @@ import { useAppDispatch, useAppSelector, useStateObj } from "src/app/hooks";
 import { selectSceneSize } from "src/app/slices/sceneSize";
 import Nbhd1d from "src/features/ca1d/Nbhd1d";
 import Rules1d from "src/features/ca1d/Rules1d";
-import { randomRules, resizeRules, selectRules } from "src/app/slices/rules";
-import { selectCellsNbhds, setCellsNbhds } from "src/app/slices/cellsNbhds";
-import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
-import { selectNbhdType } from "src/app/slices/nbhdType";
-import { selectMainCell } from "src/app/slices/mainCell";
+import {
+    randomRules,
+    resizeRules,
+    selectRules,
+} from "src/app/slices/ca1d/rules";
+import {
+    selectCellsNbhds,
+    setCellsNbhds,
+} from "src/app/slices/ca1d/cellsNbhds";
+import { selectNbhdWidth } from "src/app/slices/ca1d/nbhdWidth";
+import { selectNbhdType } from "src/app/slices/ca1d/nbhdType";
+import { selectMainCell } from "src/app/slices/ca1d/mainCell";
 import useCellsState from "src/app/hooks/cellsState";
 import InitStateEditor from "src/features/InitStateEditor";
-import CAComponents from "../CAComponents";
+import MainFrame from "../mainFrame/MainFrame";
 import {
     boolArrayToInt,
     countTrueArray,
@@ -110,7 +117,7 @@ export default function CellularAutomata1d() {
     // }, [cellsState.get]);
 
     return (
-        <CAComponents
+        <MainFrame
             init={init}
             next={next}
             stop={stop}

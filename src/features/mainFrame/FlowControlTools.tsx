@@ -1,20 +1,23 @@
-import React, { createContext, useContext, useEffect } from "react";
-
-import { Box } from "@mui/material";
 import {
+    faForward,
     faForwardStep,
+    faGaugeHigh,
     faPause,
     faPlay,
     faStop,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { Box } from "@mui/material";
+import React, { createContext, useContext, useEffect } from "react";
+import { StateObjHook } from "src/app/hooks";
 import { StatusHook } from "src/app/hooks/status";
-
 import { IconButton } from "src/components/Button";
+import { IconSlider, VerticalSlider } from "src/components/Slider";
+
+const refreshRateVal = { minVal: 200, maxVal: 999, defaultVal: 600 };
 
 const StatusCtx = createContext<StatusHook | undefined>(undefined);
 
-export default function Controllers({
+export default function FlowControlTools({
     init,
     next,
     stop,
@@ -24,15 +27,13 @@ export default function Controllers({
     init: () => void;
     next: () => void;
     stop: () => void;
-    refreshRate: number;
+    refreshRate: StateObjHook<number>;
     status: StatusHook;
 }) {
-    //
-
     // every render
     useEffect(() => {
         if (status.running) {
-            window.setTimeout(next, 1000 - refreshRate);
+            window.setTimeout(next, 1000 - refreshRate.get);
         }
     });
 
@@ -47,12 +48,20 @@ export default function Controllers({
     }, [status.get]);
 
     return (
-        <Box className="flex justify-center space-x-2">
+        <Box className="flex flex-col h-full items-center justify-center space-y-2">
             <StatusCtx.Provider value={status}>
                 <RunBtn />
                 <NextBtn clickHandler={next} />
                 <StopBtn />
             </StatusCtx.Provider>
+            <VerticalSlider
+                icon={faForward}
+                tooltipLabel="Speed"
+                state={refreshRate}
+                defaultValue={refreshRateVal.defaultVal}
+                min={refreshRateVal.minVal}
+                max={refreshRateVal.maxVal}
+            />
         </Box>
     );
 }

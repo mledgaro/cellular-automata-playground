@@ -2,11 +2,11 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { defaultVal as sceneSizeDefault } from "./sceneSize";
+import { defaultVal as sceneSizeDefault } from "../sceneSize";
 import { defaultVal as nbhdWidthDefault } from "./nbhdWidth";
 import { NbhdType, defaultVal as nbhdTypeDefault } from "./nbhdType";
 import { defaultVal as mainCellDefault } from "./mainCell";
-import { RootState } from "../store";
+import { RootState } from "../../store";
 
 interface CellsNbhdsState {
     value: number[][];

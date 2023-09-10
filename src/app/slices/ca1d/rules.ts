@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { boolArrayToInt, intToBoolArray } from "src/ts/Utils";
 
 import { defaultVal as nbhdWidthDefault } from "./nbhdWidth";
-import { RootState } from "../store";
+import { RootState } from "src/app/store";
 
 interface RulesState {
     value: boolean[];

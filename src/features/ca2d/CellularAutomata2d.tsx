@@ -6,12 +6,12 @@ import { useAppSelector, useStateObj } from "src/app/hooks";
 import { selectSceneSize } from "src/app/slices/sceneSize";
 import Nbhd2d from "src/features/ca2d/Nbhd2d";
 import Rules2d from "src/features/ca2d/Rules2d";
-import useNbhd2d from "src/app/hooks/nbhd2d";
-import { useRules2d } from "src/app/hooks/rules2d";
+import useNbhd2d from "src/app/hooks/ca2d/nbhd2d";
+import { useRules2d } from "src/app/hooks/ca2d/rules2d";
 import useCellsState from "src/app/hooks/cellsState";
 import InitStateEditor from "src/features/InitStateEditor";
 import { CellularAutomaton2d } from "src/ts/CellularAutomaton2d";
-import CAComponents from "../CAComponents";
+import MainFrame from "../mainFrame/MainFrame";
 import { countTrueArray2d, randomBoolArray2d } from "src/ts/Utils";
 
 export default function CellularAutomata2d() {
@@ -92,7 +92,7 @@ export default function CellularAutomata2d() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nbhd.type]);
     return (
-        <CAComponents
+        <MainFrame
             init={init}
             next={next}
             stop={stop}

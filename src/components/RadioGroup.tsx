@@ -30,6 +30,7 @@ export const StyledRadioGroup = styled(RadioGroup)<RadioGroupProps>(
     ({ theme }) => ({
         color: "var(--tertiary)",
         "& label": {
+            color: "var(--tertiary)",
             "& .Mui-checked": {
                 color: "var(--primary)",
             },

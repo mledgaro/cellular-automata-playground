@@ -24,7 +24,7 @@ export default function App() {
 
     return (
         <BrowserRouter>
-            <Box>
+            <Box className="space-y-4">
                 <Title items={items} selected={0} />
                 <Routes>
                     <Route index element={<CellularAutomata1d />} />

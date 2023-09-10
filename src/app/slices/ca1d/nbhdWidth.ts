@@ -1,6 +1,6 @@
 //
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+import { RootState } from "src/app/store";
 
 export const minVal = 2;
 export const maxVal = 8;

@@ -1,6 +1,6 @@
 //
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+import { RootState } from "src/app/store";
 
 export type NbhdType = "adjacent" | "grouped" | "scattered";
 

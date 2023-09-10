@@ -13,7 +13,7 @@ import {
     faSquare as faSquareSolid,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { NbhdType, selectNbhdType } from "src/app/slices/nbhdType";
+import { NbhdType, selectNbhdType } from "src/app/slices/ca1d/nbhdType";
 import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 import { Box } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
@@ -22,9 +22,9 @@ import {
     maxVal as nbhdWidthMax,
     selectNbhdWidth,
     setNbhdWidth,
-} from "src/app/slices/nbhdWidth";
+} from "src/app/slices/ca1d/nbhdWidth";
 import { intToBoolArray } from "src/ts/Utils";
-import { selectMainCell, setMainCell } from "src/app/slices/mainCell";
+import { selectMainCell, setMainCell } from "src/app/slices/ca1d/mainCell";
 import { MiniButton } from "src/components/Button";
 
 export function Nbhd1dEditor({ className = "" }: { className?: string }) {

@@ -8,7 +8,7 @@ import {
     faSquare as faSquareSolid,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { IconButton } from "../../components/Button";
+import { IconButton } from "src/components/Button";
 import { RulePreview } from "src/features/ca1d/CellsGroups";
 
 import { useAppSelector, useStateObj } from "src/app/hooks";
@@ -23,7 +23,7 @@ import {
     selectRules,
     setRulesByNumber,
     toggleRule,
-} from "src/app/slices/rules";
+} from "src/app/slices/ca1d/rules";
 import { Box, Grid } from "@mui/material";
 import InputNumber from "src/components/InputNumber";
 

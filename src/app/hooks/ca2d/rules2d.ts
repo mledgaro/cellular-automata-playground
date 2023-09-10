@@ -1,5 +1,5 @@
 //
-import { useArray } from "../hooks";
+import { useArray } from "../../hooks";
 
 export type Rule2dState = boolean | null;
 

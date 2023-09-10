@@ -2,7 +2,7 @@
 import React from "react";
 import CustomRadioGroup from "src/components/RadioGroup";
 import { Box, Grid } from "@mui/material";
-import { Nbhd2dHook } from "src/app/hooks/nbhd2d";
+import { Nbhd2dHook } from "src/app/hooks/ca2d/nbhd2d";
 import { NbhdType2D } from "src/app/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";

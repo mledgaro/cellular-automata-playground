@@ -4,8 +4,8 @@ import {
     countTrueArray2d,
     setArray2dItem,
 } from "src/ts/Utils";
-import { useStateObj } from "../hooks";
-import { NbhdType2D, Position } from "../types";
+import { useStateObj } from "../../hooks";
+import { NbhdType2D, Position } from "../../types";
 
 export type Nbhd2dHook = {
     nbhd: boolean[][];

@@ -3,12 +3,12 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import sceneSizeReducer from "src/app/slices/sceneSize";
-import nbhdWidthReducer from "src/app/slices/nbhdWidth";
-import nbhdTypeReducer from "src/app/slices/nbhdType";
-import mainCellReducer from "src/app/slices/mainCell";
-import rulesReducer from "src/app/slices/rules";
-import initStateReducer from "src/app/slices/initState";
-import cellsNbhdsReducer from "src/app/slices/cellsNbhds";
+import nbhdWidthReducer from "src/app/slices/ca1d/nbhdWidth";
+import nbhdTypeReducer from "src/app/slices/ca1d/nbhdType";
+import mainCellReducer from "src/app/slices/ca1d/mainCell";
+import rulesReducer from "src/app/slices/ca1d/rules";
+import initStateReducer from "src/app/slices/ca1d/initState";
+import cellsNbhdsReducer from "src/app/slices/ca1d/cellsNbhds";
 import sceneBoundariesReducer from "src/app/slices/sceneBoundaries";
 
 export const store = configureStore({

@@ -38,7 +38,6 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
   - [ ] Color themes
 - [ ] Help menu
 - [ ] Common rules set options (classic game of life, etc)
-- [ ] Sav/load rules and configurations
 - [ ] Run different configurations and rules on the same canvas (show as color layers)
   - [ ] Two cells alive in the same cell on different layers produce another cell in another layer.
 - [ ] show and change on every iteration the current state as image
@@ -46,11 +45,15 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 - [ ] import random color pallete from some api
 - [ ] fullscreen mode with floating controls (or absolute positioned)
 - [ ] stop automatically when current state is all zeroes
-- [ ] show live cells percentage graphic
+
 - [ ] floating window zoom area (show by area or by neighborhood)
 - [ ] control flow with key strokes
 - [ ] set 1d rule on input number
 - [ ] autoload rule 90 on 1d
 - [ ] disable components when running
+- [ ] open and save configurations and states
+  - [ ] select what to include (configuration, initial state, current state) (on save)
+- [ ] show live cells percentage graphic
+- [ ] put canvas settings on a floating menu
 
 ## Notes

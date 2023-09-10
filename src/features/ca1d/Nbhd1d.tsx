@@ -13,15 +13,18 @@ import {
     useBoolArr,
     useStateObj,
 } from "src/app/hooks";
-import { selectNbhdWidth } from "src/app/slices/nbhdWidth";
+import { selectNbhdWidth } from "src/app/slices/ca1d/nbhdWidth";
 import {
     NbhdType,
     defaultVal as nbhdTypeDefault,
     selectNbhdType,
     setNbhdType,
-} from "src/app/slices/nbhdType";
-import { selectMainCell } from "src/app/slices/mainCell";
-import { selectCellsNbhds, setCellsNbhds } from "src/app/slices/cellsNbhds";
+} from "src/app/slices/ca1d/nbhdType";
+import { selectMainCell } from "src/app/slices/ca1d/mainCell";
+import {
+    selectCellsNbhds,
+    setCellsNbhds,
+} from "src/app/slices/ca1d/cellsNbhds";
 
 import { selectSceneCols } from "src/app/slices/sceneSize";
 import { Nbhd1dEditor } from "./CellsGroups";

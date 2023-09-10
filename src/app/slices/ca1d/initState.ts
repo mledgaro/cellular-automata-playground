@@ -2,8 +2,8 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { defaultVal as sceneSizeDefault } from "./sceneSize";
-import { RootState } from "../store";
+import { defaultVal as sceneSizeDefault } from "../sceneSize";
+import { RootState } from "src/app/store";
 
 export type DistributionType = "even" | "rand";
 
