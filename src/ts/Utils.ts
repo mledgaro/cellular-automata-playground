@@ -101,6 +101,12 @@ export function setArrayItem(array: any[], index: number, value: any) {
     return nArray;
 }
 
+export function createArray(size: number, fill: any) {
+    return Array(size)
+        .fill(null)
+        .map(() => fill);
+}
+
 export function createArray2d(rows: number, cols: number, fill: any): any[][] {
     return Array(rows)
         .fill(null)

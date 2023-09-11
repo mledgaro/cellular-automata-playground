@@ -19,6 +19,7 @@ import SpaceEditionTools from "./SpaceEditionTools";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Canvas from "./Canvas";
 import Info from "./Info";
+import { createArray } from "src/ts/Utils";
 
 export const cellSizeVal = { minVal: 1, maxVal: 20, defaultVal: 8 };
 
@@ -194,6 +195,8 @@ export default function MainFrame({
                 iterations={iterations.get}
                 stopIterations={stopIterations}
                 liveCells={liveCells}
+                historySize={150}
+                update={!status.stopped}
             />
 
             <Settings tabs={tabs} />

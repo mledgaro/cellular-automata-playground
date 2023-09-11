@@ -55,5 +55,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
   - [ ] select what to include (configuration, initial state, current state) (on save)
 - [ ] show live cells percentage graphic
 - [ ] put canvas settings on a floating menu
+- [ ] fully implement dark mode
+- [ ] hide side controls
 
 ## Notes
