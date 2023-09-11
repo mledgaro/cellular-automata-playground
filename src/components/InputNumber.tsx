@@ -49,7 +49,7 @@ export default function InputNumber({
     step?: number;
 }) {
     return (
-        <Box className="cap-component-container w-fit px-1 pb-1 pt-2">
+        <Box className="w-fit">
             <StyledTextField
                 variant="outlined"
                 type="number"

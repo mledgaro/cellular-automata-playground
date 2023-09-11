@@ -12,8 +12,8 @@
     --tertiary: #bbb5bd;
 }
 
-.cap-title {
-    @apply bg-secondary text-primary font-black text-5xl w-fit mx-auto px-2 py-3 rounded-lg select-none;
+body {
+    background-color: var(--secondary);
 }
 
 .cap-component-label {
@@ -24,19 +24,10 @@
     user-select: none !important;
 }
 
-.section-container {
-    @apply space-y-2;
-}
-
-.cap-component-container {
-    /*@appy bg-secondary rounded-md text-primary;*/
-    background-color: var(--secondary);
-    border-radius: 8px;
-    color: var(--primary);
-}
-
-.cells-container {
-    @apply pl-2 pt-2 pb-0 pr-0;
+.test-border {
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--tertiary)
 }
 
 .cap-cell {
@@ -51,11 +42,6 @@
     @apply bg-tertiary;
 }
 
-
-.test-border {
-    @apply border-[#ff0000] border-2 border-solid;
-}
-
 .rule-1d-cell {
     @apply inline-block box-border w-8 rounded-sm text-sm text-secondary text-center py-1.5 mr-2 mb-2 select-none;
 }
@@ -68,22 +54,14 @@
     background-color: var(--tertiary);
 }
 
-.cap-modal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: fit-content;
-    background-color: var(--tertiary);
-    border-radius: 8px;
-    border-color: var(--secondary);
-    padding: 12px;
-}
-
 .cap-float-menu {
-    @apply cap-component-container p-1;
-    position: absolute;
+    background-color: var(--secondary);
+    border-radius: 8px;
     border-color: var(--tertiary);
     border-width: 2px;
     border-style: solid;
+    color: var(--primary);
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
 }

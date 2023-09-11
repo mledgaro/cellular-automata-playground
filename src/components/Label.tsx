@@ -24,7 +24,7 @@ export default function Label({
     //
     const className_ = `${
         props.className
-    } flex items-center cap-component-container py-2 px-3 select-none ${
+    } flex items-center text-primary select-none ${
         vertical ? "flex-col space-y-1" : "flex-row space-x-2"
     }`;
 
@@ -67,9 +67,7 @@ export function LabelButton({
     onClick: (event: React.MouseEvent<HTMLElement>) => void;
 }) {
     //
-    const className_ = `${
-        props.className
-    } flex items-center cap-component-container py-2 px-3 select-none ${
+    const className_ = `${props.className} flex items-center select-none ${
         vertical ? "flex-col space-y-1" : "flex-row space-x-2"
     } text-${size}`;
 

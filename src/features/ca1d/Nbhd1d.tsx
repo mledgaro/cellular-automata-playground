@@ -101,7 +101,7 @@ function NbhdsMap() {
     );
 
     return (
-        <Box className="cap-component-container cells-container">
+        <Box className="">
             {cells.get.map((e, i) => (
                 <Box
                     key={i}

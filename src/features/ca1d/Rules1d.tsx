@@ -40,9 +40,9 @@ export default function Rules1d() {
     }, [ruleNum]);
 
     return (
-        <Box className="space-y-2">
+        <Box className="space-y-4">
             <Grid container alignItems="center" justifyContent="space-evenly">
-                <Grid item md={4} className="flex justify-center">
+                <Grid item md="auto" className="">
                     <InputNumber
                         state={ruleNum_}
                         min={0}
@@ -52,7 +52,7 @@ export default function Rules1d() {
                     />
                 </Grid>
 
-                <Grid item md={4}>
+                <Grid item md={4} className="flex justify-center">
                     <RulePreview index={onHoverCell.get} />
                 </Grid>
 
@@ -128,9 +128,5 @@ function RulesSelector({
         );
     }
 
-    return (
-        <Box className="cap-component-container pl-2 pt-2 pb-0 pr-0 w-fit">
-            {rulesArr}
-        </Box>
-    );
+    return <Box className="w-fit">{rulesArr}</Box>;
 }

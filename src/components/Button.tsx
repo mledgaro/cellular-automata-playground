@@ -16,11 +16,14 @@ export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} arrow classes={{ popper: className }} />
 ))(({ theme }) => ({
     [`& .${tooltipClasses.arrow}`]: {
-        color: "var(--secondary)",
+        color: "var(--primary)",
     },
     [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: "var(--secondary)",
-        color: "var(--primary)",
+        backgroundColor: "var(--primary)",
+        color: "var(--secondary)",
+        borderStyle: "solid",
+        borderWidth: "1px",
+        borderColor: "var(--tertiary)",
     },
 }));
 
@@ -31,13 +34,12 @@ export const StyledButton = styled(Button)<ButtonProps>(({ theme }) => ({
     width: "fit-content",
     borderRadius: "6px",
     "&:hover": {
-        backgroundColor: "var(--secondary)",
-        color: "var(--primary)",
+        backgroundColor: "var(--tertiary)",
     },
     "&:disabled": {
-        backgroundColor: "var(--tertiary)",
-        color: "var(--secondary)",
-        borderColor: "var(--secondary)",
+        backgroundColor: "var(--secondary)",
+        color: "var(--tertiary)",
+        borderColor: "var(--tertiary)",
         borderStyle: "solid",
         borderWidth: "2px",
     },

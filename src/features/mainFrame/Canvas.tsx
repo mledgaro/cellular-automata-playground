@@ -77,7 +77,7 @@ export default function Canvas({
     return (
         <Box
             ref={scroll}
-            className="max-w-[95%] max-h-full w-fit overflow-auto"
+            className="max-w-[95%] max-h-full w-fit overflow-auto border-tertiary border-3 border-solid"
             onMouseMove={cursorMoveHandler}
             onClick={clickHandler_}
         >

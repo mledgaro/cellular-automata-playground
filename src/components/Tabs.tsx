@@ -16,9 +16,10 @@ const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
 const StyledTab = styled(Tab)<TabProps>(({ theme }) => ({
     fontWeight: "200",
     color: "var(--tertiary)",
-    fontSize: "1.2rem",
+    fontSize: "1rem",
     "&.Mui-selected": {
         color: "var(--primary)",
+        fontSize: "1.4rem",
         fontWeight: "900",
     },
 }));
@@ -56,7 +57,7 @@ export default function CustomTabs({
                 return (
                     <Box
                         key={i}
-                        className="w-[95%] mx-auto"
+                        className="w-[95%] mx-auto mt-6"
                         role="tabpanel"
                         hidden={selected.get !== i}
                         id={`cstm-tabpanel-${i}`}

@@ -17,13 +17,12 @@ import {
 export default function Nbhd2d({ state }: { state: Nbhd2dHook }) {
     //
     return (
-        <Grid container className="section-container">
+        <Grid container className="">
             {/* row */}
             <Grid item container alignItems="center" className="">
                 {/* type */}
                 <Grid item xs className="flex justify-center">
                     <CustomRadioGroup
-                        className="h-fit"
                         label="Type"
                         options={[
                             { label: "Moore", value: "moore" },
@@ -68,7 +67,7 @@ export function NbhdEditor({
     let onDblClick: () => void;
 
     return (
-        <Box className="cap-component-container p-2 flex flex-row space-x-3">
+        <Box className="flex flex-row text-primary space-x-3">
             {/* nbhd */}
             <Box className="space-y-3">
                 <Box className="space-y-1-">
@@ -132,16 +131,27 @@ function ResizeButtons({
 
     return (
         <Box className={"flex justify-center " + classes}>
+            {col && (
+                <MiniButton
+                    icon={faPlus}
+                    onClick={() => onclick(false)}
+                    disabled={disableAdd}
+                />
+            )}
+
             <MiniButton
                 icon={faMinus}
                 onClick={() => onclick(true)}
                 disabled={disableRemove}
             />
-            <MiniButton
-                icon={faPlus}
-                onClick={() => onclick(false)}
-                disabled={disableAdd}
-            />
+
+            {!col && (
+                <MiniButton
+                    icon={faPlus}
+                    onClick={() => onclick(false)}
+                    disabled={disableAdd}
+                />
+            )}
         </Box>
     );
 }

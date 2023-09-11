@@ -52,21 +52,19 @@ export default function CustomRadioGroup({
     value,
     defaultVal,
     onChange,
-    className = "",
-}: {
+}: // className = "",
+{
     label: string;
     options: { label: JSX.Element | string; value: string }[];
     value: string;
     defaultVal: string;
     onChange: (val: string) => void;
-    className?: string;
+    // className?: string;
 }) {
     const id = useId();
 
     return (
-        <StyledFormControl
-            className={`cap-component-container pl-3 pt-1 ${className}`}
-        >
+        <StyledFormControl>
             <FormLabel id={id}>{label}</FormLabel>
             <StyledRadioGroup
                 aria-labelledby={id}

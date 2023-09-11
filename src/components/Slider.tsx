@@ -66,7 +66,7 @@ export default function CustomSlider({
     className?: string;
 }) {
     return (
-        <Box className={`cap-component-container pt-1 ${className}`}>
+        <Box className={`${className}`}>
             {icon && (
                 <Box className="cap-component-label ml-2 mt-1">
                     <FontAwesomeIcon icon={icon} />
@@ -112,12 +112,7 @@ export function IconSlider({
     maxVal: number;
 }) {
     return (
-        <Grid
-            container
-            className="cap-component-container"
-            alignItems="center"
-            justifyContent="center"
-        >
+        <Grid container alignItems="center" justifyContent="center">
             <Grid item xs="auto">
                 <StyledTooltip
                     title={tooltipLabel}
@@ -161,7 +156,7 @@ export function DensitySlider({
 }) {
     //
     return (
-        <Grid container className="cap-component-container">
+        <Grid container>
             <Grid container>
                 <Box className="cap-component-label ms-2 my-2">Density</Box>
             </Grid>
@@ -217,7 +212,7 @@ export function VerticalSlider({
     state: StateObjHook<number>;
 }) {
     return (
-        <Box className="flex flex-col w-fit items-center justify-center cap-component-container py-3">
+        <Box className="flex flex-col w-fit items-center text-primary justify-center shadow-sm shadow-tertiary rounded-md p-1">
             <Box className="">
                 <StyledSlider
                     {...props}

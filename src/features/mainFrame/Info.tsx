@@ -34,13 +34,6 @@ export default function Info({
             </Grid>
 
             <Grid item md={3} className="flex justify-center">
-                {/* <Label
-                    icon={faHeart}
-                    tooltipLabel="Live cells"
-                    content={liveCells.toString()}
-                    textSize="xl"
-                    iconSize="2xl"
-                /> */}
                 <LiveCells
                     currentValue={liveCells}
                     historySize={historySize}
@@ -59,7 +52,7 @@ function Iterations({
     stopIterations: StateObjHook<number>;
 }) {
     return (
-        <Box className="flex flex-row space-x-2 items-center cap-component-container py-2 px-3 select-none">
+        <Box className="flex flex-row space-x-2 items-center select-none">
             <Box>
                 <FloatMenu
                     icon={faStopwatch}
@@ -97,12 +90,12 @@ function LiveCells({
     const formatter = useRef(new Intl.NumberFormat());
     const counter = useRef(0);
     const maxValue = useRef(0);
-    const history = useStateObj(createArray(historySize, 0));
+    const history = useStateObj(createArray(historySize, 1));
 
     useEffect(() => {
         counter.current = 0;
         maxValue.current = 0;
-        history.set(createArray(historySize, 0));
+        history.set(createArray(historySize, 1));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [historySize, update]);
 
@@ -146,7 +139,7 @@ function LiveCells({
     }, [history.get]);
 
     return (
-        <Box className="flex flex-row items-center space-x-2.5 cap-component-container p-2">
+        <Box className="flex flex-row items-center space-x-2.5">
             <FontAwesomeIcon
                 icon={faHeart}
                 size="2xl"

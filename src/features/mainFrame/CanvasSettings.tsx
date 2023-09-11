@@ -1,6 +1,7 @@
 import {
     faArrowDownUpAcrossLine,
     faArrowsLeftRightToLine,
+    faCheck,
     faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Box, Grid, Modal } from "@mui/material";
@@ -17,6 +18,7 @@ import RadioGroup from "src/components/RadioGroup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BoundaryType } from "src/app/types";
 import { setSceneBoundaries } from "src/app/slices/sceneBoundaries";
+import { IconButton } from "src/components/Button";
 
 const titleStyle = {
     paddingBottom: "10px",
@@ -24,12 +26,10 @@ const titleStyle = {
     fontSize: "1.2rem",
 };
 
-export default function SceneSettingsModal({
-    show,
-    hide,
+export default function CanvasSettings({
+    onDone = () => {},
 }: {
-    show: boolean;
-    hide: () => void;
+    onDone?: () => void;
 }) {
     //
     const sceneSize = useAppSelector(selectSceneSize);
@@ -48,24 +48,22 @@ export default function SceneSettingsModal({
                 vertical: vertical.get,
             })
         );
-        hide();
+        onDone();
     };
 
     return (
-        <Modal
-            open={show}
-            onClose={closeHandler}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
-            <Box className="cap-modal">
-                <SizeControls rows={rows} cols={cols} />
-                <BoundariesControls
-                    horizontal={horizontal}
-                    vertical={vertical}
+        <Box className="flex flex-col w-[18rem] space-y-3">
+            <SizeControls rows={rows} cols={cols} />
+            <BoundariesControls horizontal={horizontal} vertical={vertical} />
+            <Box className="flex justify-center">
+                <IconButton
+                    icon={faCheck}
+                    iconSize="xl"
+                    tooltipLabel="Apply"
+                    onClick={closeHandler}
                 />
             </Box>
-        </Modal>
+        </Box>
     );
 }
 
@@ -78,22 +76,9 @@ function SizeControls({
 }) {
     //
     return (
-        <Box
-            className="cap-component-container"
-            style={{
-                padding: "8px",
-                width: "fit-content",
-                marginLeft: "auto",
-                marginRight: "auto",
-            }}
-        >
+        <Box className="w-full">
             <Box style={titleStyle}>Size</Box>
-            <Grid
-                container
-                alignItems="center"
-                justifyContent="center"
-                columnSpacing={1}
-            >
+            <Grid container alignItems="center" justifyContent="space-evenly">
                 <Grid item md="auto">
                     <InputNumber state={rows} min={4} max={1024} label="Rows" />
                 </Grid>
@@ -117,22 +102,9 @@ function BoundariesControls({
 }) {
     //
     return (
-        <Box
-            className="cap-component-container"
-            style={{
-                paddingTop: "8px",
-                paddingLeft: "8px",
-                marginTop: "8px",
-                width: "fit-content",
-            }}
-        >
+        <Box className="w-full">
             <Box style={titleStyle}>Boundaries</Box>
-            <Grid
-                container
-                alignItems="center"
-                justifyContent="center"
-                columnSpacing={1}
-            >
+            <Grid container alignItems="center" justifyContent="space-evenly">
                 <Grid item md="auto">
                     <RadioGroup
                         label="Horizontal"

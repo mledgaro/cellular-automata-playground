@@ -75,7 +75,7 @@ export function Nbhd1dEditor({ className = "" }: { className?: string }) {
 
     return (
         <Box
-            className={`cap-component-container w-fit p-2 space-x-4 flex flex-row ${className}`}
+            className={`text-primary w-fit space-x-4 flex flex-row ${className}`}
         >
             <Box className="space-x-1">{cells}</Box>
             <Box className="flex flex-col justify-center">
@@ -113,11 +113,7 @@ export function RulePreview({ index }: { index: number }) {
 
     cells = addEllipses(cells, mainCell, nbhdType, "xs");
 
-    return (
-        <Box className="cap-component-container w-fit p-2 space-x-1.5">
-            {cells}
-        </Box>
-    );
+    return <Box className="text-primary w-fit space-x-1.5">{cells}</Box>;
 }
 
 function addEllipses(

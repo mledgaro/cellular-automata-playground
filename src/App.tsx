@@ -24,7 +24,7 @@ export default function App() {
 
     return (
         <BrowserRouter>
-            <Box className="space-y-4">
+            <Box className="space-y-5">
                 <Title items={items} selected={0} />
                 <Routes>
                     <Route index element={<CellularAutomata1d />} />
@@ -47,8 +47,8 @@ function Title({
     const title = useStateObj(items[selected].title ?? "n/a");
 
     return (
-        <Box className="cap-component-container mx-auto mt-4 w-fit flex flex-row items-center space-x-2 p-2">
-            <Box className="text-3xl">{title.get}</Box>
+        <Box className="text-primary mx-auto mt-4 w-fit flex flex-row items-center space-x-3">
+            <Box className="text-4xl">{title.get}</Box>
             <FloatMenu
                 icon={faChevronDown}
                 iconOnShow={faChevronUp}
@@ -65,7 +65,7 @@ function Title({
                         ))}
                     </Box>
                 }
-                boxProps="top-0 right-0 translate-y-[3rem] w-[12.5rem] p-3"
+                boxProps="top-0 right-0 translate-y-[3rem] w-[12.5rem]"
             />
         </Box>
     );

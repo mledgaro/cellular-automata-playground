@@ -1,25 +1,19 @@
 import React, { useEffect, useRef } from "react";
 import { Box, Grid } from "@mui/material";
-import {
-    faChevronDown,
-    faChevronUp,
-    faGears,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronUp, faGears } from "@fortawesome/free-solid-svg-icons";
 
 import { selectSceneSize } from "src/app/slices/sceneSize";
 import { useAppSelector, useStateObj } from "src/app/hooks";
 
 import CustomTabs from "src/components/Tabs";
-import { TooltipButton } from "src/components/Button";
+import { IconButton } from "src/components/Button";
 import { useStatus } from "src/app/hooks/status";
 import CanvasCntrl from "src/ts/CanvasCntrl";
 
 import FlowControlTools from "./FlowControlTools";
-import SpaceEditionTools from "./SpaceEditionTools";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CanvasTools from "./CanvasTools";
 import Canvas from "./Canvas";
 import Info from "./Info";
-import { createArray } from "src/ts/Utils";
 
 export const cellSizeVal = { minVal: 1, maxVal: 20, defaultVal: 8 };
 
@@ -149,7 +143,7 @@ export default function MainFrame({
                 justifyContent="space-evenly"
             >
                 <Grid item xs="auto">
-                    <SpaceEditionTools
+                    <CanvasTools
                         cursorPosition={cursorPos.get}
                         cellsSize={cellsSize}
                         showGrid={showGrid}
@@ -218,26 +212,14 @@ function Settings({
     return (
         <Box className="space-y-2">
             <Box className="w-full flex justify-center">
-                <TooltipButton
-                    tooltipLabel="Configuration"
+                <IconButton
+                    tooltipLabel={!show.get ? "Configuration" : ""}
+                    icon={!show.get ? faGears : faChevronUp}
+                    iconSize={!show.get ? "2xl" : "lg"}
                     onClick={() => {
                         show.set(!show.get);
                     }}
                     className="w-[10rem]"
-                    content={
-                        <Box className="w-full">
-                            <FontAwesomeIcon
-                                icon={faGears}
-                                size="2x"
-                                className="float-none"
-                            />
-                            <FontAwesomeIcon
-                                icon={show.get ? faChevronUp : faChevronDown}
-                                size="2x"
-                                className="float-right"
-                            />
-                        </Box>
-                    }
                 />
             </Box>
             {show.get && <SettingsTabs tabs={tabs} />}
@@ -255,7 +237,7 @@ function SettingsTabs({
 }) {
     useEffect(() => {
         window.scroll(0, document.body.scrollHeight);
-    });
+    }, []);
 
     return (
         <Box className="pb-6">

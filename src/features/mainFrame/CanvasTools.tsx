@@ -13,10 +13,11 @@ import { selectSceneSize } from "src/app/slices/sceneSize";
 import { IconButton } from "src/components/Button";
 import { VerticalSlider } from "src/components/Slider";
 import Label, { LabelButton } from "src/components/Label";
-import SceneSettingsModal from "./SceneSettingsModal";
+import CanvasSettings from "./CanvasSettings";
 import { cellSizeVal } from "./MainFrame";
+import { FloatMenu } from "src/components/Menu";
 
-export default function SpaceEditionTools({
+export default function CanvasTools({
     cursorPosition,
     cellsSize,
     showGrid,
@@ -34,19 +35,23 @@ export default function SpaceEditionTools({
     //
     const sceneSize = useAppSelector(selectSceneSize);
 
-    const editSceneModal = useStateObj(false);
-
     const pos = `(${cursorPosition.r + 1}, ${cursorPosition.c + 1})`;
 
     return (
-        <Box className="flex flex-col h-full items-center justify-center space-y-2">
-            <LabelButton
-                icon={faGlobe}
-                tooltipLabel="World settings"
-                content={`${sceneSize.rows} x ${sceneSize.cols}`}
-                size="sm"
-                onClick={() => editSceneModal.set(true)}
-            />
+        <Box className="flex flex-col h-full items-center justify-center space-y-3">
+            <Box className="flex flex-row space-x-2 items-center select-none">
+                <Box>
+                    <FloatMenu
+                        icon={faGlobe}
+                        iconSize="lg"
+                        content={<CanvasSettings />}
+                        boxProps="top-0 left-0 translate-x-[3rem] -translate-y-[3rem]-"
+                    />
+                </Box>
+                <Box className="text-tertiary text-xl">
+                    {`${sceneSize.rows} x ${sceneSize.cols}`}
+                </Box>
+            </Box>
 
             <Label
                 icon={faLocationDot}
@@ -54,7 +59,7 @@ export default function SpaceEditionTools({
                 content={<Box className="flex justify-center">{pos}</Box>}
                 textSize="lg"
                 iconSize="xl"
-                className="w-[7rem]"
+                className="w-full"
             />
 
             <VerticalSlider
@@ -79,11 +84,6 @@ export default function SpaceEditionTools({
                 icon={faCameraRetro}
                 iconSize="xl"
                 onClick={screenshot}
-            />
-
-            <SceneSettingsModal
-                show={editSceneModal.get}
-                hide={() => editSceneModal.set(false)}
             />
         </Box>
     );
