@@ -76,8 +76,16 @@ export function countTrueArray(array: boolean[]): number {
     return array.reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
 }
 
+export function countNotNullArray(array: any[]): number {
+    return array.reduce((acc, curr) => acc + (curr !== null ? 1 : 0), 0);
+}
+
 export function countTrueArray2d(array: boolean[][]): number {
     return array.reduce((acc, curr) => acc + countTrueArray(curr), 0);
+}
+
+export function countNotNullArray2d(array: any[][]): number {
+    return array.reduce((acc, curr) => acc + countNotNullArray(curr), 0);
 }
 
 export function boolArray(length: number, fillValue: boolean) {

@@ -13,6 +13,7 @@ import InitStateEditor from "src/features/InitStateEditor";
 import { CellularAutomaton2d } from "src/ts/CellularAutomaton2d";
 import MainFrame from "../mainFrame/MainFrame";
 import { countTrueArray2d, randomBoolArray2d } from "src/ts/Utils";
+import { NbhdType2D, Position } from "src/app/types";
 
 export default function CellularAutomata2d() {
     //
@@ -22,7 +23,7 @@ export default function CellularAutomata2d() {
     const rules = useRules2d();
     const cellsState = useCellsState(sceneSize.rows, sceneSize.cols);
 
-    const initState = useRef(cellsState.get);
+    const initState = useRef<boolean[][] | null>(null);
     const automaton = useRef(new CellularAutomaton2d());
 
     const density = useStateObj(0.1);
@@ -46,8 +47,9 @@ export default function CellularAutomata2d() {
     };
 
     const stop = () => {
-        cellsState.set(initState.current);
-        liveCells.current = countTrueArray2d(initState.current);
+        cellsState.set(initState.current ?? [[false]]);
+        liveCells.current = countTrueArray2d(initState.current ?? [[false]]);
+        initState.current = null;
     };
 
     const rand = () => {
@@ -64,6 +66,40 @@ export default function CellularAutomata2d() {
     const setDensity = (nval: number) => {
         density.set(nval);
         rand();
+    };
+
+    const getData = () => {
+        let data = {
+            type: "2d cellular automaton",
+            nbhdType: nbhd.type,
+            mainCell: nbhd.mainCell,
+            neighborhood: nbhd.nbhd,
+            rules: rules.get,
+            initialState: initState.current ?? cellsState.get,
+            currentState: cellsState.get,
+        };
+        return data;
+    };
+
+    const onLoad = (data: object) => {
+        if ("nbhdType" in data) {
+            nbhd.setType((data.nbhdType as NbhdType2D) ?? "moore");
+        }
+        if ("mainCell" in data) {
+            nbhd.setMainCellPos((data.mainCell as Position) ?? { r: 1, c: 1 });
+        }
+        if ("neighborhood" in data) {
+            nbhd.setNbhd(data.neighborhood as boolean[][]);
+        }
+        if ("rules" in data) {
+            rules.set(data.rules as (boolean | null)[]);
+        }
+        if ("initialState" in data) {
+            cellsState.set(data.initialState as boolean[][]);
+        }
+        // if ("currentState" in data) {
+        //     cellsState.set(data.currentState as boolean[][]);
+        // }
     };
 
     // useEffect(() => {
@@ -91,6 +127,7 @@ export default function CellularAutomata2d() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nbhd.type]);
+
     return (
         <MainFrame
             init={init}
@@ -98,28 +135,19 @@ export default function CellularAutomata2d() {
             stop={stop}
             cellsState={cellsState.get}
             canvasOnClick={canvasOnClick}
-            tabs={[
-                {
-                    title: "Neighborhood",
-                    content: <Nbhd2d state={nbhd} />,
-                },
-                {
-                    title: "Rules",
-                    content: <Rules2d state={rules} />,
-                },
-                {
-                    title: "Init state",
-                    content: (
-                        <InitStateEditor
-                            density={density.get}
-                            setDensity={setDensity}
-                            setRandom={rand}
-                            setClear={clear}
-                        />
-                    ),
-                },
-            ]}
+            neighborhood={<Nbhd2d state={nbhd} />}
+            rules={<Rules2d state={rules} />}
+            initialState={
+                <InitStateEditor
+                    density={density.get}
+                    setDensity={setDensity}
+                    setRandom={rand}
+                    setClear={clear}
+                />
+            }
             liveCells={liveCells.current}
+            getData={getData}
+            onLoad={onLoad}
         />
     );
 }

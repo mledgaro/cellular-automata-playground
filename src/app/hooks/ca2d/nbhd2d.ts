@@ -14,6 +14,7 @@ export type Nbhd2dHook = {
     setNbhd: (val: boolean[][]) => void;
     setType: (type: NbhdType2D) => void;
     setMainCell: (r: number, c: number) => void;
+    setMainCellPos: (pos: { r: number; c: number }) => void;
     toggle: (pos: Position) => void;
     addRow: (remove: boolean) => void;
     addColumn: (remove: boolean) => void;
@@ -56,6 +57,10 @@ export default function useNbhd2d(): Nbhd2dHook {
         setMainCell: (r: number, c: number) => {
             mainCell.set({ r: r, c: c });
             nbhd.set(setArray2dItem(r, c, nbhd.get, false));
+        },
+        setMainCellPos: (pos: { r: number; c: number }) => {
+            mainCell.set(pos);
+            nbhd.set(setArray2dItem(pos.r, pos.c, nbhd.get, false));
         },
         setType: (newType: NbhdType2D) => {
             type.set(newType);

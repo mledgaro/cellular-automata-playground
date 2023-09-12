@@ -43,6 +43,9 @@ export const rulesSlice = createSlice({
                 i === action.payload ? !e : e
             );
         },
+        setRules: (state, action: PayloadAction<boolean[]>) => {
+            state.value = action.payload;
+        },
     },
 });
 
@@ -58,6 +61,7 @@ export const {
     randomRules,
     inverseRules,
     toggleRule,
+    setRules,
 } = rulesSlice.actions;
 
 export default rulesSlice.reducer;

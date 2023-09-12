@@ -1,4 +1,5 @@
 import { Position } from "src/app/types";
+import { countNotNullArray2d } from "./Utils";
 
 //
 export class CellularAutomaton2d {
@@ -77,25 +78,10 @@ export class CellularAutomaton2d {
 
     public setNbhd(newNbhd: boolean[][], mainCell: Position) {
         //
-        let nbhdSize = 0;
-        let pr: number;
-        this._nbhd = newNbhd.map((row, ri) => {
-            pr = ri - mainCell.r;
-            return row.map((n) => (n ? { r: pr, c: 0 } : null));
-        });
-        this._nbhd[mainCell.r][mainCell.c] = null;
+        let nbhd = CellularAutomaton2d.calcNbhd(newNbhd, mainCell);
 
-        for (let ci = 0, pc, ri; ci < this._nbhd[0].length; ci++) {
-            pc = ci - mainCell.c;
-            for (ri = 0; ri < this._nbhd.length; ri++) {
-                if (this._nbhd[ri][ci] !== null) {
-                    nbhdSize++;
-                    this._nbhd[ri][ci]!.c = pc;
-                }
-            }
-        }
-
-        this._rules = Array(nbhdSize + 1).fill(null);
+        this._nbhd = nbhd;
+        this._rules = Array(countNotNullArray2d(nbhd) + 1).fill(null);
     }
 
     set rules(newRules: (boolean | null)[]) {
@@ -104,5 +90,25 @@ export class CellularAutomaton2d {
         } else {
             newRules.forEach((v, i) => (this._rules[i] = v));
         }
+    }
+
+    public static calcNbhd(newNbhd: boolean[][], mainCell: Position) {
+        //
+        let pr: number;
+        let nbhd = newNbhd.map((row, ri) => {
+            pr = ri - mainCell.r;
+            return row.map((n) => (n ? { r: pr, c: 0 } : null));
+        });
+        nbhd[mainCell.r][mainCell.c] = null;
+
+        for (let ci = 0, pc, ri; ci < nbhd[0].length; ci++) {
+            pc = ci - mainCell.c;
+            for (ri = 0; ri < nbhd.length; ri++) {
+                if (nbhd[ri][ci] !== null) {
+                    nbhd[ri][ci]!.c = pc;
+                }
+            }
+        }
+        return nbhd;
     }
 }

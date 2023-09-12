@@ -155,14 +155,17 @@ export const cellsNbhdsSlice = createSlice({
     name: "cellsNbhds",
     initialState,
     reducers: {
-        setCellsNbhds: (state, action: PayloadAction<SetParams>) => {
+        buildCellsNbhds: (state, action: PayloadAction<SetParams>) => {
             state.value = buildNbhd(action.payload);
+        },
+        setCellsNbhds: (state, action: PayloadAction<number[][]>) => {
+            state.value = action.payload;
         },
     },
 });
 
 export const selectCellsNbhds = (state: RootState) => state.cellsNbhds.value;
 
-export const { setCellsNbhds } = cellsNbhdsSlice.actions;
+export const { buildCellsNbhds, setCellsNbhds } = cellsNbhdsSlice.actions;
 
 export default cellsNbhdsSlice.reducer;

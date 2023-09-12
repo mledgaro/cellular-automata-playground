@@ -14,6 +14,7 @@ import FlowControlTools from "./FlowControlTools";
 import CanvasTools from "./CanvasTools";
 import Canvas from "./Canvas";
 import Info from "./Info";
+import Files from "./Files";
 
 export const cellSizeVal = { minVal: 1, maxVal: 20, defaultVal: 8 };
 
@@ -23,16 +24,24 @@ export default function MainFrame({
     stop,
     cellsState,
     canvasOnClick,
-    tabs,
     liveCells,
+    neighborhood,
+    rules,
+    initialState,
+    getData,
+    onLoad,
 }: {
     init: () => void;
     next: (iteration: number) => void;
     stop: () => void;
     cellsState: boolean[][];
     canvasOnClick: (r: number, c: number) => void;
-    tabs: { title: string; content: JSX.Element }[];
     liveCells: number;
+    neighborhood: JSX.Element;
+    rules: JSX.Element;
+    initialState: JSX.Element;
+    getData: () => object;
+    onLoad: (data: object) => void;
 }) {
     //
     const sceneSize = useAppSelector(selectSceneSize);
@@ -193,7 +202,34 @@ export default function MainFrame({
                 update={!status.stopped}
             />
 
-            <Settings tabs={tabs} />
+            <Settings
+                tabs={[
+                    { title: "Neighborhood", content: neighborhood },
+                    { title: "Rules", content: rules },
+                    { title: "Initial state", content: initialState },
+                    {
+                        title: "Import / Export",
+                        content: (
+                            <Files
+                                getData={() => {
+                                    return {
+                                        ...getData(),
+                                        iteration: iterations.get,
+                                    };
+                                }}
+                                onLoad={(data: object) => {
+                                    onLoad(data);
+                                    // if ("iteration" in data) {
+                                    //     iterations.set(
+                                    //         data.iteration as number
+                                    //     );
+                                    // }
+                                }}
+                            />
+                        ),
+                    },
+                ]}
+            />
         </Box>
     );
 }

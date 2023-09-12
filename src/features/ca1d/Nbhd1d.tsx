@@ -23,7 +23,7 @@ import {
 import { selectMainCell } from "src/app/slices/ca1d/mainCell";
 import {
     selectCellsNbhds,
-    setCellsNbhds,
+    buildCellsNbhds,
 } from "src/app/slices/ca1d/cellsNbhds";
 
 import { selectSceneCols } from "src/app/slices/sceneSize";
@@ -129,7 +129,7 @@ function Reload() {
             icon={faArrowRotateRight}
             iconSize="2x"
             tooltipLabel="Reload neighborhoods"
-            onClick={() => dispatch(setCellsNbhds(params))}
+            onClick={() => dispatch(buildCellsNbhds(params))}
         />
     );
 }

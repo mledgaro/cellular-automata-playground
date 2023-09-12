@@ -27,7 +27,7 @@ body {
 .test-border {
     border-style: solid;
     border-width: 1px;
-    border-color: var(--tertiary)
+    border-color: var(--primary)
 }
 
 .cap-cell {
