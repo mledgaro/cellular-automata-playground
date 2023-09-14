@@ -1,87 +1,95 @@
 //
 import React, { useEffect, useRef } from "react";
 
-import { useAppSelector, useStateObj } from "src/app/hooks";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
 
-import { selectSceneSize } from "src/app/slices/sceneSize";
+import { selectWorldSize } from "src/app/slices/mainFrame/worldSize";
 import Nbhd2d from "src/features/ca2d/Nbhd2d";
 import Rules2d from "src/features/ca2d/Rules2d";
 import useNbhd2d from "src/app/hooks/ca2d/nbhd2d";
 import { useRules2d } from "src/app/hooks/ca2d/rules2d";
-import useCellsState from "src/app/hooks/cellsState";
 import InitStateEditor from "src/features/InitStateEditor";
 import { CellularAutomaton2d } from "src/ts/CellularAutomaton2d";
 import MainFrame from "../mainFrame/MainFrame";
-import { countTrueArray2d, randomBoolArray2d } from "src/ts/Utils";
+import { copyArray2d, countTrueArray2d, randomBoolArray2d } from "src/ts/Utils";
 import { NbhdType2D, Position } from "src/app/types";
+import { selectIterations } from "src/app/slices/mainFrame/iterations";
+import {
+    clearCells,
+    selectCells,
+    setCells,
+    toggleCell,
+} from "src/app/slices/mainFrame/cells";
 
 export default function CellularAutomata2d() {
     //
-    const sceneSize = useAppSelector(selectSceneSize);
+    const worldSize = useAppSelector(selectWorldSize);
+    const iterations = useAppSelector(selectIterations);
+    const cells = useAppSelector(selectCells);
+    const dispatch = useAppDispatch();
 
     const nbhd = useNbhd2d();
     const rules = useRules2d();
-    const cellsState = useCellsState(sceneSize.rows, sceneSize.cols);
 
     const initState = useRef<boolean[][] | null>(null);
     const automaton = useRef(new CellularAutomaton2d());
 
-    const density = useStateObj(0.1);
     const liveCells = useRef(0);
 
-    const canvasOnClick = (r: number, c: number) => {
-        let nval = cellsState.toggle(r, c);
-        liveCells.current += nval ? 1 : -1;
+    const onCellClick = (r: number, c: number) => {
+        liveCells.current += !cells[r][c] ? 1 : -1;
+        dispatch(toggleCell({ r: r, c: c }));
     };
 
     const init = () => {
         automaton.current.setNbhd(nbhd.nbhd, nbhd.mainCell);
         automaton.current.rules = rules.get;
-        automaton.current.state = cellsState.get;
-        initState.current = cellsState.get;
+        automaton.current.state = copyArray2d(cells);
+        initState.current = copyArray2d(cells);
     };
 
     const next = () => {
-        cellsState.set(automaton.current.nextState());
-        liveCells.current = countTrueArray2d(cellsState.get);
+        const nstate = automaton.current.nextState();
+        liveCells.current = countTrueArray2d(nstate);
+        dispatch(setCells(nstate));
     };
 
     const stop = () => {
-        cellsState.set(initState.current ?? [[false]]);
-        liveCells.current = countTrueArray2d(initState.current ?? [[false]]);
+        if (initState.current) {
+            liveCells.current = countTrueArray2d(initState.current);
+            dispatch(setCells(initState.current));
+        } else {
+            liveCells.current = 0;
+            dispatch(clearCells());
+        }
         initState.current = null;
     };
 
-    const rand = () => {
-        let st = randomBoolArray2d(sceneSize.rows, sceneSize.cols, density.get);
-        cellsState.set(st);
+    const rand = (density: number) => {
+        let st = randomBoolArray2d(worldSize.rows, worldSize.cols, density);
         liveCells.current = countTrueArray2d(st);
+        dispatch(setCells(st));
     };
 
     const clear = () => {
-        cellsState.clear();
         liveCells.current = 0;
     };
 
-    const setDensity = (nval: number) => {
-        density.set(nval);
-        rand();
-    };
-
-    const getData = () => {
+    const exportData = () => {
         let data = {
-            type: "2d cellular automaton",
+            type: "ca2d",
             nbhdType: nbhd.type,
             mainCell: nbhd.mainCell,
             neighborhood: nbhd.nbhd,
             rules: rules.get,
-            initialState: initState.current ?? cellsState.get,
-            currentState: cellsState.get,
+            initialState: initState.current ?? cells,
+            currentState: cells,
+            iterations: iterations,
         };
         return data;
     };
 
-    const onLoad = (data: object) => {
+    const importData = (data: object) => {
         if ("nbhdType" in data) {
             nbhd.setType((data.nbhdType as NbhdType2D) ?? "moore");
         }
@@ -95,11 +103,8 @@ export default function CellularAutomata2d() {
             rules.set(data.rules as (boolean | null)[]);
         }
         if ("initialState" in data) {
-            cellsState.set(data.initialState as boolean[][]);
+            dispatch(setCells(data.initialState as boolean[][]));
         }
-        // if ("currentState" in data) {
-        //     cellsState.set(data.currentState as boolean[][]);
-        // }
     };
 
     // useEffect(() => {
@@ -111,43 +116,19 @@ export default function CellularAutomata2d() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nbhd.size]);
 
-    useEffect(() => {
-        if (nbhd.type === "moore") {
-            rules.set([
-                false,
-                false,
-                null,
-                true,
-                false,
-                false,
-                false,
-                false,
-                false,
-            ]);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nbhd.type]);
-
     return (
         <MainFrame
+            title="2D Cellular Automata"
             init={init}
             next={next}
             stop={stop}
-            cellsState={cellsState.get}
-            canvasOnClick={canvasOnClick}
+            onCellClick={onCellClick}
             neighborhood={<Nbhd2d state={nbhd} />}
             rules={<Rules2d state={rules} />}
-            initialState={
-                <InitStateEditor
-                    density={density.get}
-                    setDensity={setDensity}
-                    setRandom={rand}
-                    setClear={clear}
-                />
-            }
+            initialState={<InitStateEditor random={rand} clear={clear} />}
             liveCells={liveCells.current}
-            getData={getData}
-            onLoad={onLoad}
+            exportData={exportData}
+            importData={importData}
         />
     );
 }

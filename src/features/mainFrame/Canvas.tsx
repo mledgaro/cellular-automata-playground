@@ -1,27 +1,33 @@
 //
 import { Box } from "@mui/material";
 import React, { LegacyRef, MouseEvent, useEffect, useRef } from "react";
-import { StateObjHook } from "src/app/hooks";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import { selectCells } from "src/app/slices/mainFrame/cells";
+import { selectCellsSize } from "src/app/slices/mainFrame/cellsSize";
+import {
+    selectCursorPosition,
+    setCursorPosition,
+} from "src/app/slices/mainFrame/cursorPosition";
+import { selectGridVisibility } from "src/app/slices/mainFrame/gridVisibility";
 import CanvasCntrl from "src/ts/CanvasCntrl";
 
 export default function Canvas({
-    cellsState,
-    cellsSize,
-    cursorPos,
-    showGrid,
     clickHandler,
     canvas,
     canvasCntrl,
 }: {
-    cellsState: boolean[][];
-    cellsSize: number;
-    cursorPos: StateObjHook<{ r: number; c: number }>;
-    showGrid: boolean;
     clickHandler: (row: number, col: number) => void;
     canvas: LegacyRef<HTMLCanvasElement>;
     canvasCntrl: CanvasCntrl | undefined;
 }) {
     //
+    const cells = useAppSelector(selectCells);
+    const cellsSize: number = useAppSelector(selectCellsSize);
+    const cursorPos = useAppSelector(selectCursorPosition);
+    const gridVisibility = useAppSelector(selectGridVisibility);
+
+    const dispatch = useAppDispatch();
+
     const scroll = useRef<HTMLDivElement>(null);
 
     const cursorMoveHandler = (evt: MouseEvent) => {
@@ -37,42 +43,27 @@ export default function Canvas({
         c += scroll.current!.scrollLeft;
         c = Math.floor(c / cellsSize);
 
-        cursorPos.set({ r: r, c: c });
+        dispatch(setCursorPosition({ r: r, c: c }));
     };
 
     const clickHandler_ = () => {
-        clickHandler(cursorPos.get.r, cursorPos.get.c);
+        clickHandler(cursorPos.r, cursorPos.c);
     };
-
-    // state change
-    useEffect(() => {
-        canvasCntrl?.paintScene(cellsState);
-        if (showGrid) {
-            canvasCntrl?.drawGrid();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cellsState]);
 
     // zoom change
     useEffect(() => {
         if (canvasCntrl) {
             canvasCntrl!.cellSize = cellsSize;
         }
-        canvasCntrl?.paintScene(cellsState);
-        if (showGrid) {
-            canvasCntrl?.drawGrid();
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cellsSize]);
 
     useEffect(() => {
-        if (showGrid) {
+        canvasCntrl?.paintScene(cells);
+        if (gridVisibility) {
             canvasCntrl?.drawGrid();
-        } else {
-            canvasCntrl?.paintScene(cellsState);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [showGrid]);
+    });
 
     return (
         <Box

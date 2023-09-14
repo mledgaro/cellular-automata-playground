@@ -11,44 +11,57 @@ import {
 import { IconButton } from "src/components/Button";
 import { RulePreview } from "src/features/ca1d/CellsGroups";
 
-import { useAppSelector, useStateObj } from "src/app/hooks";
+import { useAppDispatch, useAppSelector, useStateObj } from "src/app/hooks";
 
-import { useAppDispatch } from "src/app/hooks";
+import { Box, Grid } from "@mui/material";
+import InputNumber from "src/components/InputNumber";
+import { SizeProp } from "@fortawesome/fontawesome-svg-core";
+import { selectNbhdWidth } from "src/app/slices/ca1d/nbhdWidth";
 import {
-    allRulesAlive,
-    allRulesDead,
-    inverseRules,
+    invertRules,
     randomRules,
-    selectRuleNumber,
+    resizeRules,
     selectRules,
     setRulesByNumber,
     toggleRule,
+    turnOffRules,
+    turnOnRules,
 } from "src/app/slices/ca1d/rules";
-import { Box, Grid } from "@mui/material";
-import InputNumber from "src/components/InputNumber";
+import { boolArrayToInt } from "src/ts/Utils";
 
 export default function Rules1d() {
     //
-    const onHoverCell = useStateObj<number>(0);
-    const ruleNum = useAppSelector(selectRuleNumber);
-    const ruleNum_ = useStateObj(ruleNum);
+    const nbhdWidth = useAppSelector(selectNbhdWidth);
+    const rules = useAppSelector(selectRules);
+
     const dispatch = useAppDispatch();
 
+    const onHoverCell = useStateObj<number>(0);
+    const numRule = useStateObj<number>(boolArrayToInt(rules, true));
+
     useEffect(() => {
-        ruleNum_.set(ruleNum);
+        const rulesNum = Math.pow(2, nbhdWidth);
+        if (rules.length !== rulesNum) {
+            dispatch(resizeRules(rulesNum));
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ruleNum]);
+    }, []);
+
+    useEffect(() => {
+        numRule.set(boolArrayToInt(rules, true));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [rules]);
 
     return (
         <Box className="space-y-4">
             <Grid container alignItems="center" justifyContent="space-evenly">
                 <Grid item md="auto" className="">
                     <InputNumber
-                        state={ruleNum_}
+                        state={numRule}
                         min={0}
                         max={100_000_000}
                         label="Rule number"
-                        onBlur={() => dispatch(setRulesByNumber(ruleNum_.get))}
+                        onBlur={() => dispatch(setRulesByNumber(numRule.get))}
                     />
                 </Grid>
 
@@ -68,35 +81,35 @@ export default function Rules1d() {
     );
 }
 
-function Controls() {
+function Controls({ size = "xl", gap = 2 }: { size?: SizeProp; gap?: number }) {
     //
     const dispatch = useAppDispatch();
 
     return (
-        <Box className="space-x-2">
+        <Box className={`space-x-${gap}`}>
             <IconButton
                 tooltipLabel="Random"
                 icon={faShuffle}
-                iconSize="xl"
-                onClick={() => dispatch(randomRules())}
+                iconSize={size}
+                onClick={() => dispatch(randomRules(0.5))}
             />
             <IconButton
                 tooltipLabel="Invert"
                 icon={faRightLeft}
-                iconSize="xl"
-                onClick={() => dispatch(inverseRules())}
+                iconSize={size}
+                onClick={() => dispatch(invertRules())}
             />
             <IconButton
                 tooltipLabel="All alive"
                 icon={faSquareSolid}
-                iconSize="xl"
-                onClick={() => dispatch(allRulesAlive())}
+                iconSize={size}
+                onClick={() => dispatch(turnOnRules())}
             />
             <IconButton
                 tooltipLabel="All dead"
                 icon={faSquareRegular}
-                iconSize="xl"
-                onClick={() => dispatch(allRulesDead())}
+                iconSize={size}
+                onClick={() => dispatch(turnOffRules())}
             />
         </Box>
     );
@@ -109,8 +122,9 @@ function RulesSelector({
 }) {
     //
     const rules = useAppSelector(selectRules);
-
     const dispatch = useAppDispatch();
+
+    const toggle = (idx: number) => dispatch(toggleRule(idx));
 
     let rulesArr = [];
 
@@ -119,7 +133,7 @@ function RulesSelector({
             <Box
                 key={i}
                 className={`rule-1d-cell ${rules[i] ? "on" : "off"}`}
-                onClick={() => dispatch(toggleRule(i))}
+                onClick={() => toggle(i)}
                 onMouseOver={() => setHoverCell(i)}
                 onMouseOut={() => setHoverCell(0)}
             >

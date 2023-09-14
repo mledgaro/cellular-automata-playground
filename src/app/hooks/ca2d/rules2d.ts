@@ -1,4 +1,5 @@
 //
+import { createArray } from "src/ts/Utils";
 import { useArray } from "../../hooks";
 
 export type Rule2dState = boolean | null;
@@ -26,12 +27,14 @@ export function useRules2d(): Rules2dHook {
                 rules.get[i] === null ? true : rules.get[i] ? false : null,
                 i
             ),
-        resize: (num: number) =>
-            rules.set(
-                Array(num + 1)
-                    .fill(null)
-                    .map(() => randomRule())
-            ),
+        resize: (num: number) => {
+            const diff = num - rules.get.length;
+            if (diff > 0) {
+                rules.set(rules.get.concat(createArray(diff, false)));
+            } else if (diff < 0) {
+                rules.set(rules.get.slice(0, num));
+            }
+        },
         allKeep: () => rules.set(rules.get.map(() => null)),
         allAlive: () => rules.set(rules.get.map(() => true)),
         allDead: () => rules.set(rules.get.map(() => false)),

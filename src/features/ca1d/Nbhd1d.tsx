@@ -1,5 +1,5 @@
 //
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { Box, Grid } from "@mui/material";
 import { faArrowRotateRight, faMap } from "@fortawesome/free-solid-svg-icons";
@@ -10,29 +10,50 @@ import CustomRadioGroup from "src/components/RadioGroup";
 import {
     useAppDispatch,
     useAppSelector,
+    useBool,
     useBoolArr,
-    useStateObj,
 } from "src/app/hooks";
-import { selectNbhdWidth } from "src/app/slices/ca1d/nbhdWidth";
-import {
-    NbhdType,
-    defaultVal as nbhdTypeDefault,
-    selectNbhdType,
-    setNbhdType,
-} from "src/app/slices/ca1d/nbhdType";
-import { selectMainCell } from "src/app/slices/ca1d/mainCell";
-import {
-    selectCellsNbhds,
-    buildCellsNbhds,
-} from "src/app/slices/ca1d/cellsNbhds";
 
-import { selectSceneCols } from "src/app/slices/sceneSize";
+import {
+    selectWorldCols,
+    selectWorldSize,
+} from "src/app/slices/mainFrame/worldSize";
 import { Nbhd1dEditor } from "./CellsGroups";
-import { boolArray } from "src/ts/Utils";
+import { NbhdType1D } from "src/app/types";
+import {
+    reloadCellsNbhd,
+    selectCellsNbhd,
+} from "src/app/slices/ca1d/cellsNbhd";
+import { selectNbhdWidth } from "src/app/slices/ca1d/nbhdWidth";
+import { selectNbhdType, setNbhdType } from "src/app/slices/ca1d/nbhdType";
+import { selectNbhdCenter } from "src/app/slices/ca1d/nbhdCenter";
 
 export default function Nbhd1d() {
     //
-    const nbhdsMap = useStateObj(false);
+    const worldSize = useAppSelector(selectWorldSize);
+    const nbhdType = useAppSelector(selectNbhdType);
+    const nbhdWidth = useAppSelector(selectNbhdWidth);
+    const nbhdCenter = useAppSelector(selectNbhdCenter);
+    // const cellsNbhd = useAppSelector(selectCellsNbhd);
+    // const rules = useAppSelector(selectRules);
+
+    const dispatch = useAppDispatch();
+
+    const showNbhdsMap = useBool(false);
+
+    const reloadParams = {
+        numCells: worldSize.cols,
+        nbhdWidth: nbhdWidth,
+        nbhdType: nbhdType,
+        nbhdCenter: nbhdCenter,
+    };
+
+    const reloadNbhds = () => dispatch(reloadCellsNbhd(reloadParams));
+
+    useEffect(() => {
+        reloadNbhds();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [worldSize.cols, nbhdWidth, nbhdType, nbhdCenter]);
 
     return (
         <Box className="space-y-2">
@@ -46,25 +67,31 @@ export default function Nbhd1d() {
                 </Grid>
 
                 <Grid item md="auto" className="space-x-2">
-                    <Reload />
+                    <IconButton
+                        icon={faArrowRotateRight}
+                        iconSize="2x"
+                        tooltipLabel="Reload neighborhoods"
+                        onClick={reloadNbhds}
+                    />
                     <IconButton
                         icon={faMap}
                         iconSize="2x"
                         tooltipLabel="Show neighborhoods map"
-                        onClick={() => nbhdsMap.set(!nbhdsMap.get)}
+                        onClick={showNbhdsMap.toggle}
                     />
                 </Grid>
             </Grid>
 
-            {nbhdsMap.get && <NbhdsMap />}
+            {showNbhdsMap.get && <NbhdsMap />}
         </Box>
     );
 }
 
 function Type() {
     //
-    const type = useAppSelector(selectNbhdType);
+    const nbhdType = useAppSelector(selectNbhdType);
     const dispatch = useAppDispatch();
+
     return (
         <CustomRadioGroup
             label="Type"
@@ -73,31 +100,30 @@ function Type() {
                 { label: "Grouped", value: "grouped" },
                 { label: "Scattered", value: "scattered" },
             ]}
-            defaultVal={nbhdTypeDefault}
-            value={type}
-            onChange={(val: string) => dispatch(setNbhdType(val as NbhdType))}
+            defaultVal={"adjacent"}
+            value={nbhdType}
+            onChange={(val: string) => dispatch(setNbhdType(val as NbhdType1D))}
         />
     );
 }
 
 function NbhdsMap() {
     //
-    const sceneCols = useAppSelector(selectSceneCols);
-    const cellsNbhds = useAppSelector(selectCellsNbhds);
+    const sceneCols = useAppSelector(selectWorldCols);
+    const cellsNbhd = useAppSelector(selectCellsNbhd);
 
-    const cells = useBoolArr(boolArray(sceneCols, false));
+    const cells = useBoolArr(sceneCols);
 
     const highlight = useCallback(
         (idx: number) => {
-            //
             let highCells = Array(sceneCols).fill(false);
-            cellsNbhds[idx].forEach(
-                (neighboor) => (highCells[neighboor] = true)
+            cellsNbhd[idx].forEach(
+                (neighboor: number) => (highCells[neighboor] = true)
             );
             cells.set(highCells);
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [cellsNbhds]
+        [cellsNbhd]
     );
 
     return (
@@ -110,26 +136,5 @@ function NbhdsMap() {
                 />
             ))}
         </Box>
-    );
-}
-
-function Reload() {
-    //
-    const params = {
-        numCells: useAppSelector(selectSceneCols),
-        width: useAppSelector(selectNbhdWidth),
-        type: useAppSelector(selectNbhdType),
-        mainCell: useAppSelector(selectMainCell),
-    };
-
-    const dispatch = useAppDispatch();
-
-    return (
-        <IconButton
-            icon={faArrowRotateRight}
-            iconSize="2x"
-            tooltipLabel="Reload neighborhoods"
-            onClick={() => dispatch(buildCellsNbhds(params))}
-        />
     );
 }

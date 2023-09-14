@@ -8,16 +8,22 @@
  * @param {int} size array size
  * @returns {Array} array of booleans
  */
-export function intToBoolArray(int: number, size: number): boolean[] {
+export function intToBoolArray(
+    int: number,
+    size: number,
+    reverse = true
+): boolean[] {
     //
-
     let arr;
 
     arr = "0".repeat(size) + int.toString(2);
     arr = arr.slice(-size);
     arr = arr.split("");
     arr = arr.map((e) => e === "1");
-    // arr = arr.reverse();
+    // it is originally reversed
+    if (!reverse) {
+        arr = arr.reverse();
+    }
 
     return arr;
 }
@@ -125,9 +131,9 @@ export function createArray2d(rows: number, cols: number, fill: any): any[][] {
         );
 }
 
-export function copyMatrix(matrix: any[][]): any[][] {
+export function copyArray2d(array: any[][]): any[][] {
     //
-    return matrix.map((row) => row.map((cell) => cell));
+    return array.map((row) => row.map((cell) => cell));
 }
 
 export function setArray2dItem(
@@ -137,7 +143,7 @@ export function setArray2dItem(
     value: any
 ): any[][] {
     //
-    let nMatrix = copyMatrix(matrix);
+    let nMatrix = copyArray2d(matrix);
     nMatrix[r][c] = value;
     return nMatrix;
 }
@@ -148,7 +154,7 @@ export function addRow(
     remove: boolean
 ): any[][] {
     //
-    let nMatrix = copyMatrix(matrix);
+    let nMatrix = copyArray2d(matrix);
 
     if (remove) {
         // if (atStart) {
@@ -174,7 +180,7 @@ export function addColumn(
     remove: boolean
 ): any[][] {
     //
-    let nMatrix = copyMatrix(matrix);
+    let nMatrix = copyArray2d(matrix);
 
     if (remove) {
         // if (atStart) {

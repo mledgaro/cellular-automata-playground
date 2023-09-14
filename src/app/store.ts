@@ -1,26 +1,34 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-//
-
 import { configureStore } from "@reduxjs/toolkit";
-import sceneSizeReducer from "src/app/slices/sceneSize";
-import nbhdWidthReducer from "src/app/slices/ca1d/nbhdWidth";
-import nbhdTypeReducer from "src/app/slices/ca1d/nbhdType";
-import mainCellReducer from "src/app/slices/ca1d/mainCell";
-import rulesReducer from "src/app/slices/ca1d/rules";
-import initStateReducer from "src/app/slices/ca1d/initState";
-import cellsNbhdsReducer from "src/app/slices/ca1d/cellsNbhds";
-import sceneBoundariesReducer from "src/app/slices/sceneBoundaries";
+import worldSizeReducer from "src/app/slices/mainFrame/worldSize";
+import worldLimitsReducer from "src/app/slices/mainFrame/worldLimits";
+import cellsSizeReducer from "./slices/mainFrame/cellsSize";
+import cursorPositionReducer from "./slices/mainFrame/cursorPosition";
+import gridVisibilityReducer from "./slices/mainFrame/gridVisibility";
+import iterationsReducer from "./slices/mainFrame/iterations";
+import flowStatusReducer from "./slices/mainFrame/flowStatus";
+import cellsReducer from "./slices/mainFrame/cells";
+import nbhdTypeReducer from "./slices/ca1d/nbhdType";
+import nbhdWidthReducer from "./slices/ca1d/nbhdWidth";
+import nbhdCenterReducer from "./slices/ca1d/nbhdCenter";
+import cellsNbhdReducer from "./slices/ca1d/cellsNbhd";
+import rulesReducer from "./slices/ca1d/rules";
+// import _Reducer from "./slices/_";
 
 export const store = configureStore({
     reducer: {
-        sceneSize: sceneSizeReducer,
-        nbhdWidth: nbhdWidthReducer,
+        worldSize: worldSizeReducer,
+        worldLimits: worldLimitsReducer,
+        cellsSize: cellsSizeReducer,
+        cells: cellsReducer,
+        cursorPosition: cursorPositionReducer,
+        gridVisibility: gridVisibilityReducer,
+        iterations: iterationsReducer,
+        flowStatus: flowStatusReducer,
         nbhdType: nbhdTypeReducer,
-        mainCell: mainCellReducer,
-        cellsNbhds: cellsNbhdsReducer,
+        nbhdWidth: nbhdWidthReducer,
+        nbhdCenter: nbhdCenterReducer,
+        cellsNbhd: cellsNbhdReducer,
         rules: rulesReducer,
-        initState: initStateReducer,
-        sceneBoundaries: sceneBoundariesReducer,
     },
 });
 

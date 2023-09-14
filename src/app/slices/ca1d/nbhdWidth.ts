@@ -1,17 +1,14 @@
-//
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/app/store";
-
-export const minVal = 2;
-export const maxVal = 8;
-export const defaultVal = 3;
 
 interface NbhdWidthState {
     value: number;
 }
 
+export const defaultValue = 3;
+
 const initialState: NbhdWidthState = {
-    value: defaultVal,
+    value: defaultValue,
 };
 
 export const nbhdWidthSlice = createSlice({
@@ -19,10 +16,7 @@ export const nbhdWidthSlice = createSlice({
     initialState,
     reducers: {
         setNbhdWidth: (state, action: PayloadAction<number>) => {
-            let newVal;
-            newVal = Math.max(minVal, action.payload);
-            newVal = Math.min(newVal, maxVal);
-            state.value = newVal;
+            state.value = action.payload;
         },
     },
 });

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
     faBorderAll,
     faBorderNone,
@@ -8,34 +8,60 @@ import {
     faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { Box } from "@mui/material";
-import { StateObjHook, useAppSelector, useStateObj } from "src/app/hooks";
-import { selectSceneSize } from "src/app/slices/sceneSize";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import { selectWorldSize } from "src/app/slices/mainFrame/worldSize";
 import { IconButton } from "src/components/Button";
 import { VerticalSlider } from "src/components/Slider";
-import Label, { LabelButton } from "src/components/Label";
+import Label from "src/components/Label";
 import CanvasSettings from "./CanvasSettings";
-import { cellSizeVal } from "./MainFrame";
 import { FloatMenu } from "src/components/Menu";
+import {
+    selectCellsSize,
+    setCellsSize,
+} from "src/app/slices/mainFrame/cellsSize";
+import {
+    minValue as cellsSizeMin,
+    maxValue as cellsSizeMax,
+} from "src/app/slices/mainFrame/cellsSize";
+import { selectCursorPosition } from "src/app/slices/mainFrame/cursorPosition";
+import {
+    selectGridVisibility,
+    toggleGridVisibility,
+} from "src/app/slices/mainFrame/gridVisibility";
 
 export default function CanvasTools({
-    cursorPosition,
-    cellsSize,
-    showGrid,
     screenshot,
     className = "",
-    sliderMarks = [],
+    containerWidth,
+    containerHeight,
 }: {
-    cursorPosition: { r: number; c: number };
-    cellsSize: StateObjHook<number>;
-    showGrid: StateObjHook<boolean>;
     screenshot: () => void;
     className?: string;
-    sliderMarks?: { value: number; label: string }[];
+    containerWidth: number;
+    containerHeight: number;
 }) {
     //
-    const sceneSize = useAppSelector(selectSceneSize);
+    const sceneSize = useAppSelector(selectWorldSize);
+    const cellsSize = useAppSelector(selectCellsSize);
+    const cursorPos = useAppSelector(selectCursorPosition);
+    const gridVisibility = useAppSelector(selectGridVisibility);
 
-    const pos = `(${cursorPosition.r + 1}, ${cursorPosition.c + 1})`;
+    const dispatch = useAppDispatch();
+
+    const pos = `(${cursorPos.r + 1}, ${cursorPos.c + 1})`;
+
+    const zoomMarks = useMemo(() => {
+        return [
+            {
+                value: Math.floor(containerHeight / sceneSize.rows),
+                label: "v",
+            },
+            {
+                value: Math.floor((containerWidth * 0.94) / sceneSize.cols),
+                label: "h",
+            },
+        ];
+    }, [containerWidth, containerHeight, sceneSize]);
 
     return (
         <Box className="flex flex-col h-full items-center justify-center space-y-3">
@@ -65,18 +91,20 @@ export default function CanvasTools({
             <VerticalSlider
                 icon={faMagnifyingGlass}
                 tooltipLabel="Zoom"
-                min={cellSizeVal.minVal}
-                max={cellSizeVal.maxVal}
-                defaultValue={cellSizeVal.defaultVal}
-                state={cellsSize}
-                marks={sliderMarks}
+                min={cellsSizeMin}
+                max={cellsSizeMax}
+                state={{
+                    get: cellsSize,
+                    set: (nval: number) => dispatch(setCellsSize(nval)),
+                }}
+                marks={zoomMarks}
             />
 
             <IconButton
-                tooltipLabel={`${showGrid.get ? "Hide" : "Show"} grid`}
-                icon={showGrid.get ? faBorderNone : faBorderAll}
+                tooltipLabel={`${gridVisibility ? "Hide" : "Show"} grid`}
+                icon={gridVisibility ? faBorderNone : faBorderAll}
                 iconSize="xl"
-                onClick={() => showGrid.set(!showGrid.get)}
+                onClick={() => dispatch(toggleGridVisibility())}
             />
 
             <IconButton

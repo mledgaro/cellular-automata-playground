@@ -1,30 +1,11 @@
 //
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
-import { useAppDispatch, useAppSelector, useStateObj } from "src/app/hooks";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
 
-import { selectSceneSize } from "src/app/slices/sceneSize";
+import { selectWorldSize } from "src/app/slices/mainFrame/worldSize";
 import Nbhd1d from "src/features/ca1d/Nbhd1d";
 import Rules1d from "src/features/ca1d/Rules1d";
-import {
-    randomRules,
-    resizeRules,
-    selectRules,
-    setRules,
-} from "src/app/slices/ca1d/rules";
-import {
-    selectCellsNbhds,
-    buildCellsNbhds,
-    setCellsNbhds,
-} from "src/app/slices/ca1d/cellsNbhds";
-import { selectNbhdWidth, setNbhdWidth } from "src/app/slices/ca1d/nbhdWidth";
-import {
-    NbhdType,
-    selectNbhdType,
-    setNbhdType,
-} from "src/app/slices/ca1d/nbhdType";
-import { selectMainCell, setMainCell } from "src/app/slices/ca1d/mainCell";
-import useCellsState from "src/app/hooks/cellsState";
 import InitStateEditor from "src/features/InitStateEditor";
 import MainFrame from "../mainFrame/MainFrame";
 import {
@@ -34,42 +15,61 @@ import {
     createArray2d,
     randomBoolArray,
 } from "src/ts/Utils";
+import { selectIterations } from "src/app/slices/mainFrame/iterations";
+import {
+    selectCells,
+    setCells,
+    toggleCell,
+} from "src/app/slices/mainFrame/cells";
+import { NbhdType1D } from "src/app/types";
+import { selectNbhdType, setNbhdType } from "src/app/slices/ca1d/nbhdType";
+import { selectNbhdWidth, setNbhdWidth } from "src/app/slices/ca1d/nbhdWidth";
+import { selectCellsNbhd, setCellsNbhd } from "src/app/slices/ca1d/cellsNbhd";
+import { selectRules, setRules } from "src/app/slices/ca1d/rules";
+import {
+    selectNbhdCenter,
+    setNbhdCenter,
+} from "src/app/slices/ca1d/nbhdCenter";
 
 export default function CellularAutomata1d() {
     //
-    const sceneSize = useAppSelector(selectSceneSize);
+    const sceneSize = useAppSelector(selectWorldSize);
+    const iterations = useAppSelector(selectIterations);
+    const cells = useAppSelector(selectCells);
 
-    const nbhdWidth = useAppSelector(selectNbhdWidth);
     const nbhdType = useAppSelector(selectNbhdType);
-    const mainCell = useAppSelector(selectMainCell);
-    const cellsNbhds = useAppSelector(selectCellsNbhds);
+    const nbhdWidth = useAppSelector(selectNbhdWidth);
+    const nbhdCenter = useAppSelector(selectNbhdCenter);
+    const cellsNbhd = useAppSelector(selectCellsNbhd);
     const rules = useAppSelector(selectRules);
 
     const dispatch = useAppDispatch();
 
-    const cellsState = useCellsState(sceneSize.rows, sceneSize.cols);
     const initState = useRef<boolean[] | null>(null);
     const currState = useRef<boolean[] | null>(null);
-    const density = useStateObj(0.1);
     const liveCells = useRef(0);
 
-    const canvasOnClick = (r: number, c: number) => {
-        let nval = cellsState.toggle(0, c);
+    const onCellClick = (_: number, c: number) => {
+        let nval = !cells[0][c];
+        dispatch(toggleCell({ r: 0, c: c }));
         liveCells.current += nval ? 1 : -1;
     };
 
     const init = () => {
-        initState.current = cellsState.get[0];
-        currState.current = cellsState.get[0];
+        initState.current = cells[0];
+        currState.current = cells[0];
     };
 
-    const next = (iteration: number) => {
-        const nstate = nextState(cellsNbhds, rules, cellsState.get[iteration]);
-        if (iteration >= sceneSize.rows) {
-            cellsState.set(cellsState.get.slice(1).concat([nstate]));
+    const next = () => {
+        const nstate = nextState(cellsNbhd, rules, cells[iterations]);
+
+        if (iterations >= sceneSize.rows) {
+            dispatch(setCells(cells.slice(1).concat([nstate])));
         } else {
-            cellsState.set(
-                cellsState.get.map((r, i) => (i === iteration + 1 ? nstate : r))
+            dispatch(
+                setCells(
+                    cells.map((r, i) => (i === iterations + 1 ? nstate : r))
+                )
             );
         }
         currState.current = nstate;
@@ -77,123 +77,92 @@ export default function CellularAutomata1d() {
     };
 
     const stop = () => {
-        cellsState.set(
-            [initState.current ?? createArray(sceneSize.cols, false)].concat(
-                createArray2d(sceneSize.rows - 1, sceneSize.cols, false)
+        dispatch(
+            setCells(
+                [
+                    initState.current ?? createArray(sceneSize.cols, false),
+                ].concat(
+                    createArray2d(sceneSize.rows - 1, sceneSize.cols, false)
+                )
             )
         );
+
         liveCells.current = countTrueArray(initState.current ?? []);
         initState.current = null;
         currState.current = null;
     };
 
-    const rand = () => {
-        let st = randomBoolArray(sceneSize.cols, density.get);
-        let arr = [st].concat(
-            createArray2d(sceneSize.rows - 1, sceneSize.cols, false)
+    const rand = (density: number) => {
+        let st = randomBoolArray(sceneSize.cols, density);
+        dispatch(
+            setCells(
+                [st].concat(
+                    createArray2d(sceneSize.rows - 1, sceneSize.cols, false)
+                )
+            )
         );
-        cellsState.set(arr);
         liveCells.current = countTrueArray(st);
     };
 
     const clear = () => {
-        cellsState.clear();
         liveCells.current = 0;
     };
 
-    const setDensity = (nval: number) => {
-        density.set(nval);
-        rand();
-    };
-
-    const getData = () => {
+    const exportData = () => {
         let data = {
-            type: "1d cellular automaton",
+            type: "ca1d",
             nbhdType: nbhdType,
             nbhdWidth: nbhdWidth,
-            mainCell: mainCell,
-            neighborhoods: cellsNbhds,
+            nbhdCenter: nbhdCenter,
+            cellsNbhd: cellsNbhd,
             rules: rules,
-            initialState: initState.current ?? cellsState.get[0],
-            currentState: currState.current ?? cellsState.get[0],
+            initState: initState.current ?? cells[0],
+            currState: currState.current ?? cells[0],
+            iterations: iterations,
         };
         return data;
     };
 
-    const onLoad = (data: object) => {
+    const importData = (data: object) => {
         if ("nbhdType" in data) {
-            dispatch(setNbhdType(data.nbhdType as NbhdType));
+            dispatch(setNbhdType(data.nbhdType as NbhdType1D));
         }
         if ("nbhdWidth" in data) {
             dispatch(setNbhdWidth(data.nbhdWidth as number));
         }
-        if ("mainCell" in data) {
-            dispatch(setMainCell(data.mainCell as number));
+        if ("nbhdCenter" in data) {
+            dispatch(setNbhdCenter(data.nbhdCenter as number));
         }
-        if ("neighborhoods" in data) {
-            dispatch(setCellsNbhds(data.neighborhoods as number[][]));
+        if ("cellsNbhd" in data) {
+            dispatch(setCellsNbhd(data.cellsNbhd as number[][]));
         }
         if ("rules" in data) {
             dispatch(setRules(data.rules as boolean[]));
         }
-        if ("initialState" in data) {
-            cellsState.set(
-                [data.initialState as boolean[]].concat(
-                    createArray2d(sceneSize.rows - 1, sceneSize.cols, false)
+        if ("initState" in data) {
+            dispatch(
+                setCells(
+                    [data.initState as boolean[]].concat(
+                        createArray2d(sceneSize.rows - 1, sceneSize.cols, false)
+                    )
                 )
             );
         }
-        // if ("currentState" in data) {
-        //     cellsState.set(
-        //         [data.currentState as boolean[]].concat(
-        //             createArray2d(sceneSize.rows - 1, sceneSize.cols, false)
-        //         )
-        //     );
-        // }
     };
-
-    useEffect(() => {
-        dispatch(
-            buildCellsNbhds({
-                numCells: sceneSize.cols,
-                width: nbhdWidth,
-                type: nbhdType,
-                mainCell: mainCell,
-            })
-        );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sceneSize.cols, nbhdWidth, nbhdType, mainCell]);
-
-    useEffect(() => {
-        dispatch(resizeRules(Math.pow(2, nbhdWidth)));
-        dispatch(randomRules());
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nbhdWidth]);
-
-    // useEffect(() => {
-
-    // }, [cellsState.get]);
 
     return (
         <MainFrame
+            title="1D Cellular Automata"
             init={init}
             next={next}
             stop={stop}
-            cellsState={cellsState.get}
-            canvasOnClick={canvasOnClick}
+            onCellClick={onCellClick}
             neighborhood={<Nbhd1d />}
             rules={<Rules1d />}
-            initialState={
-                <InitStateEditor
-                    density={density.get}
-                    setDensity={setDensity}
-                    setRandom={rand}
-                    setClear={clear}
-                />
-            }
+            initialState={<InitStateEditor random={rand} clear={clear} />}
             liveCells={liveCells.current}
-            getData={getData}
-            onLoad={onLoad}
+            exportData={exportData}
+            importData={importData}
         />
     );
 }

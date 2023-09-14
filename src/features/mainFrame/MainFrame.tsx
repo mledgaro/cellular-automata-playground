@@ -1,13 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { Box, Grid } from "@mui/material";
-import { faChevronUp, faGears } from "@fortawesome/free-solid-svg-icons";
+import {
+    faChevronDown,
+    faChevronUp,
+    faGears,
+} from "@fortawesome/free-solid-svg-icons";
 
-import { selectSceneSize } from "src/app/slices/sceneSize";
-import { useAppSelector, useStateObj } from "src/app/hooks";
+import { selectWorldSize } from "src/app/slices/mainFrame/worldSize";
+import { useAppSelector, useBool, useStateObj } from "src/app/hooks";
 
 import CustomTabs from "src/components/Tabs";
 import { IconButton } from "src/components/Button";
-import { useStatus } from "src/app/hooks/status";
 import CanvasCntrl from "src/ts/CanvasCntrl";
 
 import FlowControlTools from "./FlowControlTools";
@@ -15,154 +18,86 @@ import CanvasTools from "./CanvasTools";
 import Canvas from "./Canvas";
 import Info from "./Info";
 import Files from "./Files";
+import { Section } from "src/app/types";
+import { selectCellsSize } from "src/app/slices/mainFrame/cellsSize";
+import { FloatMenu } from "src/components/Menu";
 
-export const cellSizeVal = { minVal: 1, maxVal: 20, defaultVal: 8 };
+import { models } from "src/App";
+import { Link } from "react-router-dom";
 
-export default function MainFrame({
-    init,
-    next,
-    stop,
-    cellsState,
-    canvasOnClick,
-    liveCells,
-    neighborhood,
-    rules,
-    initialState,
-    getData,
-    onLoad,
-}: {
-    init: () => void;
-    next: (iteration: number) => void;
-    stop: () => void;
-    cellsState: boolean[][];
-    canvasOnClick: (r: number, c: number) => void;
+type MainFrameParams = {
+    title: string;
     liveCells: number;
     neighborhood: JSX.Element;
     rules: JSX.Element;
     initialState: JSX.Element;
-    getData: () => object;
-    onLoad: (data: object) => void;
-}) {
-    //
-    const sceneSize = useAppSelector(selectSceneSize);
+    onCellClick: (r: number, c: number) => void;
+    init: () => void;
+    next: () => void;
+    stop: () => void;
+    exportData: () => object;
+    importData: (data: object) => void;
+};
 
-    const cellsSize = useStateObj(cellSizeVal.defaultVal);
-    const cursorPos = useStateObj({ r: 0, c: 0 });
-    const showGrid = useStateObj(false);
-    const sliderMarks = useStateObj([{ value: 10, label: "mid" }]);
+export default function MainFrame({
+    title,
+    liveCells,
+    neighborhood,
+    rules,
+    initialState,
+    onCellClick,
+    init,
+    next,
+    stop,
+    exportData,
+    importData,
+}: MainFrameParams) {
+    //
+    const sceneSize = useAppSelector(selectWorldSize);
+    const cellsSize = useAppSelector(selectCellsSize);
+    // const cells = useAppSelector(selectCells);
+    // const dispatch = useAppDispatch();
 
     const container = useRef<HTMLDivElement>(null);
     const canvas = useRef<HTMLCanvasElement>(null);
     const canvasCntrl = useRef<CanvasCntrl>();
 
-    const iterations = useStateObj(0);
+    // const onCellClick_ = onCellClick ?? ((r: number, c: number) => {
+    //     dispatch(toggleCell({ r: r, c: c }));
+    // });
 
-    const refreshRate = useStateObj(500);
-    const stopIterations = useStateObj(0);
-    const status = useStatus();
-
-    const init_ = () => {
-        init();
-        iterations.set(0);
-    };
-
-    const next_ = () => {
-        next(iterations.get);
-        iterations.set(iterations.get + 1);
-    };
-
-    const stop_ = () => {
-        stop();
-        iterations.set(0);
-    };
-
-    // initialize
     useEffect(() => {
         canvasCntrl.current = new CanvasCntrl(
             canvas.current,
             sceneSize.rows,
             sceneSize.cols,
-            cellsSize.get
+            cellsSize
         );
         canvasCntrl.current.clear();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        if (status.running && iterations.get === stopIterations.get - 1) {
-            status.pause();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [iterations.get]);
-
-    useEffect(() => {
-        const vfit = Math.floor(
-            container.current!.clientHeight / sceneSize.rows
-        );
-        const hfit = Math.floor(
-            (container.current!.clientWidth * 0.94) / sceneSize.cols
-        );
-        sliderMarks.set([
-            {
-                value: vfit,
-                label: "v",
-            },
-            {
-                value: hfit,
-                label: "h",
-            },
-        ]);
-        cellsSize.set(Math.min(vfit, hfit));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [container.current?.clientHeight, container.current?.clientWidth]);
-
-    // state change
-    useEffect(() => {
-        canvasCntrl.current!.paintScene(cellsState);
-        if (showGrid.get) {
-            canvasCntrl.current!.drawGrid();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cellsState]);
-
-    // zoom change
-    useEffect(() => {
-        canvasCntrl.current!.cellSize = cellsSize.get;
-        canvasCntrl.current!.paintScene(cellsState);
-        if (showGrid.get) {
-            canvasCntrl.current!.drawGrid();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cellsSize]);
-
-    useEffect(() => {
-        if (showGrid.get) {
-            canvasCntrl.current!.drawGrid();
-        } else {
-            canvasCntrl.current!.paintScene(cellsState);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [showGrid.get]);
-
     return (
-        <Box className="space-y-3">
+        <Box className="mt-3 space-y-3">
+            <Title title={title} />
+
             <Grid
                 container
                 className="w-screen h-[70vh]"
                 justifyContent="space-evenly"
             >
+                {/* left panel */}
                 <Grid item xs="auto">
                     <CanvasTools
-                        cursorPosition={cursorPos.get}
-                        cellsSize={cellsSize}
-                        showGrid={showGrid}
                         screenshot={() =>
                             canvasCntrl.current?.saveScene("cellular_automaton")
                         }
-                        sliderMarks={sliderMarks.get}
+                        containerWidth={container.current?.clientWidth ?? 1}
+                        containerHeight={container.current?.clientHeight ?? 1}
                     />
                 </Grid>
 
+                {/* canvas */}
                 <Grid
                     item
                     xs={7}
@@ -173,37 +108,24 @@ export default function MainFrame({
                     ref={container}
                 >
                     <Canvas
-                        cellsState={cellsState}
-                        cellsSize={cellsSize.get}
-                        cursorPos={cursorPos}
-                        showGrid={showGrid.get}
-                        clickHandler={canvasOnClick}
+                        clickHandler={onCellClick}
                         canvas={canvas}
                         canvasCntrl={canvasCntrl.current}
                     />
                 </Grid>
 
+                {/* right panel */}
                 <Grid item xs="auto">
-                    <FlowControlTools
-                        init={init_}
-                        next={next_}
-                        stop={stop_}
-                        refreshRate={refreshRate}
-                        status={status}
-                    />
+                    <FlowControlTools init={init} next={next} stop={stop} />
                 </Grid>
             </Grid>
 
-            <Info
-                iterations={iterations.get}
-                stopIterations={stopIterations}
-                liveCells={liveCells}
-                historySize={150}
-                update={!status.stopped}
-            />
+            {/* iteration count and live cells */}
+            <Info liveCells={liveCells} historySize={150} />
 
+            {/* settings */}
             <Settings
-                tabs={[
+                sections={[
                     { title: "Neighborhood", content: neighborhood },
                     { title: "Rules", content: rules },
                     { title: "Initial state", content: initialState },
@@ -211,20 +133,8 @@ export default function MainFrame({
                         title: "Import / Export",
                         content: (
                             <Files
-                                getData={() => {
-                                    return {
-                                        ...getData(),
-                                        iteration: iterations.get,
-                                    };
-                                }}
-                                onLoad={(data: object) => {
-                                    onLoad(data);
-                                    // if ("iteration" in data) {
-                                    //     iterations.set(
-                                    //         data.iteration as number
-                                    //     );
-                                    // }
-                                }}
+                                exportData={exportData}
+                                importData={importData}
                             />
                         ),
                     },
@@ -234,16 +144,36 @@ export default function MainFrame({
     );
 }
 
-function Settings({
-    tabs,
-}: {
-    tabs: {
-        title: string;
-        content: JSX.Element;
-    }[];
-}) {
+function Title({ title }: { title: string }) {
     //
-    const show = useStateObj(false);
+    return (
+        <Box className="text-primary mx-auto w-fit flex flex-row items-center space-x-3">
+            <Box className="text-4xl">{title}</Box>
+            <FloatMenu
+                icon={faChevronDown}
+                iconOnShow={faChevronUp}
+                content={
+                    <Box className="flex flex-col space-y-1 text-xl">
+                        {models.map((item, idx) => (
+                            <Link
+                                key={idx}
+                                to={item.link}
+                                className="text-primary"
+                            >
+                                {item.title}
+                            </Link>
+                        ))}
+                    </Box>
+                }
+                boxProps="top-0 right-0 translate-y-[3rem] w-[12.5rem]"
+            />
+        </Box>
+    );
+}
+
+function Settings({ sections }: { sections: Section[] }) {
+    //
+    const show = useBool(false);
 
     return (
         <Box className="space-y-2">
@@ -252,32 +182,25 @@ function Settings({
                     tooltipLabel={!show.get ? "Configuration" : ""}
                     icon={!show.get ? faGears : faChevronUp}
                     iconSize={!show.get ? "2xl" : "lg"}
-                    onClick={() => {
-                        show.set(!show.get);
-                    }}
+                    onClick={show.toggle}
                     className="w-[10rem]"
                 />
             </Box>
-            {show.get && <SettingsTabs tabs={tabs} />}
+            {show.get && <SettingsTabs sections={sections} />}
         </Box>
     );
 }
 
-function SettingsTabs({
-    tabs,
-}: {
-    tabs: {
-        title: string;
-        content: JSX.Element;
-    }[];
-}) {
+function SettingsTabs({ sections }: { sections: Section[] }) {
+    //
     useEffect(() => {
         window.scroll(0, document.body.scrollHeight);
     }, []);
 
     return (
         <Box className="pb-6">
-            <CustomTabs tabs={tabs} />
+            <CustomTabs tabs={sections} />
+            {/* {sections[1].content} */}
         </Box>
     );
 }

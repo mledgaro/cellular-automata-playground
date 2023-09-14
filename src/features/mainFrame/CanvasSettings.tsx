@@ -12,12 +12,15 @@ import {
     useAppSelector,
     useStateObj,
 } from "src/app/hooks";
-import { selectSceneSize, setSceneSize } from "src/app/slices/sceneSize";
+import {
+    selectWorldSize,
+    setWorldSize,
+} from "src/app/slices/mainFrame/worldSize";
 import InputNumber from "src/components/InputNumber";
 import RadioGroup from "src/components/RadioGroup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BoundaryType } from "src/app/types";
-import { setSceneBoundaries } from "src/app/slices/sceneBoundaries";
+import { Limit } from "src/app/types";
+import { setWorldLimits } from "src/app/slices/mainFrame/worldLimits";
 import { IconButton } from "src/components/Button";
 
 const titleStyle = {
@@ -32,18 +35,18 @@ export default function CanvasSettings({
     onDone?: () => void;
 }) {
     //
-    const sceneSize = useAppSelector(selectSceneSize);
+    const sceneSize = useAppSelector(selectWorldSize);
     const dispatch = useAppDispatch();
 
     const rows = useStateObj(sceneSize.rows);
     const cols = useStateObj(sceneSize.cols);
-    const horizontal = useStateObj<BoundaryType>("continuous");
-    const vertical = useStateObj<BoundaryType>("continuous");
+    const horizontal = useStateObj<Limit>("continuous");
+    const vertical = useStateObj<Limit>("continuous");
 
     const closeHandler = () => {
-        dispatch(setSceneSize({ rows: rows.get, cols: cols.get }));
+        dispatch(setWorldSize({ rows: rows.get, cols: cols.get }));
         dispatch(
-            setSceneBoundaries({
+            setWorldLimits({
                 horizontal: horizontal.get,
                 vertical: vertical.get,
             })
@@ -97,8 +100,8 @@ function BoundariesControls({
     horizontal,
     vertical,
 }: {
-    horizontal: StateObjHook<BoundaryType>;
-    vertical: StateObjHook<BoundaryType>;
+    horizontal: StateObjHook<Limit>;
+    vertical: StateObjHook<Limit>;
 }) {
     //
     return (
@@ -130,7 +133,7 @@ function BoundariesControls({
                         defaultVal={"continuous"}
                         value={horizontal.get}
                         onChange={(nval: string) =>
-                            horizontal.set(nval as BoundaryType)
+                            horizontal.set(nval as Limit)
                         }
                     />
                 </Grid>
@@ -158,9 +161,7 @@ function BoundariesControls({
                         ]}
                         defaultVal={"continuous"}
                         value={vertical.get}
-                        onChange={(nval: string) =>
-                            vertical.set(nval as BoundaryType)
-                        }
+                        onChange={(nval: string) => vertical.set(nval as Limit)}
                     />
                 </Grid>
             </Grid>

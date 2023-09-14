@@ -2,55 +2,47 @@ import React, { useEffect, useRef } from "react";
 import { Box, Grid } from "@mui/material";
 import { faHeart, faStopwatch } from "@fortawesome/free-solid-svg-icons";
 
-import { StateObjHook, useStateObj } from "src/app/hooks";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
 
 import InputNumber from "src/components/InputNumber";
 import { FloatMenu } from "src/components/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { createArray, setArrayItem } from "src/ts/Utils";
+import { createArray } from "src/ts/Utils";
+import {
+    selectIterations,
+    selectLimitIterations,
+    setLimitIterations,
+} from "src/app/slices/mainFrame/iterations";
+import { selectFlowStatus } from "src/app/slices/mainFrame/flowStatus";
 
 export default function Info({
-    iterations,
-    stopIterations,
     liveCells,
     historySize,
-    update,
 }: {
-    iterations: number;
-    stopIterations: StateObjHook<number>;
     liveCells: number;
     historySize: number;
-    update: boolean;
 }) {
     //
 
     return (
         <Grid container alignItems="center" justifyContent="space-evenly">
             <Grid item md={3} className="flex justify-center">
-                <Iterations
-                    iterations={iterations}
-                    stopIterations={stopIterations}
-                />
+                <Iterations />
             </Grid>
 
             <Grid item md={3} className="flex justify-center">
-                <LiveCells
-                    currentValue={liveCells}
-                    historySize={historySize}
-                    update={update}
-                />
+                <LiveCells currentValue={liveCells} historySize={historySize} />
             </Grid>
         </Grid>
     );
 }
 
-function Iterations({
-    iterations,
-    stopIterations,
-}: {
-    iterations: number;
-    stopIterations: StateObjHook<number>;
-}) {
+function Iterations() {
+    //
+    const iterations = useAppSelector(selectIterations);
+    const limitIterations = useAppSelector(selectLimitIterations);
+    const dispatch = useAppDispatch();
+
     return (
         <Box className="flex flex-row space-x-2 items-center select-none">
             <Box>
@@ -59,7 +51,11 @@ function Iterations({
                     iconSize="xl"
                     content={
                         <InputNumber
-                            state={stopIterations}
+                            state={{
+                                get: limitIterations,
+                                set: (nval: number) =>
+                                    dispatch(setLimitIterations(nval)),
+                            }}
                             min={0}
                             max={100_000}
                             label="Pause at"
@@ -70,7 +66,7 @@ function Iterations({
             </Box>
             <Box className="text-tertiary text-xl">
                 {iterations +
-                    (stopIterations.get > 0 ? ` / ${stopIterations.get}` : "")}
+                    (limitIterations > 0 ? ` / ${limitIterations}` : "")}
             </Box>
         </Box>
     );
@@ -79,64 +75,60 @@ function Iterations({
 function LiveCells({
     currentValue,
     historySize,
-    update,
 }: {
     currentValue: number;
     historySize: number;
-    update: boolean;
 }) {
     //
+    const status = useAppSelector(selectFlowStatus);
+
     const canvas = useRef<HTMLCanvasElement>(null);
     const formatter = useRef(new Intl.NumberFormat());
     const counter = useRef(0);
     const maxValue = useRef(0);
-    const history = useStateObj(createArray(historySize, 1));
+    const history = useRef(createArray(historySize, 0.01));
+
+    const update = status !== "stopped";
 
     useEffect(() => {
-        counter.current = 0;
-        maxValue.current = 0;
-        history.set(createArray(historySize, 1));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [historySize, update]);
-
-    useEffect(() => {
-        //
         if (update) {
             if (currentValue > maxValue.current) {
                 maxValue.current = currentValue;
             }
 
             if (counter.current < historySize) {
-                history.set(
-                    setArrayItem(history.get, counter.current, currentValue)
-                );
+                history.current[counter.current] = currentValue;
             } else {
-                history.set(history.get.slice(1).concat([currentValue]));
+                history.current.shift();
+                history.current.push(currentValue);
             }
             counter.current++;
+
+            const gr = canvas.current?.getContext("2d");
+            const w = canvas.current?.width ?? 0;
+            const h = canvas.current?.height ?? 0;
+
+            gr!.fillStyle = "#323031";
+            gr!.fillRect(0, 0, w, h);
+
+            gr!.lineWidth = 1;
+            gr!.strokeStyle = "#bbb5bd";
+            gr!.beginPath();
+
+            history.current.forEach((val, i) => {
+                gr!.moveTo(i, h);
+                gr!.lineTo(i, h * (1 - val / maxValue.current));
+                gr!.stroke();
+            });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentValue]);
+    });
 
     useEffect(() => {
-        const gr = canvas.current?.getContext("2d");
-        const w = canvas.current?.width ?? 0;
-        const h = canvas.current?.height ?? 0;
-
-        gr!.fillStyle = "#323031";
-        gr!.fillRect(0, 0, w, h);
-
-        gr!.lineWidth = 1;
-        // gr!.strokeStyle = "#ffd166";
-        gr!.strokeStyle = "#bbb5bd";
-        gr!.beginPath();
-
-        history.get.forEach((val, i) => {
-            gr!.moveTo(i, h);
-            gr!.lineTo(i, h * (1 - val / maxValue.current));
-            gr!.stroke();
-        });
-    }, [history.get]);
+        counter.current = 0;
+        maxValue.current = 0;
+        history.current = createArray(historySize, 0.01);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [historySize, update]);
 
     return (
         <Box className="flex flex-row items-center space-x-2.5">
@@ -148,7 +140,7 @@ function LiveCells({
             <Box className="text-xl text-center text-tertiary w-[5rem]">
                 {formatter.current.format(currentValue)}
             </Box>
-            <canvas ref={canvas} width={history.get.length} height={50} />
+            <canvas ref={canvas} width={history.current.length} height={50} />
         </Box>
     );
 }

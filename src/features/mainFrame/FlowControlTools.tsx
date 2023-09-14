@@ -1,64 +1,82 @@
 import {
     faForward,
     faForwardStep,
-    faGaugeHigh,
     faPause,
     faPlay,
     faStop,
 } from "@fortawesome/free-solid-svg-icons";
 import { Box } from "@mui/material";
-import React, { createContext, useContext, useEffect } from "react";
-import { StateObjHook } from "src/app/hooks";
-import { StatusHook } from "src/app/hooks/status";
+import React, { useEffect } from "react";
+import { useAppDispatch, useAppSelector, useStateObj } from "src/app/hooks";
+import {
+    flowStatusPause,
+    flowStatusRun,
+    flowStatusStop,
+    selectFlowStatus,
+} from "src/app/slices/mainFrame/flowStatus";
+import {
+    incrementIterations,
+    restartIterations,
+    selectIterations,
+    selectLimitIterations,
+    setLimitIterations,
+} from "src/app/slices/mainFrame/iterations";
 import { IconButton } from "src/components/Button";
-import { IconSlider, VerticalSlider } from "src/components/Slider";
+import { VerticalSlider } from "src/components/Slider";
 
-const refreshRateVal = { minVal: 200, maxVal: 999, defaultVal: 600 };
-
-const StatusCtx = createContext<StatusHook | undefined>(undefined);
+const refreshRateVal = { minVal: 200, maxVal: 999, defaultVal: 500 };
 
 export default function FlowControlTools({
     init,
     next,
     stop,
-    refreshRate,
-    status,
 }: {
     init: () => void;
     next: () => void;
     stop: () => void;
-    refreshRate: StateObjHook<number>;
-    status: StatusHook;
 }) {
+    //
+    const status = useAppSelector(selectFlowStatus);
+    const iterations = useAppSelector(selectIterations);
+    const limitIterations = useAppSelector(selectLimitIterations);
+    const dispatch = useAppDispatch();
+
+    const refreshRate = useStateObj(refreshRateVal.defaultVal);
+
+    const init_ = () => {
+        init();
+        dispatch(restartIterations());
+    };
+
+    const next_ = () => {
+        next();
+        dispatch(incrementIterations());
+    };
+
     // every render
     useEffect(() => {
-        if (status.running) {
-            window.setTimeout(next, 1000 - refreshRate.get);
+        if (status === "running") {
+            window.setTimeout(next_, 1000 - refreshRate.get);
+
+            if (iterations === limitIterations - 1) {
+                dispatch(flowStatusPause());
+                dispatch(setLimitIterations(0));
+            }
         }
     });
 
-    // status change
-    useEffect(() => {
-        if (status.prev.stopped && !status.stopped) {
-            init();
-        } else if (status.stopped) {
-            stop();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [status.get]);
-
     return (
         <Box className="flex flex-col h-full items-center justify-center space-y-2">
-            <StatusCtx.Provider value={status}>
-                <RunBtn />
-                <NextBtn clickHandler={next} />
-                <StopBtn />
-            </StatusCtx.Provider>
+            <RunBtn init={init_} />
+
+            <NextBtn init={init_} next={next_} />
+
+            <StopBtn stop={stop} />
+
             <VerticalSlider
                 icon={faForward}
                 tooltipLabel="Speed"
                 state={refreshRate}
-                defaultValue={refreshRateVal.defaultVal}
                 min={refreshRateVal.minVal}
                 max={refreshRateVal.maxVal}
             />
@@ -66,29 +84,39 @@ export default function FlowControlTools({
     );
 }
 
-function RunBtn() {
+function RunBtn({ init }: { init: () => void }) {
     //
-    const status = useContext(StatusCtx);
+    const status = useAppSelector(selectFlowStatus);
+    const dispatch = useAppDispatch();
 
     return (
         <IconButton
-            tooltipLabel={status?.running ? "Pause" : "Run"}
-            icon={status?.running ? faPause : faPlay}
+            tooltipLabel={status === "running" ? "Pause" : "Run"}
+            icon={status === "running" ? faPause : faPlay}
             iconSize="xl"
             onClick={() => {
-                if (!status!.running) {
-                    status?.run();
-                } else {
-                    status?.pause();
+                switch (status) {
+                    case "stopped":
+                        init();
+                        dispatch(flowStatusRun());
+                        break;
+                    case "paused":
+                        dispatch(flowStatusRun());
+                        break;
+                    case "running":
+                        dispatch(flowStatusPause());
+                        break;
                 }
+                console.log("run button");
             }}
         />
     );
 }
 
-function NextBtn({ clickHandler }: { clickHandler: () => void }) {
+function NextBtn({ init, next }: { init: () => void; next: () => void }) {
     //
-    const status = useContext(StatusCtx);
+    const status = useAppSelector(selectFlowStatus);
+    const dispatch = useAppDispatch();
 
     return (
         <IconButton
@@ -96,20 +124,28 @@ function NextBtn({ clickHandler }: { clickHandler: () => void }) {
             icon={faForwardStep}
             iconSize="xl"
             onClick={() => {
-                if (status!.stopped) {
-                    status!.pause();
-                } else if (status!.paused) {
-                    clickHandler();
+                switch (status) {
+                    case "stopped":
+                        init();
+                        next();
+                        dispatch(flowStatusPause());
+                        break;
+                    case "paused":
+                        next();
+                        break;
+                    case "running":
+                        break;
                 }
             }}
-            disabled={status!.running}
+            disabled={status === "running"}
         />
     );
 }
 
-function StopBtn() {
+function StopBtn({ stop }: { stop: () => void }) {
     //
-    const status = useContext(StatusCtx);
+    const status = useAppSelector(selectFlowStatus);
+    const dispatch = useAppDispatch();
 
     return (
         <IconButton
@@ -117,9 +153,18 @@ function StopBtn() {
             icon={faStop}
             iconSize="xl"
             onClick={() => {
-                status!.stop();
+                switch (status) {
+                    case "stopped":
+                        break;
+                    case "paused":
+                    case "running":
+                        stop();
+                        dispatch(restartIterations());
+                        dispatch(flowStatusStop());
+                        break;
+                }
             }}
-            disabled={status!.stopped}
+            disabled={status === "stopped"}
         />
     );
 }

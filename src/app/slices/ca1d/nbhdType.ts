@@ -1,24 +1,22 @@
-//
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/app/store";
-
-export type NbhdType = "adjacent" | "grouped" | "scattered";
-
-export const defaultVal = "adjacent";
+import { NbhdType1D } from "src/app/types";
 
 interface NbhdTypeState {
-    value: NbhdType;
+    value: NbhdType1D;
 }
 
+export const defaultValue = "adjacent";
+
 const initialState: NbhdTypeState = {
-    value: defaultVal,
+    value: defaultValue,
 };
 
 export const nbhdTypeSlice = createSlice({
     name: "nbhdType",
     initialState,
     reducers: {
-        setNbhdType: (state, action: PayloadAction<NbhdType>) => {
+        setNbhdType: (state, action: PayloadAction<NbhdType1D>) => {
             state.value = action.payload;
         },
     },

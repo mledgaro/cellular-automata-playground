@@ -7,12 +7,12 @@ import { useFilePicker } from "use-file-picker";
 import { IconButton } from "src/components/Button";
 
 export default function Files({
-    getData,
-    onLoad,
+    exportData,
+    importData,
     fileName = "cellular_automaton",
 }: {
-    getData: () => object;
-    onLoad: (data: object) => void;
+    exportData: () => object;
+    importData: (data: object) => void;
     fileName?: string;
 }) {
     //
@@ -22,7 +22,7 @@ export default function Files({
 
     useEffect(() => {
         if (filesContent.length > 0) {
-            onLoad(JSON.parse(filesContent[0].content));
+            importData(JSON.parse(filesContent[0].content));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filesContent]);
@@ -62,7 +62,7 @@ export default function Files({
                     tooltipLabel="Export"
                     className="w-[6rem]"
                     onClick={() => {
-                        let blob = new Blob([JSON.stringify(getData())], {
+                        let blob = new Blob([JSON.stringify(exportData())], {
                             type: "application/json;charset=utf-8",
                         });
                         saveAs(blob, `${fileName}.json`);
