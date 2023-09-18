@@ -1,10 +1,11 @@
 import {
     faArrowDownUpAcrossLine,
     faArrowsLeftRightToLine,
-    faCheck,
+    faClose,
+    faGlobe,
     faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { Box, Grid, Modal } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React from "react";
 import {
     StateObjHook,
@@ -21,7 +22,7 @@ import RadioGroup from "src/components/RadioGroup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Limit } from "src/app/types";
 import { setWorldLimits } from "src/app/slices/mainFrame/worldLimits";
-import { IconButton } from "src/components/Button";
+import FloatingMenuButton from "src/components/FloatingMenuButton";
 
 const titleStyle = {
     paddingBottom: "10px",
@@ -29,11 +30,7 @@ const titleStyle = {
     fontSize: "1.2rem",
 };
 
-export default function CanvasSettings({
-    onDone = () => {},
-}: {
-    onDone?: () => void;
-}) {
+export default function CanvasSettings() {
     //
     const sceneSize = useAppSelector(selectWorldSize);
     const dispatch = useAppDispatch();
@@ -51,26 +48,29 @@ export default function CanvasSettings({
                 vertical: vertical.get,
             })
         );
-        onDone();
     };
 
     return (
-        <Box className="flex flex-col w-[18rem] space-y-3">
-            <SizeControls rows={rows} cols={cols} />
-            <BoundariesControls horizontal={horizontal} vertical={vertical} />
-            <Box className="flex justify-center">
-                <IconButton
-                    icon={faCheck}
-                    iconSize="xl"
-                    tooltipLabel="Apply"
-                    onClick={closeHandler}
-                />
-            </Box>
-        </Box>
+        <FloatingMenuButton
+            icon={faGlobe}
+            iconOnShow={faClose}
+            iconSize="lg"
+            content={
+                <Box className="flex flex-col w-[18rem] space-y-3">
+                    <SizeSelector rows={rows} cols={cols} />
+                    <LimitSelector
+                        horizontal={horizontal}
+                        vertical={vertical}
+                    />
+                </Box>
+            }
+            onClose={closeHandler}
+            boxProps="top-0 left-0 translate-x-[3rem] -translate-y-[3rem]-"
+        />
     );
 }
 
-function SizeControls({
+function SizeSelector({
     rows,
     cols,
 }: {
@@ -96,7 +96,7 @@ function SizeControls({
     );
 }
 
-function BoundariesControls({
+function LimitSelector({
     horizontal,
     vertical,
 }: {
@@ -106,7 +106,7 @@ function BoundariesControls({
     //
     return (
         <Box className="w-full">
-            <Box style={titleStyle}>Boundaries</Box>
+            <Box style={titleStyle}>Limits</Box>
             <Grid container alignItems="center" justifyContent="space-evenly">
                 <Grid item md="auto">
                     <RadioGroup

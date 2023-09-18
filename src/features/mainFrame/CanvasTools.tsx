@@ -3,7 +3,6 @@ import {
     faBorderAll,
     faBorderNone,
     faCameraRetro,
-    faGlobe,
     faLocationDot,
     faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
@@ -14,7 +13,6 @@ import { IconButton } from "src/components/Button";
 import { VerticalSlider } from "src/components/Slider";
 import Label from "src/components/Label";
 import CanvasSettings from "./CanvasSettings";
-import { FloatMenu } from "src/components/Menu";
 import {
     selectCellsSize,
     setCellsSize,
@@ -64,16 +62,9 @@ export default function CanvasTools({
     }, [containerWidth, containerHeight, sceneSize]);
 
     return (
-        <Box className="flex flex-col h-full items-center justify-center space-y-3">
+        <Box className="flex flex-col h-full items-center justify-center space-y-3 px-3">
             <Box className="flex flex-row space-x-2 items-center select-none">
-                <Box>
-                    <FloatMenu
-                        icon={faGlobe}
-                        iconSize="lg"
-                        content={<CanvasSettings />}
-                        boxProps="top-0 left-0 translate-x-[3rem] -translate-y-[3rem]-"
-                    />
-                </Box>
+                <CanvasSettings />
                 <Box className="text-tertiary text-xl">
                     {`${sceneSize.rows} x ${sceneSize.cols}`}
                 </Box>

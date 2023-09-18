@@ -1,11 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import { Box, Grid } from "@mui/material";
-import { faHeart, faStopwatch } from "@fortawesome/free-solid-svg-icons";
+import {
+    faClose,
+    faHeart,
+    faStopwatch,
+} from "@fortawesome/free-solid-svg-icons";
 
-import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import { useAppDispatch, useAppSelector, useStateObj } from "src/app/hooks";
 
 import InputNumber from "src/components/InputNumber";
-import { FloatMenu } from "src/components/Menu";
+import FloatingMenuButton from "src/components/FloatingMenuButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createArray } from "src/ts/Utils";
 import {
@@ -43,25 +47,29 @@ function Iterations() {
     const limitIterations = useAppSelector(selectLimitIterations);
     const dispatch = useAppDispatch();
 
+    const limitIterations_ = useStateObj(0);
+
     return (
         <Box className="flex flex-row space-x-2 items-center select-none">
             <Box>
-                <FloatMenu
+                <FloatingMenuButton
                     icon={faStopwatch}
+                    iconOnShow={faClose}
                     iconSize="xl"
+                    orientation="row"
                     content={
                         <InputNumber
-                            state={{
-                                get: limitIterations,
-                                set: (nval: number) =>
-                                    dispatch(setLimitIterations(nval)),
-                            }}
+                            state={limitIterations_}
                             min={0}
-                            max={100_000}
+                            max={10_000}
+                            step={10}
                             label="Pause at"
                         />
                     }
-                    boxProps="bottom-0 left-0 w-[8rem] translate-x-[1rem] -translate-y-[3rem]"
+                    boxProps="bottom-0 left-0 w-[10rem] translate-x-[1rem] -translate-y-[3rem]"
+                    onClose={() =>
+                        dispatch(setLimitIterations(limitIterations_.get))
+                    }
                 />
             </Box>
             <Box className="text-tertiary text-xl">

@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { selectWorldSize } from "src/app/slices/mainFrame/worldSize";
-import { useAppSelector, useBool, useStateObj } from "src/app/hooks";
+import { useAppSelector, useBool } from "src/app/hooks";
 
 import CustomTabs from "src/components/Tabs";
 import { IconButton } from "src/components/Button";
@@ -20,7 +20,7 @@ import Info from "./Info";
 import Files from "./Files";
 import { Section } from "src/app/types";
 import { selectCellsSize } from "src/app/slices/mainFrame/cellsSize";
-import { FloatMenu } from "src/components/Menu";
+import FloatingMenuButton from "src/components/FloatingMenuButton";
 
 import { models } from "src/App";
 import { Link } from "react-router-dom";
@@ -55,16 +55,10 @@ export default function MainFrame({
     //
     const sceneSize = useAppSelector(selectWorldSize);
     const cellsSize = useAppSelector(selectCellsSize);
-    // const cells = useAppSelector(selectCells);
-    // const dispatch = useAppDispatch();
 
     const container = useRef<HTMLDivElement>(null);
     const canvas = useRef<HTMLCanvasElement>(null);
     const canvasCntrl = useRef<CanvasCntrl>();
-
-    // const onCellClick_ = onCellClick ?? ((r: number, c: number) => {
-    //     dispatch(toggleCell({ r: r, c: c }));
-    // });
 
     useEffect(() => {
         canvasCntrl.current = new CanvasCntrl(
@@ -100,10 +94,9 @@ export default function MainFrame({
                 {/* canvas */}
                 <Grid
                     item
-                    xs={7}
-                    sm={8}
+                    xs={6}
+                    sm={7}
                     md={9}
-                    lg={10}
                     className="flex items-center justify-center h-full"
                     ref={container}
                 >
@@ -149,7 +142,7 @@ function Title({ title }: { title: string }) {
     return (
         <Box className="text-primary mx-auto w-fit flex flex-row items-center space-x-3">
             <Box className="text-4xl">{title}</Box>
-            <FloatMenu
+            <FloatingMenuButton
                 icon={faChevronDown}
                 iconOnShow={faChevronUp}
                 content={
@@ -157,7 +150,7 @@ function Title({ title }: { title: string }) {
                         {models.map((item, idx) => (
                             <Link
                                 key={idx}
-                                to={item.link}
+                                to={`/${item.link}`}
                                 className="text-primary"
                             >
                                 {item.title}
@@ -165,6 +158,7 @@ function Title({ title }: { title: string }) {
                         ))}
                     </Box>
                 }
+                hideDoneButton
                 boxProps="top-0 right-0 translate-y-[3rem] w-[12.5rem]"
             />
         </Box>

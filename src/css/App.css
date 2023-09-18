@@ -54,14 +54,23 @@ body {
     background-color: var(--tertiary);
 }
 
-.cap-float-menu {
-    background-color: var(--secondary);
-    border-radius: 8px;
-    border-color: var(--tertiary);
-    border-width: 2px;
-    border-style: solid;
-    color: var(--primary);
-    padding: 10px;
+.cap-modal-menu {
+    @apply flex;
     position: absolute;
     z-index: 1;
+    padding: 10px;
+    background-color: var(--secondary);
+    border: 2px solid var(--tertiary);
+    border-radius: 8px;
+    color: var(--primary);
+    width: fit-content;
+    height: fit-content;
+}
+
+.cap-modal-menu.row {
+    @apply flex-row space-x-2;
+}
+
+.cap-modal-menu.col {
+    @apply flex-col space-y-2;
 }

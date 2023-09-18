@@ -66,7 +66,7 @@ export default function FlowControlTools({
     });
 
     return (
-        <Box className="flex flex-col h-full items-center justify-center space-y-2">
+        <Box className="flex flex-col h-full items-center justify-center space-y-2 px-3">
             <RunBtn init={init_} />
 
             <NextBtn init={init_} next={next_} />
