@@ -39,7 +39,7 @@ export default function CanvasTools({
     containerHeight: number;
 }) {
     //
-    const sceneSize = useAppSelector(selectWorldSize);
+    const worldSize = useAppSelector(selectWorldSize);
     const cellsSize = useAppSelector(selectCellsSize);
     const cursorPos = useAppSelector(selectCursorPosition);
     const gridVisibility = useAppSelector(selectGridVisibility);
@@ -51,22 +51,22 @@ export default function CanvasTools({
     const zoomMarks = useMemo(() => {
         return [
             {
-                value: Math.floor(containerHeight / sceneSize.rows),
+                value: Math.floor(containerHeight / worldSize.rows),
                 label: "v",
             },
             {
-                value: Math.floor((containerWidth * 0.94) / sceneSize.cols),
+                value: Math.floor((containerWidth * 0.94) / worldSize.cols),
                 label: "h",
             },
         ];
-    }, [containerWidth, containerHeight, sceneSize]);
+    }, [containerWidth, containerHeight, worldSize]);
 
     return (
         <Box className="flex flex-col h-full items-center justify-center space-y-3 px-3">
             <Box className="flex flex-row space-x-2 items-center select-none">
                 <CanvasSettings />
                 <Box className="text-tertiary text-xl">
-                    {`${sceneSize.rows} x ${sceneSize.cols}`}
+                    {`${worldSize.rows} x ${worldSize.cols}`}
                 </Box>
             </Box>
 

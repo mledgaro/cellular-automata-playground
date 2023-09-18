@@ -11,7 +11,7 @@ import { useRules2d } from "src/app/hooks/ca2d/rules2d";
 import InitStateEditor from "src/features/InitStateEditor";
 import { CellularAutomaton2d } from "src/ts/CellularAutomaton2d";
 import MainFrame from "../mainFrame/MainFrame";
-import { copyArray2d, countTrueArray2d, randomBoolArray2d } from "src/ts/Utils";
+import { copyArray2d, countTrue2d, randomBool2d } from "src/ts/Utils";
 import { NbhdType2D, Position } from "src/app/types";
 import { selectIterations } from "src/app/slices/mainFrame/iterations";
 import {
@@ -50,13 +50,13 @@ export default function CellularAutomata2d() {
 
     const next = () => {
         const nstate = automaton.current.nextState();
-        liveCells.current = countTrueArray2d(nstate);
+        liveCells.current = countTrue2d(nstate);
         dispatch(setCells(nstate));
     };
 
     const stop = () => {
         if (initState.current) {
-            liveCells.current = countTrueArray2d(initState.current);
+            liveCells.current = countTrue2d(initState.current);
             dispatch(setCells(initState.current));
         } else {
             liveCells.current = 0;
@@ -66,8 +66,8 @@ export default function CellularAutomata2d() {
     };
 
     const rand = (density: number) => {
-        let st = randomBoolArray2d(worldSize.rows, worldSize.cols, density);
-        liveCells.current = countTrueArray2d(st);
+        let st = randomBool2d(worldSize.rows, worldSize.cols, density);
+        liveCells.current = countTrue2d(st);
         dispatch(setCells(st));
     };
 

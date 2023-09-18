@@ -3,24 +3,22 @@ import React, { useRef } from "react";
 
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 
-import { selectWorldSize } from "src/app/slices/mainFrame/worldSize";
+import {
+    selectWorldSize,
+    setWorldSize,
+} from "src/app/slices/mainFrame/worldSize";
 import Nbhd1d from "src/features/ca1d/Nbhd1d";
 import Rules1d from "src/features/ca1d/Rules1d";
 import InitStateEditor from "src/features/InitStateEditor";
 import MainFrame from "../mainFrame/MainFrame";
 import {
     boolArrayToInt,
-    countTrueArray,
+    countTrue,
     createArray,
     createArray2d,
-    randomBoolArray,
+    randomBool,
 } from "src/ts/Utils";
 import { selectIterations } from "src/app/slices/mainFrame/iterations";
-import {
-    selectCells,
-    setCells,
-    toggleCell,
-} from "src/app/slices/mainFrame/cells";
 import { NbhdType1D } from "src/app/types";
 import { selectNbhdType, setNbhdType } from "src/app/slices/ca1d/nbhdType";
 import { selectNbhdWidth, setNbhdWidth } from "src/app/slices/ca1d/nbhdWidth";
@@ -30,12 +28,17 @@ import {
     selectNbhdCenter,
     setNbhdCenter,
 } from "src/app/slices/ca1d/nbhdCenter";
+import {
+    selectCells,
+    setCells,
+    toggleCell,
+} from "src/app/slices/mainFrame/cells";
 
 export default function CellularAutomata1d() {
     //
-    const sceneSize = useAppSelector(selectWorldSize);
+    const worldSize = useAppSelector(selectWorldSize);
     const iterations = useAppSelector(selectIterations);
-    const cells = useAppSelector(selectCells);
+    const cells = useAppSelector(selectCells) as boolean[][];
 
     const nbhdType = useAppSelector(selectNbhdType);
     const nbhdWidth = useAppSelector(selectNbhdWidth);
@@ -63,7 +66,7 @@ export default function CellularAutomata1d() {
     const next = () => {
         const nstate = nextState(cellsNbhd, rules, cells[iterations]);
 
-        if (iterations >= sceneSize.rows) {
+        if (iterations >= worldSize.rows) {
             dispatch(setCells(cells.slice(1).concat([nstate])));
         } else {
             dispatch(
@@ -73,35 +76,35 @@ export default function CellularAutomata1d() {
             );
         }
         currState.current = nstate;
-        liveCells.current = countTrueArray(nstate);
+        liveCells.current = countTrue(nstate);
     };
 
     const stop = () => {
         dispatch(
             setCells(
                 [
-                    initState.current ?? createArray(sceneSize.cols, false),
+                    initState.current ?? createArray(worldSize.cols, false),
                 ].concat(
-                    createArray2d(sceneSize.rows - 1, sceneSize.cols, false)
+                    createArray2d(worldSize.rows - 1, worldSize.cols, false)
                 )
             )
         );
 
-        liveCells.current = countTrueArray(initState.current ?? []);
+        liveCells.current = countTrue(initState.current ?? []);
         initState.current = null;
         currState.current = null;
     };
 
     const rand = (density: number) => {
-        let st = randomBoolArray(sceneSize.cols, density);
+        let st = randomBool(worldSize.cols, density);
         dispatch(
             setCells(
                 [st].concat(
-                    createArray2d(sceneSize.rows - 1, sceneSize.cols, false)
+                    createArray2d(worldSize.rows - 1, worldSize.cols, false)
                 )
             )
         );
-        liveCells.current = countTrueArray(st);
+        liveCells.current = countTrue(st);
     };
 
     const clear = () => {
@@ -111,6 +114,8 @@ export default function CellularAutomata1d() {
     const exportData = () => {
         let data = {
             type: "ca1d",
+            numCells: worldSize.cols,
+            bufferSize: worldSize.rows,
             nbhdType: nbhdType,
             nbhdWidth: nbhdWidth,
             nbhdCenter: nbhdCenter,
@@ -124,6 +129,14 @@ export default function CellularAutomata1d() {
     };
 
     const importData = (data: object) => {
+        if ("numCells" in data && "bufferSize" in data) {
+            dispatch(
+                setWorldSize({
+                    rows: data.bufferSize as number,
+                    cols: data.numCells as number,
+                })
+            );
+        }
         if ("nbhdType" in data) {
             dispatch(setNbhdType(data.nbhdType as NbhdType1D));
         }
@@ -143,7 +156,7 @@ export default function CellularAutomata1d() {
             dispatch(
                 setCells(
                     [data.initState as boolean[]].concat(
-                        createArray2d(sceneSize.rows - 1, sceneSize.cols, false)
+                        createArray2d(worldSize.rows - 1, worldSize.cols, false)
                     )
                 )
             );

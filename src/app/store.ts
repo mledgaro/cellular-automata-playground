@@ -18,8 +18,8 @@ export const store = configureStore({
     reducer: {
         worldSize: worldSizeReducer,
         worldLimits: worldLimitsReducer,
-        cellsSize: cellsSizeReducer,
         cells: cellsReducer,
+        cellsSize: cellsSizeReducer,
         cursorPosition: cursorPositionReducer,
         gridVisibility: gridVisibilityReducer,
         iterations: iterationsReducer,

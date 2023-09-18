@@ -1,9 +1,4 @@
-import {
-    addColumn,
-    addRow,
-    countTrueArray2d,
-    setArray2dItem,
-} from "src/ts/Utils";
+import { addColumn, addRow, countTrue2d, setArray2dItem } from "src/ts/Utils";
 import { useStateObj } from "../../hooks";
 import { NbhdType2D, Position } from "../../types";
 
@@ -49,7 +44,7 @@ export default function useNbhd2d(): Nbhd2dHook {
         nbhd: nbhd.get,
         mainCell: mainCell.get,
         type: type.get,
-        size: countTrueArray2d(nbhd.get),
+        size: countTrue2d(nbhd.get),
         setNbhd: (value: boolean[][]) => {
             nbhd.set(value);
             mainCell.set({ r: 1, c: 1 });

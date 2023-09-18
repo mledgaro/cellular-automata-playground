@@ -6,7 +6,7 @@ import {
     faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Box, Grid } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import {
     StateObjHook,
     useAppDispatch,
@@ -21,8 +21,12 @@ import InputNumber from "src/components/InputNumber";
 import RadioGroup from "src/components/RadioGroup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Limit } from "src/app/types";
-import { setWorldLimits } from "src/app/slices/mainFrame/worldLimits";
+import {
+    selectWorldLimits,
+    setWorldLimits,
+} from "src/app/slices/mainFrame/worldLimits";
 import FloatingMenuButton from "src/components/FloatingMenuButton";
+import { resizeCellsArr } from "src/app/slices/mainFrame/cells";
 
 const titleStyle = {
     paddingBottom: "10px",
@@ -32,16 +36,18 @@ const titleStyle = {
 
 export default function CanvasSettings() {
     //
-    const sceneSize = useAppSelector(selectWorldSize);
+    const size = useAppSelector(selectWorldSize);
+    const limits = useAppSelector(selectWorldLimits);
     const dispatch = useAppDispatch();
 
-    const rows = useStateObj(sceneSize.rows);
-    const cols = useStateObj(sceneSize.cols);
-    const horizontal = useStateObj<Limit>("continuous");
-    const vertical = useStateObj<Limit>("continuous");
+    const rows = useStateObj(size.rows);
+    const cols = useStateObj(size.cols);
+    const horizontal = useStateObj<Limit>(limits.horizontal);
+    const vertical = useStateObj<Limit>(limits.vertical);
 
     const closeHandler = () => {
         dispatch(setWorldSize({ rows: rows.get, cols: cols.get }));
+        dispatch(resizeCellsArr({ rows: rows.get, cols: cols.get }));
         dispatch(
             setWorldLimits({
                 horizontal: horizontal.get,
@@ -49,6 +55,14 @@ export default function CanvasSettings() {
             })
         );
     };
+
+    useEffect(() => {
+        rows.set(size.rows);
+        cols.set(size.cols);
+        horizontal.set(limits.horizontal);
+        vertical.set(limits.vertical);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <FloatingMenuButton

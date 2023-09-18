@@ -97,10 +97,13 @@ export default class CanvasCntrl {
     }
 
     public paintScene(state: boolean[][]) {
+        //
         this.clear();
-        state.forEach((row, r) =>
-            row.forEach((cell, c) => this.paintCell(r, c, cell))
-        );
+        for (let r = 0, c; r < this._rows; r++) {
+            for (c = 0; c < this._columns; c++) {
+                this.paintCell(r, c, state[r][c] ?? false);
+            }
+        }
     }
 
     public saveScene(fileName: string) {
@@ -112,6 +115,18 @@ export default class CanvasCntrl {
         document.body.appendChild(tmpLink);
         tmpLink.click();
         document.body.removeChild(tmpLink);
+    }
+
+    public setSize(size: { rows: number; cols: number }) {
+        //
+        this._rows = size.rows;
+        this._columns = size.cols;
+
+        this._width = this._columns * this._cellSize;
+        this._height = this._rows * this._cellSize;
+
+        this.canvas!.width = this._width;
+        this.canvas!.height = this._height;
     }
 
     set cellSize(size: number) {

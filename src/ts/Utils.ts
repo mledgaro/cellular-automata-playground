@@ -52,18 +52,18 @@ export function boolArrayToInt(
     return int;
 }
 
-export function randomBoolArray(size: number, trueDensity: number): boolean[] {
+export function randomBool(size: number, trueProb: number): boolean[] {
     //
     let boolArr = [];
 
     for (let i = 0; i < size; i++) {
-        boolArr.push(Math.random() <= trueDensity);
+        boolArr.push(Math.random() <= trueProb);
     }
 
     return boolArr;
 }
 
-export function randomBoolArray2d(
+export function randomBool2d(
     rows: number,
     cols: number,
     trueDensity: number
@@ -72,26 +72,47 @@ export function randomBoolArray2d(
     let boolArr = [];
 
     for (let i = 0; i < rows; i++) {
-        boolArr.push(randomBoolArray(cols, trueDensity));
+        boolArr.push(randomBool(cols, trueDensity));
     }
 
     return boolArr;
 }
 
-export function countTrueArray(array: boolean[]): number {
-    return array.reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
+export function count(
+    array: any[],
+    countFunc: (e: any, i: number) => boolean
+): number {
+    //
+    return array.reduce((acc, e, i) => (acc + countFunc(e, i) ? 1 : 0), 0);
 }
 
-export function countNotNullArray(array: any[]): number {
-    return array.reduce((acc, curr) => acc + (curr !== null ? 1 : 0), 0);
+export function count2d(
+    array: any[][],
+    countFunc: (e: any, r: number, c: number) => boolean
+): number {
+    //
+    return array.reduce(
+        (acc, row, r) =>
+            acc +
+            row.reduce((accR, e, c) => (accR + countFunc(e, r, c) ? 1 : 0), 0),
+        0
+    );
 }
 
-export function countTrueArray2d(array: boolean[][]): number {
-    return array.reduce((acc, curr) => acc + countTrueArray(curr), 0);
+export function countTrue(array: boolean[]): number {
+    return count(array, (e) => e);
 }
 
-export function countNotNullArray2d(array: any[][]): number {
-    return array.reduce((acc, curr) => acc + countNotNullArray(curr), 0);
+export function countNotNull(array: any[]): number {
+    return count(array, (e) => e !== null);
+}
+
+export function countTrue2d(array: boolean[][]): number {
+    return count2d(array, (e) => e);
+}
+
+export function countNotNull2d(array: any[][]): number {
+    return count2d(array, (e) => e !== null);
 }
 
 export function boolArray(length: number, fillValue: boolean) {
@@ -197,4 +218,43 @@ export function addColumn(
     }
 
     return nMatrix;
+}
+
+export function extendArray(arr: any[], nlength: number, fill: any): any[] {
+    //
+    const diff = nlength - arr.length;
+    if (diff > 0) {
+        return arr.concat(createArray(diff, fill));
+    } else if (diff < 0) {
+        return arr.slice(0, nlength);
+    } else {
+        return copyArray(arr);
+    }
+}
+
+export function extendArray2d(
+    arr: any[][],
+    nrows: number,
+    ncols: number,
+    fill: any
+): any[][] {
+    //
+    let narr = copyArray2d(arr);
+    let diff = ncols - narr[0].length;
+
+    if (diff > 0) {
+        narr = narr.map((row) => row.concat(createArray(diff, fill)));
+    } else if (diff < 0) {
+        narr = narr.map((row) => row.slice(0, ncols));
+    }
+
+    diff = nrows - arr.length;
+
+    if (diff > 0) {
+        narr = narr.concat(createArray2d(diff, narr[0].length, fill));
+    } else if (diff < 0) {
+        narr = narr.slice(0, nrows);
+    }
+
+    return narr;
 }

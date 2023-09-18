@@ -50,8 +50,8 @@ export default function FloatingMenuButton({
                             iconSize="lg"
                             tooltipLabel="Done"
                             onClick={() => {
-                                onClose();
                                 show.setFalse();
+                                onClose();
                             }}
                             className={`${
                                 orientation === "col"

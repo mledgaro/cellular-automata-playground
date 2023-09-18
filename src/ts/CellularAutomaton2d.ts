@@ -1,5 +1,5 @@
 import { Position } from "src/app/types";
-import { countNotNullArray2d, createArray } from "./Utils";
+import { countNotNull2d, createArray } from "./Utils";
 
 //
 export class CellularAutomaton2d {
@@ -79,7 +79,7 @@ export class CellularAutomaton2d {
     public setNbhd(newNbhd: boolean[][], mainCell: Position) {
         //
         this._nbhd = CellularAutomaton2d.calcNbhd(newNbhd, mainCell);
-        this._rules = createArray(countNotNullArray2d(this._nbhd) + 1, null);
+        this._rules = createArray(countNotNull2d(this._nbhd) + 1, null);
     }
 
     set rules(newRules: (boolean | null)[]) {

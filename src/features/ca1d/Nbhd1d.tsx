@@ -109,14 +109,14 @@ function Type() {
 
 function NbhdsMap() {
     //
-    const sceneCols = useAppSelector(selectWorldCols);
+    const cellsNum = useAppSelector(selectWorldCols);
     const cellsNbhd = useAppSelector(selectCellsNbhd);
 
-    const cells = useBoolArr(sceneCols);
+    const cells = useBoolArr(cellsNum);
 
     const highlight = useCallback(
         (idx: number) => {
-            let highCells = Array(sceneCols).fill(false);
+            let highCells = Array(cellsNum).fill(false);
             cellsNbhd[idx].forEach(
                 (neighboor: number) => (highCells[neighboor] = true)
             );

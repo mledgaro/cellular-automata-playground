@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/app/store";
-import { Position } from "src/app/types";
-import { copyArray2d, createArray2d, setArray2dItem } from "src/ts/Utils";
+import { Position, Size } from "src/app/types";
+import { createArray2d, extendArray2d, setArray2dItem } from "src/ts/Utils";
 import { defaultValue as worldSizeDefault } from "src/app/slices/mainFrame/worldSize";
 
 interface CellsState {
@@ -17,7 +17,7 @@ export const cellsSlice = createSlice({
     initialState,
     reducers: {
         setCells: (state, action: PayloadAction<boolean[][]>) => {
-            state.value = copyArray2d(action.payload);
+            state.value = action.payload;
         },
         toggleCell: (state, action: PayloadAction<Position>) => {
             const pos = action.payload;
@@ -31,11 +31,21 @@ export const cellsSlice = createSlice({
         clearCells: (state) => {
             state.value = state.value.map((row) => row.map(() => false));
         },
+        resizeCellsArr: (state, action: PayloadAction<Size>) => {
+            const size = action.payload;
+            state.value = extendArray2d(
+                state.value,
+                size.rows,
+                size.cols,
+                false
+            );
+        },
     },
 });
 
 export const selectCells = (state: RootState) => state.cells.value;
 
-export const { setCells, toggleCell, clearCells } = cellsSlice.actions;
+export const { setCells, toggleCell, clearCells, resizeCellsArr } =
+    cellsSlice.actions;
 
 export default cellsSlice.reducer;

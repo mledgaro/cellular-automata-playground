@@ -53,7 +53,7 @@ export default function MainFrame({
     importData,
 }: MainFrameParams) {
     //
-    const sceneSize = useAppSelector(selectWorldSize);
+    const worldSize = useAppSelector(selectWorldSize);
     const cellsSize = useAppSelector(selectCellsSize);
 
     const container = useRef<HTMLDivElement>(null);
@@ -63,8 +63,8 @@ export default function MainFrame({
     useEffect(() => {
         canvasCntrl.current = new CanvasCntrl(
             canvas.current,
-            sceneSize.rows,
-            sceneSize.cols,
+            worldSize.rows,
+            worldSize.cols,
             cellsSize
         );
         canvasCntrl.current.clear();

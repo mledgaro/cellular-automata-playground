@@ -9,6 +9,7 @@ import {
     setCursorPosition,
 } from "src/app/slices/mainFrame/cursorPosition";
 import { selectGridVisibility } from "src/app/slices/mainFrame/gridVisibility";
+import { selectWorldSize } from "src/app/slices/mainFrame/worldSize";
 import CanvasCntrl from "src/ts/CanvasCntrl";
 
 export default function Canvas({
@@ -21,6 +22,7 @@ export default function Canvas({
     canvasCntrl: CanvasCntrl | undefined;
 }) {
     //
+    const worldSize = useAppSelector(selectWorldSize);
     const cells = useAppSelector(selectCells);
     const cellsSize: number = useAppSelector(selectCellsSize);
     const cursorPos = useAppSelector(selectCursorPosition);
@@ -57,6 +59,11 @@ export default function Canvas({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cellsSize]);
+
+    useEffect(() => {
+        canvasCntrl?.setSize(worldSize);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [worldSize]);
 
     useEffect(() => {
         canvasCntrl?.paintScene(cells);
