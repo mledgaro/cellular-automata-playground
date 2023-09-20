@@ -12,6 +12,9 @@ import nbhdWidthReducer from "./slices/ca1d/nbhdWidth";
 import nbhdCenterReducer from "./slices/ca1d/nbhdCenter";
 import cellsNbhdReducer from "./slices/ca1d/cellsNbhd";
 import rulesReducer from "./slices/ca1d/rules";
+import nbhd2dReducer from "./slices/ca2d/nbhd2d";
+import nbhdCenter2dReducer from "./slices/ca2d/nbhdCenter2d";
+import rules2dReducer from "./slices/ca2d/rules2d";
 // import _Reducer from "./slices/_";
 
 export const store = configureStore({
@@ -29,6 +32,9 @@ export const store = configureStore({
         nbhdCenter: nbhdCenterReducer,
         cellsNbhd: cellsNbhdReducer,
         rules: rulesReducer,
+        nbhd2d: nbhd2dReducer,
+        nbhdCenter2d: nbhdCenter2dReducer,
+        rules2d: rules2dReducer,
     },
 });
 

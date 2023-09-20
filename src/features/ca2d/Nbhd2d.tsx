@@ -1,8 +1,7 @@
 //
-import React from "react";
+import React, { useEffect } from "react";
 import CustomRadioGroup from "src/components/RadioGroup";
 import { Box, Grid } from "@mui/material";
-import { Nbhd2dHook } from "src/app/hooks/ca2d/nbhd2d";
 import { NbhdType2D } from "src/app/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
@@ -13,9 +12,43 @@ import {
     faSquareCheck,
     faSquareXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { StateObjHook, useAppDispatch, useAppSelector } from "src/app/hooks";
+import {
+    selectNbhdCenter2d,
+    setNbhdCenter2d,
+} from "src/app/slices/ca2d/nbhdCenter2d";
+import {
+    addColNbhd2d,
+    addRowNbhd2d,
+    removeColNbhd2d,
+    removeRowNbhd2d,
+    selectNbhd2d,
+    setNbhd2dCustom,
+    setNbhd2dMoore,
+    setNbhd2dVonNeumann,
+    toggleNbhd2dCell,
+} from "src/app/slices/ca2d/nbhd2d";
 
-export default function Nbhd2d({ state }: { state: Nbhd2dHook }) {
+export default function Nbhd2d({ type }: { type: StateObjHook<NbhdType2D> }) {
     //
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        switch (type.get) {
+            case "moore":
+                dispatch(setNbhd2dMoore());
+                break;
+            case "vonneumann":
+                dispatch(setNbhd2dVonNeumann());
+                break;
+            case "custom":
+                dispatch(setNbhd2dCustom());
+                break;
+        }
+        dispatch(setNbhdCenter2d({ r: 1, c: 1 }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [type.get]);
+
     return (
         <Grid container className="">
             {/* row */}
@@ -30,37 +63,31 @@ export default function Nbhd2d({ state }: { state: Nbhd2dHook }) {
                             { label: "Custom", value: "custom" },
                         ]}
                         defaultVal="moore"
-                        value={state.type}
-                        onChange={(val: string) =>
-                            state.setType(val as NbhdType2D)
-                        }
+                        value={type.get}
+                        onChange={(val: string) => type.set(val as NbhdType2D)}
                     />
                 </Grid>
                 {/* main cell selector */}
                 <Grid item xs className="flex justify-center">
-                    <NbhdEditor
-                        state={state}
-                        editable={state.type === "custom"}
-                    />
+                    <NbhdEditor editable={type.get === "custom"} />
                 </Grid>
             </Grid>
         </Grid>
     );
 }
 
-export function NbhdEditor({
-    state,
-    editable,
-}: {
-    state: Nbhd2dHook;
-    editable: boolean;
-}) {
+export function NbhdEditor({ editable }: { editable: boolean }) {
     //
+    const center = useAppSelector(selectNbhdCenter2d);
+    const nbhd = useAppSelector(selectNbhd2d);
+
+    const dispatch = useAppDispatch();
+
     const toggle = editable
-        ? (r: number, c: number) => state.toggle({ r: r, c: c })
+        ? (r: number, c: number) => dispatch(toggleNbhd2dCell({ r: r, c: c }))
         : (r: number, c: number) => {};
     const setMain = editable
-        ? (r: number, c: number) => state.setMainCell(r, c)
+        ? (r: number, c: number) => dispatch(setNbhdCenter2d({ r: r, c: c }))
         : (r: number, c: number) => {};
 
     let onClick: () => void;
@@ -71,14 +98,13 @@ export function NbhdEditor({
             {/* nbhd */}
             <Box className="space-y-3">
                 <Box className="space-y-1-">
-                    {state.nbhd.map((row, r) => {
+                    {nbhd.map((row, r) => {
                         return (
                             <Box className="space-x-1">
                                 {row.map((nbr, c) => {
                                     onClick = () => toggle(r, c);
                                     onDblClick = () => setMain(r, c);
-                                    return state.mainCell.r === r &&
-                                        state.mainCell.c === c ? (
+                                    return center.r === r && center.c === c ? (
                                         <FontAwesomeIcon
                                             icon={faSquareCheck}
                                             size="xl"
@@ -104,53 +130,42 @@ export function NbhdEditor({
                         );
                     })}
                 </Box>
-                {editable && <ResizeButtons nbhd={state} />}
+                {editable && <ResizeButtons />}
             </Box>
-            {editable && <ResizeButtons nbhd={state} col />}
+            {editable && <ResizeButtons col />}
         </Box>
     );
 }
 
-function ResizeButtons({
-    nbhd,
-    col = false,
-}: {
-    nbhd: Nbhd2dHook;
-    col?: boolean;
-}) {
+function ResizeButtons({ col = false }: { col?: boolean }) {
+    //
+    const nbhd = useAppSelector(selectNbhd2d);
+    const dispatch = useAppDispatch();
+
     const classes = col ? "flex-col space-y-1" : "space-x-1";
-    const onclick = col
-        ? (remove: boolean) => nbhd.addColumn(remove)
-        : (remove: boolean) => nbhd.addRow(remove);
-    const disableRemove = col
-        ? nbhd.nbhd[0].length === 2
-        : nbhd.nbhd.length === 2;
-    const disableAdd = col
-        ? nbhd.nbhd[0].length === 10
-        : nbhd.nbhd.length === 10;
+    const add = col
+        ? () => dispatch(addColNbhd2d())
+        : () => dispatch(addRowNbhd2d());
+    const remove = col
+        ? () => dispatch(removeColNbhd2d())
+        : () => dispatch(removeRowNbhd2d());
+    const disableRemove = col ? nbhd[0].length === 2 : nbhd.length === 2;
+    const disableAdd = col ? nbhd[0].length === 10 : nbhd.length === 10;
 
     return (
         <Box className={"flex justify-center " + classes}>
             {col && (
-                <MiniButton
-                    icon={faPlus}
-                    onClick={() => onclick(false)}
-                    disabled={disableAdd}
-                />
+                <MiniButton icon={faPlus} onClick={add} disabled={disableAdd} />
             )}
 
             <MiniButton
                 icon={faMinus}
-                onClick={() => onclick(true)}
+                onClick={remove}
                 disabled={disableRemove}
             />
 
             {!col && (
-                <MiniButton
-                    icon={faPlus}
-                    onClick={() => onclick(false)}
-                    disabled={disableAdd}
-                />
+                <MiniButton icon={faPlus} onClick={add} disabled={disableAdd} />
             )}
         </Box>
     );

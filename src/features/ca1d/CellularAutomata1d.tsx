@@ -33,10 +33,13 @@ import {
     setCells,
     toggleCell,
 } from "src/app/slices/mainFrame/cells";
+import { selectWorldLimitsGetCell } from "src/app/slices/mainFrame/worldLimits";
 
 export default function CellularAutomata1d() {
     //
     const worldSize = useAppSelector(selectWorldSize);
+
+    const getCell = useAppSelector(selectWorldLimitsGetCell);
     const iterations = useAppSelector(selectIterations);
     const cells = useAppSelector(selectCells) as boolean[][];
 
@@ -64,11 +67,24 @@ export default function CellularAutomata1d() {
     };
 
     const next = () => {
-        const nstate = nextState(cellsNbhd, rules, cells[iterations]);
+        //
+        let nstate: boolean[];
 
         if (iterations >= worldSize.rows) {
+            nstate = nextState(
+                cellsNbhd,
+                rules,
+                worldSize.cols,
+                (idx: number) => getCell(worldSize.rows - 1, idx)
+            );
             dispatch(setCells(cells.slice(1).concat([nstate])));
         } else {
+            nstate = nextState(
+                cellsNbhd,
+                rules,
+                worldSize.cols,
+                (idx: number) => getCell(iterations, idx)
+            );
             dispatch(
                 setCells(
                     cells.map((r, i) => (i === iterations + 1 ? nstate : r))
@@ -183,17 +199,16 @@ export default function CellularAutomata1d() {
 function nextState(
     cellsNbhds: number[][],
     rules: boolean[],
-    state: boolean[]
+    worldSize: number,
+    getCell: (idx: number) => boolean
 ): boolean[] {
     //
-    let nState = state.map(
-        (_, i, row) =>
-            rules[
-                boolArrayToInt(
-                    cellsNbhds[i].map((e) => row[e]),
-                    false
-                )
-            ]
-    );
-    return nState;
+    let nstate = [];
+    for (let i = 0, nbhd, rule, cell; i < worldSize; i++) {
+        nbhd = cellsNbhds[i].map((e) => getCell(e));
+        rule = boolArrayToInt(nbhd, false);
+        cell = rules[rule];
+        nstate.push(cell);
+    }
+    return nstate;
 }

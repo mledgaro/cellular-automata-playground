@@ -99,6 +99,13 @@ function LiveCells({
     const update = status !== "stopped";
 
     useEffect(() => {
+        const gr = canvas.current?.getContext("2d");
+        const w = canvas.current?.width ?? 0;
+        const h = canvas.current?.height ?? 0;
+
+        gr!.fillStyle = "#323031";
+        gr!.fillRect(0, 0, w, h);
+
         if (update) {
             if (currentValue > maxValue.current) {
                 maxValue.current = currentValue;
@@ -111,13 +118,6 @@ function LiveCells({
                 history.current.push(currentValue);
             }
             counter.current++;
-
-            const gr = canvas.current?.getContext("2d");
-            const w = canvas.current?.width ?? 0;
-            const h = canvas.current?.height ?? 0;
-
-            gr!.fillStyle = "#323031";
-            gr!.fillRect(0, 0, w, h);
 
             gr!.lineWidth = 1;
             gr!.strokeStyle = "#bbb5bd";

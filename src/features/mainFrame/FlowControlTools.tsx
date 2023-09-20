@@ -107,7 +107,6 @@ function RunBtn({ init }: { init: () => void }) {
                         dispatch(flowStatusPause());
                         break;
                 }
-                console.log("run button");
             }}
         />
     );

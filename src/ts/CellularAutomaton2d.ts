@@ -1,18 +1,18 @@
-import { Position } from "src/app/types";
-import { countNotNull2d, createArray } from "./Utils";
+import { Position, Size } from "src/app/types";
 
-//
 export class CellularAutomaton2d {
     //
     private _nbhd: (Position | null)[][];
-    private _rules: (boolean | null)[];
-    public state: boolean[][];
+    public rules: (boolean | null)[];
+    public getCell: (row: number, col: number) => boolean;
+    public size: Size;
 
-    constructor() {
+    constructor(size: Size) {
         //
         this._nbhd = [];
-        this._rules = [];
-        this.state = [];
+
+        this.getCell = () => false;
+        this.size = size;
 
         this.setNbhd(
             [
@@ -35,15 +35,6 @@ export class CellularAutomaton2d {
         ];
     }
 
-    private cellState(row: number, col: number): boolean {
-        let rows, cols;
-        rows = this.state.length;
-        cols = this.state[0].length;
-        row = row < 0 ? rows + row : row >= rows ? row - rows : row;
-        col = col < 0 ? cols + col : col >= cols ? col - cols : col;
-        return this.state[row][col];
-    }
-
     private cellNextState(row: number, col: number): boolean {
         //
         let numNbrs = 0;
@@ -51,62 +42,46 @@ export class CellularAutomaton2d {
             nbhdRow.forEach((nbr) => {
                 numNbrs +=
                     nbr !== null
-                        ? this.cellState(row + nbr.r, col + nbr.c)
+                        ? this.getCell(row + nbr.r, col + nbr.c)
                             ? 1
                             : 0
                         : 0;
             });
         });
-        return this._rules[numNbrs] ?? this.state[row][col];
+        return this.rules[numNbrs] ?? this.getCell(row, col);
     }
 
     public nextState(): boolean[][] {
         //
-        this.state = this.state.map((row, r) =>
-            row.map((_, c) => this.cellNextState(r, c))
-        );
-        return this.state;
-    }
-
-    // get nbhd() {
-    //     return this._nbhd;
-    // }
-
-    // get rules() {
-    //     return this._rules;
-    // }
-
-    public setNbhd(newNbhd: boolean[][], mainCell: Position) {
-        //
-        this._nbhd = CellularAutomaton2d.calcNbhd(newNbhd, mainCell);
-        this._rules = createArray(countNotNull2d(this._nbhd) + 1, null);
-    }
-
-    set rules(newRules: (boolean | null)[]) {
-        if (newRules.length >= this._rules.length) {
-            this._rules = this._rules.map((_, i) => newRules[i]);
-        } else {
-            newRules.forEach((v, i) => (this._rules[i] = v));
+        const nstate = [];
+        let row;
+        for (let r = 0, c; r < this.size.rows; r++) {
+            row = [];
+            for (c = 0; c < this.size.cols; c++) {
+                row.push(this.cellNextState(r, c));
+            }
+            nstate.push(row);
         }
+        return nstate;
     }
 
-    public static calcNbhd(newNbhd: boolean[][], mainCell: Position) {
+    public setNbhd(nbhd: boolean[][], center: Position) {
         //
         let pr: number;
-        let nbhd = newNbhd.map((row, ri) => {
-            pr = ri - mainCell.r;
+        let cnbhd = nbhd.map((row, ri) => {
+            pr = ri - center.r;
             return row.map((n) => (n ? { r: pr, c: 0 } : null));
         });
-        nbhd[mainCell.r][mainCell.c] = null;
+        cnbhd[center.r][center.c] = null;
 
-        for (let ci = 0, pc, ri; ci < nbhd[0].length; ci++) {
-            pc = ci - mainCell.c;
-            for (ri = 0; ri < nbhd.length; ri++) {
-                if (nbhd[ri][ci] !== null) {
-                    nbhd[ri][ci]!.c = pc;
+        for (let ci = 0, pc, ri; ci < cnbhd[0].length; ci++) {
+            pc = ci - center.c;
+            for (ri = 0; ri < cnbhd.length; ri++) {
+                if (cnbhd[ri][ci] !== null) {
+                    cnbhd[ri][ci]!.c = pc;
                 }
             }
         }
-        return nbhd;
+        this._nbhd = cnbhd;
     }
 }

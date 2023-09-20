@@ -1,5 +1,5 @@
 //
-import React from "react";
+import React, { useEffect } from "react";
 import {
     faSquare as faSquareRegular,
     faSquareMinus,
@@ -10,13 +10,35 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Stack } from "@mui/material";
-import { Rule2dState, Rules2dHook } from "src/app/hooks/ca2d/rules2d";
 import { IconButton } from "src/components/Button";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import {
+    resizeRules2d,
+    selectRules2d,
+    setRules2dKeepAll,
+    setRules2dRandom,
+    setRules2dTurnOffAll,
+    setRules2dTurnOnAll,
+    toggleRule2d,
+} from "src/app/slices/ca2d/rules2d";
+import { selectNbhd2d } from "src/app/slices/ca2d/nbhd2d";
+import { countTrue2d } from "src/ts/Utils";
 
 const cellClasses = "text-center text-xl select-none";
 
-export default function Rules2d({ state }: { state: Rules2dHook }) {
+export default function Rules2d() {
     //
+    const rules = useAppSelector(selectRules2d);
+    const nbhd = useAppSelector(selectNbhd2d);
+    const dispatch = useAppDispatch();
+
+    const toggle = (idx: number) => dispatch(toggleRule2d(idx));
+
+    useEffect(() => {
+        dispatch(resizeRules2d(countTrue2d(nbhd) + 1));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <Box className="space-y-4">
             <Box className="flex max-w-[90%] w-fit mx-auto space-x-3">
@@ -25,16 +47,17 @@ export default function Rules2d({ state }: { state: Rules2dHook }) {
                     <Box className={cellClasses}>Next state</Box>
                 </Stack>
                 <Box className="inline-block text-primary flex flex-nowrap w-auto overflow-x-auto space-x-3">
-                    {state.get.map((st, idx) => (
+                    {rules.map((st, idx) => (
                         <Rule
+                            key={idx}
                             idx={idx}
                             value={st}
-                            toggle={() => state.toggle(idx)}
+                            toggle={() => toggle(idx)}
                         />
                     ))}
                 </Box>
             </Box>
-            <Controls rules={state} />
+            <Controls />
         </Box>
     );
 }
@@ -45,7 +68,7 @@ function Rule({
     toggle,
 }: {
     idx: number;
-    value: Rule2dState;
+    value: boolean | null;
     toggle: () => void;
 }) {
     //
@@ -66,32 +89,35 @@ function Rule({
     );
 }
 
-function Controls({ rules }: { rules: Rules2dHook }) {
+function Controls() {
+    //
+    const dispatch = useAppDispatch();
+
     return (
         <Box className="w-fit mx-auto space-x-3">
             <IconButton
                 tooltipLabel="All keep"
                 icon={faSquareMinus}
                 iconSize="xl"
-                onClick={rules.allKeep}
+                onClick={() => dispatch(setRules2dKeepAll())}
             />
             <IconButton
                 tooltipLabel="All dead"
                 icon={faSquareRegular}
                 iconSize="xl"
-                onClick={rules.allDead}
+                onClick={() => dispatch(setRules2dTurnOffAll())}
             />
             <IconButton
                 tooltipLabel="All alive"
                 icon={faSquareSolid}
                 iconSize="xl"
-                onClick={rules.allAlive}
+                onClick={() => dispatch(setRules2dTurnOnAll())}
             />
             <IconButton
                 tooltipLabel="Random"
                 icon={faShuffle}
                 iconSize="xl"
-                onClick={rules.random}
+                onClick={() => dispatch(setRules2dRandom())}
             />
         </Box>
     );

@@ -1,7 +1,5 @@
 //
 
-import { Rule2dState } from "./hooks/ca2d/rules2d";
-
 export type Position = {
     r: number;
     c: number;
@@ -47,7 +45,7 @@ export type DataFileCA2D = DataFile & {
     nbhdType: NbhdType2D;
     mainCell: Position;
     neighborhood: boolean[][];
-    rules: Rule2dState[];
+    rules: (boolean | null)[];
     initialState: boolean[][];
     currentState: boolean[][];
 };

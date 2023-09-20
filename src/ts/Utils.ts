@@ -83,7 +83,7 @@ export function count(
     countFunc: (e: any, i: number) => boolean
 ): number {
     //
-    return array.reduce((acc, e, i) => (acc + countFunc(e, i) ? 1 : 0), 0);
+    return array.reduce((acc, e, i) => acc + (countFunc(e, i) ? 1 : 0), 0);
 }
 
 export function count2d(
@@ -94,7 +94,7 @@ export function count2d(
     return array.reduce(
         (acc, row, r) =>
             acc +
-            row.reduce((accR, e, c) => (accR + countFunc(e, r, c) ? 1 : 0), 0),
+            row.reduce((accR, e, c) => accR + (countFunc(e, r, c) ? 1 : 0), 0),
         0
     );
 }
@@ -125,17 +125,6 @@ export function boolArrayNot(boolArr: boolean[]): boolean[] {
     return boolArr.map((e) => !e);
 }
 
-export function copyArray(array: any[]): any[] {
-    //
-    return array.map((e) => e);
-}
-
-export function setArrayItem(array: any[], index: number, value: any) {
-    let nArray = copyArray(array);
-    nArray[index] = value;
-    return nArray;
-}
-
 export function createArray(size: number, fill: any) {
     return Array(size)
         .fill(null)
@@ -152,9 +141,21 @@ export function createArray2d(rows: number, cols: number, fill: any): any[][] {
         );
 }
 
+export function copyArray(array: any[]): any[] {
+    //
+    return array.map((e) => e);
+}
+
 export function copyArray2d(array: any[][]): any[][] {
     //
+    // return Array.from(array);
     return array.map((row) => row.map((cell) => cell));
+}
+
+export function setArrayItem(array: any[], index: number, value: any) {
+    let nArray = copyArray(array);
+    nArray[index] = value;
+    return nArray;
 }
 
 export function setArray2dItem(
