@@ -2,7 +2,11 @@
 import React, { useCallback, useEffect } from "react";
 
 import { Box, Grid } from "@mui/material";
-import { faArrowRotateRight, faMap } from "@fortawesome/free-solid-svg-icons";
+import {
+    faArrowRotateRight,
+    faChevronUp,
+    faMap,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { IconButton } from "src/components/Button";
 import CustomRadioGroup from "src/components/RadioGroup";
@@ -66,23 +70,33 @@ export default function Nbhd1d() {
                     <Nbhd1dEditor />
                 </Grid>
 
-                <Grid item md="auto" className="space-x-2">
+                <Grid item md="auto">
                     <IconButton
-                        icon={faArrowRotateRight}
+                        icon={showNbhdsMap.get ? faChevronUp : faMap}
                         iconSize="2x"
-                        tooltipLabel="Reload neighborhoods"
-                        onClick={reloadNbhds}
-                    />
-                    <IconButton
-                        icon={faMap}
-                        iconSize="2x"
-                        tooltipLabel="Show neighborhoods map"
+                        tooltipLabel={`${
+                            showNbhdsMap.get ? "Hide" : "Show"
+                        } neighborhoods map`}
                         onClick={showNbhdsMap.toggle}
                     />
                 </Grid>
             </Grid>
 
-            {showNbhdsMap.get && <NbhdsMap />}
+            {showNbhdsMap.get && (
+                <Box className="flex flex-row space-x-2 items-center justify-even">
+                    <Box className="w-max">
+                        <NbhdsMap />
+                    </Box>
+                    <Box className="w-fit">
+                        <IconButton
+                            icon={faArrowRotateRight}
+                            iconSize="2x"
+                            tooltipLabel="Reload neighborhoods"
+                            onClick={reloadNbhds}
+                        />
+                    </Box>
+                </Box>
+            )}
         </Box>
     );
 }
