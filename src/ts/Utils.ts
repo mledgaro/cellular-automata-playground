@@ -221,7 +221,7 @@ export function addColumn(
     return nMatrix;
 }
 
-export function extendArray(arr: any[], nlength: number, fill: any): any[] {
+export function resizeArray(arr: any[], nlength: number, fill: any): any[] {
     //
     const diff = nlength - arr.length;
     if (diff > 0) {
@@ -233,7 +233,7 @@ export function extendArray(arr: any[], nlength: number, fill: any): any[] {
     }
 }
 
-export function extendArray2d(
+export function resizeArray2d(
     arr: any[][],
     nrows: number,
     ncols: number,

@@ -5,14 +5,15 @@ import { saveAs } from "file-saver";
 import { useFilePicker } from "use-file-picker";
 
 import { IconButton } from "src/components/Button";
+import { DataFileObj } from "src/app/types";
 
 export default function Files({
     exportData,
     importData,
     fileName = "cellular_automaton",
 }: {
-    exportData: () => object;
-    importData: (data: object) => void;
+    exportData: () => DataFileObj;
+    importData: (data: DataFileObj) => void;
     fileName?: string;
 }) {
     //
@@ -22,7 +23,9 @@ export default function Files({
 
     useEffect(() => {
         if (filesContent.length > 0) {
-            importData(JSON.parse(filesContent[0].content));
+            const data = JSON.parse(filesContent[0].content);
+            importData(data);
+            // console.log("Files.tsx", data);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filesContent]);
@@ -69,7 +72,6 @@ export default function Files({
                     }}
                 />
             </Box>
-            {loading && <Box>{JSON.stringify(filesContent)}</Box>}
         </Box>
     );
 }

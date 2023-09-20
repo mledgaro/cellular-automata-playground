@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/app/store";
 import { Position, Size } from "src/app/types";
-import { createArray2d, extendArray2d, setArray2dItem } from "src/ts/Utils";
+import { createArray2d, resizeArray2d, setArray2dItem } from "src/ts/Utils";
 import { defaultValue as worldSizeDefault } from "src/app/slices/mainFrame/worldSize";
 
 interface CellsState {
@@ -33,7 +33,7 @@ export const cellsSlice = createSlice({
         },
         resizeCellsArr: (state, action: PayloadAction<Size>) => {
             const size = action.payload;
-            state.value = extendArray2d(
+            state.value = resizeArray2d(
                 state.value,
                 size.rows,
                 size.cols,

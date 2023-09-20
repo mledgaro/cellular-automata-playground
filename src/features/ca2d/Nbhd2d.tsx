@@ -1,5 +1,5 @@
 //
-import React, { useEffect } from "react";
+import React from "react";
 import CustomRadioGroup from "src/components/RadioGroup";
 import { Box, Grid } from "@mui/material";
 import { NbhdType2D } from "src/app/types";
@@ -33,8 +33,8 @@ export default function Nbhd2d({ type }: { type: StateObjHook<NbhdType2D> }) {
     //
     const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        switch (type.get) {
+    const onTypeChange = (val: string) => {
+        switch (val) {
             case "moore":
                 dispatch(setNbhd2dMoore());
                 break;
@@ -46,8 +46,8 @@ export default function Nbhd2d({ type }: { type: StateObjHook<NbhdType2D> }) {
                 break;
         }
         dispatch(setNbhdCenter2d({ r: 1, c: 1 }));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [type.get]);
+        type.set(val as NbhdType2D);
+    };
 
     return (
         <Grid container className="">
@@ -64,7 +64,7 @@ export default function Nbhd2d({ type }: { type: StateObjHook<NbhdType2D> }) {
                         ]}
                         defaultVal="moore"
                         value={type.get}
-                        onChange={(val: string) => type.set(val as NbhdType2D)}
+                        onChange={onTypeChange}
                     />
                 </Grid>
                 {/* main cell selector */}

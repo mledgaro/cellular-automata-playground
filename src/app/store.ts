@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import dataReducer from "./slices/mainFrame/data";
 import worldSizeReducer from "src/app/slices/mainFrame/worldSize";
 import worldLimitsReducer from "src/app/slices/mainFrame/worldLimits";
 import cellsSizeReducer from "./slices/mainFrame/cellsSize";
@@ -19,6 +20,7 @@ import rules2dReducer from "./slices/ca2d/rules2d";
 
 export const store = configureStore({
     reducer: {
+        data: dataReducer,
         worldSize: worldSizeReducer,
         worldLimits: worldLimitsReducer,
         cells: cellsReducer,

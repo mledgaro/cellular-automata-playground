@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/app/store";
-import { extendArray, setArrayItem } from "src/ts/Utils";
+import { resizeArray, setArrayItem } from "src/ts/Utils";
 
 interface Rules2dState {
     value: (boolean | null)[];
@@ -42,7 +42,7 @@ export const rules2dSlice = createSlice({
             state.value = state.value.map(() => randomRule());
         },
         resizeRules2d: (state, action: PayloadAction<number>) => {
-            state.value = extendArray(state.value, action.payload, false);
+            state.value = resizeArray(state.value, action.payload, false);
         },
     },
 });

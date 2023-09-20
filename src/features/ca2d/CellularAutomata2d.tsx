@@ -3,14 +3,27 @@ import React, { useRef } from "react";
 
 import { useAppDispatch, useAppSelector, useStateObj } from "src/app/hooks";
 
-import { selectWorldSize } from "src/app/slices/mainFrame/worldSize";
+import {
+    selectWorldSize,
+    setWorldSize,
+} from "src/app/slices/mainFrame/worldSize";
 import Nbhd2d from "src/features/ca2d/Nbhd2d";
 import Rules2d from "src/features/ca2d/Rules2d";
 import InitStateEditor from "src/features/InitStateEditor";
-import { CellularAutomaton2d } from "src/ts/CellularAutomaton2d";
 import MainFrame from "../mainFrame/MainFrame";
-import { copyArray2d, countTrue2d, randomBool2d } from "src/ts/Utils";
-import { NbhdType2D, Position, Size } from "src/app/types";
+import {
+    copyArray2d,
+    countTrue2d,
+    resizeArray2d,
+    randomBool2d,
+} from "src/ts/Utils";
+import {
+    DataFileCA2D,
+    DataFileObj,
+    NbhdType2D,
+    Position,
+    Size,
+} from "src/app/types";
 import { selectIterations } from "src/app/slices/mainFrame/iterations";
 import {
     clearCells,
@@ -25,6 +38,8 @@ import {
     setNbhdCenter2d,
 } from "src/app/slices/ca2d/nbhdCenter2d";
 import { selectRules2d, setRules2d } from "src/app/slices/ca2d/rules2d";
+
+const slug = "ca2d";
 
 export default function CellularAutomata2d() {
     //
@@ -41,7 +56,6 @@ export default function CellularAutomata2d() {
 
     const nbhdType = useStateObj<NbhdType2D>("moore");
     const initState = useRef<boolean[][] | null>(null);
-    const automaton = useRef(new CellularAutomaton2d(worldSize));
     const calcNbhd_ = useRef(calcNbhd(nbhd, nbhdCenter));
     const liveCells = useRef(0);
 
@@ -52,15 +66,10 @@ export default function CellularAutomata2d() {
 
     const init = () => {
         calcNbhd_.current = calcNbhd(nbhd, nbhdCenter);
-        // automaton.current.size = worldSize;
-        // automaton.current.setNbhd(nbhd, nbhdCenter);
-        // automaton.current.rules = rules;
-        // automaton.current.getCell = getCell;
         initState.current = copyArray2d(cells);
     };
 
     const next = () => {
-        // const nstate = automaton.current.nextState();
         const nstate = nextState(calcNbhd_.current, rules, worldSize, getCell);
         liveCells.current = countTrue2d(nstate);
         dispatch(setCells(nstate));
@@ -88,40 +97,43 @@ export default function CellularAutomata2d() {
     };
 
     const exportData = () => {
-        let data = {
-            type: "ca2d",
+        return {
+            type: slug,
+            worldSize: worldSize,
             nbhdType: nbhdType.get,
+            nbhd: nbhd,
             nbhdCenter: nbhdCenter,
-            neighborhood: nbhd,
             rules: rules,
-            initialState: initState.current ?? cells,
-            currentState: cells,
+            initState: initState.current ?? cells,
+            currState: cells,
             iterations: iterations,
         };
-        return data;
     };
 
-    const importData = (data: object) => {
-        if ("nbhdType" in data) {
-            nbhdType.set((data.nbhdType as NbhdType2D) ?? "moore");
-        }
-        if ("nbhdCenter" in data) {
-            dispatch(setNbhdCenter2d(data.nbhdCenter as Position));
-        }
-        if ("neighborhood" in data) {
-            dispatch(setNbhd2d(data.neighborhood as boolean[][]));
-        }
-        if ("rules" in data) {
-            dispatch(setRules2d(data.rules as (boolean | null)[]));
-        }
-        if ("initialState" in data) {
-            dispatch(setCells(data.initialState as boolean[][]));
-        }
+    const importData = (data: DataFileObj) => {
+        let data_ = data as DataFileCA2D;
+        dispatch(setWorldSize(data_.worldSize));
+        nbhdType.set(data_.nbhdType);
+        dispatch(setNbhd2d(data_.nbhd));
+        dispatch(setNbhdCenter2d(data_.nbhdCenter));
+        dispatch(setRules2d(data_.rules));
+        dispatch(
+            setCells(
+                resizeArray2d(
+                    data_.initState,
+                    data_.worldSize.rows,
+                    data_.worldSize.cols,
+                    false
+                )
+            )
+        );
+        console.log("ca2d loading data");
     };
 
     return (
         <MainFrame
             title="2D Cellular Automata"
+            slug={slug}
             init={init}
             next={next}
             stop={stop}

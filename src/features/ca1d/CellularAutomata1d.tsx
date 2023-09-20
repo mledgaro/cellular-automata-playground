@@ -1,5 +1,5 @@
 //
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 
@@ -16,10 +16,11 @@ import {
     countTrue,
     createArray,
     createArray2d,
+    resizeArray2d,
     randomBool,
 } from "src/ts/Utils";
 import { selectIterations } from "src/app/slices/mainFrame/iterations";
-import { NbhdType1D } from "src/app/types";
+import { DataFileCA1D, DataFileObj, NbhdType1D } from "src/app/types";
 import { selectNbhdType, setNbhdType } from "src/app/slices/ca1d/nbhdType";
 import { selectNbhdWidth, setNbhdWidth } from "src/app/slices/ca1d/nbhdWidth";
 import { selectCellsNbhd, setCellsNbhd } from "src/app/slices/ca1d/cellsNbhd";
@@ -34,6 +35,8 @@ import {
     toggleCell,
 } from "src/app/slices/mainFrame/cells";
 import { selectWorldLimitsGetCell } from "src/app/slices/mainFrame/worldLimits";
+
+const slug = "ca1d";
 
 export default function CellularAutomata1d() {
     //
@@ -128,10 +131,9 @@ export default function CellularAutomata1d() {
     };
 
     const exportData = () => {
-        let data = {
-            type: "ca1d",
-            numCells: worldSize.cols,
-            bufferSize: worldSize.rows,
+        return {
+            type: slug,
+            worldSize: worldSize,
             nbhdType: nbhdType,
             nbhdWidth: nbhdWidth,
             nbhdCenter: nbhdCenter,
@@ -141,47 +143,33 @@ export default function CellularAutomata1d() {
             currState: currState.current ?? cells[0],
             iterations: iterations,
         };
-        return data;
     };
 
-    const importData = (data: object) => {
-        if ("numCells" in data && "bufferSize" in data) {
-            dispatch(
-                setWorldSize({
-                    rows: data.bufferSize as number,
-                    cols: data.numCells as number,
-                })
-            );
-        }
-        if ("nbhdType" in data) {
-            dispatch(setNbhdType(data.nbhdType as NbhdType1D));
-        }
-        if ("nbhdWidth" in data) {
-            dispatch(setNbhdWidth(data.nbhdWidth as number));
-        }
-        if ("nbhdCenter" in data) {
-            dispatch(setNbhdCenter(data.nbhdCenter as number));
-        }
-        if ("cellsNbhd" in data) {
-            dispatch(setCellsNbhd(data.cellsNbhd as number[][]));
-        }
-        if ("rules" in data) {
-            dispatch(setRules(data.rules as boolean[]));
-        }
-        if ("initState" in data) {
-            dispatch(
-                setCells(
-                    [data.initState as boolean[]].concat(
-                        createArray2d(worldSize.rows - 1, worldSize.cols, false)
-                    )
+    const importData = (data: DataFileObj) => {
+        let data_ = data as DataFileCA1D;
+        console.log("ca1d import data", data_);
+        dispatch(setWorldSize(data_.worldSize));
+        dispatch(setNbhdType(data_.nbhdType));
+        dispatch(setNbhdWidth(data_.nbhdWidth));
+        dispatch(setNbhdCenter(data_.nbhdCenter));
+        dispatch(setCellsNbhd(data_.cellsNbhd));
+        dispatch(setRules(data_.rules));
+        dispatch(
+            setCells(
+                resizeArray2d(
+                    [data_.initState],
+                    data_.worldSize.rows,
+                    data_.worldSize.cols,
+                    false
                 )
-            );
-        }
+            )
+        );
     };
 
     return (
         <MainFrame
             title="1D Cellular Automata"
+            slug={slug}
             init={init}
             next={next}
             stop={stop}

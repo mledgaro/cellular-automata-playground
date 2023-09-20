@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { selectWorldSize } from "src/app/slices/mainFrame/worldSize";
-import { useAppSelector, useBool } from "src/app/hooks";
+import { useAppDispatch, useAppSelector, useBool } from "src/app/hooks";
 
 import CustomTabs from "src/components/Tabs";
 import { IconButton } from "src/components/Button";
@@ -18,15 +18,17 @@ import CanvasTools from "./CanvasTools";
 import Canvas from "./Canvas";
 import Info from "./Info";
 import Files from "./Files";
-import { Section } from "src/app/types";
+import { DataFileObj, Section } from "src/app/types";
 import { selectCellsSize } from "src/app/slices/mainFrame/cellsSize";
 import FloatingMenuButton from "src/components/FloatingMenuButton";
 
 import { models } from "src/App";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { selectData, setData } from "src/app/slices/mainFrame/data";
 
 type MainFrameParams = {
     title: string;
+    slug: string;
     liveCells: number;
     neighborhood: JSX.Element;
     rules: JSX.Element;
@@ -35,12 +37,13 @@ type MainFrameParams = {
     init: () => void;
     next: () => void;
     stop: () => void;
-    exportData: () => object;
-    importData: (data: object) => void;
+    exportData: () => DataFileObj;
+    importData: (data: DataFileObj) => void;
 };
 
 export default function MainFrame({
     title,
+    slug,
     liveCells,
     neighborhood,
     rules,
@@ -55,10 +58,26 @@ export default function MainFrame({
     //
     const worldSize = useAppSelector(selectWorldSize);
     const cellsSize = useAppSelector(selectCellsSize);
+    const data = useAppSelector(selectData);
+
+    const dispatch = useAppDispatch();
 
     const container = useRef<HTMLDivElement>(null);
     const canvas = useRef<HTMLCanvasElement>(null);
     const canvasCntrl = useRef<CanvasCntrl>();
+
+    const navigate = useNavigate();
+
+    const importData_ = (data_: DataFileObj) => {
+        if (data_?.type === slug) {
+            console.log("correct slug", data_.type);
+            importData(data_);
+        } else {
+            console.log("redirect loading", data_?.type);
+            dispatch(setData(data_));
+            navigate(`/${data_?.type}`);
+        }
+    };
 
     useEffect(() => {
         canvasCntrl.current = new CanvasCntrl(
@@ -68,6 +87,11 @@ export default function MainFrame({
             cellsSize
         );
         canvasCntrl.current.clear();
+
+        if (data) {
+            importData_(data);
+            dispatch(setData(null));
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -127,7 +151,7 @@ export default function MainFrame({
                         content: (
                             <Files
                                 exportData={exportData}
-                                importData={importData}
+                                importData={importData_}
                             />
                         ),
                     },

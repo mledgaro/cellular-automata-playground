@@ -25,12 +25,11 @@ export type FlowStatus = "stopped" | "paused" | "running" | undefined;
 
 export type DataFile = {
     type: string;
+    worldSize: Size;
     iterations: number;
 };
 
 export type DataFileCA1D = DataFile & {
-    numCells: number;
-    bufferSize: number;
     nbhdType: NbhdType1D;
     nbhdWidth: number;
     nbhdCenter: number;
@@ -41,11 +40,12 @@ export type DataFileCA1D = DataFile & {
 };
 
 export type DataFileCA2D = DataFile & {
-    worldSize: Size;
     nbhdType: NbhdType2D;
-    mainCell: Position;
-    neighborhood: boolean[][];
+    nbhd: boolean[][];
+    nbhdCenter: Position;
     rules: (boolean | null)[];
-    initialState: boolean[][];
-    currentState: boolean[][];
+    initState: boolean[][];
+    currState: boolean[][];
 };
+
+export type DataFileObj = DataFileCA1D | DataFileCA2D | null;
