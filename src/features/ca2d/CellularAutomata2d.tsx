@@ -10,7 +10,7 @@ import {
 import Nbhd2d from "src/features/ca2d/Nbhd2d";
 import Rules2d from "src/features/ca2d/Rules2d";
 import InitStateEditor from "src/features/InitStateEditor";
-import MainFrame from "../mainFrame/MainFrame";
+import MainFrame from "src/features/mainFrame/MainFrame";
 import {
     copyArray2d,
     countTrue2d,

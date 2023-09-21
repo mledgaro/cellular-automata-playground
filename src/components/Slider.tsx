@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Fade, Grid, Slider, SliderProps, styled } from "@mui/material";
 import React from "react";
 import { StateObjHook } from "src/app/hooks";
-import { StyledTooltip } from "./Button";
+import { StyledTooltip } from "src/components/Button";
 
 export const StyledSlider = styled(Slider)<SliderProps>(({ theme }) => ({
     width: "calc(100% - 40px)",

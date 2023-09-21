@@ -1,21 +1,21 @@
 import { configureStore } from "@reduxjs/toolkit";
-import dataReducer from "./slices/mainFrame/data";
+import dataReducer from "src/app/slices/mainFrame/data";
 import worldSizeReducer from "src/app/slices/mainFrame/worldSize";
 import worldLimitsReducer from "src/app/slices/mainFrame/worldLimits";
-import cellsSizeReducer from "./slices/mainFrame/cellsSize";
-import cursorPositionReducer from "./slices/mainFrame/cursorPosition";
-import gridVisibilityReducer from "./slices/mainFrame/gridVisibility";
-import iterationsReducer from "./slices/mainFrame/iterations";
-import flowStatusReducer from "./slices/mainFrame/flowStatus";
-import cellsReducer from "./slices/mainFrame/cells";
-import nbhdTypeReducer from "./slices/ca1d/nbhdType";
-import nbhdWidthReducer from "./slices/ca1d/nbhdWidth";
-import nbhdCenterReducer from "./slices/ca1d/nbhdCenter";
-import cellsNbhdReducer from "./slices/ca1d/cellsNbhd";
-import rulesReducer from "./slices/ca1d/rules";
-import nbhd2dReducer from "./slices/ca2d/nbhd2d";
-import nbhdCenter2dReducer from "./slices/ca2d/nbhdCenter2d";
-import rules2dReducer from "./slices/ca2d/rules2d";
+import cellsSizeReducer from "src/app/slices/mainFrame/cellsSize";
+import cursorPositionReducer from "src/app/slices/mainFrame/cursorPosition";
+import gridVisibilityReducer from "src/app/slices/mainFrame/gridVisibility";
+import iterationsReducer from "src/app/slices/mainFrame/iterations";
+import flowStatusReducer from "src/app/slices/mainFrame/flowStatus";
+import cellsReducer from "src/app/slices/mainFrame/cells";
+import nbhdTypeReducer from "src/app/slices/ca1d/nbhdType";
+import nbhdWidthReducer from "src/app/slices/ca1d/nbhdWidth";
+import nbhdCenterReducer from "src/app/slices/ca1d/nbhdCenter";
+import cellsNbhdReducer from "src/app/slices/ca1d/cellsNbhd";
+import rulesReducer from "src/app/slices/ca1d/rules";
+import nbhd2dReducer from "src/app/slices/ca2d/nbhd2d";
+import nbhdCenter2dReducer from "src/app/slices/ca2d/nbhdCenter2d";
+import rules2dReducer from "src/app/slices/ca2d/rules2d";
 // import _Reducer from "./slices/_";
 
 export const store = configureStore({

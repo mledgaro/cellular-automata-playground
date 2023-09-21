@@ -13,11 +13,11 @@ import CustomTabs from "src/components/Tabs";
 import { IconButton } from "src/components/Button";
 import CanvasCntrl from "src/ts/CanvasCntrl";
 
-import FlowControlTools from "./FlowControlTools";
-import CanvasTools from "./CanvasTools";
-import Canvas from "./Canvas";
-import Info from "./Info";
-import Files from "./Files";
+import FlowControlTools from "src/features/mainFrame/FlowControlTools";
+import CanvasTools from "src/features/mainFrame/CanvasTools";
+import Canvas from "src/features/mainFrame/Canvas";
+import Info from "src/features/mainFrame/Info";
+import Files from "src/features/mainFrame/Files";
 import { DataFileObj, Section } from "src/app/types";
 import { selectCellsSize } from "src/app/slices/mainFrame/cellsSize";
 import FloatingMenuButton from "src/components/FloatingMenuButton";

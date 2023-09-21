@@ -2,7 +2,7 @@ import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, BoxProps, Fade } from "@mui/material";
 import React from "react";
-import { MiniButton, StyledTooltip } from "./Button";
+import { MiniButton, StyledTooltip } from "src/components/Button";
 import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 
 export default function Label({

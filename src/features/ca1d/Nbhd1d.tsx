@@ -22,7 +22,7 @@ import {
     selectWorldCols,
     selectWorldSize,
 } from "src/app/slices/mainFrame/worldSize";
-import { Nbhd1dEditor } from "./CellsGroups";
+import { Nbhd1dEditor } from "src/features/ca1d/CellsGroups";
 import { NbhdType1D } from "src/app/types";
 import {
     reloadCellsNbhd,

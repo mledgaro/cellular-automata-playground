@@ -4,7 +4,7 @@ import React from "react";
 import { IconDefinition, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 import { Box } from "@mui/material";
-import { IconButton } from "./Button";
+import { IconButton } from "src/components/Button";
 import { useBool } from "src/app/hooks";
 import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 

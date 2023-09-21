@@ -1,5 +1,5 @@
 //
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 
@@ -10,7 +10,7 @@ import {
 import Nbhd1d from "src/features/ca1d/Nbhd1d";
 import Rules1d from "src/features/ca1d/Rules1d";
 import InitStateEditor from "src/features/InitStateEditor";
-import MainFrame from "../mainFrame/MainFrame";
+import MainFrame from "src/features/mainFrame/MainFrame";
 import {
     boolArrayToInt,
     countTrue,

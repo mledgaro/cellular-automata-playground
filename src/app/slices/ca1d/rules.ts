@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/app/store";
 import { createArray, intToBoolArray, setArrayItem } from "src/ts/Utils";
-import { defaultValue as nbhdWidthDefault } from "./nbhdWidth";
+import { defaultValue as nbhdWidthDefault } from "src/app/slices/ca1d/nbhdWidth";
 
 interface RulesState {
     value: boolean[];

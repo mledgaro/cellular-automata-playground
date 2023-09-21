@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../../store";
-import { Limit } from "../../types";
+import { RootState } from "src/app/store";
+import { Limit } from "src/app/types";
 
 interface WorldLimitsState {
     value: {

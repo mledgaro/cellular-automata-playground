@@ -12,7 +12,7 @@ import { selectWorldSize } from "src/app/slices/mainFrame/worldSize";
 import { IconButton } from "src/components/Button";
 import { VerticalSlider } from "src/components/Slider";
 import Label from "src/components/Label";
-import CanvasSettings from "./CanvasSettings";
+import CanvasSettings from "src/features/mainFrame/CanvasSettings";
 import {
     selectCellsSize,
     setCellsSize,
